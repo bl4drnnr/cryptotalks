@@ -8,8 +8,18 @@
     "prod:build": "docker-compose --env-file .env.production up --build",
     "prod:up": "docker-compose --env-file .env.production up",
     "front:dev": "npm run dev --workspace=front",
+    "front:build": "npm run build --workspace=front",
+    "api:dev": "npm run start:dev --workspace=api",
+    "api:build": "npm run build --workspace=api",
+    "auth:dev": "npm run start:dev --workspace=auth",
+    "auth:build": "npm run build --workspace=auth",
+    "crypto-rates:dev": "npm run start:dev --workspace=crypto-rates",
+    "crypto-rates:build": "npm run build --workspace=crypto-rates",
     "down:dev": "docker-compose --env-file .env.development down",
-    "rmi": "docker rmi cryptotalks-api cryptotalks-db cryptotalks-crypto-rates cryptotalks-auth cryptotalks-front"
+    "down:prod": "docker-compose --env-file .env.production down",
+    "rmi": "docker rmi cryptotalks-api cryptotalks-db cryptotalks-crypto-rates cryptotalks-auth cryptotalks-front",
+    "format": "npm run format --workspace=api && npm run format --workspace=auth && npm run format --workspace=crypto-rates && npm run lint --workspace=api && npm run lint --workspace=auth && npm run lint --workspace=crypto-rates",
+    "demo": ""
   },
   "workspaces": [
     "./services/*"

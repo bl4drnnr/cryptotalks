@@ -16,6 +16,14 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@shared/*": ["src/shared/services/*", "src/shared/*"],
+      "@auth/*": ["src/modules/auth/*"],
+      "@middlewares/*": ["src/middlewares/*"],
+      "@decorators/*": ["src/decorators/*"],
+      "@interfaces/*": ["src/interfaces/*"],
+      "@guards/*": ["src/guards/*"]
+    }
   }
 }
