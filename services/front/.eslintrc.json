@@ -1,3 +1,67 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": "next/core-web-vitals",
+  "globals": {
+    "JSX": true
+  },
+  "rules": {
+    "react/no-array-index-key": "off",
+    "react-hooks/exhaustive-deps": "off",
+    "no-param-reassign": "off",
+    "react/prop-types": "off",
+    "no-shadow": "off",
+    "no-nested-ternary": "off",
+    "operator-linebreak": "off",
+    "comma-dangle": "off",
+    "object-curly-newline": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "jsx-a11y/no-noninteractive-element-interactions": "off",
+    "quotes": [2, "single", "avoid-escape"],
+    "react/jsx-props-no-spreading": "off",
+    "react/require-default-props": "off",
+    "object-curly-spacing": ["error", "always"],
+    "no-throw-literal": "off",
+    "consistent-return": "off",
+    "implicit-arrow-linebreak": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+    "no-useless-escape": "off",
+    "func-names": "off",
+    "semi": "error",
+    "react/jsx-filename-extension": [
+      2,
+      { "extensions": [".js", ".jsx", ".ts", ".tsx"] }
+    ],
+    "react/function-component-definition": [
+      2,
+      {
+        "namedComponents": "arrow-function",
+        "unnamedComponents": "arrow-function"
+      }
+    ],
+    "import/prefer-default-export": "off",
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
+    "import/order":[
+      "error",
+      {
+        "groups": ["builtin", "external", "internal"],
+        "pathGroups":[{
+          "pattern": "react",
+          "group": "external",
+          "position": "before"
+        }],
+        "pathGroupsExcludedImportTypes": ["react"],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive":true
+        }
+      }
+    ]
+  }
 }

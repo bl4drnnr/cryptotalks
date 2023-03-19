@@ -12,10 +12,36 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "baseUrl": ".",
     "jsx": "preserve",
     "incremental": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "@components/*": [
+        "src/components/basic-components/*",
+        "src/components/layout-components/*",
+        "src/components/page-components/*"
+      ],
+      "@styles/*": [
+        "src/styles/basic-components/*",
+        "src/styles/layout-components/*",
+        "src/styles/page-components/*",
+        "src/styles/themes/*",
+        "src/styles/layouts/*",
+        "src/styles/pages/*",
+        "src/styles/*"
+      ],
+      "@services/*": [
+        "src/services/*",
+        "src/services/post/*"
+      ],
+      "@layouts/*": ["src/layouts/*"],
+      "@store/*": ["src/store/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@interfaces/*": ["src/interfaces/*"],
+      "@api-client": ["src/services/api.client.ts"],
+      "@api": ["src/api/api.ts"],
+      "@exceptions/*": ["src/api/exceptions/*"],
+      "@exception-handler": ["src/api/ExceptionHandler.ts"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
