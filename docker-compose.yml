@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  front:
+    container_name: cryptotalks-front
+    restart: always
+    build:
+      context: ./services/front
+      dockerfile: ./Dockerfile
+#    command: npm start
+#    volumes:
+#      - ./:/usr/src/cryptotalks-front
+    ports:
+      - ${FRONT_PORT}:${FRONT_PORT}
+  crypto-rates:
+    container_name: cryptotalks-crypto-rates
+    restart: always
+    build:
+      context: ./services/crypto-rates
+      dockerfile: ./Dockerfile
+    command: npm run start:dev
+    volumes:
+      - ./:/usr/src/cryptotalks-crypto-rates
+    ports:
+      - ${CRYPTO_RATES_SERVICE_PORT}:${CRYPTO_RATES_SERVICE_PORT}
+    networks:
+      - cryptotalks-network
+  auth:
+    container_name: cryptotalks-auth
+    restart: always
+    build:
+      context: ./services/auth
+      dockerfile: ./Dockerfile
+    command: npm run start:dev
+    volumes:
+      - ./:/usr/src/cryptotalks-auth
+    ports:
+      - ${AUTH_SERVICE_PORT}:${AUTH_SERVICE_PORT}
+    depends_on:
+      - db
+    networks:
+      - cryptotalks-network
+  api:
+    container_name: cryptotalks-api
+    restart: always
+    build:
+      context: ./services/api
+      dockerfile: ./Dockerfile
+    command: npm run start:dev
+    volumes:
+      - ./:/usr/src/cryptotalks-api
+    ports:
+      - ${API_PORT}:${API_PORT}
+    depends_on:
+      - db
+    networks:
+      - cryptotalks-network
+  db:
+    image: postgres
+    container_name: cryptotalks-db
+    restart: always
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+    volumes:
+      - /:/data/postgres
+    networks:
+      - cryptotalks-network
+
+networks:
+  cryptotalks-network:
+    driver: bridge

@@ -1,6 +1,7 @@
 # compiled output
 services/**/dist
 services/**/node_modules
+/node_modules
 
 # Logs
 logs
@@ -48,6 +49,8 @@ services/**/build
 
 # local env files
 .env*.local
+.env
+.env.*
 
 # vercel
 .vercel

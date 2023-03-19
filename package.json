@@ -2,7 +2,15 @@
   "name": "cryptotalks",
   "version": "0.0.1",
   "description": "Forum for cryptogeeks",
-  "scripts": {},
+  "scripts": {
+    "dev:build": "docker-compose --env-file .env.development up --build",
+    "dev:up": "docker-compose --env-file .env.development up",
+    "prod:build": "docker-compose --env-file .env.production up --build",
+    "prod:up": "docker-compose --env-file .env.production up",
+    "front:dev": "npm run dev --workspace=front",
+    "down:dev": "docker-compose --env-file .env.development down",
+    "rmi": "docker rmi cryptotalks-api cryptotalks-db cryptotalks-crypto-rates cryptotalks-auth cryptotalks-front"
+  },
   "workspaces": [
     "./services/*"
   ],
@@ -14,5 +22,8 @@
     "blog"
   ],
   "author": "Mikhail Bahdashych <contact@mikhailbahdashych.me>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  }
 }
