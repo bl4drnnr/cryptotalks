@@ -17,6 +17,7 @@
     "auth:build": "npm run build --workspace=auth",
     "crypto-rates:dev": "NODE_ENV=development npm run start:dev --workspace=crypto-rates",
     "crypto-rates:build": "npm run build --workspace=crypto-rates",
+    "db:dev:up": "docker-compose --env-file .env.development up db",
     "rmi": "docker rmi cryptotalks-api cryptotalks-db cryptotalks-crypto-rates cryptotalks-auth cryptotalks-front",
     "dev:local": "export NODE_ENV=development && concurrently \"npm run dev --workspace=front\" \"npm run start:dev --workspace=api\" \"npm run start:dev --workspace=auth\" \"npm run start:dev --workspace=crypto-rates\"",
     "format": "npm run format --workspace=api && npm run format --workspace=auth && npm run format --workspace=crypto-rates && npm run lint --workspace=api && npm run lint --workspace=auth && npm run lint --workspace=crypto-rates",
