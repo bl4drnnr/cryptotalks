@@ -14,6 +14,7 @@ import { fastifyCookie } from '@fastify/cookie';
     AppModule,
     new FastifyAdapter()
   );
+  const port = process.env.AUTH_SERVICE_PORT;
 
   await app.register(fastifyCookie, {
     secret: process.env.COOKIE_SECRET
@@ -35,5 +36,7 @@ import { fastifyCookie } from '@fastify/cookie';
 
   SwaggerModule.setup('/docs', app, document);
 
-  await app.listen(3000);
+  await app.listen(port, () => {
+    console.log(`Auth API has been successfully started on port: ${port}.`);
+  });
 })();

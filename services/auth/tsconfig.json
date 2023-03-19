@@ -20,6 +20,7 @@
     "paths": {
       "@shared/*": ["src/shared/services/*", "src/shared/*"],
       "@auth/*": ["src/modules/auth/*"],
+      "@user/*": ["src/modules/user/*"],
       "@middlewares/*": ["src/middlewares/*"],
       "@decorators/*": ["src/decorators/*"],
       "@interfaces/*": ["src/interfaces/*"],
