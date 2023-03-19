@@ -18,8 +18,9 @@
     "crypto-rates:dev": "NODE_ENV=development npm run start:dev --workspace=crypto-rates",
     "crypto-rates:build": "npm run build --workspace=crypto-rates",
     "rmi": "docker rmi cryptotalks-api cryptotalks-db cryptotalks-crypto-rates cryptotalks-auth cryptotalks-front",
+    "dev:local": "export NODE_ENV=development && concurrently \"npm run dev --workspace=front\" \"npm run start:dev --workspace=api\" \"npm run start:dev --workspace=auth\" \"npm run start:dev --workspace=crypto-rates\"",
     "format": "npm run format --workspace=api && npm run format --workspace=auth && npm run format --workspace=crypto-rates && npm run lint --workspace=api && npm run lint --workspace=auth && npm run lint --workspace=crypto-rates",
-    "prep": "npm --prefix services/api install && npm --prefix services/auth install && npm --prefix services/crypto-rates install && npm --prefix services/front install",
+    "prep": "npm --prefix . install && npm --prefix services/api install && npm --prefix services/auth install && npm --prefix services/crypto-rates install && npm --prefix services/front install",
     "demo": ""
   },
   "workspaces": [
@@ -33,5 +34,8 @@
     "blog"
   ],
   "author": "Mikhail Bahdashych <contact@mikhailbahdashych.me>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  }
 }
