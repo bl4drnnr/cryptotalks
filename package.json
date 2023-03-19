@@ -18,7 +18,8 @@
     "down:dev": "docker-compose --env-file .env.development down",
     "down:prod": "docker-compose --env-file .env.production down",
     "rmi": "docker rmi cryptotalks-api cryptotalks-db cryptotalks-crypto-rates cryptotalks-auth cryptotalks-front",
-    "format": "prettier --write services/{api,auth,crypto-rates}/**/*.ts && eslint services/{api,auth,crypto-rates}/**/*.ts --fix"
+    "format": "prettier --write services/{api,auth,crypto-rates}/**/*.ts && eslint services/{api,auth,crypto-rates}/**/*.ts --fix",
+    "demo": ""
   },
   "workspaces": [
     "./services/*"

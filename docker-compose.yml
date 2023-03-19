@@ -21,6 +21,8 @@ services:
     command: npm run start:dev
     volumes:
       - ./services/crypto-rates:/usr/src/cryptotalks-crypto-rates
+    depends_on:
+      - api
     ports:
       - ${CRYPTO_RATES_SERVICE_PORT}:${CRYPTO_RATES_SERVICE_PORT}
     networks:
@@ -37,7 +39,7 @@ services:
     ports:
       - ${AUTH_SERVICE_PORT}:${AUTH_SERVICE_PORT}
     depends_on:
-      - db
+      - api
     networks:
       - cryptotalks-network
   api:

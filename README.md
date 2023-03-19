@@ -8,7 +8,7 @@
 3. [Services](#services)
    1. [API](#api)
    2. [Front](#front)
-   3. [Auth](#auth)
+   3. [Authentication](#authentication)
    4. [Crypto rates](#crypto-rates)
 4. [Contact and references](#contact-and-references)
 5. [License and tech stack](#license)
@@ -51,23 +51,45 @@ Here is more details about the difference between the architecture of microservi
 - **_Monitoring and Logging_**: The monitoring system has been implemented, since, as mentioned previously, there is no production mode, but **some of critical logs are sent to MongoDB**.
 - **_Deployment and Orchestration_**: As orchestration for this project **_Docker_** has been used. All services were compiled in [docker-compose](docker-compose.yml) file and can be executed together joined by the same network. Also, in the root folder of the project, in [package.json](package.json) file was written scripts that allow execution services both together and separately either within containers or locally. 
 
+The main advantage of the architecture of microservices approach is that fail of the one service won't make any negative impact of availability of other services. For instance, in this project, if something bad happens to [cryptocurrencies rates](services/crypto-rates) services, you still will be able to log in to our account and write posts. The only thing that you won't be able to access is the rates of currencies, availability and accessibility of other services won't be impacted. 
+
 ## Services
+
+As it was mentioned above, the architecture of microservices have been built using Docker and docker-compose. It means, that all 5 services are working within the save network inside the network of container and that way are able to communicate with each other.
+
+Even though some of external API's could be implemented as the separated service, because of the project scale, there were no need for that. This is why main, for example, [API](services/api) acts as an API Gateway and API responsible for different functionalities at the same time.
 
 ### API
 
+The ["main" API](services/api) of the whole application. Generally, this API is responsible for posting and acts as a proxy/API Gateway at the same time. It means, that every request that goes from the front-end is handled by API. The same situation for other services. Requests and responses are handled byit .Moreover, this API stores every model of the database.
+
 ### Front
 
-### Auth
+The [front-end](services/front) of the project was written using `Next.js` framework, which is basically `React` + `Typescript` + `SSR`. In this particular case, since there is no production mode, there were no need in making `SEO` optimization and `server-side rendering`, which is the main feature of the `Next.js`. It means that basically React + Typescript could be used, but Next.js was chosen because of other features such as routing, API building approach etc.   
+
+### Authentication
+
+The [authentication](services/auth) is responsible for the authentication of the users for the account creation. It also is responsible for sending the confirmation email to the new user. As an external provider of email service `Sendgrid` was used.
 
 ### Crypto rates
 
+The [cryptocurrencies rates](services/crypto-rates) service is the simple HTTP service that sends requests to an exchange and obtains all rates. Then, it writes them to database. In this case, a cache could be implemented.
+
+Also, this services works as a webjob. It means that it has a schedule and every `X` minutes (can be configured via environmental variables) sends requests to the cryptocurrency exchange.
+
 ### Database
+
+As the database, `PostgreSQL` was chosen. Even though it is possible and very convenient, it is not the best choice for the production. Database should be implemented as a separated server.
+
+To implement `ORM` and be able to provide `CRUD` operations, `Sequelize` has been utilized. It allows to describe models which will be converted to tables within database. Except that, Sequelize is probably the best ORM for Nest.js that provides the developers the ability of migrations.
+
+Talking about migrations, they were used for `demo` script inside [package.json](package.json) in the root folder of the project.
 
 ## Contact and references
 
 - Developer contact - [contact@mikhailbahdashych.me](mailto:contact@mikhailbahdashych.me)
 - API service - [services/api](services/api)
-- Auth service - [services/auth](services/auth)
+- Authentication service - [services/auth](services/auth)
 - Front service - [services/front](services/front)
 - Crypto rates service - [services/crypto-rates](services/crypto-rates)
 
