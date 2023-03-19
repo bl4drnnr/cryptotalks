@@ -7,9 +7,9 @@ services:
     build:
       context: ./services/front
       dockerfile: ./Dockerfile
-#    command: npm start
-#    volumes:
-#      - ./:/usr/src/cryptotalks-front
+    command: npm run dev
+    volumes:
+      - ./services/front:/usr/src/cryptotalks-front
     ports:
       - ${FRONT_PORT}:${FRONT_PORT}
   crypto-rates:
@@ -20,7 +20,7 @@ services:
       dockerfile: ./Dockerfile
     command: npm run start:dev
     volumes:
-      - ./:/usr/src/cryptotalks-crypto-rates
+      - ./services/crypto-rates:/usr/src/cryptotalks-crypto-rates
     ports:
       - ${CRYPTO_RATES_SERVICE_PORT}:${CRYPTO_RATES_SERVICE_PORT}
     networks:
@@ -33,7 +33,7 @@ services:
       dockerfile: ./Dockerfile
     command: npm run start:dev
     volumes:
-      - ./:/usr/src/cryptotalks-auth
+      - ./services/auth:/usr/src/cryptotalks-auth
     ports:
       - ${AUTH_SERVICE_PORT}:${AUTH_SERVICE_PORT}
     depends_on:
@@ -48,7 +48,7 @@ services:
       dockerfile: ./Dockerfile
     command: npm run start:dev
     volumes:
-      - ./:/usr/src/cryptotalks-api
+      - ./services/api:/usr/src/cryptotalks-api
     ports:
       - ${API_PORT}:${API_PORT}
     depends_on:
