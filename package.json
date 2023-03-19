@@ -1,0 +1,18 @@
+{
+  "name": "cryptotalks",
+  "version": "0.0.1",
+  "description": "Forum for cryptogeeks",
+  "scripts": {},
+  "workspaces": [
+    "./services/*"
+  ],
+  "keywords": [
+    "cryptocurrency",
+    "crypto",
+    "bitcoin",
+    "forum",
+    "blog"
+  ],
+  "author": "Mikhail Bahdashych <contact@mikhailbahdashych.me>",
+  "license": "MIT"
+}
