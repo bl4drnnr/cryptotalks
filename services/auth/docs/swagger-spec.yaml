@@ -1,0 +1,11 @@
+openapi: 3.0.0
+paths: {}
+info:
+  title: Cryptotalks API
+  description: Cryptotalks API documentation
+  version: 0.0.1
+  contact: {}
+tags: []
+servers: []
+components:
+  schemas: {}

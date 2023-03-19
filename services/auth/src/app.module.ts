@@ -8,14 +8,14 @@ import { ConfigModule } from '@nestjs/config';
 import { BasicAuthMiddleware } from '@middlewares/basic-auth.middleware';
 import { SharedModule } from '@shared/shared.module';
 import { AuthModule } from '@auth/auth.module';
-import { UserModule } from './modules/user/user.module';
+import { UserModule } from '@user/user.module';
 
 @Module({
   imports: [
     SharedModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: `.env.${process.env.NODE_ENV}`
+      envFilePath: `../../.env.${process.env.NODE_ENV}`
     }),
     AuthModule,
     UserModule
