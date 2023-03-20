@@ -1,32 +1,24 @@
 import React from 'react';
 
-import { useTranslation } from 'next-i18next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 import DefaultLayout from '@layouts/Default.layout';
-import { getStaticPaths, makeStaticProps } from '@lib/getStatic';
 import { Container, Content, TacBox, Title } from '@styles/tac.style';
 
-interface TermsAndConditionsProps {
-  locale: string
-}
-
-const TermsAndConditions = ({ locale }: TermsAndConditionsProps) => {
-  const { t } = useTranslation();
-
+const TermsAndConditions = () => {
   const router = useRouter();
 
   const handleRedirect = async (path: string) => {
-    await router.push(`/${locale}${path}`);
+    await router.push(`/${path}`);
   };
 
   return (
     <>
       <Head>
-        <title>Cryptodistrict | {t('pages:tac.title')}</title>
+        <title>Cryptotalks | T&C</title>
       </Head>
-      <DefaultLayout locale={locale} translate={t}>
+      <DefaultLayout>
         <Container>
           <TacBox>
             <Title>Lorem ipsum dolor sit amet.</Title>
@@ -45,8 +37,5 @@ const TermsAndConditions = ({ locale }: TermsAndConditionsProps) => {
     </>
   );
 };
-
-const getStaticProps = makeStaticProps(['pages', 'components', 'errors']);
-export { getStaticPaths, getStaticProps };
 
 export default TermsAndConditions;

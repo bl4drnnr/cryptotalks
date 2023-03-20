@@ -65,11 +65,11 @@ const Signup = () => {
     passwordRules: false
   });
   const [passwordRulesList, setPasswordRulesList] = React.useState([
-    { error: false, text: '' },
-    { error: false, text: '' },
-    { error: false, text: '' },
-    { error: false, text: '' },
-    { error: false, text: '' }
+    { error: false, text: 'Password length should be more than 8 characters' },
+    { error: false, text: 'Password should contain at least one uppercase character' },
+    { error: false, text: 'Password should contain at least one lowercase character' },
+    { error: false, text: 'Password should contain at least one special character' },
+    { error: false, text: 'Password should contain at least one digit character' }
   ]);
 
   const signUpUser = async () => {
@@ -158,19 +158,19 @@ const Signup = () => {
   return (
     <>
       <Head>
-        <title></title>
+        <title>Cryptotalks | Sign up</title>
       </Head>
       <CredentialsLayout leftSide={
         <Box>
-          <WelcomeTitle></WelcomeTitle>
-          <WelcomeText></WelcomeText>
-          <WelcomeText></WelcomeText>
+          <WelcomeTitle>Hello there, cryptogeek!</WelcomeTitle>
+          <WelcomeText>Welcome to Cryptotalks - platform that will keep you in touch with everything that happens in the world of cryptocurrencies.</WelcomeText>
+          <WelcomeText>We are quite sure you have been doing this hundreds times before, so, no need to explain what you need to do, fields on the right side. See ya!</WelcomeText>
         </Box>
       } rightSide={
         <>
           {step === 1 ? (
             <Box>
-              <Title></Title>
+              <Title>Sign up</Title>
 
               <MarginWrapper>
                 <Input
@@ -178,7 +178,7 @@ const Signup = () => {
                   onError={emailError}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder={''}
+                  placeholder={'Email'}
                 />
               </MarginWrapper>
 
@@ -186,9 +186,9 @@ const Signup = () => {
                 <Input
                   high={true}
                   onError={usernameError}
-                  onErrorMessage={''}
+                  onErrorMessage={'Username should contain at least 1 symbol'}
                   value={username}
-                  placeholder={''}
+                  placeholder={'Username'}
                   onChange={(e) => setUsername(e.target.value)}
                 />
               </MarginWrapper>
@@ -200,7 +200,7 @@ const Signup = () => {
                   value={password.password}
                   onChange={(e) => setPassword({ ...password, password: e.target.value })}
                   type={'password'}
-                  placeholder={''}
+                  placeholder={'Password'}
                 />
               </MarginWrapper>
 
@@ -211,7 +211,7 @@ const Signup = () => {
                   value={password.repeatPassword}
                   onChange={(e) => setPassword({ ...password, repeatPassword: e.target.value })}
                   type={'password'}
-                  placeholder={''}
+                  placeholder={'Password repeat'}
                 />
               </MarginWrapper>
 
@@ -219,8 +219,8 @@ const Signup = () => {
                 <Checkbox
                   value={tac}
                   label={
-                    <Tea> <Link
-                      onClick={() => handleRedirect('/terms-and-conditions')}></Link>
+                    <Tea>I confirm that I have read and accepted <Link
+                      onClick={() => handleRedirect('/terms-and-conditions')}>terms and conditions</Link>
                     </Tea>
                   } onChange={() => setTac(!tac)}/>
               </MarginWrapper>
@@ -242,7 +242,7 @@ const Signup = () => {
                   disabled={!validateFields()}
                   onClick={() => setStep(2)}
                   highHeight={true}
-                  text={''}
+                  text={'Sign up'}
                 />
               </MarginWrapper>
 
@@ -250,17 +250,17 @@ const Signup = () => {
           ) : (step === 2 ? (
               <Box className={'scrollable'}>
                 <MarginWrapper>
-                  <HeaderSmall></HeaderSmall>
+                  <HeaderSmall>Tell us a little about yourself</HeaderSmall>
                 </MarginWrapper>
                 <MarginWrapper>
-                  <Paragraph></Paragraph>
+                  <Paragraph>Don't worry, you can skip this step and fill information you want later</Paragraph>
                 </MarginWrapper>
 
                 <MarginWrapper>
                   <Input
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    placeholder={''}
+                    placeholder={'First name'}
                   />
                 </MarginWrapper>
 
@@ -268,12 +268,12 @@ const Signup = () => {
                   <Input
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                    placeholder={''}
+                    placeholder={'Last name'}
                   />
                 </MarginWrapper>
 
                 <MarginWrapper>
-                  <HeaderSmall></HeaderSmall>
+                  <HeaderSmall>Provide your nickname or link</HeaderSmall>
                 </MarginWrapper>
                 <hr/>
 
@@ -295,12 +295,12 @@ const Signup = () => {
                   <Input
                     value={personalWebsite}
                     onChange={(e) => setPersonalWebsite(e.target.value)}
-                    placeholder={''}
+                    placeholder={'Personal website'}
                   />
                 </MarginWrapper>
 
                 <MarginWrapper>
-                  <HeaderSmall></HeaderSmall>
+                  <HeaderSmall>What do you want to tell this world?</HeaderSmall>
                 </MarginWrapper>
                 <hr/>
 
@@ -308,42 +308,42 @@ const Signup = () => {
                   <Input
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    placeholder={''}
+                    placeholder={'Title'}
                   />
                 </MarginWrapper>
                 <MarginWrapper>
                   <Textarea
                     value={bio}
                     onChange={(e) => setBio(e.target.value)}
-                    placeholder={''}
+                    placeholder={'Bio'}
                   />
 
                 </MarginWrapper>
                 <Checkbox
                   value={publicEmail}
-                  label={''}
+                  label={'Public email'}
                   onChange={() => setPublicEmail(!publicEmail)}
                 />
 
                 <Buttons>
-                  <Button text={''} onClick={() => setStep(step - 1)}/>
+                  <Button text={'Back'} onClick={() => setStep(step - 1)}/>
                   <MarginVerticalWrapper>
-                    <Button text={''} onClick={() => signUpUser()}/>
+                    <Button text={'Skip'} onClick={() => signUpUser()}/>
                   </MarginVerticalWrapper>
-                  <Button fillButton={true} text={''} onClick={() => signUpUser()}/>
+                  <Button fillButton={true} text={'Sign up'} onClick={() => signUpUser()}/>
                 </Buttons>
               </Box>
             ) : (
               <Box>
-                <Title></Title>
+                <Title>Welcome!</Title>
                 <MarginWrapper>
-                  <SubTitle></SubTitle>
+                  <SubTitle>Your account has been successfully created!</SubTitle>
                 </MarginWrapper>
                 <MarginWrapper>
-                  <SubTitle></SubTitle>
+                  <SubTitle>Please, check you email inbox in order to confirm registration by clicking the link you will find inside the message.</SubTitle>
                 </MarginWrapper>
                 <MarginWrapper>
-                  <Button fillButton={true} text={''} onClick={() => handleRedirect('/signin')}/>
+                  <Button fillButton={true} text={'Sign in'} onClick={() => handleRedirect('/signin')}/>
                 </MarginWrapper>
               </Box>
             )
@@ -352,13 +352,14 @@ const Signup = () => {
       } headerLink={
         <>
           {step === 1 &&
-            <HeaderLink> <Link
+            <HeaderLink>Already have an account? <Link
               onClick={() => handleRedirect('/signin')}
-            ></Link></HeaderLink>
+            >Sign in!</Link></HeaderLink>
           }
         </>
       } rightDarkSide={true}
         leftSideHide={hideLeftSide}
+        loading={loading}
       />
     </>
   );

@@ -76,18 +76,18 @@ const Signin = () => {
   return (
     <>
       <Head>
-        <title></title>
+        <title>Cryptotalks | Sign in</title>
       </Head>
       <CredentialsLayout leftSide={
         <>
           {step === 1 ? (
             <Box>
-              <Title></Title>
+              <Title>Sign in</Title>
 
               <LoginOptions>
-                <LoginOption onClick={() => setLoginOption('email')}></LoginOption>
+                <LoginOption onClick={() => setLoginOption('email')}>With email</LoginOption>
                 <VerticalLine/>
-                <LoginOption onClick={() => setLoginOption('phone')}></LoginOption>
+                <LoginOption onClick={() => setLoginOption('phone')}>With phone</LoginOption>
               </LoginOptions>
 
               <MarginWrapper>
@@ -97,14 +97,14 @@ const Signin = () => {
                     onError={emailError}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder={''}
+                    placeholder={'Email'}
                   />
                 ) : (
                   <Input
                     high={true}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder={''}
+                    placeholder={'Phone'}
                   />
                 )}
               </MarginWrapper>
@@ -118,21 +118,21 @@ const Signin = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   type={'password'}
-                  placeholder={''}
+                  placeholder={'Password'}
                 />
               </MarginWrapper>
 
               <MarginWrapper>
                 <Link
                   onClick={() => handleRedirect('/forgot-password')}
-                >{''}</Link>
+                >{'Forgot password?'}</Link>
               </MarginWrapper>
 
               <MarginWrapper>
                 <Button
                   disabled={passwordError || emailError || !password || !email}
                   highHeight={true}
-                  text={''}
+                  text={'Sign in'}
                   onClick={() => signInUser()}
                 />
               </MarginWrapper>
@@ -140,7 +140,7 @@ const Signin = () => {
             </Box>
           ) : (
             <Box>
-              <Title></Title>
+              <Title>Sign in</Title>
               <MarginWrapper className={'big'}>
                 <TwoFa
                   title={''}

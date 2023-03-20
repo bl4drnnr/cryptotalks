@@ -5,7 +5,7 @@ export const LoadingBackground = styled.div`
   height: 100vh;
   position: fixed;
   z-index: 999;
-  background-color: rgba(${(props) => props.theme.colors.textColor}, .35);
+  background-color: rgba(${(props) => props.theme.colors.disableColor}, .35);
 `;
 
 export const LoadingSpinner = styled.span`
@@ -28,7 +28,7 @@ export const LoadingSpinner = styled.span`
   }
 
   :after {
-    box-shadow: 0 10px 0 rgb(${(props) => props.theme.colors.primaryLight}) inset;
+    box-shadow: 0 10px 0 rgb(${(props) => props.theme.colors.primary}) inset;
     animation: rotate 2s linear infinite;
   }
 

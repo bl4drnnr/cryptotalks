@@ -3,7 +3,7 @@ version: '3.8'
 services:
   front:
     container_name: cryptotalks-front
-    restart: always
+    restart: no
     build:
       context: ./services/front
       dockerfile: ./Dockerfile
@@ -14,7 +14,7 @@ services:
       - ${FRONT_PORT}:${FRONT_PORT}
   crypto-rates:
     container_name: cryptotalks-crypto-rates
-    restart: always
+    restart: no
     build:
       context: ./services/crypto-rates
       dockerfile: ./Dockerfile
@@ -29,7 +29,7 @@ services:
       - cryptotalks-network
   auth:
     container_name: cryptotalks-auth
-    restart: always
+    restart: no
     build:
       context: ./services/auth
       dockerfile: ./Dockerfile
@@ -44,7 +44,7 @@ services:
       - cryptotalks-network
   api:
     container_name: cryptotalks-api
-    restart: always
+    restart: no
     build:
       context: ./services/api
       dockerfile: ./Dockerfile
@@ -60,7 +60,7 @@ services:
   db:
     image: postgres
     container_name: cryptotalks-db
-    restart: always
+    restart: no
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
     environment:

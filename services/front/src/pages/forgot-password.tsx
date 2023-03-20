@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { useTranslation } from 'next-i18next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
@@ -9,7 +8,6 @@ import { Input } from '@components/Input/Input.component';
 import { InputButton } from '@components/InputButton/InputButton.component';
 import { useWindowDimensions } from '@hooks/useGetWindowDimensions.hook';
 import CredentialsLayout from '@layouts/Credentials.layout';
-import { getStaticPaths, makeStaticProps } from '@lib/getStatic';
 import {
   Box,
   Link,
@@ -22,13 +20,7 @@ import {
   Title
 } from '@styles/login.style';
 
-interface ForgotPasswordProps {
-  locale: string;
-}
-
-const ForgotPassword = ({ locale }: ForgotPasswordProps) => {
-  const { t } = useTranslation();
-
+const ForgotPassword = () => {
   const router = useRouter();
   const [hideLeftSide, setHideLeftSide] = React.useState(false);
   const { height, width } = useWindowDimensions();
@@ -39,7 +31,7 @@ const ForgotPassword = ({ locale }: ForgotPasswordProps) => {
   const [verificationCode, setVerificationCode] = React.useState('');
 
   const handleRedirect = async (path: string) => {
-    await router.push(`/${locale}${path}`);
+    await router.push(`/${path}`);
   };
 
   React.useEffect(() => {
@@ -49,48 +41,48 @@ const ForgotPassword = ({ locale }: ForgotPasswordProps) => {
   return (
     <>
       <Head>
-        <title>Cryptodistrict | {t('pages:forgotPassword.title')}</title>
+        <title>Cryptodistrict | Forgot password</title>
       </Head>
       <CredentialsLayout leftSide={
         <Box>
           <WelcomeTitle>
-            {t('pages:forgotPassword.text1')}
+            Forgot password?
           </WelcomeTitle>
           <WelcomeTitle>
-            {t('pages:forgotPassword.text2')}
+            Hah... Not a big deal!
           </WelcomeTitle>
 
         </Box>
       } rightSide={
         <Box>
-          <Title>{t('pages:forgotPassword.text1')}</Title>
+          <Title>Forgot password?</Title>
           <LoginOptions>
-            <LoginOption onClick={() => setPasswordRecoveryMethod('email')}>{t('pages:signin.withEmail')}</LoginOption>
+            <LoginOption onClick={() => setPasswordRecoveryMethod('email')}>With email</LoginOption>
             <VerticalLine/>
-            <LoginOption onClick={() => setPasswordRecoveryMethod('phone')}>{t('pages:signin.withPhone')}</LoginOption>
+            <LoginOption onClick={() => setPasswordRecoveryMethod('phone')}>With password</LoginOption>
           </LoginOptions>
 
           {passwordRecoveryMethod === 'email' ? (
             <MarginWrapper>
               <InputButton
-                buttonTitle={t('placeholders:inputs.sendCode')}
+                buttonTitle={'Send code'}
                 onChange={() => {
                 }}
                 onClick={() => {
                 }}
-                placeholder={t('placeholders:inputs.email')}
+                placeholder={'Email'}
                 value={email}
               />
             </MarginWrapper>
           ) : (
             <MarginWrapper>
               <InputButton
-                buttonTitle={t('placeholders:inputs.sendCode')}
+                buttonTitle={'Send code'}
                 onChange={() => {
                 }}
                 onClick={() => {
                 }}
-                placeholder={t('placeholders:inputs.phone')}
+                placeholder={'Phone'}
                 value={phone}
               />
             </MarginWrapper>
@@ -101,29 +93,25 @@ const ForgotPassword = ({ locale }: ForgotPasswordProps) => {
               high={true}
               value={verificationCode}
               onChange={(e) => setVerificationCode(e.target.value)}
-              placeholder={t('placeholders:inputs.verificationCode')}
+              placeholder={'Verification code'}
             />
           </MarginWrapper>
 
           <MarginWrapper>
-            <Button highHeight={true} text={t('placeholders:inputs.submit')}/>
+            <Button highHeight={true} text={'Submit'}/>
           </MarginWrapper>
         </Box>
       } headerLink={
         <HeaderLink>
-          {t('pages:signin.dontHaveAnAcc')} <Link
+          Do not have an account yet? <Link
           onClick={() => handleRedirect('/signup')}
-        >{t('pages:signin.signUpNow')}</Link>
+        >Sign up now!</Link>
         </HeaderLink>
       } rightDarkSide={true}
-        locale={locale}
         leftSideHide={hideLeftSide}
       />
     </>
   );
 };
-
-const getStaticProps = makeStaticProps(['pages', 'components', 'errors', 'placeholders']);
-export { getStaticPaths, getStaticProps };
 
 export default ForgotPassword;
