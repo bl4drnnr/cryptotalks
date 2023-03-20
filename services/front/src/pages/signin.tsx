@@ -10,7 +10,7 @@ import { useWindowDimensions } from '@hooks/useGetWindowDimensions.hook';
 import { useHandleException } from '@hooks/useHandleException.hook';
 import { validateEmail, validatePasswordLength } from '@hooks/useValidators.hook';
 import CredentialsLayout from '@layouts/Credentials.layout';
-// import { useSignInService } from '@services/signin/signin.service';
+import { useSignInService } from '@services/signin/signin.service';
 import {
   Box,
   Link,
@@ -20,13 +20,14 @@ import {
   VerticalLine,
   LoginOption,
   MarginWrapper,
-  Title, HeaderLink
+  Title,
+  HeaderLink
 } from '@styles/login.style';
 
 
 const Signin = () => {
   const router = useRouter();
-  // const { signIn, loading } = useSignInService();
+  const { signIn, loading } = useSignInService();
   const { handleException } = useHandleException();
   const [rightSideHide, setRightSideHide] = React.useState(false);
   const { height, width } = useWindowDimensions();
@@ -46,11 +47,11 @@ const Signin = () => {
   const signInUser = async (e?: any) => {
     try {
       if ((e && e.key === 'Enter') || !e) {
-        // const { _at } = await signIn({
-        //   email, password
-        // });
-        // sessionStorage.setItem('_at', _at);
-        // await handleRedirect('/account');
+        const { _at } = await signIn({
+          email, password
+        });
+        sessionStorage.setItem('_at', _at);
+        await handleRedirect('/account');
       }
     } catch (e) {
       handleException(e);
@@ -170,6 +171,7 @@ const Signin = () => {
       } leftDarkSide={true}
         mirroredHeader={true}
         rightSideHide={rightSideHide}
+        loading={loading}
       />
     </>
   );

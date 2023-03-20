@@ -12,7 +12,7 @@ import { useWindowDimensions } from '@hooks/useGetWindowDimensions.hook';
 import { useHandleException } from '@hooks/useHandleException.hook';
 import { validateEmail, validatePasswordRules, validatePassword } from '@hooks/useValidators.hook';
 import CredentialsLayout from '@layouts/Credentials.layout';
-// import { useSignUpService } from '@services/signup/signup.service';
+import { useSignUpService } from '@services/signup/signup.service';
 import {
   Box,
   Link,
@@ -35,7 +35,7 @@ import {
 const Signup = () => {
   const router = useRouter();
 
-  // const { loading, signUp } = useSignUpService();
+  const { loading, signUp } = useSignUpService();
   const { handleException } = useHandleException();
   const { height, width } = useWindowDimensions();
   const [hideLeftSide, setHideLeftSide] = React.useState(false);
@@ -74,24 +74,24 @@ const Signup = () => {
 
   const signUpUser = async () => {
     try {
-      // const response = await signUp({
-      //   password: password.password,
-      //   bio,
-      //   linkedIn,
-      //   firstName,
-      //   lastName,
-      //   title,
-      //   twitter,
-      //   personalWebsite,
-      //   tac,
-      //   email,
-      //   username,
-      //   publicEmail
-      // });
-      //
-      // if (response.message == 'success') {
-      //   setStep(3);
-      // }
+      const response = await signUp({
+        password: password.password,
+        bio,
+        linkedIn,
+        firstName,
+        lastName,
+        title,
+        twitter,
+        personalWebsite,
+        tac,
+        email,
+        username,
+        publicEmail
+      });
+
+      if (response.message == 'success') {
+        setStep(3);
+      }
     } catch (e) {
       handleException(e);
     }
