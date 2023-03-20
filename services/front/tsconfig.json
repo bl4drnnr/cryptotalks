@@ -32,7 +32,13 @@
       ],
       "@services/*": [
         "src/services/*",
-        "src/services/post/*"
+        "src/services/auth/*",
+        "src/services/token/*",
+        "src/services/account/*",
+        "src/services/user-settings/*",
+        "src/services/two-fa/*",
+        "src/services/user/*",
+        "src/services/crypto/*"
       ],
       "@layouts/*": ["src/layouts/*"],
       "@store/*": ["src/store/*"],

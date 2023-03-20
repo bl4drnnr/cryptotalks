@@ -1,10 +1,14 @@
 export interface ThemeProps {
   colors: {
-    primaryLight: string;
-    primaryDark: string;
+    primary: string;
     lightBackground: string;
     darkBackground: string;
+    error: string;
+    success: string;
     textColor: string;
-    svgColor: string;
+    inputBackground: string;
+    disableColor: string;
+    opposite: string;
+    svgIcon: string;
   }
 }

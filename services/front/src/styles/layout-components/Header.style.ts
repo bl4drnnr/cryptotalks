@@ -3,115 +3,97 @@ import styled from 'styled-components';
 export const Container = styled.div`
   width: 100%;
   height: 65px;
+  border-bottom: 1px solid rgba(${(props) => props.theme.colors.opposite}, .25);
   background-color: rgb(${(props) => props.theme.colors.lightBackground});
   position: fixed;
-  z-index: 998;
+  z-index: 101;
 `;
 
 export const Box = styled.div`
-  width: 45%;
-  height: 100%;
-  border-bottom: 1px solid rgba(${(props) => props.theme.colors.textColor}, .25);
-  margin: 0 auto;
-  padding: 0 30px;
+  width: 90%;
+  height: 50%;
+  margin: 15px auto;
   display: flex;
   position: relative;
   justify-content: space-between;
-  align-items: center;
-  
-  @media only screen and (max-width: 780px) {
-    width: 100%;
-  }
 `;
 
-export const Link = styled.h3`
-  color: rgba(${(props) => props.theme.colors.textColor});
-  font-family: "Charter", sans-serif;
-  font-weight: 100;
-  transition: .2s;
-  cursor: pointer;
-  
-  &:hover {
-    color: rgba(${(props) => props.theme.colors.primaryLight});
-  }
-  
+export const NavigationButtons = styled.div`
+  width: 33%;
+  display: flex;
   @media only screen and (max-width: 780px) {
     display: none;
   }
 `;
 
-export const LanguageContainer = styled.div`
-  position: absolute;
-  top: 0;
-  right: 50px;
-`;
-
-export const ThemeContainer = styled.div`
-  position: absolute;
-  top: 0;
-  right: 20px;
-`;
-
-export const Hamburger = styled.div`
-  position: absolute;
-  display: none;
-  height: 60px;
-  top: 0;
-  left: 20px;
-  
+export const Buttons = styled.div`
+  display: flex;
+  width: 33%;
   @media only screen and (max-width: 780px) {
-    display: block;
-  }
-  
-  .color {
-    filter: ${(props) => props.theme.colors.svgColor}
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    width: 100%;
   }
 `;
 
-export const ImageWrapper = styled.div`
+export const Links = styled.div`
   display: flex;
   align-items: center;
-  height: 60px;
+`;
+
+export const Link = styled.h3`
+  margin: 5px 15px 0 15px;
   cursor: pointer;
-`;
-
-export const MobileMenuContainer = styled.div`
-  position: absolute;
-  border-bottom: 1px solid rgba(${(props) => props.theme.colors.textColor}, .25);
-  background-color: rgb(${(props) => props.theme.colors.lightBackground});
-  right: 0;
-  left: 0;
-  top: 65px;
-  display: none;
-  width: 100%;
-  height: 60px;
-  
-  @media only screen and (max-width: 780px) {
-    display: block;
-  }
-`;
-
-export const MobileMenuWrapper = styled.div`
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 30px;
-`;
-
-export const MobileLink = styled.h3`
-  color: rgba(${(props) => props.theme.colors.textColor});
-  display: none;
-  font-weight: 900;
-  cursor: pointer;
-
-  @media only screen and (max-width: 780px) {
-    display: block;
-  }
+  transition: .2s;
+  font-weight: 300;
+  font-family: "Lato", sans-serif;
+  color: rgb(${(props) => props.theme.colors.textColor});
 
   &:hover {
-    color: rgba(${(props) => props.theme.colors.primaryLight});
+    color: rgb(${(props) => props.theme.colors.primary});
+  }
+`;
+
+export const Button = styled.div`
+  &:first-child {
+    @media only screen and (min-width: 780px) {
+      margin-left: auto;
+    }
+  }
+  width: 90px;
+  height: 100%;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: .2s;
+  font-weight: 200;
+  font-size: 14px;
+  color: rgb(${(props) => props.theme.colors.textColor});
+
+  &.logIn {
+    &:hover {
+      background: rgba(255, 255, 255, .15);
+      color: rgb(${(props) => props.theme.colors.primary});
+    }
+  }
+
+  &.signup {
+    background: rgb(${(props) => props.theme.colors.primary});
+    color: black;
+  }
+`;
+
+export const Logo = styled.h2`
+  cursor: pointer;
+  transition: .2s;
+  margin-right: 35px;
+  margin-top: 5px;
+  color: rgb(${(props) => props.theme.colors.textColor});
+
+  &:hover {
+    color: rgb(${(props) => props.theme.colors.primary});
   }
 `;

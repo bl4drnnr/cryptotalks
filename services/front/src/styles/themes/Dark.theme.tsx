@@ -2,12 +2,16 @@ import { ThemeProps } from './Theme.interface';
 
 export const DarkTheme: ThemeProps = {
   colors: {
-    primaryLight: '102, 252, 241',
-    primaryDark: '69, 162, 158',
-    lightBackground: '49, 51, 56',
-    darkBackground: '44, 44, 52',
-    textColor: '197, 198, 199',
-    svgColor: 'invert(99%) sepia(77%) saturate(2%) hue-rotate(145deg) brightness(112%) contrast(101%)'
+    primary: '255, 215, 0',
+    lightBackground: '22, 27, 34',
+    darkBackground: '13, 17, 23',
+    error: '255, 51, 51',
+    success: '59, 232, 59',
+    textColor: '255, 255, 255',
+    inputBackground: '35, 36, 40',
+    disableColor: '255, 255, 255',
+    opposite: '255, 255, 255',
+    svgIcon: 'invert(100%) sepia(100%) saturate(0%) hue-rotate(305deg) brightness(103%) contrast(101%)'
   }
 };
 
