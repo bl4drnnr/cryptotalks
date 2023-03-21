@@ -8,6 +8,6 @@ export class PostsController {
 
   @EventPattern('post_created')
   handlePostCreated(data: any) {
-    this.postsService.postCreated(data.value);
+    return this.postsService.postCreated(data);
   }
 }
