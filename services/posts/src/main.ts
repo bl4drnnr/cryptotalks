@@ -1,11 +1,21 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 (async () => {
-  const app = await NestFactory.create(AppModule);
-  const port = process.env.POSTS_SERVICE_PORT;
-
-  await app.listen(port, () => {
-    console.log(`Posts API has been successfully started on port: ${port}.`);
-  });
+  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
+    AppModule,
+    {
+      transport: Transport.KAFKA,
+      options: {
+        client: {
+          brokers: ['localhost:9092']
+        },
+        consumer: {
+          groupId: 'posts-consumer'
+        }
+      }
+    }
+  );
+  await app.listen();
 })();
