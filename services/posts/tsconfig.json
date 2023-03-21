@@ -16,10 +16,6 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false,
-    "paths": {
-      "@models/*": ["src/models/*"],
-      "@modules/*": ["src/modules/*", "src/modules/gateway/*"]
-    }
+    "noFallthroughCasesInSwitch": false
   }
 }

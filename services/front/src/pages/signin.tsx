@@ -143,7 +143,7 @@ const Signin = () => {
               <Title>Sign in</Title>
               <MarginWrapper className={'big'}>
                 <TwoFa
-                  title={''}
+                  title={'Two FA'}
                   setTwoFaCode={setTwoFa}
                 />
               </MarginWrapper>

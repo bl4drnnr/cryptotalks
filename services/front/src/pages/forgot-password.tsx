@@ -41,7 +41,7 @@ const ForgotPassword = () => {
   return (
     <>
       <Head>
-        <title>Cryptodistrict | Forgot password</title>
+        <title>Cryptotalks | Forgot password</title>
       </Head>
       <CredentialsLayout leftSide={
         <Box>
