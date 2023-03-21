@@ -42,6 +42,21 @@ services:
       - api
     networks:
       - cryptotalks-network
+  posts:
+    container_name: cryptotalks-posts
+    restart: no
+    build:
+      context: ./services/posts
+      dockerfile: ./Dockerfile
+    command: npm run start:dev
+    volumes:
+      - ./services/posts:/usr/src/cryptotalks-posts
+    ports:
+      - ${POSTS_SERVICE_PORT}:${POSTS_SERVICE_PORT}
+    depends_on:
+      - api
+    networks:
+      - cryptotalks-network
   api:
     container_name: cryptotalks-api
     restart: no

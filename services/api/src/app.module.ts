@@ -5,6 +5,7 @@ import { Post } from '@models/post.model';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
 import { Session } from '@models/session.model';
 import { User } from '@models/user.model';
+import { GatewayModule } from '@modules/gateway.module';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { User } from '@models/user.model';
       database: process.env.POSTGRES_DATABASE,
       models: [Post, User, Session, ConfirmationHash],
       autoLoadModels: true
-    })
+    }),
+    GatewayModule
   ]
 })
 export class AppModule {}

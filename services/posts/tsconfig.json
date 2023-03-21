@@ -18,9 +18,7 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@models/*": ["src/models/*"],
-      "@modules/*": ["src/modules/*", "src/modules/gateway/*"],
-      "@events/*": ["src/events/*"],
+      "@modules/*": ["src/modules/*", "src/modules/posts/*"],
       "@dto/*": ["src/dto/*"]
     }
   }
