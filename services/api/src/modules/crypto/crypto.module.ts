@@ -1,27 +1,27 @@
 import { Module } from '@nestjs/common';
-import { GatewayController } from './gateway.controller';
-import { GatewayService } from './gateway.service';
+import { CryptoController } from './crypto.controller';
+import { CryptoService } from './crypto.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
     ClientsModule.register([
       {
-        name: 'POSTS_SERVICE',
+        name: 'CRYPTO_SERVICE',
         transport: Transport.KAFKA,
         options: {
           client: {
-            clientId: 'posts',
+            clientId: 'crypto',
             brokers: ['localhost:9092']
           },
           consumer: {
-            groupId: 'posts-consumer'
+            groupId: 'crypto-consumer'
           }
         }
       }
     ])
   ],
-  controllers: [GatewayController],
-  providers: [GatewayService]
+  controllers: [CryptoController],
+  providers: [CryptoService]
 })
-export class GatewayModule {}
+export class CryptoModule {}

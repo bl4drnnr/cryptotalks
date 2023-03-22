@@ -16,17 +16,6 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false,
-    "paths": {
-      "@models/*": ["src/models/*"],
-      "@modules/*": [
-        "src/modules/*",
-        "src/modules/posts/*",
-        "src/modules/user/*",
-        "src/modules/crypto/*"
-      ],
-      "@events/*": ["src/events/*"],
-      "@dto/*": ["src/dto/*"]
-    }
+    "noFallthroughCasesInSwitch": false
   }
 }

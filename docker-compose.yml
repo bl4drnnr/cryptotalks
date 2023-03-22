@@ -1,6 +1,21 @@
 version: '3.8'
 
 services:
+  users:
+    container_name: cryptotalks-users
+    restart: no
+    build:
+      context: ./services/users
+      dockerfile: ./Dockerfile
+    command: npm run start:dev
+    volumes:
+      - ./services/users:/usr/src/cryptotalks-users
+    depends_on:
+      - api
+    ports:
+      - ${USERS_SERVICE_PORT}:${USERS_SERVICE_PORT}
+    networks:
+      - cryptotalks-network
   front:
     container_name: cryptotalks-front
     restart: no
@@ -89,3 +104,4 @@ services:
 networks:
   cryptotalks-network:
     driver: bridge
+    external: true

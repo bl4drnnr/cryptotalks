@@ -1,42 +1,21 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import * as fs from 'fs';
-import * as yaml from 'yaml';
-import {
-  FastifyAdapter,
-  NestFastifyApplication
-} from '@nestjs/platform-fastify';
-import { fastifyCookie } from '@fastify/cookie';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 (async () => {
-  const app = await NestFactory.create<NestFastifyApplication>(
+  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
-    new FastifyAdapter()
+    {
+      transport: Transport.KAFKA,
+      options: {
+        client: {
+          brokers: ['localhost:9092']
+        },
+        consumer: {
+          groupId: 'auth-consumer'
+        }
+      }
+    }
   );
-  const port = process.env.AUTH_SERVICE_PORT;
-
-  await app.register(fastifyCookie, {
-    secret: process.env.COOKIE_SECRET
-  });
-
-  const config = new DocumentBuilder()
-    .setTitle('Cryptotalks API')
-    .setDescription('Cryptotalks API documentation')
-    .setVersion('0.0.1')
-    .build();
-
-  app.setGlobalPrefix('/api');
-
-  const document = SwaggerModule.createDocument(app, config);
-  const yamlString = yaml.stringify(document, {});
-
-  fs.writeFileSync('./docs/swagger-spec.yaml', yamlString);
-  fs.writeFileSync('./docs/swagger-spec.json', JSON.stringify(document));
-
-  SwaggerModule.setup('/docs', app, document);
-
-  await app.listen(port, () => {
-    console.log(`Auth API has been successfully started on port: ${port}.`);
-  });
+  await app.listen();
 })();

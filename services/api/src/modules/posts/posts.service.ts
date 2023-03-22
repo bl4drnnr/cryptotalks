@@ -4,7 +4,7 @@ import { CreatePostDto } from '@dto/create-post.dto';
 import { CreatePostEvent } from '@events/create-post.event';
 
 @Injectable()
-export class GatewayService {
+export class PostsService {
   constructor(
     @Inject('POSTS_SERVICE') private readonly postsClient: ClientKafka
   ) {}
