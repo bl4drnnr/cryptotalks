@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
-import { SignInDto } from '@dto/sign-in.dto';
 import { SignUpDto } from '@dto/sign-up.dto';
+import {CreateUserEvent} from "@events/create-user.event";
 
 @Injectable()
 export class UserService {
@@ -10,6 +10,19 @@ export class UserService {
   ) {}
 
   signUp(payload: SignUpDto) {
-    return this.userClient.emit('user_created', {});
+    return this.userClient.emit('user_created', new CreateUserEvent(
+      payload.email,
+      payload.password,
+      payload.username,
+      payload.tac,
+      payload.firstName,
+      payload.lastName,
+      payload.twitter,
+      payload.linkedIn,
+      payload.personalWebsite,
+      payload.title,
+      payload.bio,
+      payload.publicEmail
+    ));
   }
 }

@@ -1,9 +1,22 @@
 version: '3.8'
 
 services:
+  front:
+    container_name: cryptotalks-front
+    restart: always
+    build:
+      context: ./services/front
+      dockerfile: ./Dockerfile
+    command: npm run dev
+    volumes:
+      - ./services/front:/usr/src/cryptotalks-front
+    ports:
+      - ${FRONT_PORT}:${FRONT_PORT}
+    networks:
+      - cryptotalks_cryptotalks-network
   users:
     container_name: cryptotalks-users
-    restart: no
+    restart: always
     build:
       context: ./services/users
       dockerfile: ./Dockerfile
@@ -15,21 +28,10 @@ services:
     ports:
       - ${USERS_SERVICE_PORT}:${USERS_SERVICE_PORT}
     networks:
-      - cryptotalks-network
-  front:
-    container_name: cryptotalks-front
-    restart: no
-    build:
-      context: ./services/front
-      dockerfile: ./Dockerfile
-    command: npm run dev
-    volumes:
-      - ./services/front:/usr/src/cryptotalks-front
-    ports:
-      - ${FRONT_PORT}:${FRONT_PORT}
+      - cryptotalks_cryptotalks-network
   crypto-rates:
     container_name: cryptotalks-crypto-rates
-    restart: no
+    restart: always
     build:
       context: ./services/crypto-rates
       dockerfile: ./Dockerfile
@@ -41,10 +43,10 @@ services:
     ports:
       - ${CRYPTO_RATES_SERVICE_PORT}:${CRYPTO_RATES_SERVICE_PORT}
     networks:
-      - cryptotalks-network
+      - cryptotalks_cryptotalks-network
   auth:
     container_name: cryptotalks-auth
-    restart: no
+    restart: always
     build:
       context: ./services/auth
       dockerfile: ./Dockerfile
@@ -56,10 +58,10 @@ services:
     depends_on:
       - api
     networks:
-      - cryptotalks-network
+      - cryptotalks_cryptotalks-network
   posts:
     container_name: cryptotalks-posts
-    restart: no
+    restart: always
     build:
       context: ./services/posts
       dockerfile: ./Dockerfile
@@ -71,10 +73,10 @@ services:
     depends_on:
       - api
     networks:
-      - cryptotalks-network
+      - cryptotalks_cryptotalks-network
   api:
     container_name: cryptotalks-api
-    restart: no
+    restart: always
     build:
       context: ./services/api
       dockerfile: ./Dockerfile
@@ -86,11 +88,11 @@ services:
     depends_on:
       - db
     networks:
-      - cryptotalks-network
+      - cryptotalks_cryptotalks-network
   db:
     image: postgres
     container_name: cryptotalks-db
-    restart: no
+    restart: always
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
     environment:
@@ -99,9 +101,10 @@ services:
     volumes:
       - /:/data/postgres
     networks:
-      - cryptotalks-network
+      - cryptotalks_cryptotalks-network
+
 
 networks:
-  cryptotalks-network:
+  cryptotalks_cryptotalks-network:
     driver: bridge
     external: true

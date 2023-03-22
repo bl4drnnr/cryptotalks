@@ -46,7 +46,7 @@ export class UserController {
     @UserDecorator() userId: string,
     @Res({ passthrough: true }) res: FastifyReply
   ) {
-    res.clearCookie('_rt');
+    // res.clearCookie('_rt');
     await this.userService.logout(userId);
 
     return new LogoutResponse();
