@@ -8,6 +8,7 @@ import { User } from '@models/user.model';
 import { PostsModule } from '@modules/posts.module';
 import { UserModule } from '@modules/user.module';
 import { CryptoModule } from '@modules/crypto.module';
+import { AuthModule } from '@modules/auth.module';
 
 @Module({
   imports: [
@@ -27,7 +28,8 @@ import { CryptoModule } from '@modules/crypto.module';
     }),
     PostsModule,
     UserModule,
-    CryptoModule
+    CryptoModule,
+    AuthModule
   ]
 })
 export class AppModule {}

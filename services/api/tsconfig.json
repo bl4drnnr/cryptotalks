@@ -23,7 +23,8 @@
         "src/modules/*",
         "src/modules/posts/*",
         "src/modules/user/*",
-        "src/modules/crypto/*"
+        "src/modules/crypto/*",
+        "src/modules/auth/*"
       ],
       "@events/*": ["src/events/*"],
       "@dto/*": ["src/dto/*"]

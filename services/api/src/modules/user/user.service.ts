@@ -6,13 +6,8 @@ import { SignUpDto } from '@dto/sign-up.dto';
 @Injectable()
 export class UserService {
   constructor(
-    @Inject('USERS_SERVICE') private readonly userClient: ClientKafka,
-    @Inject('AUTH_SERVICE') private readonly authClient: ClientKafka
+    @Inject('USERS_SERVICE') private readonly userClient: ClientKafka
   ) {}
-
-  signIn(payload: SignInDto) {
-    return this.authClient.emit('user_signed_in', {});
-  }
 
   signUp(payload: SignUpDto) {
     return this.userClient.emit('user_created', {});
