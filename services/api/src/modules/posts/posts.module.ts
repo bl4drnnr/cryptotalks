@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { GatewayController } from './gateway.controller';
-import { GatewayService } from './gateway.service';
+import { PostsController } from './posts.controller';
+import { PostsService } from './posts.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
@@ -12,7 +12,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         options: {
           client: {
             clientId: 'posts',
-            brokers: ['localhost:9092']
+            brokers: ['kafka:9092']
           },
           consumer: {
             groupId: 'posts-consumer'
@@ -21,7 +21,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
       }
     ])
   ],
-  controllers: [GatewayController],
-  providers: [GatewayService]
+  controllers: [PostsController],
+  providers: [PostsService]
 })
-export class GatewayModule {}
+export class PostsModule {}

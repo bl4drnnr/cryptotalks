@@ -8,7 +8,6 @@ import { ConfigModule } from '@nestjs/config';
 import { BasicAuthMiddleware } from '@middlewares/basic-auth.middleware';
 import { SharedModule } from '@shared/shared.module';
 import { AuthModule } from '@auth/auth.module';
-import { UserModule } from '@user/user.module';
 
 @Module({
   imports: [
@@ -17,8 +16,7 @@ import { UserModule } from '@user/user.module';
       isGlobal: true,
       envFilePath: `../../.env.${process.env.NODE_ENV}`
     }),
-    AuthModule,
-    UserModule
+    AuthModule
   ]
 })
 export class AppModule implements NestModule {

@@ -5,7 +5,10 @@ import { Post } from '@models/post.model';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
 import { Session } from '@models/session.model';
 import { User } from '@models/user.model';
-import { GatewayModule } from '@modules/gateway.module';
+import { PostsModule } from '@modules/posts.module';
+import { UserModule } from '@modules/user.module';
+import { CryptoModule } from '@modules/crypto.module';
+import { AuthModule } from '@modules/auth.module';
 
 @Module({
   imports: [
@@ -23,7 +26,10 @@ import { GatewayModule } from '@modules/gateway.module';
       models: [Post, User, Session, ConfirmationHash],
       autoLoadModels: true
     }),
-    GatewayModule
+    PostsModule,
+    UserModule,
+    CryptoModule,
+    AuthModule
   ]
 })
 export class AppModule {}
