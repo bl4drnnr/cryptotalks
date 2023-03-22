@@ -21,19 +21,4 @@ export class ApiConfigService {
 
     return value.replace(/\\n/g, '\n');
   }
-
-  get basicAuthConfig() {
-    return {
-      username: this.getString('BASIC_AUTH_USERNAME'),
-      password: this.getString('BASIC_AUTH_PASSWORD')
-    };
-  }
-
-  get jwtAuthConfig() {
-    return {
-      accessExpiresIn: this.getString('JWT_ACCESS_EXPIRES_IN'),
-      refreshExpiresIn: this.getString('JWT_REFRESH_EXPIRES_IN'),
-      secret: this.getString('JWT_SECRET')
-    };
-  }
 }

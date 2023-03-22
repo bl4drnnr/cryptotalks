@@ -4,6 +4,8 @@ services:
   front:
     container_name: cryptotalks-front
     restart: always
+    env_file:
+      - .env.${NODE_ENV}
     build:
       context: ./services/front
       dockerfile: ./Dockerfile
@@ -17,6 +19,8 @@ services:
   users:
     container_name: cryptotalks-users
     restart: always
+    env_file:
+      - .env.${NODE_ENV}
     build:
       context: ./services/users
       dockerfile: ./Dockerfile
@@ -32,6 +36,8 @@ services:
   crypto-rates:
     container_name: cryptotalks-crypto-rates
     restart: always
+    env_file:
+      - .env.${NODE_ENV}
     build:
       context: ./services/crypto-rates
       dockerfile: ./Dockerfile
@@ -47,6 +53,8 @@ services:
   auth:
     container_name: cryptotalks-auth
     restart: always
+    env_file:
+      - .env.${NODE_ENV}
     build:
       context: ./services/auth
       dockerfile: ./Dockerfile
@@ -62,6 +70,8 @@ services:
   posts:
     container_name: cryptotalks-posts
     restart: always
+    env_file:
+      - .env.${NODE_ENV}
     build:
       context: ./services/posts
       dockerfile: ./Dockerfile
@@ -77,6 +87,8 @@ services:
   api:
     container_name: cryptotalks-api
     restart: always
+    env_file:
+      - .env.${NODE_ENV}
     build:
       context: ./services/api
       dockerfile: ./Dockerfile

@@ -18,7 +18,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
             groupId: 'users-consumer'
           }
         }
-      },
+      }
     ])
   ],
   controllers: [UserController],
