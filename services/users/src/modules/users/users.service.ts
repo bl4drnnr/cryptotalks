@@ -1,6 +1,6 @@
 import * as bcryptjs from 'bcryptjs';
 import * as crypto from 'crypto';
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { SignInDto } from '@modules/dto/sign-in/request.dto';
 import { SignUpDto } from '@modules/dto/sign-up/request.dto';
 import { User } from '@models/user.model';
@@ -14,6 +14,8 @@ import { ValidationErrorException } from '@modules/exceptions/validation-error.e
 import { ValidatorService } from '@shared/validator.service';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
 import { EmailService } from '@shared/email.service';
+import { EmailAlreadyConfirmedException } from '@modules/exceptions/email-already-confirmed.exception';
+import { UpdateTokensDto } from '@modules/dto/update-tokens/request.dto';
 
 @Injectable()
 export class UsersService {
@@ -21,7 +23,7 @@ export class UsersService {
     @InjectModel(User) private readonly userRepository: typeof User,
     @InjectModel(ConfirmationHash)
     private readonly confirmHashRepository: typeof ConfirmationHash,
-    // @Inject('AUTH_SERVICE') private readonly authClient: ClientKafka,
+    @Inject('AUTH_SERVICE') private readonly authClient: ClientKafka,
     private readonly validatorService: ValidatorService,
     private readonly emailService: EmailService
   ) {}
@@ -36,10 +38,18 @@ export class UsersService {
 
     const passwordEquality = bcryptjs.compare(payload.password, user.password);
     if (!passwordEquality) throw new WrongCredentialsException();
-    // return await this.authService.updateTokens({
-    //   userId: user.id,
-    //   email: user.email
-    // });
+
+    this.authClient
+      .send(
+        'update_tokens',
+        new UpdateTokensDto({
+          userId: user.id,
+          email: user.email
+        })
+      )
+      .subscribe((response) => {
+        console.log(response);
+      });
   }
 
   async signUp(payload: SignUpDto) {
@@ -76,26 +86,32 @@ export class UsersService {
     // return { message: 'success' };
   }
 
-  async accountConfirmation({ confirmHash }: { confirmHash: string }) {
-    // const confirmationHash = await this.prisma.confirmationHashes.findFirst({
-    //   where: { confirmHash },
-    //   include: { user: true }
-    // });
-    //
-    // if (!confirmationHash) throw new BadRequestException();
-    // if (confirmationHash.confirmed) throw new EmailAlreadyConfirmedException();
-    //
-    // await this.prisma.confirmationHashes.update({
-    //   where: { id: confirmationHash.id },
-    //   data: {
-    //     confirmed: true,
-    //     user: {
-    //       update: {
-    //         accountConfirm: true
-    //       }
-    //     }
-    //   }
-    // });
+  async accountConfirmation({
+    confirmationHash
+  }: {
+    confirmationHash: string;
+  }) {
+    const foundHash = await this.confirmHashRepository.findOne({
+      where: { confirmationHash },
+      include: [{ model: User }]
+    });
+
+    if (!foundHash) throw new BadRequestException();
+    if (foundHash.confirmed) throw new EmailAlreadyConfirmedException();
+
+    await this.confirmHashRepository.update(
+      {
+        confirmed: true
+      },
+      { where: { id: foundHash.id } }
+    );
+
+    await this.userRepository.update(
+      {
+        accountConfirm: true
+      },
+      { where: { id: foundHash.userId } }
+    );
   }
 
   async logout(userId: string) {
