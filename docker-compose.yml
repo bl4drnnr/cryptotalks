@@ -90,11 +90,12 @@ services:
     env_file:
       - .env.${NODE_ENV}
     build:
-      context: ./services/api
+      context: .
       dockerfile: ./Dockerfile
     command: npm run start:dev
     volumes:
       - ./services/api:/usr/src/cryptotalks-api
+      - ./services/common/models:/usr/src/cryptotalks-api/src/models
     ports:
       - ${API_PORT}:${API_PORT}
     depends_on:

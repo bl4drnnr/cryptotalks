@@ -18,7 +18,7 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@models/*": ["src/models/*"],
+      "@models/*": ["src/models/*", "../common/models/*"],
       "@modules/*": [
         "src/modules/*",
         "src/modules/posts/*",

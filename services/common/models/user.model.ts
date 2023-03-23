@@ -3,18 +3,15 @@ import {
   CreatedAt,
   DataType,
   Default,
-  HasMany,
-  HasOne,
   Model,
   PrimaryKey,
   Table,
   UpdatedAt
 } from 'sequelize-typescript';
-import { Session } from '@models/session.model';
-import { ConfirmationHash } from '@models/confirmation-hash.model';
 
 interface UserCreationAttributes {
   email: string;
+  password: string;
 }
 
 @Table({
@@ -40,14 +37,35 @@ export class User extends Model<User, UserCreationAttributes> {
   })
   accountConfirm: boolean;
 
-  @HasMany(() => ConfirmationHash)
-  confirmationHashes: ConfirmationHash[];
+  @Column({ type: DataType.STRING, allowNull: true })
+  firstName?: string;
 
-  @HasOne(() => Session)
-  session: Session;
+  @Column({ type: DataType.STRING, allowNull: true })
+  lastName?: string;
 
-  @HasMany(() => ConfirmationHash)
-  confirmationHash: ConfirmationHash[];
+  @Column({ type: DataType.STRING, allowNull: false })
+  username: string;
+
+  @Column({ type: DataType.STRING, allowNull: true })
+  twitter?: string;
+
+  @Column({ type: DataType.STRING, allowNull: true })
+  linkedIn?: string;
+
+  @Column({ type: DataType.STRING, allowNull: true })
+  personalWebsite?: string;
+
+  @Column({ type: DataType.STRING, allowNull: true })
+  title?: string;
+
+  @Column({ type: DataType.STRING, allowNull: true })
+  bio?: string;
+
+  @Column({ type: DataType.BOOLEAN, allowNull: false })
+  tac: boolean;
+
+  @Column({ type: DataType.BOOLEAN, allowNull: true })
+  publicEmail?: boolean;
 
   @CreatedAt
   @Column({ field: 'created_at' })
