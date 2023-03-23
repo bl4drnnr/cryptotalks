@@ -1,6 +1,10 @@
 import { Controller, Inject, OnModuleInit } from '@nestjs/common';
 import { UsersService } from '@modules/users.service';
-import { ClientKafka, EventPattern } from '@nestjs/microservices';
+import {
+  ClientKafka,
+  EventPattern,
+  MessagePattern
+} from '@nestjs/microservices';
 
 @Controller('users')
 export class UsersController implements OnModuleInit {
@@ -17,6 +21,11 @@ export class UsersController implements OnModuleInit {
   @EventPattern('user_signed_in')
   handleSignIn(data: any) {
     return this.usersService.signIn(data);
+  }
+
+  @MessagePattern('get_user_by_id')
+  getUserById(data: any) {
+    return this.usersService.getUserById(data);
   }
 
   onModuleInit(): any {

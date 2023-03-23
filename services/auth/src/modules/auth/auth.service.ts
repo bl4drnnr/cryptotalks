@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ApiConfigService } from '@shared/config.service';
 import { IAccessToken } from '@interfaces/access-token.interface';
@@ -14,13 +14,15 @@ import {
 } from './exceptions/auth-exceptions.export';
 import { Session } from '@models/session.model';
 import { InjectModel } from '@nestjs/sequelize';
+import { ClientKafka } from '@nestjs/microservices';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly configService: ApiConfigService,
-    @InjectModel(Session) private readonly sessionRepository: typeof Session
+    @InjectModel(Session) private readonly sessionRepository: typeof Session,
+    @Inject('USER_SERVICE') private readonly userClient: ClientKafka
   ) {}
 
   private generateAccessToken(accessTokenPayload: IAccessToken) {
@@ -95,26 +97,20 @@ export class AuthService {
   }
 
   async refreshToken(tokenRefresh: string) {
-    // if (!tokenRefresh) throw new CorruptedTokenException();
-    //
-    // const payload: ITokenPayload = this.verifyToken(tokenRefresh);
-    //
-    // const token = await this.getTokenById(payload.id);
+    if (!tokenRefresh) throw new CorruptedTokenException();
 
-    // const user = await this.prisma.users.findFirst({
-    //   where: { id: token.userId }
-    // });
+    const payload: ITokenPayload = this.verifyToken(tokenRefresh);
 
-    // const { _at, _rt } = await this.updateTokens({
-    //   userId: user.id,
-    //   email: user.email
-    // });
-    //
-    // const userData = await this.userService.getUser({
-    //   userId: user.id
-    // });
-    //
-    // return { _at, _rt, userData };
+    const token = await this.getTokenById(payload.id);
+
+    this.userClient.send('get_user_by_id', {}).subscribe(async (user) => {
+      const { _at, _rt } = await this.updateTokens({
+        userId: user.id,
+        email: user.email
+      });
+
+      return { _at, _rt };
+    });
   }
 
   async deleteRefreshToken(userId: string) {

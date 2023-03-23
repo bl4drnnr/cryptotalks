@@ -117,4 +117,6 @@ export class UsersService {
   async logout(userId: string) {
     // return await this.authService.deleteRefreshToken(userId);
   }
+
+  async getUserById({ id }: { id: string }) {}
 }
