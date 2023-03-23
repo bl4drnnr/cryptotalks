@@ -22,11 +22,12 @@ services:
     env_file:
       - .env.${NODE_ENV}
     build:
-      context: ./services/users
-      dockerfile: ./Dockerfile
+      context: .
+      dockerfile: ./dockerfiles/users/Dockerfile
     command: npm run start:dev
     volumes:
       - ./services/users:/usr/src/cryptotalks-users
+      - ./services/common/models:/usr/src/cryptotalks-users/src/models
     depends_on:
       - api
     ports:
@@ -39,11 +40,12 @@ services:
     env_file:
       - .env.${NODE_ENV}
     build:
-      context: ./services/crypto-rates
-      dockerfile: ./Dockerfile
+      context: .
+      dockerfile: ./dockerfiles/crypto-rates/Dockerfile
     command: npm run start:dev
     volumes:
       - ./services/crypto-rates:/usr/src/cryptotalks-crypto-rates
+      - ./services/common/models:/usr/src/cryptotalks-crypto-rates/src/models
     depends_on:
       - api
     ports:
@@ -56,11 +58,12 @@ services:
     env_file:
       - .env.${NODE_ENV}
     build:
-      context: ./services/auth
-      dockerfile: ./Dockerfile
+      context: .
+      dockerfile: ./dockerfiles/auth/Dockerfile
     command: npm run start:dev
     volumes:
       - ./services/auth:/usr/src/cryptotalks-auth
+      - ./services/common/models:/usr/src/cryptotalks-auth/src/models
     ports:
       - ${AUTH_SERVICE_PORT}:${AUTH_SERVICE_PORT}
     depends_on:
@@ -73,11 +76,12 @@ services:
     env_file:
       - .env.${NODE_ENV}
     build:
-      context: ./services/posts
-      dockerfile: ./Dockerfile
+      context: .
+      dockerfile: ./dockerfiles/posts/Dockerfile
     command: npm run start:dev
     volumes:
       - ./services/posts:/usr/src/cryptotalks-posts
+      - ./services/common/models:/usr/src/cryptotalks-posts/src/models
     ports:
       - ${POSTS_SERVICE_PORT}:${POSTS_SERVICE_PORT}
     depends_on:
@@ -91,7 +95,7 @@ services:
       - .env.${NODE_ENV}
     build:
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: ./dockerfiles/api/Dockerfile
     command: npm run start:dev
     volumes:
       - ./services/api:/usr/src/cryptotalks-api

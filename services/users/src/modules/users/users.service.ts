@@ -17,7 +17,7 @@ import { ValidatorService } from '@shared/validator.service';
 export class UsersService {
   constructor(
     @InjectModel(User) private readonly userRepository: typeof User,
-    @Inject('AUTH_SERVICE') private readonly authClient: ClientKafka,
+    // @Inject('AUTH_SERVICE') private readonly authClient: ClientKafka,
     private readonly validatorService: ValidatorService
   ) {}
 
@@ -27,10 +27,7 @@ export class UsersService {
     });
     if (!user) throw new WrongCredentialsException();
     if (!user.accountConfirm) throw new AccountNotConfirmedException();
-    const passwordEquality = bcryptjs.compare(
-      payload.password,
-      user.password
-    );
+    const passwordEquality = bcryptjs.compare(payload.password, user.password);
     if (!passwordEquality) throw new WrongCredentialsException();
     // return await this.authService.updateTokens({
     //   userId: user.id,
@@ -55,8 +52,9 @@ export class UsersService {
     const hashedPassword = await bcryptjs.hash(payload.password, 10);
 
     const createdUser = await this.userRepository.create({
-      ...payload, password: hashedPassword
-    })
+      ...payload,
+      password: hashedPassword
+    });
 
     const confirmHash = crypto.randomBytes(20).toString('hex');
     // await this.prisma.confirmationHashes.create({
