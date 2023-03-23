@@ -3,13 +3,11 @@ import {
   CreatedAt,
   DataType,
   Default,
-  ForeignKey,
   Model,
   PrimaryKey,
   Table,
   UpdatedAt
 } from 'sequelize-typescript';
-import { User } from '@models/user.model';
 
 interface SessionCreationAttributes {
   tokenId: string;
@@ -28,7 +26,6 @@ export class Session extends Model<Session, SessionCreationAttributes> {
   @Column({ type: DataType.UUID, allowNull: false, field: 'token_id' })
   tokenId: string;
 
-  @ForeignKey(() => User)
   @Column({ type: DataType.UUID, allowNull: false, field: 'user_id' })
   userId: string;
 

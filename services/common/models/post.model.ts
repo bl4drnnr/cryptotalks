@@ -13,6 +13,7 @@ interface PostCreationAttributes {
   title: string;
   slug: string;
   content: Array<string>;
+  userId: string;
 }
 
 @Table({
@@ -32,6 +33,9 @@ export class Post extends Model<Post, PostCreationAttributes> {
 
   @Column({ type: DataType.JSON, allowNull: false })
   content: Array<string>;
+
+  @Column({ type: DataType.UUID, allowNull: false })
+  userId: string;
 
   @CreatedAt
   @Column({ field: 'created_at' })

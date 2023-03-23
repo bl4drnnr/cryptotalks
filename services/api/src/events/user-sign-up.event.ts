@@ -1,6 +1,6 @@
 import { SignUpDto } from '@dto/sign-up.dto';
 
-export class CreateUserEvent {
+export class UserSignUpEvent {
   constructor(private readonly createUserPayload: SignUpDto) {}
 
   toString() {
