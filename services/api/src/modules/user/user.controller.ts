@@ -8,7 +8,7 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   @Post('sign-up')
-  signUp(payload: SignUpDto) {
+  signUp(@Body() payload: SignUpDto) {
     return this.userService.signUp(payload);
   }
 

@@ -21,4 +21,15 @@ export class ApiConfigService {
 
     return value.replace(/\\n/g, '\n');
   }
+
+  get sendGridCredentials() {
+    return {
+      api_key: this.getString('SENDGRID_API_KEY'),
+      sender_email: this.getString('SENDGRID_SENDER_EMAIL')
+    };
+  }
+
+  get frontEndUrl() {
+    return this.getString('FRONT_END_URL');
+  }
 }
