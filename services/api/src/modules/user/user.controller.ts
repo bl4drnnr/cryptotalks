@@ -1,7 +1,6 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { UserService } from '@modules/user.service';
-import { SignInDto } from '@dto/sign-in.dto';
-import { SignUpDto } from '@dto/sign-up.dto';
+import {Body, Controller, Post} from '@nestjs/common';
+import {UserService} from '@modules/user.service';
+import {SignUpDto} from '@dto/sign-up.dto';
 
 @Controller('user')
 export class UserController {
@@ -12,8 +11,10 @@ export class UserController {
     return this.userService.signUp(payload);
   }
 
-  @Post('sign-in')
-  signIn(@Body() payload: SignInDto) {
-    return this.userService.signIn(payload);
+  @Post('/sign-in')
+  async signIn(@Body() data: any): Promise<any> {
+    const test = await this.userService.signIn(data);
+    console.log('test', test);
+    return test;
   }
 }

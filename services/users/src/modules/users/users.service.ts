@@ -17,6 +17,21 @@ import { EmailService } from '@shared/email.service';
 import { EmailAlreadyConfirmedException } from '@modules/exceptions/email-already-confirmed.exception';
 import { UpdateTokensEvent } from '@events/update-tokens.event';
 
+interface ITest {
+  _at: string;
+  _rt: string;
+}
+
+class test {
+  constructor(private readonly response: ITest) {}
+
+  toString() {
+    return JSON.stringify({
+      ...this.response
+    })
+  }
+}
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -24,6 +39,7 @@ export class UsersService {
     @InjectModel(ConfirmationHash)
     private readonly confirmHashRepository: typeof ConfirmationHash,
     @Inject('AUTH_SERVICE') private readonly authClient: ClientKafka,
+    @Inject('USERS_SERVICE') private readonly userClient: ClientKafka,
     private readonly validatorService: ValidatorService,
     private readonly emailService: EmailService
   ) {}
@@ -39,7 +55,7 @@ export class UsersService {
     const passwordEquality = bcryptjs.compare(payload.password, user.password);
     if (!passwordEquality) throw new WrongCredentialsException();
 
-    this.authClient
+    const response = await this.authClient
       .send(
         'update_tokens',
         new UpdateTokensEvent({
@@ -47,9 +63,9 @@ export class UsersService {
           email: user.email
         })
       )
-      .subscribe((response) => {
-        return response;
-      });
+      .toPromise();
+
+    return response;
   }
 
   async signUp(payload: SignUpDto) {
