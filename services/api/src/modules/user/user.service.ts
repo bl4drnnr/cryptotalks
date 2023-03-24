@@ -1,4 +1,4 @@
-import {Inject, Injectable, OnModuleInit} from '@nestjs/common';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { SignUpDto } from '@dto/sign-up.dto';
 import { UserSignUpEvent } from '@events/user-sign-up.event';
@@ -26,6 +26,6 @@ export class UserService implements OnModuleInit {
   }
 
   onModuleInit(): any {
-    this.userClient.subscribeToResponseOf('user_sign_in')
+    this.userClient.subscribeToResponseOf('user_sign_in');
   }
 }

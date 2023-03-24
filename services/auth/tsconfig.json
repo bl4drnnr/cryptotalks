@@ -19,6 +19,7 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@shared/*": ["src/shared/services/*", "src/shared/*"],
+      "@exceptions/*": ["src/exceptions/*", "../common/exceptions/*"],
       "@auth/*": ["src/modules/auth/*"],
       "@interfaces/*": ["src/interfaces/*"],
       "@models/*": ["src/models/*", "../common/models/*"],

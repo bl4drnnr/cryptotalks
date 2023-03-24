@@ -1,4 +1,4 @@
 export interface IAccessToken {
-  readonly userId: string;
-  readonly email: string;
+  userId: string;
+  email: string;
 }

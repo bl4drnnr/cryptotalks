@@ -6,15 +6,13 @@ import { IRefreshToken } from '@interfaces/refresh-token.interface';
 import * as uuid from 'uuid';
 import * as jwt from 'jsonwebtoken';
 import { ITokenPayload } from '@interfaces/token-payload.interface';
-import {
-  CorruptedTokenException,
-  ExpiredTokenException,
-  InvalidTokenException,
-  SessionHasExpiredException
-} from './exceptions/auth-exceptions.export';
 import { Session } from '@models/session.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { ClientKafka } from '@nestjs/microservices';
+import { ExpiredTokenException } from '@exceptions/expired-token.exception';
+import { InvalidTokenException } from '@exceptions/invalid-token.exception';
+import { SessionHasExpiredException } from '@exceptions/session-expired.exception';
+import { CorruptedTokenException } from '@exceptions/corrupted-token.exception';
 
 @Injectable()
 export class AuthService {

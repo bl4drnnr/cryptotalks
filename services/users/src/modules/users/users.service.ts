@@ -1,36 +1,21 @@
 import * as bcryptjs from 'bcryptjs';
 import * as crypto from 'crypto';
-import {BadRequestException, Inject, Injectable} from '@nestjs/common';
-import {SignInDto} from '@dto/sign-in.dto';
-import {SignUpDto} from '@dto/sign-up.dto';
-import {User} from '@models/user.model';
-import {InjectModel} from '@nestjs/sequelize';
-import {WrongCredentialsException} from '@modules/exceptions/wrong-credentials.exception';
-import {AccountNotConfirmedException} from '@modules/exceptions/account-not-confirmed.exception';
-import {ClientKafka} from '@nestjs/microservices';
-import {UserAlreadyExistsException} from '@modules/exceptions/user-already-exists.exception';
-import {TacNotAcceptedException} from '@modules/exceptions/tac-not-accepted.exception';
-import {ValidationErrorException} from '@modules/exceptions/validation-error.exception';
-import {ValidatorService} from '@shared/validator.service';
-import {ConfirmationHash} from '@models/confirmation-hash.model';
-import {EmailService} from '@shared/email.service';
-import {EmailAlreadyConfirmedException} from '@modules/exceptions/email-already-confirmed.exception';
-import {UpdateTokensEvent} from '@events/update-tokens.event';
-
-interface ITest {
-  _at: string;
-  _rt: string;
-}
-
-class test {
-  constructor(private readonly response: ITest) {}
-
-  toString() {
-    return JSON.stringify({
-      ...this.response
-    })
-  }
-}
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { SignInDto } from '@dto/sign-in.dto';
+import { SignUpDto } from '@dto/sign-up.dto';
+import { User } from '@models/user.model';
+import { InjectModel } from '@nestjs/sequelize';
+import { WrongCredentialsException } from '@modules/exceptions/wrong-credentials.exception';
+import { AccountNotConfirmedException } from '@modules/exceptions/account-not-confirmed.exception';
+import { ClientKafka } from '@nestjs/microservices';
+import { UserAlreadyExistsException } from '@modules/exceptions/user-already-exists.exception';
+import { TacNotAcceptedException } from '@modules/exceptions/tac-not-accepted.exception';
+import { ValidationErrorException } from '@modules/exceptions/validation-error.exception';
+import { ValidatorService } from '@shared/validator.service';
+import { ConfirmationHash } from '@models/confirmation-hash.model';
+import { EmailService } from '@shared/email.service';
+import { EmailAlreadyConfirmedException } from '@modules/exceptions/email-already-confirmed.exception';
+import { UpdateTokensEvent } from '@events/update-tokens.event';
 
 @Injectable()
 export class UsersService {
@@ -54,14 +39,13 @@ export class UsersService {
     const passwordEquality = bcryptjs.compare(payload.password, user.password);
     if (!passwordEquality) throw new WrongCredentialsException();
 
-    return this.authClient
-      .send(
-        'update_tokens',
-        new UpdateTokensEvent({
-          userId: user.id,
-          email: user.email
-        })
-      );
+    return this.authClient.send(
+      'update_tokens',
+      new UpdateTokensEvent({
+        userId: user.id,
+        email: user.email
+      })
+    );
   }
 
   async signUp(payload: SignUpDto) {
@@ -127,7 +111,7 @@ export class UsersService {
   }
 
   async logout(userId: string) {
-    // return await this.authService.deleteRefreshToken(userId);
+    return this.authClient.send('', {});
   }
 
   async getUserById({ id }: { id: string }) {
