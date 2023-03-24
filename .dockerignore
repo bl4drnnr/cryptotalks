@@ -1,3 +1,9 @@
 .DS_Store
 services/**/.next/
 services/**/node_modules
+.github/
+media/
+LICENSE
+.gitignore
+.idea/
+docker-compose.kafka.yml

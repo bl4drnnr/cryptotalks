@@ -7,6 +7,8 @@ RUN npm i -g nest
 COPY ../../services/auth/package*.json ./
 
 COPY ../../services/common/models/ /usr/src/cryptotalks-auth/src/models
+COPY ../../services/common/dto/ /usr/src/cryptotalks-auth/src/dto
+COPY ../../services/common/events/ /usr/src/cryptotalks-auth/src/events
 
 RUN npm install
 

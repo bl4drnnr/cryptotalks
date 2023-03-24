@@ -7,6 +7,8 @@ RUN npm i -g nest
 COPY ../../services/crypto-rates/package*.json ./
 
 COPY ../../services/common/models/ /usr/src/cryptotalks-crypto-rates/src/models
+COPY ../../services/common/dto/ /usr/src/cryptotalks-crypto-rates/src/dto
+COPY ../../services/common/events/ /usr/src/cryptotalks-crypto-rates/src/events
 
 RUN npm install
 
