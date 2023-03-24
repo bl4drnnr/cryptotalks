@@ -1,8 +1,8 @@
 import * as bcryptjs from 'bcryptjs';
 import * as crypto from 'crypto';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { SignInDto } from '@modules/dto/sign-in/request.dto';
-import { SignUpDto } from '@modules/dto/sign-up/request.dto';
+import { SignInDto } from '@dto/sign-in.dto';
+import { SignUpDto } from '@dto/sign-up.dto';
 import { User } from '@models/user.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { WrongCredentialsException } from '@modules/exceptions/wrong-credentials.exception';
@@ -15,7 +15,7 @@ import { ValidatorService } from '@shared/validator.service';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
 import { EmailService } from '@shared/email.service';
 import { EmailAlreadyConfirmedException } from '@modules/exceptions/email-already-confirmed.exception';
-import { UpdateTokensDto } from '@modules/dto/update-tokens/request.dto';
+import { UpdateTokensEvent } from '@events/update-tokens.event';
 
 @Injectable()
 export class UsersService {
@@ -42,7 +42,7 @@ export class UsersService {
     this.authClient
       .send(
         'update_tokens',
-        new UpdateTokensDto({
+        new UpdateTokensEvent({
           userId: user.id,
           email: user.email
         })
@@ -118,5 +118,7 @@ export class UsersService {
     // return await this.authService.deleteRefreshToken(userId);
   }
 
-  async getUserById({ id }: { id: string }) {}
+  async getUserById({ id }: { id: string }) {
+    return await this.userRepository.findByPk(id);
+  }
 }
