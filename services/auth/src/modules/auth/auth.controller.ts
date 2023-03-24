@@ -10,4 +10,9 @@ export class AuthController {
   updateTokens(data: any) {
     return this.authService.updateTokens(data);
   }
+
+  @MessagePattern('logout')
+  logout(data: any) {
+    return this.authService.deleteRefreshToken(data);
+  }
 }

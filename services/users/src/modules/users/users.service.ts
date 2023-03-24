@@ -39,17 +39,13 @@ export class UsersService {
     const passwordEquality = bcryptjs.compare(payload.password, user.password);
     if (!passwordEquality) throw new WrongCredentialsException();
 
-    this.authClient
-      .send(
-        'update_tokens',
-        new UpdateTokensEvent({
-          userId: user.id,
-          email: user.email
-        })
-      )
-      .subscribe((response) => {
-        return response;
-      });
+    return this.authClient.send(
+      'update_tokens',
+      new UpdateTokensEvent({
+        userId: user.id,
+        email: user.email
+      })
+    );
   }
 
   async signUp(payload: SignUpDto) {
@@ -115,7 +111,7 @@ export class UsersService {
   }
 
   async logout(userId: string) {
-    // return await this.authService.deleteRefreshToken(userId);
+    return this.authClient.send('', {});
   }
 
   async getUserById({ id }: { id: string }) {

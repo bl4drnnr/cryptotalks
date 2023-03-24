@@ -1,4 +1,4 @@
-export interface ITokenPayload {
+export class TokenPayloadDto {
   id: string;
   type: string;
   userId: string;

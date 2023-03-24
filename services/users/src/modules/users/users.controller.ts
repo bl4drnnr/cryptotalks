@@ -18,7 +18,7 @@ export class UsersController implements OnModuleInit {
     return this.usersService.signUp(data);
   }
 
-  @EventPattern('user_sign_in')
+  @MessagePattern('user_sign_in')
   handleSignIn(data: any) {
     return this.usersService.signIn(data);
   }

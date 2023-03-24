@@ -19,6 +19,7 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@models/*": ["src/models/*", "../common/models/*"],
+      "@exceptions/*": ["src/exceptions/*", "../common/exceptions/*"],
       "@dto/*": ["src/dto/*", "../common/dto/*"],
       "@events/*": ["src/events/*", "../common/events/*"]
     }

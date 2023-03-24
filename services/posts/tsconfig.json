@@ -19,6 +19,7 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@modules/*": ["src/modules/*", "src/modules/posts/*"],
+      "@exceptions/*": ["src/exceptions/*", "../common/exceptions/*"],
       "@models/*": ["src/models/*", "../common/models/*"],
       "@dto/*": ["src/dto/*", "../common/dto/*"],
       "@events/*": ["src/events/*", "../common/events/*"]

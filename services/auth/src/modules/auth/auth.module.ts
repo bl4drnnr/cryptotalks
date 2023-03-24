@@ -1,4 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { ApiConfigService } from '@shared/config.service';
@@ -25,7 +25,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         transport: Transport.KAFKA,
         options: {
           client: {
-            clientId: 'crypto',
+            clientId: 'users',
             brokers: ['kafka:9092']
           },
           consumer: {
