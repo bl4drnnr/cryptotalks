@@ -1,0 +1,11 @@
+{
+  "name": "common",
+  "version": "0.0.1",
+  "description": "",
+  "author": "",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "format": "prettier --write \"dto/*.ts\" \"events/*.ts\" \"models/*.ts\""
+  }
+}

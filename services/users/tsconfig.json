@@ -20,7 +20,9 @@
     "paths": {
       "@modules/*": ["src/modules/*", "src/modules/users/*"],
       "@shared/*": ["src/shared/*", "src/shared/services/*"],
-      "@models/*": ["src/models/*", "../common/models/*"]
+      "@models/*": ["src/models/*", "../common/models/*"],
+      "@dto/*": ["src/dto/*", "../common/dto/*"],
+      "@events/*": ["src/events/*", "../common/events/*"]
     }
   }
 }

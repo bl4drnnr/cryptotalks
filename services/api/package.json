@@ -27,7 +27,6 @@
     "@nestjs/microservices": "^9.3.11",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/sequelize": "^9.0.0",
-    "class-validator": "^0.14.0",
     "dotenv": "^16.0.3",
     "kafkajs": "^2.2.4",
     "pg": "^8.10.0",

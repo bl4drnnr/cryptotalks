@@ -156,10 +156,13 @@ const Signin = () => {
       } rightSide={
         <Box>
           <WelcomeTitle>
+            Welcome back!
           </WelcomeTitle>
           <WelcomeTitle>
+            We are glad to see again!
           </WelcomeTitle>
           <WelcomeText>
+            We are quite sure you have been doing this hundreds times before, so, no need to explain what you need to do, fields on the left side.
           </WelcomeText>
         </Box>
       } headerLink={

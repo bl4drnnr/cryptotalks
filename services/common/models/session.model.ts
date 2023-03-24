@@ -6,8 +6,8 @@ import {
   Model,
   PrimaryKey,
   Table,
-  UpdatedAt
-} from 'sequelize-typescript';
+  UpdatedAt,
+} from "sequelize-typescript";
 
 interface SessionCreationAttributes {
   tokenId: string;
@@ -15,7 +15,7 @@ interface SessionCreationAttributes {
 }
 
 @Table({
-  tableName: 'sessions'
+  tableName: "sessions",
 })
 export class Session extends Model<Session, SessionCreationAttributes> {
   @PrimaryKey
@@ -23,17 +23,17 @@ export class Session extends Model<Session, SessionCreationAttributes> {
   @Column(DataType.UUID)
   id: string;
 
-  @Column({ type: DataType.UUID, allowNull: false, field: 'token_id' })
+  @Column({ type: DataType.UUID, allowNull: false, field: "token_id" })
   tokenId: string;
 
-  @Column({ type: DataType.UUID, allowNull: false, field: 'user_id' })
+  @Column({ type: DataType.UUID, allowNull: false, field: "user_id" })
   userId: string;
 
   @CreatedAt
-  @Column({ field: 'created_at' })
+  @Column({ field: "created_at" })
   createdAt: Date;
 
   @UpdatedAt
-  @Column({ field: 'updated_at' })
+  @Column({ field: "updated_at" })
   updatedAt: Date;
 }

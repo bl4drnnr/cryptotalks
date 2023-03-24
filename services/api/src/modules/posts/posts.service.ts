@@ -10,6 +10,6 @@ export class PostsService {
   ) {}
 
   createPost({ title }: CreatePostDto) {
-    return this.postsClient.emit('post_created', new CreatePostEvent(title));
+    return this.postsClient.emit('post_created', new CreatePostEvent({ title }));
   }
 }

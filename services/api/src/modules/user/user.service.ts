@@ -20,7 +20,7 @@ export class UserService {
 
   signIn(payload: SignInDto) {
     return this.userClient.emit(
-      'user_signed_in',
+      'user_sign_in',
       new UserSignInEvent({ ...payload })
     );
   }

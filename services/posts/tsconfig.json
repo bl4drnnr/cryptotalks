@@ -19,7 +19,9 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@modules/*": ["src/modules/*", "src/modules/posts/*"],
-      "@dto/*": ["src/dto/*"]
+      "@models/*": ["src/models/*", "../common/models/*"],
+      "@dto/*": ["src/dto/*", "../common/dto/*"],
+      "@events/*": ["src/events/*", "../common/events/*"]
     }
   }
 }

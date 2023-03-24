@@ -61,13 +61,13 @@ const CredentialsLayout = ({
               </LoginHeaderButton>
               <LoginHeaderTitle
                 onClick={() => handleRedirect('/')}
-              ></LoginHeaderTitle>
+              >Cryptotalks</LoginHeaderTitle>
             </>
           ) : (
             <>
               <LoginHeaderTitle
                 onClick={() => handleRedirect('/')}
-              ></LoginHeaderTitle>
+              >Cryptotalks</LoginHeaderTitle>
               <LoginHeaderButton>
                 {headerLink}
               </LoginHeaderButton>

@@ -19,15 +19,15 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@models/*": ["src/models/*", "../common/models/*"],
+      "@dto/*": ["src/dto/*", "../common/dto/*"],
+      "@events/*": ["src/events/*", "../common/events/*"],
       "@modules/*": [
         "src/modules/*",
         "src/modules/posts/*",
         "src/modules/user/*",
         "src/modules/crypto/*",
         "src/modules/auth/*"
-      ],
-      "@events/*": ["src/events/*"],
-      "@dto/*": ["src/dto/*"]
+      ]
     }
   }
 }
