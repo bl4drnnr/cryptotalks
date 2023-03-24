@@ -1,11 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ApiConfigService } from '@shared/config.service';
-import { IAccessToken } from '@interfaces/access-token.interface';
-import { IRefreshToken } from '@interfaces/refresh-token.interface';
 import * as uuid from 'uuid';
 import * as jwt from 'jsonwebtoken';
-import { ITokenPayload } from '@interfaces/token-payload.interface';
 import { Session } from '@models/session.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { ClientKafka } from '@nestjs/microservices';
@@ -13,6 +10,9 @@ import { ExpiredTokenException } from '@exceptions/expired-token.exception';
 import { InvalidTokenException } from '@exceptions/invalid-token.exception';
 import { SessionHasExpiredException } from '@exceptions/session-expired.exception';
 import { CorruptedTokenException } from '@exceptions/corrupted-token.exception';
+import { AccessTokenDto } from '@dto/access-token.dto';
+import { RefreshTokenDto } from '@dto/refresh-token.dto';
+import { TokenPayloadDto } from '@dto/token-payload.dto';
 
 @Injectable()
 export class AuthService {
@@ -23,7 +23,7 @@ export class AuthService {
     @Inject('USER_SERVICE') private readonly userClient: ClientKafka
   ) {}
 
-  private generateAccessToken(accessTokenPayload: IAccessToken) {
+  private generateAccessToken(accessTokenPayload: AccessTokenDto) {
     const payload = {
       userId: accessTokenPayload.userId,
       email: accessTokenPayload.email,
@@ -48,7 +48,7 @@ export class AuthService {
     return { id, token: this.jwtService.sign(payload, options) };
   }
 
-  private async updateRefreshToken(refreshTokenPayload: IRefreshToken) {
+  private async updateRefreshToken(refreshTokenPayload: RefreshTokenDto) {
     const currentSession = await this.sessionRepository.findOne({
       where: { userId: refreshTokenPayload.userId }
     });
@@ -82,7 +82,7 @@ export class AuthService {
     });
   }
 
-  async updateTokens(accessTokenPayload: IAccessToken) {
+  async updateTokens(accessTokenPayload: AccessTokenDto) {
     const accessToken = this.generateAccessToken(accessTokenPayload);
     const refreshToken = this.generateRefreshToken();
 
@@ -97,7 +97,7 @@ export class AuthService {
   async refreshToken(tokenRefresh: string) {
     if (!tokenRefresh) throw new CorruptedTokenException();
 
-    const payload: ITokenPayload = this.verifyToken(tokenRefresh);
+    const payload: TokenPayloadDto = this.verifyToken(tokenRefresh);
 
     const token = await this.getTokenById(payload.id);
 

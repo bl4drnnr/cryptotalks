@@ -1,4 +1,4 @@
-export interface IRefreshToken {
+export class RefreshTokenDto {
   userId: string;
   tokenId: string;
 }
