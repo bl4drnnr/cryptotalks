@@ -13,8 +13,6 @@ export class UserController {
 
   @Post('/sign-in')
   async signIn(@Body() data: any): Promise<any> {
-    const test = await this.userService.signIn(data);
-    console.log('test', test);
-    return test;
+    return this.userService.signIn(data);
   }
 }

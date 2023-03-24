@@ -19,8 +19,8 @@ export class UsersController implements OnModuleInit {
   }
 
   @MessagePattern('user_sign_in')
-  async handleSignIn(data: any): Promise<any> {
-    return await this.usersService.signIn(data);
+  handleSignIn(data: any) {
+    return this.usersService.signIn(data);
   }
 
   @MessagePattern('get_user_by_id')

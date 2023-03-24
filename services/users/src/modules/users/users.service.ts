@@ -1,21 +1,21 @@
 import * as bcryptjs from 'bcryptjs';
 import * as crypto from 'crypto';
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { SignInDto } from '@dto/sign-in.dto';
-import { SignUpDto } from '@dto/sign-up.dto';
-import { User } from '@models/user.model';
-import { InjectModel } from '@nestjs/sequelize';
-import { WrongCredentialsException } from '@modules/exceptions/wrong-credentials.exception';
-import { AccountNotConfirmedException } from '@modules/exceptions/account-not-confirmed.exception';
-import { ClientKafka } from '@nestjs/microservices';
-import { UserAlreadyExistsException } from '@modules/exceptions/user-already-exists.exception';
-import { TacNotAcceptedException } from '@modules/exceptions/tac-not-accepted.exception';
-import { ValidationErrorException } from '@modules/exceptions/validation-error.exception';
-import { ValidatorService } from '@shared/validator.service';
-import { ConfirmationHash } from '@models/confirmation-hash.model';
-import { EmailService } from '@shared/email.service';
-import { EmailAlreadyConfirmedException } from '@modules/exceptions/email-already-confirmed.exception';
-import { UpdateTokensEvent } from '@events/update-tokens.event';
+import {BadRequestException, Inject, Injectable} from '@nestjs/common';
+import {SignInDto} from '@dto/sign-in.dto';
+import {SignUpDto} from '@dto/sign-up.dto';
+import {User} from '@models/user.model';
+import {InjectModel} from '@nestjs/sequelize';
+import {WrongCredentialsException} from '@modules/exceptions/wrong-credentials.exception';
+import {AccountNotConfirmedException} from '@modules/exceptions/account-not-confirmed.exception';
+import {ClientKafka} from '@nestjs/microservices';
+import {UserAlreadyExistsException} from '@modules/exceptions/user-already-exists.exception';
+import {TacNotAcceptedException} from '@modules/exceptions/tac-not-accepted.exception';
+import {ValidationErrorException} from '@modules/exceptions/validation-error.exception';
+import {ValidatorService} from '@shared/validator.service';
+import {ConfirmationHash} from '@models/confirmation-hash.model';
+import {EmailService} from '@shared/email.service';
+import {EmailAlreadyConfirmedException} from '@modules/exceptions/email-already-confirmed.exception';
+import {UpdateTokensEvent} from '@events/update-tokens.event';
 
 interface ITest {
   _at: string;
@@ -39,7 +39,6 @@ export class UsersService {
     @InjectModel(ConfirmationHash)
     private readonly confirmHashRepository: typeof ConfirmationHash,
     @Inject('AUTH_SERVICE') private readonly authClient: ClientKafka,
-    @Inject('USERS_SERVICE') private readonly userClient: ClientKafka,
     private readonly validatorService: ValidatorService,
     private readonly emailService: EmailService
   ) {}
@@ -55,17 +54,14 @@ export class UsersService {
     const passwordEquality = bcryptjs.compare(payload.password, user.password);
     if (!passwordEquality) throw new WrongCredentialsException();
 
-    const response = await this.authClient
+    return this.authClient
       .send(
         'update_tokens',
         new UpdateTokensEvent({
           userId: user.id,
           email: user.email
         })
-      )
-      .toPromise();
-
-    return response;
+      );
   }
 
   async signUp(payload: SignUpDto) {
