@@ -48,7 +48,7 @@ export class UsersService {
         })
       )
       .subscribe((response) => {
-        console.log(response);
+        return response;
       });
   }
 
