@@ -6,7 +6,7 @@ import { useRecoilState } from 'recoil';
 
 import { ThemeToggler } from '@components/ThemeToggler/ThemeToggler.component';
 import { useHandleException } from '@hooks/useHandleException.hook';
-// import { useLogoutService } from '@services/logout/logout.service';
+import { useLogoutService } from '@services/logout/logout.service';
 import { theme } from '@store/global/global.state';
 import {
   Container,
@@ -24,7 +24,7 @@ export const Header = () => {
   const [currentTheme, setCurrentTheme] = useRecoilState(theme);
   const [tokenPersists, setTokenPersistence] = React.useState(false);
 
-  // const { loading, logout } = useLogoutService();
+  const { loading, logout } = useLogoutService();
   const { handleException } = useHandleException();
 
   const handleRedirect = async (path: string) => {
@@ -44,13 +44,13 @@ export const Header = () => {
   const fetchLogout = async () => {
     try {
       const token = sessionStorage.getItem('_at');
-      // const response = await logout({ token });
+      const response = await logout({ token });
 
-      // if (response.message === 'success') {
-      //   setTokenPersistence(false);
-      //   sessionStorage.removeItem('_at');
-      //   await handleRedirect('/');
-      // }
+      if (response.message === 'success') {
+        setTokenPersistence(false);
+        sessionStorage.removeItem('_at');
+        await handleRedirect('/');
+      }
     } catch (e) {
       handleException(e);
     }
@@ -69,11 +69,10 @@ export const Header = () => {
       <Container>
         <Box>
           <NavigationButtons>
-            <Logo onClick={() => handleRedirect('/')}></Logo>
+            <Logo onClick={() => handleRedirect('/')}>Cryptotalks</Logo>
             <Links>
-              <Link onClick={() => handleRedirect('/about')}></Link>
-              <Link onClick={() => handleRedirect('/market')}></Link>
-              <Link onClick={() => handleRedirect('/contact')}></Link>
+              <Link onClick={() => handleRedirect('/posts')}>Posts</Link>
+              <Link onClick={() => handleRedirect('/market')}>Market</Link>
             </Links>
           </NavigationButtons>
 
@@ -84,11 +83,13 @@ export const Header = () => {
                   className={classNames({ logIn: true })}
                   onClick={() => handleRedirect('/account')}
                 >
+                  My account
                 </Button>
                 <Button
                   className={classNames({ signup: true })}
                   onClick={() => fetchLogout()}
                 >
+                  Logout
                 </Button>
               </>
             ) : (
@@ -97,11 +98,13 @@ export const Header = () => {
                   className={classNames({ logIn: true })}
                   onClick={() => handleRedirect('/signin')}
                 >
+                  Sign In
                 </Button>
                 <Button
                   className={classNames({ signup: true })}
                   onClick={() => handleRedirect('/signup')}
                 >
+                  Sign Up
                 </Button>
               </>
             )}

@@ -14,13 +14,17 @@ export const Footer = () => {
       <Box>
         <NavigationButtons>
           <NavigationLink onClick={() => handleRedirect('/')}>
+            Home
           </NavigationLink>
-          <NavigationLink onClick={() => handleRedirect('/about')}>
+          <NavigationLink onClick={() => handleRedirect('/posts')}>
+            Posts
           </NavigationLink>
-          <NavigationLink onClick={() => handleRedirect('/terms-and-conditions')}>
+          <NavigationLink onClick={() => handleRedirect('/market')}>
+            Market
           </NavigationLink>
         </NavigationButtons>
         <NavigationLink>
+          Copyright &copy; 2023 Mikhail Bahdashych
         </NavigationLink>
       </Box>
     </Container>
