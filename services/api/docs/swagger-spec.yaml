@@ -62,131 +62,327 @@ tags: []
 servers: []
 components:
   schemas:
+    Post:
+      type: object
+      properties:
+        id:
+          type: uuidv4
+          nullable: false
+          default: uuidv4
+          description: Unique Id of the record
+        title:
+          type: string
+          nullable: false
+          description: Title of the post
+        slug:
+          type: string
+          nullable: false
+          description: Slug of the post
+        content:
+          nullable: false
+          description: Content of the post
+          type: array
+          items:
+            type: string
+        userId:
+          type: uuiv4
+          nullable: false
+          description: User Id
+        createdAt:
+          type: date
+          nullable: false
+          description: Record creation date
+        updatedAt:
+          type: string
+          nullable: false
+          description: Record update date
+      required:
+        - id
+        - title
+        - slug
+        - content
+        - userId
+        - createdAt
+        - updatedAt
     CreatePostDto:
       type: object
       properties:
-        Title:
+        title:
           type: string
           nullable: false
-        Content:
-          type: Array<string>
+        content:
           nullable: false
+          type: array
+          items:
+            type: string
       required:
-        - Title
-        - Content
+        - title
+        - content
     AccountConfirmationDto:
       type: object
       properties:
-        Confirmation hash:
+        confirmHash:
           type: string
           nullable: false
       required:
-        - Confirmation hash
+        - confirmHash
+    ConfirmationHash:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: false
+          default: uuidv4
+          description: Unique Id of the record
+        confirmationHash:
+          type: string
+          nullable: false
+          description: Confirmation hash
+        confirmed:
+          type: boolean
+          nullable: false
+          description: If hash has been confirmed
+        userId:
+          type: uuidv4
+          nullable: false
+          description: User Id
+        createdAt:
+          type: date
+          nullable: false
+          description: Record creation date
+        updatedAt:
+          type: string
+          nullable: false
+          description: Record update date
+      required:
+        - id
+        - confirmationHash
+        - confirmed
+        - userId
+        - createdAt
+        - updatedAt
+    User:
+      type: object
+      properties:
+        id:
+          type: uuidv4
+          nullable: false
+          default: uuidv4
+          description: Unique Id of the record
+        email:
+          type: string
+          nullable: false
+          description: User email
+        password:
+          type: string
+          nullable: false
+          description: User hashed password
+        accountConfirm:
+          type: boolean
+          nullable: false
+          description: Checks if user confirmed account by clicking into link in email
+            after registration
+          default: false
+        firstName:
+          type: string
+          nullable: true
+          description: User first name
+        lastName:
+          type: string
+          nullable: true
+          description: User last name
+        username:
+          type: string
+          nullable: false
+          description: User username
+        twitter:
+          type: string
+          nullable: true
+          description: User Twitter account
+        linkedIn:
+          type: string
+          nullable: true
+          description: User LinkedIn account
+        personalWebsite:
+          type: string
+          nullable: true
+          description: User personal website
+        title:
+          type: string
+          nullable: true
+          description: User account title
+        bio:
+          type: string
+          nullable: true
+          description: User biography
+        tac:
+          type: boolean
+          nullable: false
+          description: User accepted terms and conditions
+        publicEmail:
+          type: boolean
+          nullable: true
+          description: If user wants to set their email as public
+        createdAt:
+          type: date
+          nullable: false
+          description: Record creation date
+        updatedAt:
+          type: string
+          nullable: false
+          description: Record update date
+      required:
+        - id
+        - email
+        - password
+        - accountConfirm
+        - firstName
+        - lastName
+        - username
+        - twitter
+        - linkedIn
+        - personalWebsite
+        - title
+        - bio
+        - tac
+        - publicEmail
+        - createdAt
+        - updatedAt
     SignUpDto:
       type: object
       properties:
-        First name:
+        firstName:
           type: string
           nullable: true
-        Last name:
+        lastName:
           type: string
           nullable: true
-        Email:
+        email:
           type: string
           nullable: false
-        Password:
+        password:
           type: string
           nullable: false
-        Username:
+        username:
           type: string
           nullable: false
-        Twitter:
+        twitter:
           type: string
           nullable: true
-        LinkedIn:
+        linkedIn:
           type: string
           nullable: true
-        Personal website:
+        personalWebsite:
           type: string
           nullable: true
-        Account title:
+        title:
           type: string
           nullable: true
-        Biography:
+        bio:
           type: string
           nullable: true
-        Terms and conditions:
+        tac:
           type: boolean
           nullable: false
-        Show personal email:
+        publicEmail:
           type: boolean
           nullable: true
       required:
-        - Email
-        - Password
-        - Username
-        - Terms and conditions
+        - email
+        - password
+        - username
+        - tac
     TokenPayloadDto:
       type: object
       properties:
-        Id:
+        id:
           type: string
           nullable: false
-        Token type:
+        type:
           type: access | refresh
           nullable: false
-        User Id:
+        userId:
           type: string
           nullable: false
       required:
-        - Id
-        - Token type
-        - User Id
+        - id
+        - type
+        - userId
     UpdateTokensDto:
       type: object
       properties:
-        User Id:
+        userId:
           type: string
           nullable: false
-        Email:
+        email:
           type: string
           nullable: false
       required:
-        - User Id
-        - Email
+        - userId
+        - email
     RefreshTokenDto:
       type: object
       properties:
-        User Id:
+        userId:
           type: string
           nullable: false
-        Token Id:
+        tokenId:
           type: string
           nullable: false
       required:
-        - User Id
-        - Token Id
+        - userId
+        - tokenId
     AccessTokenDto:
       type: object
       properties:
-        User Id:
+        userId:
           type: string
           nullable: false
-        Email:
+        email:
           type: string
           nullable: false
       required:
-        - User Id
-        - Email
+        - userId
+        - email
+    Session:
+      type: object
+      properties:
+        id:
+          type: uuidv4
+          nullable: false
+          default: uuidv4
+          description: Unique Id of the record
+        tokenId:
+          type: uuidv4
+          nullable: false
+          description: Id of the token
+        userId:
+          type: uuidv4
+          nullable: false
+          description: User id
+        createdAt:
+          type: date
+          nullable: false
+          description: Record creation date
+        updatedAt:
+          type: string
+          nullable: false
+          description: Record update date
+      required:
+        - id
+        - tokenId
+        - userId
+        - createdAt
+        - updatedAt
     SignInDto:
       type: object
       properties:
-        Email:
+        email:
           type: string
           nullable: false
-        Password:
+        password:
           type: string
           nullable: false
       required:
-        - Email
-        - Password
+        - email
+        - password

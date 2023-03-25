@@ -1,13 +1,20 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { PostsService } from '@modules/posts.service';
 import { CreatePostDto } from '@dto/create-post.dto';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiExtraModels,
+  ApiOperation,
+  ApiResponse,
+  ApiTags
+} from '@nestjs/swagger';
+import { Post as PostModel } from '@models/post.model';
 
 @ApiTags('Posts')
 @Controller('posts')
 export class PostsController {
   constructor(private postsService: PostsService) {}
 
+  @ApiExtraModels(PostModel)
   @ApiOperation({ summary: 'Responsible for post creation' })
   @ApiResponse({
     status: 200,

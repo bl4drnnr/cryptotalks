@@ -13,12 +13,17 @@ import { AccessTokenDto } from '@dto/access-token.dto';
 import { RefreshTokenDto } from '@dto/refresh-token.dto';
 import { TokenPayloadDto } from '@dto/token-payload.dto';
 import { AccountConfirmationDto } from '@dto/account-confirmation.dto';
+import { User } from '@models/user.model';
+import { ConfirmationHash } from '@models/confirmation-hash.model';
+import { Session } from '@models/session.model';
 
 @ApiTags('User')
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
 
+  @ApiExtraModels(User)
+  @ApiExtraModels(ConfirmationHash)
   @ApiExtraModels(AccountConfirmationDto)
   @ApiOperation({ summary: 'Responsible for user account creation' })
   @ApiResponse({
@@ -30,6 +35,7 @@ export class UserController {
     return this.userService.signUp(payload);
   }
 
+  @ApiExtraModels(Session)
   @ApiExtraModels(AccessTokenDto)
   @ApiExtraModels(RefreshTokenDto)
   @ApiExtraModels(UpdateTokensDto)
