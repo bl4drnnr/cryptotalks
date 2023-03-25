@@ -6,8 +6,10 @@ import {
   Model,
   PrimaryKey,
   Table,
-  UpdatedAt,
-} from "sequelize-typescript";
+  UpdatedAt
+  // @ts-ignore
+} from 'sequelize-typescript';
+import { ApiProperty } from '@nestjs/swagger';
 
 interface ConfirmationHashCreationAttributes {
   userId: string;
@@ -15,36 +17,67 @@ interface ConfirmationHashCreationAttributes {
 }
 
 @Table({
-  tableName: "confirmation_hashes",
+  tableName: 'confirmation_hashes'
 })
 export class ConfirmationHash extends Model<
   ConfirmationHash,
   ConfirmationHashCreationAttributes
 > {
+  @ApiProperty({
+    type: 'string',
+    nullable: false,
+    default: 'uuidv4',
+    description: 'Unique Id of the record'
+  })
   @PrimaryKey
   @Default(DataType.UUIDV4)
   @Column(DataType.UUID)
   id: string;
 
+  @ApiProperty({
+    type: 'string',
+    nullable: false,
+    description: 'Confirmation hash'
+  })
   @Column({
     type: DataType.STRING,
     allowNull: false,
-    field: "confirmation_hash",
+    field: 'confirmation_hash'
   })
   confirmationHash: string;
 
+  @ApiProperty({
+    type: 'boolean',
+    nullable: false,
+    description: 'If hash has been confirmed'
+  })
   @Default(false)
   @Column({ type: DataType.BOOLEAN, allowNull: false })
   confirmed: boolean;
 
-  @Column({ type: DataType.UUID, allowNull: false, field: "user_id" })
+  @ApiProperty({
+    type: 'uuidv4',
+    nullable: false,
+    description: 'User Id'
+  })
+  @Column({ type: DataType.UUID, allowNull: false, field: 'user_id' })
   userId: string;
 
+  @ApiProperty({
+    type: 'date',
+    nullable: false,
+    description: 'Record creation date'
+  })
   @CreatedAt
-  @Column({ field: "created_at" })
+  @Column({ field: 'created_at' })
   createdAt: Date;
 
+  @ApiProperty({
+    type: 'string',
+    nullable: false,
+    description: 'Record update date'
+  })
   @UpdatedAt
-  @Column({ field: "updated_at" })
+  @Column({ field: 'updated_at' })
   updatedAt: Date;
 }

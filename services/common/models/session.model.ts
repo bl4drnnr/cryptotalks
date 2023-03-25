@@ -6,8 +6,10 @@ import {
   Model,
   PrimaryKey,
   Table,
-  UpdatedAt,
-} from "sequelize-typescript";
+  UpdatedAt
+  // @ts-ignore
+} from 'sequelize-typescript';
+import { ApiProperty } from '@nestjs/swagger';
 
 interface SessionCreationAttributes {
   tokenId: string;
@@ -15,25 +17,51 @@ interface SessionCreationAttributes {
 }
 
 @Table({
-  tableName: "sessions",
+  tableName: 'sessions'
 })
 export class Session extends Model<Session, SessionCreationAttributes> {
+  @ApiProperty({
+    type: 'uuidv4',
+    nullable: false,
+    default: 'uuidv4',
+    description: 'Unique Id of the record'
+  })
   @PrimaryKey
   @Default(DataType.UUIDV4)
   @Column(DataType.UUID)
   id: string;
 
-  @Column({ type: DataType.UUID, allowNull: false, field: "token_id" })
+  @ApiProperty({
+    type: 'uuidv4',
+    nullable: false,
+    description: 'Id of the token'
+  })
+  @Column({ type: DataType.UUID, allowNull: false, field: 'token_id' })
   tokenId: string;
 
-  @Column({ type: DataType.UUID, allowNull: false, field: "user_id" })
+  @ApiProperty({
+    type: 'uuidv4',
+    nullable: false,
+    description: 'User id'
+  })
+  @Column({ type: DataType.UUID, allowNull: false, field: 'user_id' })
   userId: string;
 
+  @ApiProperty({
+    type: 'date',
+    nullable: false,
+    description: 'Record creation date'
+  })
   @CreatedAt
-  @Column({ field: "created_at" })
+  @Column({ field: 'created_at' })
   createdAt: Date;
 
+  @ApiProperty({
+    type: 'string',
+    nullable: false,
+    description: 'Record update date'
+  })
   @UpdatedAt
-  @Column({ field: "updated_at" })
+  @Column({ field: 'updated_at' })
   updatedAt: Date;
 }

@@ -10,6 +10,9 @@
    2. [Front](#front)
    3. [Authentication](#authentication)
    4. [Crypto rates](#crypto-rates)
+   5. [Posts](#posts)
+   6. [Users](#users)
+   7. [Common](#common)
 4. [Contact and references](#contact-and-references)
 5. [License and tech stack](#license)
 
@@ -45,11 +48,9 @@ In this project not every component has been implemented, because the descriptio
 
 Here is more details about the difference between the architecture of microservices described above and the architecture of microservices that has been implemented in this project. The most of them are explained by the **_scale of the project_**, meaning that there were no need of implementation of the entire component. Therefore, they were either simplify or not implemented: 
 
-- **_API Gateway_**: API Gateway normally should be created as a separate service, but since there won't be so many endpoints, **the role of the API Gateway was taken by** [API service](services/api).  
-- **_Service Registry_**: The same explanation as for API Gateway. No separate service, was implemented in API.
-- **_Load Balancer_**: Not for production.
+- **_Load Balancer_**: Not for production. In the development mode, there is no need to control the flow of the traffic.
 - **_Monitoring and Logging_**: The monitoring system has been implemented, since, as mentioned previously, there is no production mode, but **some of critical logs are sent to MongoDB**.
-- **_Deployment and Orchestration_**: As orchestration for this project **_Docker_** has been used. All services were compiled in [docker-compose](docker-compose.yml) file and can be executed together joined by the same network. Also, in the root folder of the project, in [package.json](package.json) file was written scripts that allow execution services both together and separately either within containers or locally. 
+- **_Deployment and Orchestration_**: As orchestration for this project **_Docker_** and **Apache Kafka** have been used. All services were compiled in [docker-compose](docker-compose.yml) file and can be executed together joined by the same network. Also, in the root folder of the project, in [package.json](package.json) file was written scripts that allow execution services both together and separately either within containers or locally. 
 
 The main advantage of the architecture of microservices approach is that fail of the one service won't make any negative impact of availability of other services. For instance, in this project, if something bad happens to [cryptocurrencies rates](services/crypto-rates) services, you still will be able to log in to our account and write posts. The only thing that you won't be able to access is the rates of currencies, availability and accessibility of other services won't be impacted. 
 
@@ -61,7 +62,7 @@ Even though some of external API's could be implemented as the separated service
 
 ### API
 
-The ["main" API](services/api) of the whole application. Generally, this API is responsible for posting and acts as a proxy/API Gateway at the same time. It means, that every request that goes from the front-end is handled by API. The same situation for other services. Requests and responses are handled byit .Moreover, this API stores every model of the database.
+The service named in project [API](services/api) is the gateway. It receives requests from the client and then routes them to appropriate services. Generally speaking, **routing** is the main function of the API Gateway.
 
 ### Front
 
@@ -69,7 +70,7 @@ The [front-end](services/front) of the project was written using `Next.js` frame
 
 ### Authentication
 
-The [authentication](services/auth) is responsible for the authentication of the users for the account creation. It also is responsible for sending the confirmation email to the new user. As an external provider of email service `Sendgrid` was used.
+The [authentication](services/auth) is responsible for the authentication of the **already created users**. Endpoints of this microservice mostly responsible for communication with `Sessions` table within database. This includes - generating user tokens, log out and refresh of the tokens. 
 
 ### Crypto rates
 
@@ -85,13 +86,29 @@ To implement `ORM` and be able to provide `CRUD` operations, `Sequelize` has bee
 
 Talking about migrations, they were used for `demo` script inside [package.json](package.json) in the root folder of the project.
 
+### Posts
+
+Microservice named [posts](services/posts) simple responsible for handling posts. It includes - creating, editing, removing etc.
+
+### Users
+
+Microservice named [users](services/users) is responsible for every action that is connected with user such as account creation or login (in this case it just checks data and asks for tokens [authentication](services/auth) service). It also is responsible for sending the confirmation email to the new user. As an external provider of email service `Sendgrid` was used.
+
+### Common
+
+Common is not a microservices itself, it doesn't receive or respond on requests. Instead of it, it stores all entities that can be shared between services. It includes - DTOs, exceptions, events and database modes.
+
+It is very important to mention that in real life example this would be a little incorrect. The purpose of the architecture of microservices is to synchronize data states. It means that microservices can have its own database, physically or logically. Therefore, there is no availability to connect records logically, using foreign keys. Here is where microservices come into play. Every table that needs to be synchronized has at least one column with id from table, or even database, to which it has no logical connection. And all microservices are responsible to handle this and prevent desynchronization.
+
 ## Contact and references
 
 - Developer contact - [contact@mikhailbahdashych.me](mailto:contact@mikhailbahdashych.me)
-- API service - [services/api](services/api)
-- Authentication service - [services/auth](services/auth)
-- Front service - [services/front](services/front)
-- Crypto rates service - [services/crypto-rates](services/crypto-rates)
+- API Gateway - [services/api](services/api)
+- Authentication microservice - [services/auth](services/auth)
+- Front microservice - [services/front](services/front)
+- Crypto rates microservice - [services/crypto-rates](services/crypto-rates)
+- Users microservice - [services/users](services/users)
+- Posts microservice - [services/posts](services/posts)
 
 ## License
 
@@ -108,3 +125,4 @@ Licensed by [MIT license](LICENSE).
 ![Sequelize](https://img.shields.io/badge/Sequelize-52B0E7?style=for-the-badge&logo=Sequelize&logoColor=white)
 ![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=for-the-badge&logo=swagger&logoColor=white)
 ![NPM](https://img.shields.io/badge/NPM-%23CB3837.svg?style=for-the-badge&logo=npm&logoColor=white)
+![Apache Kafka](https://img.shields.io/badge/Apache%20Kafka-000?style=for-the-badge&logo=apachekafka)

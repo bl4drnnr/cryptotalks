@@ -27,6 +27,7 @@
     "@nestjs/microservices": "^9.3.11",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/sequelize": "^9.0.0",
+    "@nestjs/swagger": "^6.2.1",
     "dotenv": "^16.0.3",
     "kafkajs": "^2.2.4",
     "pg": "^8.10.0",
@@ -36,7 +37,8 @@
     "sequelize": "^6.29.3",
     "sequelize-cli": "^6.6.0",
     "sequelize-typescript": "^2.1.5",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "yaml": "^2.2.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
