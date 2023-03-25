@@ -9,10 +9,10 @@ export class PostsService {
     @Inject('POSTS_SERVICE') private readonly postsClient: ClientKafka
   ) {}
 
-  createPost({ title }: CreatePostDto) {
+  createPost(payload: CreatePostDto) {
     return this.postsClient.emit(
       'post_created',
-      new CreatePostEvent({ title })
+      new CreatePostEvent({ ...payload })
     );
   }
 }

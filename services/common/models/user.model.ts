@@ -6,8 +6,9 @@ import {
   Model,
   PrimaryKey,
   Table,
-  UpdatedAt,
-} from "sequelize-typescript";
+  UpdatedAt
+  // @ts-ignore
+} from 'sequelize-typescript';
 
 interface UserCreationAttributes {
   email: string;
@@ -15,7 +16,7 @@ interface UserCreationAttributes {
 }
 
 @Table({
-  tableName: "users",
+  tableName: 'users'
 })
 export class User extends Model<User, UserCreationAttributes> {
   @PrimaryKey
@@ -33,7 +34,7 @@ export class User extends Model<User, UserCreationAttributes> {
   @Column({
     type: DataType.BOOLEAN,
     allowNull: false,
-    field: "account_confirm",
+    field: 'account_confirm'
   })
   accountConfirm: boolean;
 
@@ -68,10 +69,10 @@ export class User extends Model<User, UserCreationAttributes> {
   publicEmail?: boolean;
 
   @CreatedAt
-  @Column({ field: "created_at" })
+  @Column({ field: 'created_at' })
   createdAt: Date;
 
   @UpdatedAt
-  @Column({ field: "updated_at" })
+  @Column({ field: 'updated_at' })
   updatedAt: Date;
 }

@@ -6,8 +6,9 @@ import {
   Model,
   PrimaryKey,
   Table,
-  UpdatedAt,
-} from "sequelize-typescript";
+  UpdatedAt
+  // @ts-ignore
+} from 'sequelize-typescript';
 
 interface ConfirmationHashCreationAttributes {
   userId: string;
@@ -15,7 +16,7 @@ interface ConfirmationHashCreationAttributes {
 }
 
 @Table({
-  tableName: "confirmation_hashes",
+  tableName: 'confirmation_hashes'
 })
 export class ConfirmationHash extends Model<
   ConfirmationHash,
@@ -29,7 +30,7 @@ export class ConfirmationHash extends Model<
   @Column({
     type: DataType.STRING,
     allowNull: false,
-    field: "confirmation_hash",
+    field: 'confirmation_hash'
   })
   confirmationHash: string;
 
@@ -37,14 +38,14 @@ export class ConfirmationHash extends Model<
   @Column({ type: DataType.BOOLEAN, allowNull: false })
   confirmed: boolean;
 
-  @Column({ type: DataType.UUID, allowNull: false, field: "user_id" })
+  @Column({ type: DataType.UUID, allowNull: false, field: 'user_id' })
   userId: string;
 
   @CreatedAt
-  @Column({ field: "created_at" })
+  @Column({ field: 'created_at' })
   createdAt: Date;
 
   @UpdatedAt
-  @Column({ field: "updated_at" })
+  @Column({ field: 'updated_at' })
   updatedAt: Date;
 }

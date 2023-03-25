@@ -6,8 +6,9 @@ import {
   Default,
   Column,
   CreatedAt,
-  UpdatedAt,
-} from "sequelize-typescript";
+  UpdatedAt
+  // @ts-ignore
+} from 'sequelize-typescript';
 
 interface PostCreationAttributes {
   title: string;
@@ -17,7 +18,7 @@ interface PostCreationAttributes {
 }
 
 @Table({
-  tableName: "posts",
+  tableName: 'posts'
 })
 export class Post extends Model<Post, PostCreationAttributes> {
   @PrimaryKey
@@ -38,10 +39,10 @@ export class Post extends Model<Post, PostCreationAttributes> {
   userId: string;
 
   @CreatedAt
-  @Column({ field: "created_at" })
+  @Column({ field: 'created_at' })
   createdAt: Date;
 
   @UpdatedAt
-  @Column({ field: "updated_at" })
+  @Column({ field: 'updated_at' })
   updatedAt: Date;
 }
