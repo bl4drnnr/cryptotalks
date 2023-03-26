@@ -9,7 +9,7 @@ export default async (
 ) => {
   try {
     const { hash } = req.query;
-    const { data } = await Api.get(`/user/account-confirmation/${hash}`);
+    const { data } = await Api.post(`/user/account-confirmation/${hash}`);
 
     return res.json(data);
   } catch (error: any) {

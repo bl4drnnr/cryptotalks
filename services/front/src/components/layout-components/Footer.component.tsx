@@ -13,7 +13,7 @@ export const Footer = () => {
     <Container>
       <Box>
         <NavigationButtons>
-          <NavigationLink onClick={() => handleRedirect('/')}>
+          <NavigationLink onClick={() => handleRedirect('')}>
             Home
           </NavigationLink>
           <NavigationLink onClick={() => handleRedirect('/posts')}>

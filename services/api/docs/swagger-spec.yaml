@@ -53,6 +53,34 @@ paths:
         "201":
           description: As a response function gets success message
       tags: *a1
+  "/api/user/account-confirmation/{confirmationHash}":
+    get:
+      operationId: UserController_confirmAccount
+      summary: Confirm user registration
+      parameters:
+        - name: confirmationHash
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+        "201":
+          description: As a response function gets success message
+      tags: *a1
+  /api/user/logout:
+    post:
+      operationId: UserController_logout
+      parameters: []
+      responses:
+        "201":
+          description: ""
+      tags: *a1
 info:
   title: Cryptotalks - API Gateway
   description: Documentation of Cryptotalks' API Gateway.
@@ -118,49 +146,6 @@ components:
       required:
         - title
         - content
-    AccountConfirmationDto:
-      type: object
-      properties:
-        confirmHash:
-          type: string
-          nullable: false
-      required:
-        - confirmHash
-    ConfirmationHash:
-      type: object
-      properties:
-        id:
-          type: string
-          nullable: false
-          default: uuidv4
-          description: Unique Id of the record
-        confirmationHash:
-          type: string
-          nullable: false
-          description: Confirmation hash
-        confirmed:
-          type: boolean
-          nullable: false
-          description: If hash has been confirmed
-        userId:
-          type: uuidv4
-          nullable: false
-          description: User Id
-        createdAt:
-          type: date
-          nullable: false
-          description: Record creation date
-        updatedAt:
-          type: string
-          nullable: false
-          description: Record update date
-      required:
-        - id
-        - confirmationHash
-        - confirmed
-        - userId
-        - createdAt
-        - updatedAt
     User:
       type: object
       properties:
@@ -386,3 +371,46 @@ components:
       required:
         - email
         - password
+    AccountConfirmationDto:
+      type: object
+      properties:
+        confirmationHash:
+          type: string
+          nullable: false
+      required:
+        - confirmationHash
+    ConfirmationHash:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: false
+          default: uuidv4
+          description: Unique Id of the record
+        confirmationHash:
+          type: string
+          nullable: false
+          description: Confirmation hash
+        confirmed:
+          type: boolean
+          nullable: false
+          description: If hash has been confirmed
+        userId:
+          type: uuidv4
+          nullable: false
+          description: User Id
+        createdAt:
+          type: date
+          nullable: false
+          description: Record creation date
+        updatedAt:
+          type: string
+          nullable: false
+          description: Record update date
+      required:
+        - id
+        - confirmationHash
+        - confirmed
+        - userId
+        - createdAt
+        - updatedAt

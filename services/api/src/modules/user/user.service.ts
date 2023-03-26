@@ -4,6 +4,7 @@ import { SignUpDto } from '@dto/sign-up.dto';
 import { UserSignUpEvent } from '@events/user-sign-up.event';
 import { SignInDto } from '@dto/sign-in.dto';
 import { UserSignInEvent } from '@events/user-sign-in.event';
+import { ConfirmAccountEvent } from '@events/confirm-account.event';
 
 @Injectable()
 export class UserService implements OnModuleInit {
@@ -12,7 +13,7 @@ export class UserService implements OnModuleInit {
   ) {}
 
   signUp(payload: SignUpDto) {
-    return this.userClient.emit(
+    return this.userClient.send(
       'user_created',
       new UserSignUpEvent({ ...payload })
     );
@@ -25,7 +26,16 @@ export class UserService implements OnModuleInit {
     );
   }
 
+  confirmAccount({ confirmationHash }: { confirmationHash: string }) {
+    return this.userClient.send(
+      'confirm_user_account',
+      new ConfirmAccountEvent({ confirmationHash })
+    );
+  }
+
   onModuleInit(): any {
     this.userClient.subscribeToResponseOf('user_sign_in');
+    this.userClient.subscribeToResponseOf('user_created');
+    this.userClient.subscribeToResponseOf('confirm_user_account');
   }
 }

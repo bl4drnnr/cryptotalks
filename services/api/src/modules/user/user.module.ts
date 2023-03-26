@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ClientKafka, ClientsModule, Transport } from '@nestjs/microservices';
+import { JwtModule } from '@nestjs/jwt';
+import { ApiConfigService } from '@shared/config.service';
 
 @Module({
   imports: [
@@ -18,8 +20,27 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
             groupId: 'users-consumer'
           }
         }
+      },
+      {
+        name: 'AUTH_SERVICE',
+        transport: Transport.KAFKA,
+        options: {
+          client: {
+            clientId: 'auth',
+            brokers: ['kafka:9092']
+          },
+          consumer: {
+            groupId: 'auth-consumer'
+          }
+        }
       }
-    ])
+    ]),
+    JwtModule.registerAsync({
+      useFactory: async (configService: ApiConfigService) => ({
+        secret: configService.jwtSecret.secret
+      }),
+      inject: [ApiConfigService]
+    })
   ],
   controllers: [UserController],
   providers: [UserService]

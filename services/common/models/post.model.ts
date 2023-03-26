@@ -7,7 +7,6 @@ import {
   Column,
   CreatedAt,
   UpdatedAt
-  // @ts-ignore
 } from 'sequelize-typescript';
 import { ApiProperty } from '@nestjs/swagger';
 

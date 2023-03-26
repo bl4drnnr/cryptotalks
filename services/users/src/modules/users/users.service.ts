@@ -5,17 +5,18 @@ import { SignInDto } from '@dto/sign-in.dto';
 import { SignUpDto } from '@dto/sign-up.dto';
 import { User } from '@models/user.model';
 import { InjectModel } from '@nestjs/sequelize';
-import { WrongCredentialsException } from '@modules/exceptions/wrong-credentials.exception';
-import { AccountNotConfirmedException } from '@modules/exceptions/account-not-confirmed.exception';
 import { ClientKafka } from '@nestjs/microservices';
-import { UserAlreadyExistsException } from '@modules/exceptions/user-already-exists.exception';
-import { TacNotAcceptedException } from '@modules/exceptions/tac-not-accepted.exception';
-import { ValidationErrorException } from '@modules/exceptions/validation-error.exception';
 import { ValidatorService } from '@shared/validator.service';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
 import { EmailService } from '@shared/email.service';
-import { EmailAlreadyConfirmedException } from '@modules/exceptions/email-already-confirmed.exception';
 import { UpdateTokensEvent } from '@events/update-tokens.event';
+import { WrongCredentialsException } from '@exceptions/wrong-credentials.exception';
+import { AccountNotConfirmedException } from '@exceptions/account-not-confirmed.exception';
+import { UserAlreadyExistsException } from '@exceptions/user-already-exists.exception';
+import { TacNotAcceptedException } from '@exceptions/tac-not-accepted.exception';
+import { ValidationErrorException } from '@exceptions/validation-error.exception';
+import { EmailAlreadyConfirmedException } from '@exceptions/email-already-confirmed.exception';
+import { ResponseDto } from '@dto/response.dto';
 
 @Injectable()
 export class UsersService {
@@ -79,7 +80,7 @@ export class UsersService {
       confirmationHash
     });
 
-    // return { message: 'success' };
+    return new ResponseDto();
   }
 
   async accountConfirmation({
@@ -88,8 +89,7 @@ export class UsersService {
     confirmationHash: string;
   }) {
     const foundHash = await this.confirmHashRepository.findOne({
-      where: { confirmationHash },
-      include: [{ model: User }]
+      where: { confirmationHash }
     });
 
     if (!foundHash) throw new BadRequestException();
@@ -108,6 +108,8 @@ export class UsersService {
       },
       { where: { id: foundHash.userId } }
     );
+
+    return new ResponseDto();
   }
 
   async logout(userId: string) {

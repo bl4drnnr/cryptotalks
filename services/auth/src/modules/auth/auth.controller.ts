@@ -15,4 +15,9 @@ export class AuthController {
   logout(data: any) {
     return this.authService.deleteRefreshToken(data);
   }
+
+  @MessagePattern('verify_token')
+  verifyToken(data: any) {
+    return this.authService.verifyToken(data);
+  }
 }
