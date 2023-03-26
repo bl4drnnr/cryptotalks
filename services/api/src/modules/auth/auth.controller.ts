@@ -17,7 +17,9 @@ export class AuthController {
   @Get('refresh')
   @UseGuards(JwtGuard)
   async refreshTokens(@CookieRefreshToken() refreshToken: string) {
-    const refreshedTokens = this.authService.refreshTokens({ refreshToken });
+    const refreshedTokens = await this.authService.refreshTokens({
+      refreshToken
+    });
 
     // res.cookie('_rt', refreshedTokens._rt);
 

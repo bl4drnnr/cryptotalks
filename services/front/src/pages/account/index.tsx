@@ -45,20 +45,20 @@ const Account = () => {
 
   const [userData, setUserData] = React.useState<IPersonalInformation>();
 
-  React.useEffect(() => {
-    if (fetchTokenChecking.current) {
-      fetchTokenChecking.current = false;
-      const token = sessionStorage.getItem('_at');
-
-      if (!token) handleRedirect('/').then();
-      else checkUser(token).then((res) => {
-        if (res) {
-          sessionStorage.setItem('_at', res._at);
-          setUserData(res.user);
-        }
-      });
-    }
-  }, []);
+  // React.useEffect(() => {
+  //   if (fetchTokenChecking.current) {
+  //     fetchTokenChecking.current = false;
+  //     const token = sessionStorage.getItem('_at');
+  //
+  //     if (!token) handleRedirect('/').then();
+  //     else checkUser(token).then((res) => {
+  //       if (res) {
+  //         sessionStorage.setItem('_at', res._at);
+  //         setUserData(res.user);
+  //       }
+  //     });
+  //   }
+  // }, []);
 
   const copyToClipboard = async (text: string) => {
     await navigator.clipboard.writeText(text);
@@ -74,7 +74,7 @@ const Account = () => {
 
   const checkUser = async (token: string) => {
     try {
-      return await refreshToken({ token });
+      // return await refreshToken({ token });
     } catch (e) {
       handleException(e);
       sessionStorage.removeItem('_at');

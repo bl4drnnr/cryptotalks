@@ -14,6 +14,7 @@ import { AccessTokenDto } from '@dto/access-token.dto';
 import { RefreshTokenDto } from '@dto/refresh-token.dto';
 import { TokenPayloadDto } from '@dto/token-payload.dto';
 import { GetUserByIdEvent } from '@events/get-user-by-id.event';
+import { ResponseDto } from '@dto/response.dto';
 
 @Injectable()
 export class AuthService {
