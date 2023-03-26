@@ -65,6 +65,6 @@ export class UserController {
   @Post('logout')
   @UseGuards(JwtGuard)
   async logout(@UserDecorator() userId: string) {
-    console.log('userId', userId);
+    //
   }
 }

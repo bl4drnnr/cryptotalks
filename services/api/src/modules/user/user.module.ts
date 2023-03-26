@@ -20,6 +20,19 @@ import { ApiConfigService } from '@shared/config.service';
             groupId: 'users-consumer'
           }
         }
+      },
+      {
+        name: 'AUTH_SERVICE',
+        transport: Transport.KAFKA,
+        options: {
+          client: {
+            clientId: 'auth',
+            brokers: ['kafka:9092']
+          },
+          consumer: {
+            groupId: 'auth-consumer'
+          }
+        }
       }
     ]),
     JwtModule.registerAsync({

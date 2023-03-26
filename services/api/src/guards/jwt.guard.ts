@@ -2,12 +2,23 @@ import {
   CanActivate,
   ExecutionContext,
   Inject,
-  Injectable, OnModuleInit
+  Injectable,
+  OnModuleInit
 } from '@nestjs/common';
 import { CorruptedTokenException } from '@exceptions/corrupted-token.exception';
 import { InvalidTokenException } from '@exceptions/invalid-token.exception';
 import { ClientKafka } from '@nestjs/microservices';
-import {UserService} from "@modules/user.service";
+import { UserService } from '@modules/user.service';
+
+class VerifyTokenDto {
+  constructor(private readonly token: string) {}
+
+  toString() {
+    return JSON.stringify({
+      token: this.token
+    });
+  }
+}
 
 interface ITokenPayload {
   id: string;
@@ -16,10 +27,9 @@ interface ITokenPayload {
 }
 
 @Injectable()
-export class JwtGuard implements CanActivate {
+export class JwtGuard implements CanActivate, OnModuleInit {
   constructor(
-    // @Inject('AUTH_SERVICE') private readonly authClient: ClientKafka
-    private readonly userService: UserService
+    @Inject('AUTH_SERVICE') private readonly authClient: ClientKafka
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -33,19 +43,20 @@ export class JwtGuard implements CanActivate {
 
     if (bearer !== 'Bearer' || !token) throw new CorruptedTokenException();
 
-    // const payload: ITokenPayload = this.authService.verifyToken(token);
-    // const response = await this.authClient
-    //   .send(
-    //     'verify_token',
-    //     new VerifyTokenDto(token)
-    //   );
-    const response = await this.userService.logout(token);
-    console.log('response', response.subscribe((t) => {
-      console.log('t', t);
-    }));
+    const response = await this.authClient.send(
+      'verify_token',
+      new VerifyTokenDto(token)
+    );
+    response.subscribe((payload) => {
+      //
+    });
 
     // req.user = payload.userId;
 
     return true;
+  }
+
+  onModuleInit(): any {
+    this.authClient.subscribeToResponseOf('verify_token');
   }
 }

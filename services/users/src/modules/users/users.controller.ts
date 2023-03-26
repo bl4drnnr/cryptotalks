@@ -29,11 +29,6 @@ export class UsersController implements OnModuleInit {
     return this.usersService.accountConfirmation(data);
   }
 
-  @MessagePattern('verify_token')
-  test(data: any) {
-    return 'asdadas';
-  }
-
   onModuleInit(): any {
     this.authClient.subscribeToResponseOf('update_tokens');
   }
