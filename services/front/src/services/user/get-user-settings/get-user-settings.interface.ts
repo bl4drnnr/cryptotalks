@@ -12,9 +12,6 @@ export interface IPersonalInformation {
   email: string;
 }
 
-export interface INotificationSettings {
-  receiveNotifications: boolean;
-}
 
 export interface ISecuritySettings {
   emailChanged: boolean;
@@ -26,7 +23,6 @@ export interface ISecuritySettings {
 
 interface ISettings {
   personalInformation: IPersonalInformation;
-  notificationSettings: INotificationSettings;
   securitySettings: ISecuritySettings;
 }
 

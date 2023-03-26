@@ -50,6 +50,14 @@ export class UserService implements OnModuleInit {
     return new ResponseDto();
   }
 
+  getUserById({ id }: { id: string }) {
+    //
+  }
+
+  closeAccount({ userId }: { userId: string }) {
+    //
+  }
+
   onModuleInit(): any {
     this.userClient.subscribeToResponseOf('user_sign_in');
     this.userClient.subscribeToResponseOf('user_created');

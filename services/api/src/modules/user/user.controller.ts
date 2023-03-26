@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   Res,
   UseGuards
@@ -79,9 +80,31 @@ export class UserController {
     status: 201,
     description: 'As a response function gets success message'
   })
-  @Post('logout')
   @UseGuards(JwtGuard)
+  @Post('logout')
   logout(@UserDecorator() userId: string, @Res() res) {
+    res.clearCookie('_rt');
     return this.userService.logout({ userId });
+  }
+
+  @ApiOperation({ summary: 'Get user public profile' })
+  @ApiResponse({
+    status: 201,
+    description: 'As a response returns only public data'
+  })
+  @Get('get/:id')
+  getUserById(@Param('id') id: string) {
+    return this.userService.getUserById({ id });
+  }
+
+  @ApiOperation({ summary: 'Closes user profile (soft delete)' })
+  @ApiResponse({
+    status: 201,
+    description: 'As a response returns success message'
+  })
+  @UseGuards(JwtGuard)
+  @Patch('close-account')
+  closeAccount(@UserDecorator() userId: string) {
+    return this.userService.closeAccount({ userId });
   }
 }

@@ -2,16 +2,16 @@ import React from 'react';
 
 import { ApiClient } from '@api-client';
 import { ExceptionHandler } from '@exception-handler';
-import { GetUserSettingsPayload, GetUserSettingsResponse } from '@services/get-user-settings/get-user-settings.interface';
+import { DeletePostPayload, DeletePostResponse } from '@services/posts/delete-post/delete-post.interface';
 
-export const useGetUserSettingsService = () => {
+export const useDeletePostService = () => {
   const [loading, setLoading] = React.useState(false);
 
-  const getUserSettings = async (payload: GetUserSettingsPayload)
-    : Promise<GetUserSettingsResponse> => {
+  const deletePost = async (payload: DeletePostPayload)
+    : Promise<DeletePostResponse> => {
     try {
       setLoading(true);
-      const { data } = await ApiClient.get<GetUserSettingsResponse>('/user/get-user-settings', {
+      const { data } = await ApiClient.delete<DeletePostResponse>(`/post/delete/${payload.postId}`, {
         headers: { 'Application-Authorization': `Bearer ${payload.token}` }
       });
 
@@ -23,5 +23,5 @@ export const useGetUserSettingsService = () => {
     }
   };
 
-  return { getUserSettings, loading };
+  return { deletePost, loading };
 };

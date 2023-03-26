@@ -5,9 +5,9 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 
-import PersonalInformation from "@components/PersonalInformation/PersonalInformation.component";
-import SecuritySettings from "@components/SecuritySettings/SecuritySettings.component";
 import { Button } from '@components/Button/Button.component';
+import PersonalInformation from '@components/PersonalInformation/PersonalInformation.component';
+import SecuritySettings from '@components/SecuritySettings/SecuritySettings.component';
 import { useHandleException } from '@hooks/useHandleException.hook';
 import DefaultLayout from '@layouts/Default.layout';
 import { useCloseAccountService } from '@services/close-account/close-account.service';
@@ -16,6 +16,9 @@ import {
   ISecuritySettings
 } from '@services/get-user-settings/get-user-settings.interface';
 import { useGetUserSettingsService } from '@services/get-user-settings/get-user-settings.service';
+import {
+  useSetPersonalUserSettingsService
+} from '@services/set-user-personal-settings/set-user-personal-settings.service';
 import {
   ButtonWrapper,
   Container, CreatedAtDate, CreatedAtParagraph,
@@ -31,9 +34,6 @@ import {
   UserProfilePicture,
   Wrapper
 } from '@styles/settings.style';
-import {
-  useSetPersonalUserSettingsService
-} from "@services/set-user-personal-settings/set-user-personal-settings.service";
 
 const AccountSettings = () => {
   const router = useRouter();

@@ -1,8 +1,11 @@
 import React from 'react';
 
+
 import { ApiClient } from '@api-client';
 import { ExceptionHandler } from '@exception-handler';
-import { SetPersonalUserSettingsPayload, SetPersonalUserSettingsResponse } from '@services/user-settings/set-user-personal-settings/set-user-personal-settings.interface';
+import {
+  SetPersonalUserSettingsPayload, SetPersonalUserSettingsResponse
+} from '@services/set-user-personal-settings/set-user-personal-settings.interface';
 
 export const useSetPersonalUserSettingsService = () => {
   const [loading, setLoading] = React.useState(false);
@@ -11,7 +14,7 @@ export const useSetPersonalUserSettingsService = () => {
     : Promise<SetPersonalUserSettingsResponse> => {
     try {
       setLoading(true);
-      const { data } = await ApiClient.patch<SetPersonalUserSettingsResponse>('/user/settings/set-personal', payload, {
+      const { data } = await ApiClient.patch<SetPersonalUserSettingsResponse>('/user/set-user-settings', payload, {
         headers: { 'Application-Authorization': `Bearer ${token}` }
       });
 

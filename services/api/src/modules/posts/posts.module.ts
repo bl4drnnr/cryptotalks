@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { PostsController } from './posts.controller';
 import { PostsService } from './posts.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { JwtModule } from '@nestjs/jwt';
+import { ApiConfigService } from '@shared/config.service';
 
 @Module({
   imports: [
@@ -19,7 +21,13 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
           }
         }
       }
-    ])
+    ]),
+    JwtModule.registerAsync({
+      useFactory: async (configService: ApiConfigService) => ({
+        secret: configService.jwtSecret.secret
+      }),
+      inject: [ApiConfigService]
+    })
   ],
   controllers: [PostsController],
   providers: [PostsService]

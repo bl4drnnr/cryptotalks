@@ -2,16 +2,18 @@ import React from 'react';
 
 import { ApiClient } from '@api-client';
 import { ExceptionHandler } from '@exception-handler';
-import { GetUserSettingsPayload, GetUserSettingsResponse } from '@services/get-user-settings/get-user-settings.interface';
+import { UpdatePostPayload, UpdatePostResponse } from '@services/posts/update-post/update-post.interface';
 
-export const useGetUserSettingsService = () => {
+export const useUpdatePostService = () => {
   const [loading, setLoading] = React.useState(false);
 
-  const getUserSettings = async (payload: GetUserSettingsPayload)
-    : Promise<GetUserSettingsResponse> => {
+  const updatePost = async (payload: UpdatePostPayload)
+    : Promise<UpdatePostResponse> => {
     try {
       setLoading(true);
-      const { data } = await ApiClient.get<GetUserSettingsResponse>('/user/get-user-settings', {
+      const { data } = await ApiClient.patch(`/post/update/${payload.postId}`, {
+        title: payload.title, content: payload.content
+      }, {
         headers: { 'Application-Authorization': `Bearer ${payload.token}` }
       });
 
@@ -23,5 +25,5 @@ export const useGetUserSettingsService = () => {
     }
   };
 
-  return { getUserSettings, loading };
+  return { updatePost, loading };
 };
