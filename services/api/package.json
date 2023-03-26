@@ -21,15 +21,12 @@
     "sequelize:seed": "npx sequelize-cli db:seed --seed 20230319180209-demo.js"
   },
   "dependencies": {
-    "@fastify/cookie": "^8.3.0",
-    "@fastify/static": "^6.8.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.3.1",
     "@nestjs/core": "^9.0.0",
     "@nestjs/jwt": "^10.0.2",
     "@nestjs/microservices": "^9.3.11",
     "@nestjs/platform-express": "^9.0.0",
-    "@nestjs/platform-fastify": "^9.2.1",
     "@nestjs/sequelize": "^9.0.0",
     "@nestjs/swagger": "^6.2.1",
     "dotenv": "^16.0.3",

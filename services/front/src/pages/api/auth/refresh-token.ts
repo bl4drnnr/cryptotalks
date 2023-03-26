@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { serialize } from 'cookie';
+import cookie from 'cookie';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import { Api } from '@api';
@@ -10,16 +10,18 @@ export default async (
   res: NextApiResponse
 ) => {
   try {
+    const cookies = cookie.parse(req.headers.cookie || '');
+
     const { data, headers } = await Api.get('/auth/refresh', {
       headers: {
-        'Cookie': req.headers.cookie || '',
+        'Cookie': `_rt=${cookies._rt}`,
         'Application-Authorization': req.headers['application-authorization']
       }
     });
 
     if (headers['set-cookie']) {
       const refreshToken = headers['set-cookie'][0].split('=')[1];
-      res.setHeader('Set-Cookie', serialize(
+      res.setHeader('Set-Cookie', cookie.serialize(
         '_rt', refreshToken, {
           path: '/',
           httpOnly: true,

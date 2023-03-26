@@ -26,7 +26,6 @@ import { ConfirmationHash } from '@models/confirmation-hash.model';
 import { Session } from '@models/session.model';
 import { JwtGuard } from '@guards/jwt.guard';
 import { UserDecorator } from '@decorators/user.decorator';
-import { FastifyReply } from 'fastify';
 
 @ApiTags('User')
 @Controller('user')
@@ -55,10 +54,7 @@ export class UserController {
     description: 'As a response function gets success message'
   })
   @Post('sign-in')
-  async signIn(
-    @Body() payload: SignInDto,
-    @Res({ passthrough: true }) res
-  ) {
+  async signIn(@Body() payload: SignInDto, @Res({ passthrough: true }) res) {
     const tokens = await this.userService.signIn(payload);
 
     res.cookie('_rt', tokens._rt);
@@ -85,7 +81,7 @@ export class UserController {
   })
   @Post('logout')
   @UseGuards(JwtGuard)
-  logout(@UserDecorator() userId: string, @Res() res: FastifyReply) {
+  logout(@UserDecorator() userId: string, @Res() res) {
     return this.userService.logout({ userId });
   }
 }

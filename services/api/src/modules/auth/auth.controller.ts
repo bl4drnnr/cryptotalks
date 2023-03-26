@@ -1,9 +1,8 @@
-import { Controller, Get, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { AuthService } from '@modules/auth.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtGuard } from '@guards/jwt.guard';
-import { Cookie } from '@decorators/cookie.decorator';
-import { FastifyReply } from 'fastify';
+import { CookieRefreshToken } from '@decorators/cookie-refresh-token.decorator';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -17,10 +16,7 @@ export class AuthController {
   })
   @Get('refresh')
   @UseGuards(JwtGuard)
-  async refreshTokens(
-    @Res({ passthrough: true }) res: FastifyReply,
-    @Cookie('_rt') refreshToken: string
-  ) {
+  async refreshTokens(@CookieRefreshToken() refreshToken: string) {
     const refreshedTokens = this.authService.refreshTokens({ refreshToken });
 
     // res.cookie('_rt', refreshedTokens._rt);
