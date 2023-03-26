@@ -1,10 +1,6 @@
 import { Controller, Inject, OnModuleInit } from '@nestjs/common';
 import { UsersService } from '@modules/users.service';
-import {
-  ClientKafka,
-  EventPattern,
-  MessagePattern
-} from '@nestjs/microservices';
+import { ClientKafka, MessagePattern } from '@nestjs/microservices';
 
 @Controller('users')
 export class UsersController implements OnModuleInit {
@@ -13,7 +9,7 @@ export class UsersController implements OnModuleInit {
     @Inject('AUTH_SERVICE') private readonly authClient: ClientKafka
   ) {}
 
-  @EventPattern('user_created')
+  @MessagePattern('user_created')
   handleSignUp(data: any) {
     return this.usersService.signUp(data);
   }
@@ -26,6 +22,11 @@ export class UsersController implements OnModuleInit {
   @MessagePattern('get_user_by_id')
   getUserById(data: any) {
     return this.usersService.getUserById(data);
+  }
+
+  @MessagePattern('confirm_user_account')
+  confirmUserAccount(data: any) {
+    return this.usersService.accountConfirmation(data);
   }
 
   onModuleInit(): any {

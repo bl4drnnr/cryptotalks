@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { UserService } from '@modules/user.service';
 import { SignUpDto } from '@dto/sign-up.dto';
 import {
@@ -16,6 +16,7 @@ import { AccountConfirmationDto } from '@dto/account-confirmation.dto';
 import { User } from '@models/user.model';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
 import { Session } from '@models/session.model';
+import { JwtGuard } from '@guards/jwt.guard';
 
 @ApiTags('User')
 @Controller('user')
@@ -23,8 +24,6 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   @ApiExtraModels(User)
-  @ApiExtraModels(ConfirmationHash)
-  @ApiExtraModels(AccountConfirmationDto)
   @ApiOperation({ summary: 'Responsible for user account creation' })
   @ApiResponse({
     status: 201,
@@ -45,8 +44,26 @@ export class UserController {
     status: 201,
     description: 'As a response function gets success message'
   })
-  @Post('/sign-in')
+  @Post('sign-in')
   async signIn(@Body() payload: SignInDto) {
     return this.userService.signIn(payload);
+  }
+
+  @ApiExtraModels(ConfirmationHash)
+  @ApiExtraModels(AccountConfirmationDto)
+  @ApiOperation({ summary: 'Confirm user registration' })
+  @ApiResponse({
+    status: 201,
+    description: 'As a response function gets success message'
+  })
+  @Get('account-confirmation/:confirmationHash')
+  async confirmAccount(@Param('confirmationHash') confirmationHash: string) {
+    return this.userService.confirmAccount({ confirmationHash });
+  }
+
+  @UseGuards(JwtGuard)
+  @Post('test')
+  testEndpoint() {
+    //
   }
 }

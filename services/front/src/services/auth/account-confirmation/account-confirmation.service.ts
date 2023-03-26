@@ -14,7 +14,7 @@ export const useAccountConfirmationService = () => {
     : Promise<AccountConfirmationResponse> => {
     try {
       setLoading(true);
-      const { data } = await ApiClient.get<AccountConfirmationResponse>(`/user/account-confirmation/${payload.hash}`);
+      const { data } = await ApiClient.get<AccountConfirmationResponse>(`/auth/account-confirmation/${payload.hash}`);
 
       return data;
     } catch (error: any) {

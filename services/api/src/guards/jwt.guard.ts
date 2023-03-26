@@ -1,14 +1,15 @@
 import {
   CanActivate,
   ExecutionContext,
-  forwardRef,
   Inject,
-  Injectable
+  Injectable,
+  OnModuleInit,
+  UnauthorizedException
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { AuthService } from '@auth/auth.service';
 import { CorruptedTokenException } from '@exceptions/corrupted-token.exception';
 import { InvalidTokenException } from '@exceptions/invalid-token.exception';
+import { ClientKafka } from '@nestjs/microservices';
 
 interface ITokenPayload {
   id: string;
@@ -18,10 +19,7 @@ interface ITokenPayload {
 
 @Injectable()
 export class JwtGuard implements CanActivate {
-  constructor(
-    @Inject(forwardRef(() => AuthService))
-    private readonly authService: AuthService
-  ) {}
+  // constructor(@Inject() private clientKafka : ClientKafka) {}
 
   canActivate(
     context: ExecutionContext
@@ -36,9 +34,9 @@ export class JwtGuard implements CanActivate {
 
     if (bearer !== 'Bearer' || !token) throw new CorruptedTokenException();
 
-    const payload: ITokenPayload = this.authService.verifyToken(token);
+    // const payload: ITokenPayload = this.authService.verifyToken(token);
 
-    req.user = payload.userId;
+    // req.user = payload.userId;
     return true;
   }
 }

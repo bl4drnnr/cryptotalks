@@ -63,6 +63,7 @@ export class AuthService {
   }
 
   verifyToken(token: string) {
+    console.log('tokentokentoken', token);
     try {
       return this.jwtService.verify(token, {
         secret: this.configService.jwtAuthConfig.secret

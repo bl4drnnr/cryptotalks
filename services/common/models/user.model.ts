@@ -7,7 +7,6 @@ import {
   PrimaryKey,
   Table,
   UpdatedAt
-  // @ts-ignore
 } from 'sequelize-typescript';
 import { ApiProperty } from '@nestjs/swagger';
 

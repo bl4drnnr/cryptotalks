@@ -12,7 +12,7 @@ export const useSignUpService = () => {
     : Promise<SignUpResponse> => {
     try {
       setLoading(true);
-      const { data } = await ApiClient.post<SignUpResponse>('/user/sign-up', payload);
+      const { data } = await ApiClient.post<SignUpResponse>('/auth/sign-up', payload);
 
       return data;
     } catch (error: any) {

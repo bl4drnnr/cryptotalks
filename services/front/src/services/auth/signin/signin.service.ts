@@ -11,7 +11,7 @@ export const useSignInService = () => {
     : Promise<SignInResponse> => {
     try {
       setLoading(true);
-      const { data } = await ApiClient.post<SignInResponse>('/user/sign-in', payload);
+      const { data } = await ApiClient.post<SignInResponse>('/auth/sign-in', payload);
 
       return data;
     } catch (error: any) {

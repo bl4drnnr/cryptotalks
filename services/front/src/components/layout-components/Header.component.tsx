@@ -49,7 +49,7 @@ export const Header = () => {
       if (response.message === 'success') {
         setTokenPersistence(false);
         sessionStorage.removeItem('_at');
-        await handleRedirect('/');
+        await handleRedirect('');
       }
     } catch (e) {
       handleException(e);
@@ -69,7 +69,7 @@ export const Header = () => {
       <Container>
         <Box>
           <NavigationButtons>
-            <Logo onClick={() => handleRedirect('/')}>Cryptotalks</Logo>
+            <Logo onClick={() => handleRedirect('')}>Cryptotalks</Logo>
             <Links>
               <Link onClick={() => handleRedirect('/posts')}>Posts</Link>
               <Link onClick={() => handleRedirect('/market')}>Market</Link>

@@ -5,5 +5,5 @@ export class AccountConfirmationDto {
     type: 'string',
     nullable: false
   })
-  confirmHash: string;
+  confirmationHash: string;
 }
