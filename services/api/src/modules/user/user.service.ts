@@ -5,11 +5,14 @@ import { UserSignUpEvent } from '@events/user-sign-up.event';
 import { SignInDto } from '@dto/sign-in.dto';
 import { UserSignInEvent } from '@events/user-sign-in.event';
 import { ConfirmAccountEvent } from '@events/confirm-account.event';
+import { UserLogoutEvent } from '@events/user-logout.event';
+import {ResponseDto} from "@dto/response.dto";
 
 @Injectable()
 export class UserService implements OnModuleInit {
   constructor(
-    @Inject('USERS_SERVICE') private readonly userClient: ClientKafka
+    @Inject('USERS_SERVICE') private readonly userClient: ClientKafka,
+    @Inject('AUTH_SERVICE') private readonly authClient: ClientKafka
   ) {}
 
   signUp(payload: SignUpDto) {
@@ -31,6 +34,11 @@ export class UserService implements OnModuleInit {
       'confirm_user_account',
       new ConfirmAccountEvent({ confirmationHash })
     );
+  }
+
+  logout({ userId }: { userId: string }) {
+    this.authClient.emit('user_logout', new UserLogoutEvent({ userId }));
+    return new ResponseDto();
   }
 
   onModuleInit(): any {

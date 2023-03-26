@@ -1,6 +1,11 @@
 import * as bcryptjs from 'bcryptjs';
 import * as crypto from 'crypto';
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  OnModuleInit
+} from '@nestjs/common';
 import { SignInDto } from '@dto/sign-in.dto';
 import { SignUpDto } from '@dto/sign-up.dto';
 import { User } from '@models/user.model';
@@ -19,7 +24,7 @@ import { EmailAlreadyConfirmedException } from '@exceptions/email-already-confir
 import { ResponseDto } from '@dto/response.dto';
 
 @Injectable()
-export class UsersService {
+export class UsersService implements OnModuleInit {
   constructor(
     @InjectModel(User) private readonly userRepository: typeof User,
     @InjectModel(ConfirmationHash)
@@ -112,11 +117,11 @@ export class UsersService {
     return new ResponseDto();
   }
 
-  async logout(userId: string) {
-    return this.authClient.send('', {});
-  }
-
   async getUserById({ id }: { id: string }) {
     return await this.userRepository.findByPk(id);
+  }
+
+  onModuleInit(): any {
+    this.authClient.subscribeToResponseOf('update_tokens');
   }
 }

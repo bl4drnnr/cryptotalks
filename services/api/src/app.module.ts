@@ -9,7 +9,7 @@ import { PostsModule } from '@modules/posts.module';
 import { UserModule } from '@modules/user.module';
 import { CryptoModule } from '@modules/crypto.module';
 import { AuthModule } from '@modules/auth.module';
-import { SharedModule } from './shared/shared.module';
+import { SharedModule } from '@shared/shared.module';
 
 @Module({
   imports: [

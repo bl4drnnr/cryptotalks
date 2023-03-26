@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {Body, Controller, Get, Param, Post, Res, UseGuards} from '@nestjs/common';
 import { UserService } from '@modules/user.service';
 import { SignUpDto } from '@dto/sign-up.dto';
 import {
@@ -18,6 +18,8 @@ import { ConfirmationHash } from '@models/confirmation-hash.model';
 import { Session } from '@models/session.model';
 import { JwtGuard } from '@guards/jwt.guard';
 import { UserDecorator } from '@decorators/user.decorator';
+import { ResponseDto } from '@dto/response.dto';
+import {FastifyReply} from "fastify";
 
 @ApiTags('User')
 @Controller('user')
@@ -46,7 +48,7 @@ export class UserController {
     description: 'As a response function gets success message'
   })
   @Post('sign-in')
-  async signIn(@Body() payload: SignInDto) {
+  signIn(@Body() payload: SignInDto) {
     return this.userService.signIn(payload);
   }
 
@@ -58,13 +60,18 @@ export class UserController {
     description: 'As a response function gets success message'
   })
   @Get('account-confirmation/:confirmationHash')
-  async confirmAccount(@Param('confirmationHash') confirmationHash: string) {
+  confirmAccount(@Param('confirmationHash') confirmationHash: string) {
     return this.userService.confirmAccount({ confirmationHash });
   }
 
+  @ApiOperation({ summary: 'Logouts user' })
+  @ApiResponse({
+    status: 201,
+    description: 'As a response function gets success message'
+  })
   @Post('logout')
   @UseGuards(JwtGuard)
-  async logout(@UserDecorator() userId: string) {
-    //
+  logout(@UserDecorator() userId: string, @Res() res) {
+    return this.userService.logout({ userId });
   }
 }
