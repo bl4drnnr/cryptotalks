@@ -1,4 +1,9 @@
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod
+} from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Post } from '@models/post.model';
@@ -10,6 +15,7 @@ import { UserModule } from '@modules/user.module';
 import { CryptoModule } from '@modules/crypto.module';
 import { AuthModule } from '@modules/auth.module';
 import { SharedModule } from '@shared/shared.module';
+import { BasicAuthMiddleware } from '@middlewares/basic-auth.middleware';
 
 @Module({
   imports: [
@@ -34,4 +40,11 @@ import { SharedModule } from '@shared/shared.module';
     SharedModule
   ]
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(BasicAuthMiddleware).forRoutes({
+      path: '/api/*',
+      method: RequestMethod.ALL
+    });
+  }
+}

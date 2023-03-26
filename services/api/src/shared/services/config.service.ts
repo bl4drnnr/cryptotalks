@@ -27,4 +27,11 @@ export class ApiConfigService {
       secret: this.getString('JWT_SECRET')
     };
   }
+
+  get basicAuthConfig() {
+    return {
+      username: this.getString('BASIC_AUTH_USERNAME'),
+      password: this.getString('BASIC_AUTH_PASSWORD')
+    };
+  }
 }

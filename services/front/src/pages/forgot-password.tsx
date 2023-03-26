@@ -104,7 +104,7 @@ const ForgotPassword = () => {
       } headerLink={
         <HeaderLink>
           Do not have an account yet? <Link
-          onClick={() => handleRedirect('/signup')}
+          onClick={() => handleRedirect('signup')}
         >Sign up now!</Link>
         </HeaderLink>
       } rightDarkSide={true}

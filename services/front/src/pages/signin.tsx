@@ -51,7 +51,7 @@ const Signin = () => {
           email, password
         });
         sessionStorage.setItem('_at', _at);
-        await handleRedirect('/account');
+        await handleRedirect('account');
       }
     } catch (e) {
       handleException(e);
@@ -124,7 +124,7 @@ const Signin = () => {
 
               <MarginWrapper>
                 <Link
-                  onClick={() => handleRedirect('/forgot-password')}
+                  onClick={() => handleRedirect('forgot-password')}
                 >{'Forgot password?'}</Link>
               </MarginWrapper>
 
@@ -168,7 +168,7 @@ const Signin = () => {
       } headerLink={
         <HeaderLink>
            <Link
-          onClick={() => handleRedirect('/signup')}
+          onClick={() => handleRedirect('signup')}
         ></Link>
         </HeaderLink>
       } leftDarkSide={true}

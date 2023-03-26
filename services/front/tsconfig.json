@@ -19,6 +19,7 @@
       "@components/*": [
         "src/components/basic-components/*",
         "src/components/layout-components/*",
+        "src/components/account-components/*",
         "src/components/page-components/*"
       ],
       "@styles/*": [

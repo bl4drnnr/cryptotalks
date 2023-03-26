@@ -1,6 +1,6 @@
 import { Controller, Get, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from '@modules/auth.service';
-import {ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtGuard } from '@guards/jwt.guard';
 import { Cookie } from '@decorators/cookie.decorator';
 import { FastifyReply } from 'fastify';
