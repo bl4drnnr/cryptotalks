@@ -73,9 +73,9 @@ paths:
         "201":
           description: As a response function gets success message
       tags: *a1
-  /api/user/test:
+  /api/user/logout:
     post:
-      operationId: UserController_testEndpoint
+      operationId: UserController_logout
       parameters: []
       responses:
         "201":

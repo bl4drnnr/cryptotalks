@@ -20,7 +20,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly configService: ApiConfigService,
     @InjectModel(Session) private readonly sessionRepository: typeof Session,
-    @Inject('USER_SERVICE') private readonly userClient: ClientKafka
+    @Inject('USERS_SERVICE') private readonly userClient: ClientKafka
   ) {}
 
   private generateAccessToken(accessTokenPayload: AccessTokenDto) {
@@ -63,7 +63,6 @@ export class AuthService {
   }
 
   verifyToken(token: string) {
-    console.log('tokentokentoken', token);
     try {
       return this.jwtService.verify(token, {
         secret: this.configService.jwtAuthConfig.secret

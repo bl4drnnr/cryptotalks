@@ -18,6 +18,7 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
+      "@shared/*": ["src/shared/services/*", "src/shared/*"],
       "@models/*": ["src/models/*", "../common/models/*"],
       "@exceptions/*": ["src/exceptions/*", "../common/exceptions/*"],
       "@dto/*": ["src/dto/*", "../common/dto/*"],

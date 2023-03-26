@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ClientKafka, ClientsModule, Transport } from '@nestjs/microservices';
 import { JwtModule } from '@nestjs/jwt';
-import { ApiConfigService } from '../../shared/services/config.service';
+import { ApiConfigService } from '@shared/config.service';
 
 @Module({
   imports: [

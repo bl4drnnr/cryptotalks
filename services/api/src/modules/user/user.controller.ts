@@ -17,6 +17,7 @@ import { User } from '@models/user.model';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
 import { Session } from '@models/session.model';
 import { JwtGuard } from '@guards/jwt.guard';
+import { UserDecorator } from '@decorators/user.decorator';
 
 @ApiTags('User')
 @Controller('user')
@@ -61,9 +62,9 @@ export class UserController {
     return this.userService.confirmAccount({ confirmationHash });
   }
 
+  @Post('logout')
   @UseGuards(JwtGuard)
-  @Post('test')
-  testEndpoint() {
-    //
+  async logout(@UserDecorator() userId: string) {
+    console.log('userId', userId);
   }
 }

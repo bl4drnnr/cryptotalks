@@ -1,5 +1,5 @@
 import { Global, Module } from '@nestjs/common';
-import { ApiConfigService } from './services/config.service';
+import { ApiConfigService } from '@shared/config.service';
 
 const providers = [ApiConfigService];
 

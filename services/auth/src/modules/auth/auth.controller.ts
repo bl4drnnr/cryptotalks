@@ -16,7 +16,7 @@ export class AuthController {
     return this.authService.deleteRefreshToken(data);
   }
 
-  @MessagePattern('verify_token')
+  @MessagePattern('verify_tokenasdasd')
   verifyToken(data: any) {
     return this.authService.verifyToken(data);
   }
