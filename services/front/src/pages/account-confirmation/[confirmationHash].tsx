@@ -17,11 +17,11 @@ const AccountConfirmation = () => {
   const [confirmationStatus, setConfirmationStatus] = React.useState(1);
 
   React.useEffect(() => {
-    const { confirmationHash } = router.query
+    const { confirmationHash } = router.query;
     confirmAccountRegistration(confirmationHash as string)
       .then((res) => {
         if (res?.message === 'success') setConfirmationStatus(2);
-      })
+      });
   }, [router.query]);
 
   const handleRedirect = async (path: string) => {
@@ -60,7 +60,7 @@ const AccountConfirmation = () => {
                     <Button
                       fillButton={true}
                       text={'Sign In'}
-                      onClick={() => handleRedirect('/signin')}
+                      onClick={() => handleRedirect('signin')}
                     />
                   </MarginWrapper>
                 </>
@@ -89,7 +89,7 @@ const AccountConfirmation = () => {
         }
         headerLink={
           <>
-            <HeaderLink><Link onClick={() => handleRedirect('/signin')}
+            <HeaderLink><Link onClick={() => handleRedirect('signin')}
             >Sign In</Link></HeaderLink>
           </>
         }

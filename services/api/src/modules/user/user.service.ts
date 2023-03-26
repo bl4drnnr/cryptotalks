@@ -5,11 +5,15 @@ import { UserSignUpEvent } from '@events/user-sign-up.event';
 import { SignInDto } from '@dto/sign-in.dto';
 import { UserSignInEvent } from '@events/user-sign-in.event';
 import { ConfirmAccountEvent } from '@events/confirm-account.event';
+import { UserLogoutEvent } from '@events/user-logout.event';
+import { ResponseDto } from '@dto/response.dto';
+import { from, tap } from 'rxjs';
 
 @Injectable()
 export class UserService implements OnModuleInit {
   constructor(
-    @Inject('USERS_SERVICE') private readonly userClient: ClientKafka
+    @Inject('USERS_SERVICE') private readonly userClient: ClientKafka,
+    @Inject('AUTH_SERVICE') private readonly authClient: ClientKafka
   ) {}
 
   signUp(payload: SignUpDto) {
@@ -19,11 +23,19 @@ export class UserService implements OnModuleInit {
     );
   }
 
-  signIn(payload: SignInDto) {
-    return this.userClient.send(
-      'user_sign_in',
-      new UserSignInEvent({ ...payload })
-    );
+  async signIn(payload: SignInDto) {
+    return await from(
+      new Promise<{ _at: string; _rt: string }>((resolve) => {
+        this.userClient
+          .send('user_sign_in', new UserSignInEvent({ ...payload }))
+          .pipe(
+            tap((t) => {
+              resolve(t);
+            })
+          )
+          .subscribe();
+      })
+    ).toPromise();
   }
 
   confirmAccount({ confirmationHash }: { confirmationHash: string }) {
@@ -31,6 +43,19 @@ export class UserService implements OnModuleInit {
       'confirm_user_account',
       new ConfirmAccountEvent({ confirmationHash })
     );
+  }
+
+  logout({ userId }: { userId: string }) {
+    this.authClient.emit('user_logout', new UserLogoutEvent({ userId }));
+    return new ResponseDto();
+  }
+
+  getUserById({ id }: { id: string }) {
+    //
+  }
+
+  closeAccount({ userId }: { userId: string }) {
+    //
   }
 
   onModuleInit(): any {

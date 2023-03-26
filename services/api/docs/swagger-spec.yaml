@@ -76,11 +76,24 @@ paths:
   /api/user/logout:
     post:
       operationId: UserController_logout
+      summary: Logouts user
       parameters: []
       responses:
         "201":
-          description: ""
+          description: As a response function gets success message
       tags: *a1
+  /api/auth/refresh:
+    get:
+      operationId: AuthController_refreshTokens
+      summary: Refreshes tokens
+      parameters: []
+      responses:
+        "200":
+          description: ""
+        "201":
+          description: Refreshes both tokens and returns to user
+      tags:
+        - Authentication
 info:
   title: Cryptotalks - API Gateway
   description: Documentation of Cryptotalks' API Gateway.

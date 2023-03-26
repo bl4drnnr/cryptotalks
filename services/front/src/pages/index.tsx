@@ -65,7 +65,7 @@ const Home = () => {
           </InputWrapper>
 
           <InputWrapper>
-            <StartButton onClick={() => handleRedirect(`/signup?email=${email}`)}>
+            <StartButton onClick={() => handleRedirect(`signup?email=${email}`)}>
               <ButtonText>
                 Here we go
               </ButtonText>

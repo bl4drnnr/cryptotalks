@@ -25,6 +25,7 @@
       "@events/*": ["src/events/*", "../common/events/*"],
       "@guards/*": ["src/guards/*"],
       "@decorators/*": ["src/decorators/*"],
+      "@middlewares/*": ["src/middlewares/*"],
       "@modules/*": [
         "src/modules/*",
         "src/modules/posts/*",

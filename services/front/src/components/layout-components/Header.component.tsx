@@ -71,8 +71,8 @@ export const Header = () => {
           <NavigationButtons>
             <Logo onClick={() => handleRedirect('')}>Cryptotalks</Logo>
             <Links>
-              <Link onClick={() => handleRedirect('/posts')}>Posts</Link>
-              <Link onClick={() => handleRedirect('/market')}>Market</Link>
+              <Link onClick={() => handleRedirect('posts')}>Posts</Link>
+              <Link onClick={() => handleRedirect('market')}>Market</Link>
             </Links>
           </NavigationButtons>
 
@@ -81,7 +81,7 @@ export const Header = () => {
               <>
                 <Button
                   className={classNames({ logIn: true })}
-                  onClick={() => handleRedirect('/account')}
+                  onClick={() => handleRedirect('account')}
                 >
                   My account
                 </Button>
@@ -96,13 +96,13 @@ export const Header = () => {
               <>
                 <Button
                   className={classNames({ logIn: true })}
-                  onClick={() => handleRedirect('/signin')}
+                  onClick={() => handleRedirect('signin')}
                 >
                   Sign In
                 </Button>
                 <Button
                   className={classNames({ signup: true })}
-                  onClick={() => handleRedirect('/signup')}
+                  onClick={() => handleRedirect('signup')}
                 >
                   Sign Up
                 </Button>

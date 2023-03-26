@@ -13,6 +13,8 @@ import { CorruptedTokenException } from '@exceptions/corrupted-token.exception';
 import { AccessTokenDto } from '@dto/access-token.dto';
 import { RefreshTokenDto } from '@dto/refresh-token.dto';
 import { TokenPayloadDto } from '@dto/token-payload.dto';
+import { GetUserByIdEvent } from '@events/get-user-by-id.event';
+import { ResponseDto } from '@dto/response.dto';
 
 @Injectable()
 export class AuthService {
@@ -62,7 +64,7 @@ export class AuthService {
     });
   }
 
-  verifyToken(token: string) {
+  private verifyToken({ token }: { token: string }) {
     try {
       return this.jwtService.verify(token, {
         secret: this.configService.jwtAuthConfig.secret
@@ -97,21 +99,23 @@ export class AuthService {
   async refreshToken(tokenRefresh: string) {
     if (!tokenRefresh) throw new CorruptedTokenException();
 
-    const payload: TokenPayloadDto = this.verifyToken(tokenRefresh);
+    const payload: TokenPayloadDto = this.verifyToken({ token: tokenRefresh });
 
     const token = await this.getTokenById(payload.id);
 
-    this.userClient.send('get_user_by_id', {}).subscribe(async (user) => {
-      const { _at, _rt } = await this.updateTokens({
-        userId: user.id,
-        email: user.email
-      });
+    this.userClient
+      .send('get_user_by_id', new GetUserByIdEvent({ id: token.userId }))
+      .subscribe(async (user) => {
+        const { _at, _rt } = await this.updateTokens({
+          userId: user.id,
+          email: user.email
+        });
 
-      return { _at, _rt };
-    });
+        return { _at, _rt };
+      });
   }
 
-  async deleteRefreshToken(userId: string) {
-    return await this.sessionRepository.destroy({ where: { userId } });
+  deleteRefreshToken({ userId }: { userId: string }) {
+    return this.sessionRepository.destroy({ where: { userId } });
   }
 }

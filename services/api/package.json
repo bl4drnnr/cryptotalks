@@ -30,6 +30,7 @@
     "@nestjs/sequelize": "^9.0.0",
     "@nestjs/swagger": "^6.2.1",
     "dotenv": "^16.0.3",
+    "jsonwebtoken": "^9.0.0",
     "kafkajs": "^2.2.4",
     "pg": "^8.10.0",
     "pg-hstore": "^2.3.4",

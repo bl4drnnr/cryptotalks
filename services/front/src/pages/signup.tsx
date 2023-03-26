@@ -220,7 +220,7 @@ const Signup = () => {
                   value={tac}
                   label={
                     <Tea>I confirm that I have read and accepted <Link
-                      onClick={() => handleRedirect('/terms-and-conditions')}>terms and conditions</Link>
+                      onClick={() => handleRedirect('terms-and-conditions')}>terms and conditions</Link>
                     </Tea>
                   } onChange={() => setTac(!tac)}/>
               </MarginWrapper>
@@ -343,7 +343,7 @@ const Signup = () => {
                   <SubTitle>Please, check you email inbox in order to confirm registration by clicking the link you will find inside the message.</SubTitle>
                 </MarginWrapper>
                 <MarginWrapper>
-                  <Button fillButton={true} text={'Sign in'} onClick={() => handleRedirect('/signin')}/>
+                  <Button fillButton={true} text={'Sign in'} onClick={() => handleRedirect('signin')}/>
                 </MarginWrapper>
               </Box>
             )
@@ -353,7 +353,7 @@ const Signup = () => {
         <>
           {step === 1 &&
             <HeaderLink>Already have an account? <Link
-              onClick={() => handleRedirect('/signin')}
+              onClick={() => handleRedirect('signin')}
             >Sign in!</Link></HeaderLink>
           }
         </>

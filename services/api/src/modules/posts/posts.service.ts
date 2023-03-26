@@ -15,4 +15,12 @@ export class PostsService {
       new CreatePostEvent({ ...payload })
     );
   }
+
+  getPostById({ id }: { id: string }) {}
+
+  deletePost({ id }: { id: string }) {}
+
+  updatePost({ id, payload }) {
+    //
+  }
 }

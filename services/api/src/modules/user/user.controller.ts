@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Res,
+  UseGuards
+} from '@nestjs/common';
 import { UserService } from '@modules/user.service';
 import { SignUpDto } from '@dto/sign-up.dto';
 import {
@@ -46,8 +55,12 @@ export class UserController {
     description: 'As a response function gets success message'
   })
   @Post('sign-in')
-  async signIn(@Body() payload: SignInDto) {
-    return this.userService.signIn(payload);
+  async signIn(@Body() payload: SignInDto, @Res({ passthrough: true }) res) {
+    const tokens = await this.userService.signIn(payload);
+
+    res.cookie('_rt', tokens._rt);
+
+    return { _at: tokens._at };
   }
 
   @ApiExtraModels(ConfirmationHash)
@@ -58,13 +71,40 @@ export class UserController {
     description: 'As a response function gets success message'
   })
   @Get('account-confirmation/:confirmationHash')
-  async confirmAccount(@Param('confirmationHash') confirmationHash: string) {
+  confirmAccount(@Param('confirmationHash') confirmationHash: string) {
     return this.userService.confirmAccount({ confirmationHash });
   }
 
-  @Post('logout')
+  @ApiOperation({ summary: 'Logouts user' })
+  @ApiResponse({
+    status: 201,
+    description: 'As a response function gets success message'
+  })
   @UseGuards(JwtGuard)
-  async logout(@UserDecorator() userId: string) {
-    //
+  @Post('logout')
+  logout(@UserDecorator() userId: string, @Res() res) {
+    res.clearCookie('_rt');
+    return this.userService.logout({ userId });
+  }
+
+  @ApiOperation({ summary: 'Get user public profile' })
+  @ApiResponse({
+    status: 201,
+    description: 'As a response returns only public data'
+  })
+  @Get('get/:id')
+  getUserById(@Param('id') id: string) {
+    return this.userService.getUserById({ id });
+  }
+
+  @ApiOperation({ summary: 'Closes user profile (soft delete)' })
+  @ApiResponse({
+    status: 201,
+    description: 'As a response returns success message'
+  })
+  @UseGuards(JwtGuard)
+  @Patch('close-account')
+  closeAccount(@UserDecorator() userId: string) {
+    return this.userService.closeAccount({ userId });
   }
 }

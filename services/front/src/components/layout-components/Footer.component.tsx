@@ -16,10 +16,10 @@ export const Footer = () => {
           <NavigationLink onClick={() => handleRedirect('')}>
             Home
           </NavigationLink>
-          <NavigationLink onClick={() => handleRedirect('/posts')}>
+          <NavigationLink onClick={() => handleRedirect('posts')}>
             Posts
           </NavigationLink>
-          <NavigationLink onClick={() => handleRedirect('/market')}>
+          <NavigationLink onClick={() => handleRedirect('market')}>
             Market
           </NavigationLink>
         </NavigationButtons>

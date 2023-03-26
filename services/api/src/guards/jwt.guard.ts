@@ -1,35 +1,17 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Inject,
-  Injectable,
-  OnModuleInit
-} from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { CorruptedTokenException } from '@exceptions/corrupted-token.exception';
 import { InvalidTokenException } from '@exceptions/invalid-token.exception';
-import { ClientKafka } from '@nestjs/microservices';
-import { UserService } from '@modules/user.service';
-
-class VerifyTokenDto {
-  constructor(private readonly token: string) {}
-
-  toString() {
-    return JSON.stringify({
-      token: this.token
-    });
-  }
-}
-
-interface ITokenPayload {
-  id: string;
-  type: string;
-  userId: string;
-}
+import { ApiConfigService } from '@shared/config.service';
+import { ExpiredTokenException } from '@exceptions/expired-token.exception';
+import { SessionHasExpiredException } from '@exceptions/session-expired.exception';
+import { JwtService } from '@nestjs/jwt';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
-export class JwtGuard implements CanActivate, OnModuleInit {
+export class JwtGuard implements CanActivate {
   constructor(
-    @Inject('AUTH_SERVICE') private readonly authClient: ClientKafka
+    private readonly configService: ApiConfigService,
+    private readonly jwtService: JwtService
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -43,20 +25,18 @@ export class JwtGuard implements CanActivate, OnModuleInit {
 
     if (bearer !== 'Bearer' || !token) throw new CorruptedTokenException();
 
-    const response = await this.authClient.send(
-      'verify_token',
-      new VerifyTokenDto(token)
-    );
-    response.subscribe((payload) => {
-      //
-    });
-
-    // req.user = payload.userId;
-
-    return true;
-  }
-
-  onModuleInit(): any {
-    this.authClient.subscribeToResponseOf('verify_token');
+    try {
+      const tokenData = this.jwtService.verify(token, {
+        secret: this.configService.jwtSecret.secret
+      });
+      req.user = tokenData.userId;
+      return true;
+    } catch (error: any) {
+      if (error instanceof jwt.TokenExpiredError)
+        throw new ExpiredTokenException();
+      else if (error instanceof jwt.JsonWebTokenError)
+        throw new InvalidTokenException();
+      else throw new SessionHasExpiredException();
+    }
   }
 }
