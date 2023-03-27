@@ -10,8 +10,8 @@ export default async (
   res: NextApiResponse
 ) => {
   try {
-    const { data, headers } = await Api.post('/user/logout', {}, {
-      headers: { 'Application-Authorization': req.headers['application-authorization'] }
+    const { data, headers } = await Api.get('/user/logout', {
+      headers: { 'x-access-token': req.headers['x-access-token'] }
     });
 
     if (headers['set-cookie']) {

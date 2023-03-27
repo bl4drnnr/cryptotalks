@@ -1,7 +1,8 @@
 import { ForbiddenException } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
 
-export class TacNotAcceptedException extends ForbiddenException {
+export class TacNotAcceptedException extends RpcException {
   constructor() {
-    super('tac-not-accepted', 'T&C is not accepted');
+    super(new ForbiddenException('tac-not-accepted', 'T&C is not accepted'));
   }
 }

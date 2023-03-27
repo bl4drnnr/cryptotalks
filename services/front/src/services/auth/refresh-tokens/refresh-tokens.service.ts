@@ -14,7 +14,7 @@ export const useRefreshTokenService = () => {
     try {
       setLoading(true);
       const { data } = await ApiClient.get<RefreshTokenResponse>('/auth/refresh-token', {
-        headers: { 'Application-Authorization': `Bearer ${payload.token}` }
+        headers: { 'x-access-token': `Bearer ${payload.token}` }
       });
 
       return data;

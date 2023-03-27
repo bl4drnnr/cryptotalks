@@ -26,6 +26,7 @@
       "@guards/*": ["src/guards/*"],
       "@decorators/*": ["src/decorators/*"],
       "@middlewares/*": ["src/middlewares/*"],
+      "@filters/*": ["src/filters/*"],
       "@modules/*": [
         "src/modules/*",
         "src/modules/posts/*",

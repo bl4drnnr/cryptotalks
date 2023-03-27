@@ -6,9 +6,10 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "format": "prettier --write \"dto/*.ts\" \"events/*.ts\" \"models/*.ts\""
+    "format": "prettier --write \"dto/*.ts\" \"events/*.ts\" \"models/*.ts\" \"exceptions/*.ts\""
   },
   "dependencies": {
+    "@nestjs/microservices": "^9.3.12",
     "@nestjs/swagger": "^6.2.1",
     "sequelize": "^6.30.0",
     "sequelize-cli": "^6.6.0",

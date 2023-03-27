@@ -1,7 +1,10 @@
 import { ForbiddenException } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
 
-export class AccountNotConfirmedException extends ForbiddenException {
+export class AccountNotConfirmedException extends RpcException {
   constructor() {
-    super('account-not-confirmed', 'Account not confirmed');
+    super(
+      new ForbiddenException('account-not-confirmed', 'Account not confirmed')
+    );
   }
 }

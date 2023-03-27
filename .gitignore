@@ -60,3 +60,4 @@ services/**/build
 next-env.d.ts
 
 package-lock.json
+test.js

@@ -6,7 +6,8 @@ import {
   Patch,
   Post,
   Res,
-  UseGuards
+  UseGuards,
+  HttpStatus
 } from '@nestjs/common';
 import { UserService } from '@modules/user.service';
 import { SignUpDto } from '@dto/sign-up.dto';
@@ -81,10 +82,11 @@ export class UserController {
     description: 'As a response function gets success message'
   })
   @UseGuards(JwtGuard)
-  @Post('logout')
-  logout(@UserDecorator() userId: string, @Res() res) {
+  @Get('logout')
+  async logout(@UserDecorator() userId: string, @Res() res) {
     res.clearCookie('_rt');
-    return this.userService.logout({ userId });
+    const response = this.userService.logout({ userId });
+    return res.status(HttpStatus.OK).json(response);
   }
 
   @ApiOperation({ summary: 'Get user public profile' })

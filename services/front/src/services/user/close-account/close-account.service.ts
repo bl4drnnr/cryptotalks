@@ -12,7 +12,7 @@ export const useCloseAccountService = () => {
     try {
       setLoading(true);
       const { data } = await ApiClient.patch<CloseAccountResponse>('/user/close-account', {}, {
-        headers: { 'Application-Authorization': `Bearer ${payload.token}` }
+        headers: { 'x-access-token': `Bearer ${payload.token}` }
       });
 
       return data;

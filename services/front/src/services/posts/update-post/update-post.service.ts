@@ -14,7 +14,7 @@ export const useUpdatePostService = () => {
       const { data } = await ApiClient.patch(`/post/update/${payload.postId}`, {
         title: payload.title, content: payload.content
       }, {
-        headers: { 'Application-Authorization': `Bearer ${payload.token}` }
+        headers: { 'x-access-token': `Bearer ${payload.token}` }
       });
 
       return data;

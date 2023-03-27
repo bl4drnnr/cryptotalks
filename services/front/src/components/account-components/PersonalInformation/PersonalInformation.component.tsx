@@ -1,4 +1,4 @@
-import { PersonalInformationProps } from '@components/account-settings/PersonalInformation/PersonalInformation.interface';
+import { PersonalInformationProps } from '@components/PersonalInformation/PersonalInformation.interface';
 import {
   AvaWrapper,
   ChangeAvatar,
@@ -21,7 +21,6 @@ import { Textarea } from '@components/Textarea/Textarea.component';
 
 
 export const PersonalInformation = ({
-  translate,
   personalInformation,
   setPersonalInformation,
   applyPersonalInformation
@@ -30,9 +29,9 @@ export const PersonalInformation = ({
     <>
       <PublicInfoTitleBox>
         <PublicInfoTitle>
-          {translate('placeholders:inputs.personalInformation')}
+
         </PublicInfoTitle>
-        <PersonalInfoSectionDescription>{translate('pages:settings.personalInfoDescription')}</PersonalInfoSectionDescription>
+        <PersonalInfoSectionDescription></PersonalInfoSectionDescription>
       </PublicInfoTitleBox>
       <SeparationLine className={'margin-bottom'} />
 
@@ -43,30 +42,30 @@ export const PersonalInformation = ({
               <>
                 <Input
                   value={personalInformation.username}
-                  placeholder={translate('placeholders:inputs.username')}
+                  placeholder={'Username'}
                   onChange={(e) => setPersonalInformation({ ...personalInformation, username: e.target.value })}
-                  inputDescription={translate('placeholders:inputs.usernameDescription')}
+                  inputDescription={''}
                 />
                 <Input
                   value={personalInformation.firstName}
-                  placeholder={translate('pages:signup.firstName')}
+                  placeholder={'First name'}
                   onChange={(e) => setPersonalInformation({ ...personalInformation, firstName: e.target.value })}
                 />
                 <Input
                   value={personalInformation.lastName}
-                  placeholder={translate('pages:signup.lastName')}
+                  placeholder={'Last name'}
                   onChange={(e) => setPersonalInformation({ ...personalInformation, lastName: e.target.value })}
                 />
                 <SeparationLine />
                 <Input
                   value={personalInformation.title}
-                  placeholder={translate('pages:signup.accTitle')}
+                  placeholder={'Account title'}
                   onChange={(e) => setPersonalInformation({ ...personalInformation, title: e.target.value })}
-                  inputDescription={translate('pages:signup.tellTheWorld')}
+                  inputDescription={'What do you want to tell this world?'}
                 />
                 <Input
                   value={personalInformation.personalWebsite}
-                  placeholder={translate('pages:signup.personalWebsite')}
+                  placeholder={'Personal website'}
                   onChange={(e) => setPersonalInformation({ ...personalInformation, personalWebsite: e.target.value })}
                 />
                 <Input
@@ -81,14 +80,14 @@ export const PersonalInformation = ({
                 />
                 <Textarea
                   value={personalInformation.bio}
-                  placeholder={translate('pages:signup.bio')}
+                  placeholder={'Biography'}
                   onChange={(e) => setPersonalInformation({ ...personalInformation, bio: e.target.value })}
-                  inputDescription={translate('pages:signup.tellAbout')}
+                  inputDescription={'Tell something about yourself'}
                 />
                 <SeparationLine />
                 <Checkbox
                   value={personalInformation.publicEmail}
-                  label={translate('pages:signup.publicEmail')}
+                  label={'Do you want your email be public?'}
                   onChange={(e) => setPersonalInformation({ ...personalInformation, publicEmail: !personalInformation.publicEmail })}
                 />
               </>
@@ -98,7 +97,7 @@ export const PersonalInformation = ({
           <FieldsContainer className={'no-line'}>
             <InputWrapper className={'button'}>
               <Button
-                text={translate('placeholders:inputs.saveChanges')}
+                text={'Save changes'}
                 onClick={applyPersonalInformation}
               />
             </InputWrapper>
@@ -110,7 +109,7 @@ export const PersonalInformation = ({
             <Image className={'ava'} src={'/img/testava.jpg'} alt={'ava'} width={225} height={225}/>
             <ChangeAvatar>
               <Button
-                text={translate('placeholders:inputs.changeAva')}
+                text={'Change avatar'}
                 fillButton={true}
               />
             </ChangeAvatar>

@@ -13,6 +13,8 @@ import { ApiProperty } from '@nestjs/swagger';
 interface UserCreationAttributes {
   email: string;
   password: string;
+  username: string;
+  tac: boolean;
 }
 
 @Table({

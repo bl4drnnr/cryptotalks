@@ -26,8 +26,9 @@
     "kafka:down": "docker-compose -f docker-compose.kafka.yml down",
     "rmi": "docker rmi cryptotalks-api cryptotalks-db cryptotalks-crypto-rates cryptotalks-auth cryptotalks-front cryptotalks-posts cryptotalks-users",
     "format": "npm run format --workspace=users && npm run format --workspace=posts && npm run format --workspace=api && npm run format --workspace=auth && npm run format --workspace=crypto-rates && npm run format --workspace=common",
-    "prep": "npm --prefix . install --no-workspaces && npm --prefix services/api install --no-workspaces && npm --prefix services/auth install --no-workspaces && npm --prefix services/crypto-rates install --no-workspaces && npm --prefix services/front install --no-workspaces && npm --prefix services/posts install --no-workspaces && npm --prefix services/users install --no-workspaces",
-    "demo": ""
+    "prep": "npm --prefix . install --no-workspaces && npm --prefix services/api install --no-workspaces && npm --prefix services/auth install --no-workspaces && npm --prefix services/crypto-rates install --no-workspaces && npm --prefix services/front install --no-workspaces && npm --prefix services/posts install --no-workspaces && npm --prefix services/users install --no-workspaces && npm --prefix services/common install --no-workspaces",
+    "seeders": "npm run sequelize:seed --workspace=api",
+    "demo": "docker-compose -f docker-compose.kafka.yml up -d && npm run prep && docker-compose up -d && npm run sequelize:seed --workspace=api"
   },
   "workspaces": [
     "./services/*"

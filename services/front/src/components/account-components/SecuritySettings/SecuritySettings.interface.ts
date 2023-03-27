@@ -7,7 +7,5 @@ interface ISecuritySettings {
 }
 
 export interface SecuritySettingsProps {
-  locale: string;
-  translate: any;
   securitySettings: ISecuritySettings | undefined;
 }

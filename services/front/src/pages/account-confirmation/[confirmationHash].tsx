@@ -18,10 +18,12 @@ const AccountConfirmation = () => {
 
   React.useEffect(() => {
     const { confirmationHash } = router.query;
-    confirmAccountRegistration(confirmationHash as string)
-      .then((res) => {
-        if (res?.message === 'success') setConfirmationStatus(2);
-      });
+    if (confirmationHash) {
+      confirmAccountRegistration(confirmationHash as string)
+        .then((res) => {
+          if (res?.message === 'success') setConfirmationStatus(2);
+        });
+    }
   }, [router.query]);
 
   const handleRedirect = async (path: string) => {
