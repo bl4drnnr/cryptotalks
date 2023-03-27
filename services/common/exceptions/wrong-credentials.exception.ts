@@ -1,7 +1,9 @@
-import { ForbiddenException } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
+import { NotFoundException } from '@nestjs/common';
 
-export class WrongCredentialsException extends ForbiddenException {
+export class WrongCredentialsException extends RpcException {
   constructor() {
-    super('wrong-credentials', 'Wrong credentials');
+    const notFoundException = new NotFoundException('wrong-credentials', 'Wrong credentials');
+    super({ error: notFoundException });
   }
 }

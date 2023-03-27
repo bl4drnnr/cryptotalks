@@ -1,7 +1,8 @@
 import { ForbiddenException } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
 
-export class UserAlreadyExistsException extends ForbiddenException {
+export class UserAlreadyExistsException extends RpcException {
   constructor() {
-    super('user-already-exists', 'User already exists');
+    super(new ForbiddenException('user-already-exists', 'User already exists'));
   }
 }

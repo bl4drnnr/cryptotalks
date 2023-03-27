@@ -14,7 +14,7 @@ interface UserCreationAttributes {
   email: string;
   password: string;
   username: string;
-  tac: boolean
+  tac: boolean;
 }
 
 @Table({

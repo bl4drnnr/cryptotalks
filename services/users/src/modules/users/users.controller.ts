@@ -1,7 +1,6 @@
-import {Controller, NotFoundException} from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { UsersService } from '@modules/users.service';
-import {MessagePattern, RpcException} from '@nestjs/microservices';
-import {GrpcNotFoundException} from "nestjs-grpc-exceptions";
+import { MessagePattern } from '@nestjs/microservices';
 
 @Controller('users')
 export class UsersController {
@@ -24,9 +23,6 @@ export class UsersController {
 
   @MessagePattern('confirm_user_account')
   confirmUserAccount(data: any) {
-    // return this.usersService.accountConfirmation(data);
-    throw new RpcException(
-      new NotFoundException("Product was not found!")
-    );
+    return this.usersService.accountConfirmation(data);
   }
 }

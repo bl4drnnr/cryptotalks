@@ -1,7 +1,8 @@
 import { UnauthorizedException } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
 
-export class ExpiredTokenException extends UnauthorizedException {
+export class ExpiredTokenException extends RpcException {
   constructor() {
-    super('token-expired', 'Token expired');
+    super(new UnauthorizedException('token-expired', 'Token expired'));
   }
 }

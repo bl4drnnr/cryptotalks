@@ -7,7 +7,7 @@ import {
   Post,
   Res,
   UseGuards,
-  HttpStatus, UseFilters
+  HttpStatus
 } from '@nestjs/common';
 import { UserService } from '@modules/user.service';
 import { SignUpDto } from '@dto/sign-up.dto';
@@ -31,7 +31,6 @@ import { UserDecorator } from '@decorators/user.decorator';
 
 @ApiTags('User')
 @Controller('user')
-// @UseFilters(new HttpExceptionFilter())
 export class UserController {
   constructor(private userService: UserService) {}
 
