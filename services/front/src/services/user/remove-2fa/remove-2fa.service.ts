@@ -12,7 +12,7 @@ export const useRemove2FaService = () => {
     try {
       setLoading(true);
       const { data } = await ApiClient.post<Remove2FaResponse>('/twofactor/remove', {}, {
-        headers: { 'Application-Authorization': `Bearer ${payload.token}` }
+        headers: { 'x-access-token': `Bearer ${payload.token}` }
       });
 
       return data;

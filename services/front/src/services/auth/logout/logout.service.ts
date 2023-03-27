@@ -11,8 +11,8 @@ export const useLogoutService = () => {
     : Promise<LogoutResponse> => {
     try {
       setLoading(true);
-      const { data } = await ApiClient.post<LogoutResponse>('/auth/logout', {}, {
-        headers: { 'Application-Authorization': `Bearer ${payload.token}` }
+      const { data } = await ApiClient.get<LogoutResponse>('/auth/logout', {
+        headers: { 'x-access-token': `Bearer ${payload.token}` }
       });
 
       return data;

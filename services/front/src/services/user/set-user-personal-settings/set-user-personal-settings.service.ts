@@ -15,7 +15,7 @@ export const useSetPersonalUserSettingsService = () => {
     try {
       setLoading(true);
       const { data } = await ApiClient.patch<SetPersonalUserSettingsResponse>('/user/set-user-settings', {}, {
-        headers: { 'Application-Authorization': `Bearer ${payload.token}` }
+        headers: { 'x-access-token': `Bearer ${payload.token}` }
       });
 
       return data;

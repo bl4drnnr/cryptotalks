@@ -16,7 +16,7 @@ export const useCreatePostService = () => {
         content: payload.content
       }, {
         headers: {
-          'Application-Authorization': `Bearer ${payload.token}`
+          'x-access-token': `Bearer ${payload.token}`
         }
       });
 

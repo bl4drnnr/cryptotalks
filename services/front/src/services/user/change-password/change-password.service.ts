@@ -15,7 +15,7 @@ export const useChangePasswordService = () => {
         password: payload.password,
         passwordRepeat: payload.passwordRepeat
       }, {
-        headers: { 'Application-Authorization': `Bearer ${payload.token}` }
+        headers: { 'x-access-token': `Bearer ${payload.token}` }
       });
 
       return data;

@@ -1,10 +1,20 @@
 import React from 'react';
 
-const Posts = () => {
-  return (
-    <div>
+import { useRouter } from 'next/router';
 
-    </div>
+import DefaultLayout from '@layouts/Default.layout';
+
+const Posts = () => {
+  const router = useRouter();
+
+  const handleRedirect = async (path: string) => {
+    await router.push(`/${path}`);
+  };
+
+  return (
+    <DefaultLayout>
+      <></>
+    </DefaultLayout>
   );
 };
 

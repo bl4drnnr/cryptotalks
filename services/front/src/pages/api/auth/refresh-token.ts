@@ -15,7 +15,7 @@ export default async (
     const { data, headers } = await Api.get('/auth/refresh', {
       headers: {
         'Cookie': `_rt=${cookies._rt}`,
-        'Application-Authorization': req.headers['application-authorization']
+        'x-access-token': req.headers['x-access-token']
       }
     });
 

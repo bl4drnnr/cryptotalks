@@ -12,7 +12,7 @@ export const useDeletePostService = () => {
     try {
       setLoading(true);
       const { data } = await ApiClient.delete<DeletePostResponse>(`/post/delete/${payload.postId}`, {
-        headers: { 'Application-Authorization': `Bearer ${payload.token}` }
+        headers: { 'x-access-token': `Bearer ${payload.token}` }
       });
 
       return data;

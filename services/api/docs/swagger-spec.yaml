@@ -116,11 +116,17 @@ paths:
           description: As a response function gets success message
       tags: *a2
   /api/user/logout:
-    post:
+    get:
       operationId: UserController_logout
       summary: Logouts user
       parameters: []
       responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
         "201":
           description: As a response function gets success message
       tags: *a2

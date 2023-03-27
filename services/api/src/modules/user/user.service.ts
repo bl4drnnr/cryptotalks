@@ -6,8 +6,8 @@ import { SignInDto } from '@dto/sign-in.dto';
 import { UserSignInEvent } from '@events/user-sign-in.event';
 import { ConfirmAccountEvent } from '@events/confirm-account.event';
 import { UserLogoutEvent } from '@events/user-logout.event';
-import { ResponseDto } from '@dto/response.dto';
 import { from, tap } from 'rxjs';
+import {ResponseDto} from "@dto/response.dto";
 
 @Injectable()
 export class UserService implements OnModuleInit {
@@ -46,7 +46,7 @@ export class UserService implements OnModuleInit {
   }
 
   logout({ userId }: { userId: string }) {
-    // this.authClient.emit('user_logout', new UserLogoutEvent({ userId }));
+    this.authClient.emit('user_logout', new UserLogoutEvent({ userId }));
     return new ResponseDto();
   }
 

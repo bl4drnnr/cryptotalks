@@ -10,7 +10,15 @@ module.exports = {
       password: '$2a$10$P3L5AlTTAfzRjLWFVg9DMuCCiZjyr.514pB5ULQYn.FYCqRw2J00q',
       username: 'JohnDoe',
       account_confirm: true,
-      tac: true
+      tac: true,
+      firstName: 'John',
+      lastName: 'Doe',
+      twitter: 'twitter.com/johndoe',
+      linkedIn: 'linkedin.com/johndoe',
+      personalWebsite: 'stackoverflow.com',
+      title: 'Just share my knowledge',
+      bio: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur dolor dolorem dolores dolorum eius esse facilis fugit inventore laborum natus necessitatibus nobis omnis, porro quam sint vel, veniam voluptates voluptatum?',
+      publicEmail: true
     }, {
       id: '186f0ff4-1444-4637-9be3-8c0abc168ba2',
       email: 'jan.kowalski@wp.pl',
@@ -18,7 +26,13 @@ module.exports = {
       password: '$2a$10$RZs8Um4bze/AwzSfg6NVi.BUbrXrc29uyfmP.vXwLIO/rtYSNT.32',
       username: 'MilyKotek',
       account_confirm: true,
-      tac: true
+      tac: true,
+      firstName: 'Jan',
+      lastName: 'Kowalski',
+      twitter: 'twitter.com/milykotek',
+      title: 'The best coder in the world!',
+      bio: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur dolor dolorem dolores dolorum eius esse facilis fugit inventore laborum natus necessitatibus nobis omnis, porro quam sint vel, veniam voluptates voluptatum?',
+      publicEmail: false
     }, {
       id: '77c93fdf-8a06-483c-8d89-2f5c71d029ed',
       email: 'geralt@protonmail.com',
@@ -26,7 +40,14 @@ module.exports = {
       password: '$2a$10$IagiSYEnTamJPE8uqhFgTOQZqNt43AzwrPF2Z3l.LKbX4o3eVq7AG',
       username: 'TopWiedzmin1337',
       account_confirm: true,
-      tac: true
+      tac: true,
+      firstName: 'Geralt',
+      lastName: 'Rivijski',
+      twitter: 't.com/jkowalski',
+      personalWebsite: 'https://www.cdprojektred.com/en',
+      title: 'Triss or Jennifer?...',
+      bio: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur dolor dolorem dolores dolorum eius esse facilis fugit inventore laborum natus necessitatibus nobis omnis, porro quam sint vel, veniam voluptates voluptatum?',
+      publicEmail: true
     }]);
 
     await queryInterface.bulkInsert('posts', [{

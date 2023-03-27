@@ -14,7 +14,7 @@ export const useChangeEmailService = () => {
       const { data } = await ApiClient.patch<ChangeEmailResponse>('/user/change-email', {
         newEmail: payload.newEmail
       }, {
-        headers: { 'Application-Authorization': `Bearer ${payload.token}` }
+        headers: { 'x-access-token': `Bearer ${payload.token}` }
       });
 
       return data;
