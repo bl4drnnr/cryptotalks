@@ -5,10 +5,18 @@ import { User } from '@models/user.model';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { GrpcServerExceptionFilter } from "nestjs-grpc-exceptions";
+import {APP_FILTER} from "@nestjs/core";
 
 @Module({
   controllers: [UsersController],
-  providers: [UsersService],
+  providers: [
+    UsersService,
+    {
+      provide: APP_FILTER,
+      useClass: GrpcServerExceptionFilter,
+    }
+  ],
   imports: [
     SequelizeModule.forFeature([User, ConfirmationHash]),
     ClientsModule.register([

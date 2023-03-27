@@ -1,12 +1,12 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices';
+import {HttpException, Inject, Injectable, OnModuleInit, UseFilters} from '@nestjs/common';
+import {ClientKafka, RpcException} from '@nestjs/microservices';
 import { SignUpDto } from '@dto/sign-up.dto';
 import { UserSignUpEvent } from '@events/user-sign-up.event';
 import { SignInDto } from '@dto/sign-in.dto';
 import { UserSignInEvent } from '@events/user-sign-in.event';
 import { ConfirmAccountEvent } from '@events/confirm-account.event';
 import { UserLogoutEvent } from '@events/user-logout.event';
-import { from, tap } from 'rxjs';
+import {catchError, from, tap, throwError} from 'rxjs';
 import {ResponseDto} from "@dto/response.dto";
 
 @Injectable()
@@ -39,10 +39,14 @@ export class UserService implements OnModuleInit {
   }
 
   confirmAccount({ confirmationHash }: { confirmationHash: string }) {
-    return this.userClient.send(
-      'confirm_user_account',
-      new ConfirmAccountEvent({ confirmationHash })
-    );
+    try {
+      return this.userClient.send(
+        'confirm_user_account',
+        new ConfirmAccountEvent({ confirmationHash })
+      ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
+    } catch (error) {
+      console.log('errorerrorerror', error);
+    }
   }
 
   logout({ userId }: { userId: string }) {
