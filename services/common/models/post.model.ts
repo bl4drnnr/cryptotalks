@@ -53,7 +53,7 @@ export class Post extends Model<Post, PostCreationAttributes> {
     nullable: false,
     description: 'Content of the post'
   })
-  @Column({ type: DataType.JSON, allowNull: false })
+  @Column({ type: DataType.ARRAY(DataType.TEXT), allowNull: false })
   content: Array<string>;
 
   @ApiProperty({

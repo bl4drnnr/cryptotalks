@@ -10,12 +10,12 @@ import {
 export const useSetPersonalUserSettingsService = () => {
   const [loading, setLoading] = React.useState(false);
 
-  const setPersonalUserSettings = async (token: string | null, payload: SetPersonalUserSettingsPayload)
+  const setPersonalUserSettings = async (payload: SetPersonalUserSettingsPayload)
     : Promise<SetPersonalUserSettingsResponse> => {
     try {
       setLoading(true);
-      const { data } = await ApiClient.patch<SetPersonalUserSettingsResponse>('/user/set-user-settings', payload, {
-        headers: { 'Application-Authorization': `Bearer ${token}` }
+      const { data } = await ApiClient.patch<SetPersonalUserSettingsResponse>('/user/set-user-settings', {}, {
+        headers: { 'Application-Authorization': `Bearer ${payload.token}` }
       });
 
       return data;

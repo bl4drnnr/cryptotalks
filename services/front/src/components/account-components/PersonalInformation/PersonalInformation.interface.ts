@@ -13,7 +13,6 @@ interface IPersonalInformation {
 }
 
 export interface PersonalInformationProps {
-  translate: any;
   personalInformation: IPersonalInformation | undefined;
   setPersonalInformation: React.Dispatch<React.SetStateAction<any>>;
   applyPersonalInformation: any;

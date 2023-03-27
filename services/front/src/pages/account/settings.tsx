@@ -90,7 +90,7 @@ const AccountSettings = () => {
   const applyPersonalInformation = async () => {
     try {
       const token = sessionStorage.getItem('_at');
-      return await setPersonalUserSettings(token, { ...personalInformation });
+      return await setPersonalUserSettings({ ...personalInformation, token });
     } catch (e) {
       return exceptionHandler(e);
     }

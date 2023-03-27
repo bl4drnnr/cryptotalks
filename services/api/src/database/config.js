@@ -7,7 +7,7 @@ dotenv.config({
 module.exports = {
   development: {
     dialect: 'postgres',
-    host: process.env.POSTGRES_HOST,
+    host: process.env.POSTGRES_POST_LOCAL,
     port: Number(process.env.POSTGRES_PORT),
     username: process.env.POSTGRES_USERNAME,
     password: process.env.POSTGRES_PASSWORD,

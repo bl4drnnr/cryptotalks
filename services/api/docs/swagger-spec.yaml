@@ -20,8 +20,50 @@ paths:
             application/json:
               schema:
                 type: object
-      tags:
+      tags: &a1
         - Posts
+  "/api/posts/get/{id}":
+    get:
+      operationId: PostsController_getPostById
+      summary: Gets post by its id
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: As a response function returns post
+      tags: *a1
+  "/api/posts/delete/{id}":
+    delete:
+      operationId: PostsController_deletePost
+      summary: Responsible for post deletion
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: As a response function gets success message
+      tags: *a1
+  "/api/posts/update/{id}":
+    patch:
+      operationId: PostsController_updatePost
+      summary: Responsible for post update
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: As a response function gets success message
+      tags: *a1
   /api/user/sign-up:
     post:
       operationId: UserController_signUp
@@ -36,7 +78,7 @@ paths:
       responses:
         "201":
           description: As a response function gets 2 tokens - refresh and access
-      tags: &a1
+      tags: &a2
         - User
   /api/user/sign-in:
     post:
@@ -52,7 +94,7 @@ paths:
       responses:
         "201":
           description: As a response function gets success message
-      tags: *a1
+      tags: *a2
   "/api/user/account-confirmation/{confirmationHash}":
     get:
       operationId: UserController_confirmAccount
@@ -72,7 +114,7 @@ paths:
                 type: object
         "201":
           description: As a response function gets success message
-      tags: *a1
+      tags: *a2
   /api/user/logout:
     post:
       operationId: UserController_logout
@@ -81,7 +123,34 @@ paths:
       responses:
         "201":
           description: As a response function gets success message
-      tags: *a1
+      tags: *a2
+  "/api/user/get/{id}":
+    get:
+      operationId: UserController_getUserById
+      summary: Get user public profile
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+        "201":
+          description: As a response returns only public data
+      tags: *a2
+  /api/user/close-account:
+    patch:
+      operationId: UserController_closeAccount
+      summary: Closes user profile (soft delete)
+      parameters: []
+      responses:
+        "200":
+          description: ""
+        "201":
+          description: As a response returns success message
+      tags: *a2
   /api/auth/refresh:
     get:
       operationId: AuthController_refreshTokens
