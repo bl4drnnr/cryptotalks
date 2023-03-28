@@ -84,7 +84,10 @@ export class UserService implements OnModuleInit {
     if (!user) throw new WrongCredentialsException();
     if (!user.accountConfirm) throw new AccountNotConfirmedException();
 
-    const passwordEquality = bcryptjs.compare(payload.password, user.password);
+    const passwordEquality = await bcryptjs.compare(
+      payload.password,
+      user.password
+    );
     if (!passwordEquality) throw new WrongCredentialsException();
 
     return await from(
