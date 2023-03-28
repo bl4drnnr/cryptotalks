@@ -20,6 +20,10 @@ export class UserService implements OnModuleInit {
     return this.userClient.send(
       'user_created',
       new UserSignUpEvent({ ...payload })
+    ).pipe(
+      catchError((error) =>
+        throwError(() => new RpcException(error.response))
+      )
     );
   }
 

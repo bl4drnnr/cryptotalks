@@ -292,10 +292,6 @@ components:
           type: boolean
           nullable: false
           description: User accepted terms and conditions
-        publicEmail:
-          type: boolean
-          nullable: true
-          description: If user wants to set their email as public
         createdAt:
           type: date
           nullable: false
@@ -318,7 +314,6 @@ components:
         - title
         - bio
         - tac
-        - publicEmail
         - createdAt
         - updatedAt
     SignUpDto:

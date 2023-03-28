@@ -17,8 +17,7 @@ module.exports = {
       linkedIn: 'linkedin.com/johndoe',
       personalWebsite: 'stackoverflow.com',
       title: 'Just share my knowledge',
-      bio: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur dolor dolorem dolores dolorum eius esse facilis fugit inventore laborum natus necessitatibus nobis omnis, porro quam sint vel, veniam voluptates voluptatum?',
-      publicEmail: true
+      bio: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur dolor dolorem dolores dolorum eius esse facilis fugit inventore laborum natus necessitatibus nobis omnis, porro quam sint vel, veniam voluptates voluptatum?'
     }, {
       id: '186f0ff4-1444-4637-9be3-8c0abc168ba2',
       email: 'jan.kowalski@wp.pl',
@@ -31,8 +30,7 @@ module.exports = {
       lastName: 'Kowalski',
       twitter: 'twitter.com/milykotek',
       title: 'The best coder in the world!',
-      bio: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur dolor dolorem dolores dolorum eius esse facilis fugit inventore laborum natus necessitatibus nobis omnis, porro quam sint vel, veniam voluptates voluptatum?',
-      publicEmail: false
+      bio: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur dolor dolorem dolores dolorum eius esse facilis fugit inventore laborum natus necessitatibus nobis omnis, porro quam sint vel, veniam voluptates voluptatum?'
     }, {
       id: '77c93fdf-8a06-483c-8d89-2f5c71d029ed',
       email: 'geralt@protonmail.com',
@@ -46,8 +44,7 @@ module.exports = {
       twitter: 't.com/jkowalski',
       personalWebsite: 'https://www.cdprojektred.com/en',
       title: 'Triss or Jennifer?...',
-      bio: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur dolor dolorem dolores dolorum eius esse facilis fugit inventore laborum natus necessitatibus nobis omnis, porro quam sint vel, veniam voluptates voluptatum?',
-      publicEmail: true
+      bio: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur dolor dolorem dolores dolorum eius esse facilis fugit inventore laborum natus necessitatibus nobis omnis, porro quam sint vel, veniam voluptates voluptatum?'
     }]);
 
     await queryInterface.bulkInsert('posts', [{

@@ -1,6 +1,6 @@
 import { Controller } from '@nestjs/common';
 import { UsersService } from '@modules/users.service';
-import { MessagePattern } from '@nestjs/microservices';
+import {EventPattern, MessagePattern} from '@nestjs/microservices';
 
 @Controller('users')
 export class UsersController {

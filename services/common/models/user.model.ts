@@ -68,7 +68,7 @@ export class User extends Model<User, UserCreationAttributes> {
     nullable: true,
     description: 'User first name'
   })
-  @Column({ type: DataType.STRING, allowNull: true })
+  @Column({ type: DataType.STRING, allowNull: true, field: 'first_name' })
   firstName?: string;
 
   @ApiProperty({
@@ -76,7 +76,7 @@ export class User extends Model<User, UserCreationAttributes> {
     nullable: true,
     description: 'User last name'
   })
-  @Column({ type: DataType.STRING, allowNull: true })
+  @Column({ type: DataType.STRING, allowNull: true, field: 'last_name' })
   lastName?: string;
 
   @ApiProperty({
@@ -100,7 +100,7 @@ export class User extends Model<User, UserCreationAttributes> {
     nullable: true,
     description: 'User LinkedIn account'
   })
-  @Column({ type: DataType.STRING, allowNull: true })
+  @Column({ type: DataType.STRING, allowNull: true, field: 'linked_in' })
   linkedIn?: string;
 
   @ApiProperty({
@@ -108,7 +108,7 @@ export class User extends Model<User, UserCreationAttributes> {
     nullable: true,
     description: 'User personal website'
   })
-  @Column({ type: DataType.STRING, allowNull: true })
+  @Column({ type: DataType.STRING, allowNull: true, field: 'personal_website' })
   personalWebsite?: string;
 
   @ApiProperty({
@@ -134,14 +134,6 @@ export class User extends Model<User, UserCreationAttributes> {
   })
   @Column({ type: DataType.BOOLEAN, allowNull: false })
   tac: boolean;
-
-  @ApiProperty({
-    type: 'boolean',
-    nullable: true,
-    description: 'If user wants to set their email as public'
-  })
-  @Column({ type: DataType.BOOLEAN, allowNull: true })
-  publicEmail?: boolean;
 
   @ApiProperty({
     type: 'date',

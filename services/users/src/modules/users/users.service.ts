@@ -1,11 +1,16 @@
 import * as bcryptjs from 'bcryptjs';
 import * as crypto from 'crypto';
-import {Inject, Injectable, NotFoundException, OnModuleInit} from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  OnModuleInit
+} from '@nestjs/common';
 import { SignInDto } from '@dto/sign-in.dto';
 import { SignUpDto } from '@dto/sign-up.dto';
 import { User } from '@models/user.model';
 import { InjectModel } from '@nestjs/sequelize';
-import {ClientKafka, RpcException} from '@nestjs/microservices';
+import { ClientKafka, RpcException } from '@nestjs/microservices';
 import { ValidatorService } from '@shared/validator.service';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
 import { EmailService } from '@shared/email.service';
@@ -35,8 +40,7 @@ export class UsersService implements OnModuleInit {
       where: { email: payload.email }
     });
 
-    // if (!user) throw new WrongCredentialsException();
-    if (!user) throw new RpcException(new NotFoundException('wrong-credentials', 'Wrong credentials'));
+    if (!user) throw new WrongCredentialsException();
     if (!user.accountConfirm) throw new AccountNotConfirmedException();
 
     const passwordEquality = bcryptjs.compare(payload.password, user.password);
@@ -90,30 +94,28 @@ export class UsersService implements OnModuleInit {
   }: {
     confirmationHash: string;
   }) {
-    // TODO
-    throw new RpcException(new NotFoundException('hash-not-found', 'Hash not found'));
-    // const foundHash = await this.confirmHashRepository.findOne({
-    //   where: { confirmationHash }
-    // });
-    //
-    // if (!foundHash) throw new HashNotFoundException();
-    // if (foundHash.confirmed) throw new EmailAlreadyConfirmedException();
-    //
-    // await this.confirmHashRepository.update(
-    //   {
-    //     confirmed: true
-    //   },
-    //   { where: { id: foundHash.id } }
-    // );
-    //
-    // await this.userRepository.update(
-    //   {
-    //     accountConfirm: true
-    //   },
-    //   { where: { id: foundHash.userId } }
-    // );
-    //
-    // return new ResponseDto();
+    const foundHash = await this.confirmHashRepository.findOne({
+      where: { confirmationHash }
+    });
+
+    if (!foundHash) throw new HashNotFoundException();
+    if (foundHash.confirmed) throw new EmailAlreadyConfirmedException();
+
+    await this.confirmHashRepository.update(
+      {
+        confirmed: true
+      },
+      { where: { id: foundHash.id } }
+    );
+
+    await this.userRepository.update(
+      {
+        accountConfirm: true
+      },
+      { where: { id: foundHash.userId } }
+    );
+
+    return new ResponseDto();
   }
 
   async getUserById({ id }: { id: string }) {
