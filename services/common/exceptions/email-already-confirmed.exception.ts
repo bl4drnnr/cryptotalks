@@ -1,13 +1,7 @@
 import { ForbiddenException } from '@nestjs/common';
-import { RpcException } from '@nestjs/microservices';
 
-export class EmailAlreadyConfirmedException extends RpcException {
+export class EmailAlreadyConfirmedException extends ForbiddenException {
   constructor() {
-    super(
-      new ForbiddenException(
-        'email-already-confirmed',
-        'Email address already confirmed'
-      )
-    );
+    super('email-already-confirmed', 'Email address already confirmed');
   }
 }

@@ -1,7 +1,7 @@
-import { AccountConfirmationDto } from '../dto/account-confirmation.dto';
+import { ConfirmAccountEventDto } from '../event-dto/confirm-account-event.dto';
 
 export class ConfirmAccountEvent {
-  constructor(private readonly confirmAccountDto: AccountConfirmationDto) {}
+  constructor(private readonly confirmAccountDto: ConfirmAccountEventDto) {}
 
   toString() {
     return JSON.stringify({

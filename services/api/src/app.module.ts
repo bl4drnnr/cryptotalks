@@ -16,6 +16,9 @@ import { CryptoModule } from '@modules/crypto.module';
 import { AuthModule } from '@modules/auth.module';
 import { SharedModule } from '@shared/shared.module';
 import { BasicAuthMiddleware } from '@middlewares/basic-auth.middleware';
+import { UserSettings } from '@models/user-settings.model';
+import { FavoriteCoins } from '@models/favorites-coins.model';
+import { Cryptocurrency } from '@models/cryptocurrency.model';
 
 @Module({
   imports: [
@@ -30,7 +33,15 @@ import { BasicAuthMiddleware } from '@middlewares/basic-auth.middleware';
       username: process.env.POSTGRES_USERNAME,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
-      models: [Post, User, Session, ConfirmationHash],
+      models: [
+        Post,
+        User,
+        Session,
+        ConfirmationHash,
+        UserSettings,
+        FavoriteCoins,
+        Cryptocurrency
+      ],
       autoLoadModels: true
     }),
     PostsModule,

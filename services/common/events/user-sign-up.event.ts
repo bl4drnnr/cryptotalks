@@ -1,7 +1,7 @@
-import { SignUpDto } from '../dto/sign-up.dto';
+import { SignUpEventDto } from '../event-dto/sign-up-event.dto';
 
 export class UserSignUpEvent {
-  constructor(private readonly createUserPayload: SignUpDto) {}
+  constructor(private readonly createUserPayload: SignUpEventDto) {}
 
   toString() {
     return JSON.stringify({

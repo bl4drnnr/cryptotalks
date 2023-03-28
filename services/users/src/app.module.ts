@@ -4,6 +4,7 @@ import { SharedModule } from '@shared/shared.module';
 import { ConfigModule } from '@nestjs/config';
 import { User } from '@models/user.model';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { UserSettings } from '@models/user-settings.model';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
       isGlobal: true,
       envFilePath: `../../.env.${process.env.NODE_ENV}`
     }),
+    // TODO Try to remove this
     SequelizeModule.forRoot({
       dialect: 'postgres',
       host: process.env.POSTGRES_HOST,
@@ -20,7 +22,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
       username: process.env.POSTGRES_USERNAME,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
-      models: [User],
+      models: [User, UserSettings],
       autoLoadModels: true
     })
   ]

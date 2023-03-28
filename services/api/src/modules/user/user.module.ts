@@ -4,9 +4,13 @@ import { UserService } from './user.service';
 import { ClientKafka, ClientsModule, Transport } from '@nestjs/microservices';
 import { JwtModule } from '@nestjs/jwt';
 import { ApiConfigService } from '@shared/config.service';
+import { User } from '@models/user.model';
+import { ConfirmationHash } from '@models/confirmation-hash.model';
+import { SequelizeModule } from '@nestjs/sequelize';
 
 @Module({
   imports: [
+    SequelizeModule.forFeature([User, ConfirmationHash]),
     ClientsModule.register([
       {
         name: 'USERS_SERVICE',
@@ -31,6 +35,19 @@ import { ApiConfigService } from '@shared/config.service';
           },
           consumer: {
             groupId: 'auth-consumer'
+          }
+        }
+      },
+      {
+        name: 'CRYPTO_SERVICE',
+        transport: Transport.KAFKA,
+        options: {
+          client: {
+            clientId: 'auth',
+            brokers: ['kafka:9092']
+          },
+          consumer: {
+            groupId: 'crypto-consumer'
           }
         }
       }

@@ -61,7 +61,7 @@ export class Post extends Model<Post, PostCreationAttributes> {
     nullable: false,
     description: 'User Id'
   })
-  @Column({ type: DataType.UUID, allowNull: false })
+  @Column({ type: DataType.UUID, allowNull: false, field: 'user_id' })
   userId: string;
 
   @ApiProperty({

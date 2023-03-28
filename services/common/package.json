@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "format": "prettier --write \"dto/*.ts\" \"events/*.ts\" \"models/*.ts\" \"exceptions/*.ts\""
+    "format": "prettier --write \"dto/*.ts\" \"events/*.ts\" \"models/*.ts\" \"exceptions/*.ts\" \"event-dto/*.ts\""
   },
   "dependencies": {
     "@nestjs/microservices": "^9.3.12",

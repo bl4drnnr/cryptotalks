@@ -1,8 +1,7 @@
 import { UnauthorizedException } from '@nestjs/common';
-import { RpcException } from '@nestjs/microservices';
 
-export class InvalidTokenException extends RpcException {
+export class InvalidTokenException extends UnauthorizedException {
   constructor() {
-    super(new UnauthorizedException('invalid-token', 'Invalid token'));
+    super('invalid-token', 'Invalid token');
   }
 }

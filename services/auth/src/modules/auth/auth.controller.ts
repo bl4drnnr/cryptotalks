@@ -7,17 +7,17 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @MessagePattern('refresh_tokens')
-  refreshTokens(data: any) {
+  handleRefreshTokens(data: any) {
     return this.authService.refreshToken(data);
   }
 
   @MessagePattern('update_tokens')
-  updateTokens(data: any) {
+  handleUpdateTokens(data: any) {
     return this.authService.updateTokens(data);
   }
 
   @EventPattern('user_logout')
-  logout(data: any) {
+  handleLogout(data: any) {
     return this.authService.deleteRefreshToken(data);
   }
 }
