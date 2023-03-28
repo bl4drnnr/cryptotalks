@@ -18,6 +18,7 @@ import { SharedModule } from '@shared/shared.module';
 import { BasicAuthMiddleware } from '@middlewares/basic-auth.middleware';
 import { UserSettings } from '@models/user-settings.model';
 import { FavoriteCoins } from '@models/favorites-coins.model';
+import {Cryptocurrency} from "@models/cryptocurrency.model";
 
 @Module({
   imports: [
@@ -38,7 +39,8 @@ import { FavoriteCoins } from '@models/favorites-coins.model';
         Session,
         ConfirmationHash,
         UserSettings,
-        FavoriteCoins
+        FavoriteCoins,
+        Cryptocurrency
       ],
       autoLoadModels: true
     }),

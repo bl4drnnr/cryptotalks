@@ -1,4 +1,4 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { SignUpEventDto } from '@event-dto/sign-up-event.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { ClientKafka } from '@nestjs/microservices';
@@ -9,7 +9,7 @@ import { User } from '@models/user.model';
 import { ConfirmAccountEventDto } from '@event-dto/confirm-account-event.dto';
 
 @Injectable()
-export class UsersService implements OnModuleInit {
+export class UsersService {
   constructor(
     @InjectModel(User) private readonly userRepository: typeof User,
     @InjectModel(UserSettings)
@@ -21,6 +21,9 @@ export class UsersService implements OnModuleInit {
   ) {}
 
   async signUp(payload: SignUpEventDto) {
+    await this.userSettingsRepository.create({
+      userId: payload.userId
+    })
     await this.confirmHashRepository.create({
       userId: payload.userId,
       confirmationHash: payload.confirmationHash
@@ -49,9 +52,5 @@ export class UsersService implements OnModuleInit {
 
   async getUserById({ id }: { id: string }) {
     // return await this.userRepository.findByPk(id);
-  }
-
-  onModuleInit(): any {
-    this.authClient.subscribeToResponseOf('update_tokens');
   }
 }

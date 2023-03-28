@@ -37,6 +37,19 @@ import { SequelizeModule } from '@nestjs/sequelize';
             groupId: 'auth-consumer'
           }
         }
+      },
+      {
+        name: 'CRYPTO_SERVICE',
+        transport: Transport.KAFKA,
+        options: {
+          client: {
+            clientId: 'auth',
+            brokers: ['kafka:9092']
+          },
+          consumer: {
+            groupId: 'crypto-consumer'
+          }
+        }
       }
     ]),
     JwtModule.registerAsync({

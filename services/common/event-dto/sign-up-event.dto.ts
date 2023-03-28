@@ -3,9 +3,9 @@ import { ApiProperty } from '@nestjs/swagger';
 export class SignUpEventDto {
   @ApiProperty({
     type: 'string',
-    nullable: false
+    nullable: true
   })
-  confirmationHash: string;
+  confirmationHash?: string;
 
   @ApiProperty({
     type: 'string',
@@ -15,7 +15,7 @@ export class SignUpEventDto {
 
   @ApiProperty({
     type: 'string',
-    nullable: false
+    nullable: true
   })
-  email: string;
+  email?: string;
 }

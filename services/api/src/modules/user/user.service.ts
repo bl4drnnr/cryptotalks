@@ -1,16 +1,14 @@
 import * as bcryptjs from 'bcryptjs';
 import * as crypto from 'crypto';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import { ClientKafka, RpcException } from '@nestjs/microservices';
+import { ClientKafka } from '@nestjs/microservices';
 import { SignUpDto } from '@dto/sign-up.dto';
 import { UserSignUpEvent } from '@events/user-sign-up.event';
 import { SignInDto } from '@dto/sign-in.dto';
-import { UserSignInEvent } from '@events/user-sign-in.event';
 import { ConfirmAccountEvent } from '@events/confirm-account.event';
 import { UserLogoutEvent } from '@events/user-logout.event';
-import { catchError, from, tap, throwError } from 'rxjs';
+import { from, tap } from 'rxjs';
 import { ResponseDto } from '@dto/response.dto';
-import { ServiceClient } from '@shared/service-client.service';
 import { UserAlreadyExistsException } from '@exceptions/user-already-exists.exception';
 import { TacNotAcceptedException } from '@exceptions/tac-not-accepted.exception';
 import { ValidationErrorException } from '@exceptions/validation-error.exception';
@@ -29,6 +27,7 @@ export class UserService implements OnModuleInit {
   constructor(
     @Inject('USERS_SERVICE') private readonly userClient: ClientKafka,
     @Inject('AUTH_SERVICE') private readonly authClient: ClientKafka,
+    @Inject('CRYPTO_SERVICE') private readonly cryptoClient: ClientKafka,
     @InjectModel(User) private readonly userRepository: typeof User,
     @InjectModel(ConfirmationHash)
     private readonly confirmHashRepository: typeof ConfirmationHash,
@@ -64,6 +63,13 @@ export class UserService implements OnModuleInit {
         email: payload.email,
         userId: createdUser.id,
         confirmationHash
+      })
+    );
+
+    this.cryptoClient.emit(
+      'user_created',
+      new UserSignUpEvent({
+        userId: createdUser.id
       })
     );
 

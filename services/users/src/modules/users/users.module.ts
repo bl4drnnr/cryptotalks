@@ -3,9 +3,9 @@ import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
-import { ClientsModule, Transport } from '@nestjs/microservices';
 import { UserSettings } from '@models/user-settings.model';
 import { User } from '@models/user.model';
+import {ClientsModule, Transport} from "@nestjs/microservices";
 
 @Module({
   controllers: [UsersController],

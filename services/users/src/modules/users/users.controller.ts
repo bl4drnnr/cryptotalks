@@ -12,12 +12,12 @@ export class UsersController {
   }
 
   @MessagePattern('get_user_by_id')
-  getUserById(data: any) {
+  handleGetUserById(data: any) {
     return this.usersService.getUserById(data);
   }
 
   @EventPattern('confirm_user_account')
-  confirmUserAccount(data: any) {
+  handleConfirmUserAccount(data: any) {
     return this.usersService.accountConfirmation(data);
   }
 }
