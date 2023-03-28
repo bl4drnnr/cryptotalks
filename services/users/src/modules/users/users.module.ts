@@ -5,12 +5,13 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
 import { UserSettings } from '@models/user-settings.model';
 import { User } from '@models/user.model';
-import {ClientsModule, Transport} from "@nestjs/microservices";
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   controllers: [UsersController],
   providers: [UsersService],
   imports: [
+    // TODO But keep this
     SequelizeModule.forFeature([User, UserSettings, ConfirmationHash]),
     ClientsModule.register([
       {

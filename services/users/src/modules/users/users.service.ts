@@ -21,9 +21,10 @@ export class UsersService {
   ) {}
 
   async signUp(payload: SignUpEventDto) {
+    console.log('payload', payload);
     await this.userSettingsRepository.create({
       userId: payload.userId
-    })
+    });
     await this.confirmHashRepository.create({
       userId: payload.userId,
       confirmationHash: payload.confirmationHash

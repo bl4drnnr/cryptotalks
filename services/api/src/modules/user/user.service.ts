@@ -67,7 +67,7 @@ export class UserService implements OnModuleInit {
     );
 
     this.cryptoClient.emit(
-      'user_created',
+      'crypto_for_user_created',
       new UserSignUpEvent({
         userId: createdUser.id
       })

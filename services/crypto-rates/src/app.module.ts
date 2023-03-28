@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { CryptoModule } from './modules/crypto/crypto.module';
-import {FavoriteCoins} from "@models/favorites-coins.model";
-import {SequelizeModule} from "@nestjs/sequelize";
-import {Cryptocurrency} from "@models/cryptocurrency.model";
+import { FavoriteCoins } from '@models/favorites-coins.model';
+import { SequelizeModule } from '@nestjs/sequelize';
+import { Cryptocurrency } from '@models/cryptocurrency.model';
 
 @Module({
   imports: [
@@ -18,7 +18,6 @@ import {Cryptocurrency} from "@models/cryptocurrency.model";
       username: process.env.POSTGRES_USERNAME,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
-      models: [FavoriteCoins, Cryptocurrency],
       autoLoadModels: true
     }),
     CryptoModule

@@ -12,6 +12,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 interface FavoritesCoinsCreationAttributes {
   userId: string;
+  favoriteCoins: Array<string>
 }
 
 @Table({
@@ -47,7 +48,7 @@ export class FavoriteCoins extends Model<
   })
   @Column({
     type: DataType.ARRAY(DataType.STRING),
-    allowNull: false,
+    allowNull: true,
     field: 'favorite_coins'
   })
   favoriteCoins?: Array<string>;

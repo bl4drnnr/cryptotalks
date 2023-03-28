@@ -1,12 +1,13 @@
-import {Model, Table} from "sequelize-typescript";
+import { Model, Table } from 'sequelize-typescript';
 
-interface CryptocurrencyCreationAttributes {
-
-}
+interface CryptocurrencyCreationAttributes {}
 
 @Table({
   tableName: 'cryptocurrencies'
 })
-export class Cryptocurrency extends Model<Cryptocurrency, CryptocurrencyCreationAttributes> {
+export class Cryptocurrency extends Model<
+  Cryptocurrency,
+  CryptocurrencyCreationAttributes
+> {
   //
 }

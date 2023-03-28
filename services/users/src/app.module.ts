@@ -14,6 +14,7 @@ import { UserSettings } from '@models/user-settings.model';
       isGlobal: true,
       envFilePath: `../../.env.${process.env.NODE_ENV}`
     }),
+    // TODO Try to remove this
     SequelizeModule.forRoot({
       dialect: 'postgres',
       host: process.env.POSTGRES_HOST,
