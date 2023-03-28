@@ -1,8 +1,7 @@
 import { BadRequestException } from '@nestjs/common';
-import { RpcException } from '@nestjs/microservices';
 
-export class ValidationErrorException extends RpcException {
+export class ValidationErrorException extends BadRequestException {
   constructor() {
-    super(new BadRequestException('validation-error', 'Validation error'));
+    super('validation-error', 'Validation error');
   }
 }

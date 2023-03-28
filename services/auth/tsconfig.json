@@ -23,7 +23,8 @@
       "@auth/*": ["src/modules/auth/*"],
       "@models/*": ["src/models/*", "../common/models/*"],
       "@dto/*": ["src/dto/*", "../common/dto/*"],
-      "@events/*": ["src/events/*", "../common/events/*"]
+      "@events/*": ["src/events/*", "../common/events/*"],
+      "@event-dto/*": ["src/event-dto/*", "../common/event-dto/*"]
     }
   }
 }

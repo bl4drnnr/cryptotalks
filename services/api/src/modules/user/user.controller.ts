@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   Param,
-  Patch,
   Post,
   Res,
   UseGuards,
@@ -85,28 +84,9 @@ export class UserController {
   @Get('logout')
   async logout(@UserDecorator() userId: string, @Res() res) {
     res.clearCookie('_rt');
+
     const response = this.userService.logout({ userId });
+
     return res.status(HttpStatus.OK).json(response);
-  }
-
-  @ApiOperation({ summary: 'Get user public profile' })
-  @ApiResponse({
-    status: 201,
-    description: 'As a response returns only public data'
-  })
-  @Get('get/:id')
-  getUserById(@Param('id') id: string) {
-    return this.userService.getUserById({ id });
-  }
-
-  @ApiOperation({ summary: 'Closes user profile (soft delete)' })
-  @ApiResponse({
-    status: 201,
-    description: 'As a response returns success message'
-  })
-  @UseGuards(JwtGuard)
-  @Patch('close-account')
-  closeAccount(@UserDecorator() userId: string) {
-    return this.userService.closeAccount({ userId });
   }
 }

@@ -1,10 +1,7 @@
 import { UnauthorizedException } from '@nestjs/common';
-import { RpcException } from '@nestjs/microservices';
 
-export class SessionHasExpiredException extends RpcException {
+export class SessionHasExpiredException extends UnauthorizedException {
   constructor() {
-    super(
-      new UnauthorizedException('session-has-expired', 'Session has expired')
-    );
+    super('session-has-expired', 'Session has expired');
   }
 }

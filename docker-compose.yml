@@ -31,10 +31,9 @@ services:
       - ./services/common/dto:/usr/src/cryptotalks-users/src/dto
       - ./services/common/events:/usr/src/cryptotalks-users/src/events
       - ./services/common/exceptions:/usr/src/cryptotalks-users/src/exceptions
+      - ./services/common/event-dto:/usr/src/cryptotalks-users/src/event-dto
     depends_on:
       - api
-    ports:
-      - ${USERS_SERVICE_PORT}:${USERS_SERVICE_PORT}
     networks:
       - cryptotalks_cryptotalks-network
   crypto-rates:
@@ -52,10 +51,9 @@ services:
       - ./services/common/dto:/usr/src/cryptotalks-crypto-rates/src/dto
       - ./services/common/events:/usr/src/cryptotalks-crypto-rates/src/events
       - ./services/common/exceptions:/usr/src/cryptotalks-crypto-rates/src/exceptions
+      - ./services/common/event-dto:/usr/src/cryptotalks-crypto-rates/src/event-dto
     depends_on:
       - api
-    ports:
-      - ${CRYPTO_RATES_SERVICE_PORT}:${CRYPTO_RATES_SERVICE_PORT}
     networks:
       - cryptotalks_cryptotalks-network
   auth:
@@ -73,8 +71,7 @@ services:
       - ./services/common/dto:/usr/src/cryptotalks-auth/src/dto
       - ./services/common/events:/usr/src/cryptotalks-auth/src/events
       - ./services/common/exceptions:/usr/src/cryptotalks-auth/src/exceptions
-    ports:
-      - ${AUTH_SERVICE_PORT}:${AUTH_SERVICE_PORT}
+      - ./services/common/event-dto:/usr/src/cryptotalks-auth/src/event-dto
     depends_on:
       - api
     networks:
@@ -94,8 +91,7 @@ services:
       - ./services/common/dto:/usr/src/cryptotalks-posts/src/dto
       - ./services/common/events:/usr/src/cryptotalks-posts/src/events
       - ./services/common/exceptions:/usr/src/cryptotalks-posts/src/exceptions
-    ports:
-      - ${POSTS_SERVICE_PORT}:${POSTS_SERVICE_PORT}
+      - ./services/common/event-dto:/usr/src/cryptotalks-posts/src/event-dto
     depends_on:
       - api
     networks:
@@ -115,6 +111,7 @@ services:
       - ./services/common/dto:/usr/src/cryptotalks-api/src/dto
       - ./services/common/events:/usr/src/cryptotalks-api/src/events
       - ./services/common/exceptions:/usr/src/cryptotalks-api/src/exceptions
+      - ./services/common/event-dto:/usr/src/cryptotalks-api/src/event-dto
     ports:
       - ${API_PORT}:${API_PORT}
     depends_on:

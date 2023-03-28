@@ -21,7 +21,8 @@
       "@models/*": ["src/models/*", "../common/models/*"],
       "@exceptions/*": ["src/exceptions/*", "../common/exceptions/*"],
       "@dto/*": ["src/dto/*", "../common/dto/*"],
-      "@events/*": ["src/events/*", "../common/events/*"]
+      "@events/*": ["src/events/*", "../common/events/*"],
+      "@events-dto/*": ["src/events-dto/*", "../common/events-dto/*"]
     }
   }
 }

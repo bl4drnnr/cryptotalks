@@ -23,10 +23,10 @@
       "@exceptions/*": ["src/exceptions/*", "../common/exceptions/*"],
       "@dto/*": ["src/dto/*", "../common/dto/*"],
       "@events/*": ["src/events/*", "../common/events/*"],
+      "@events-dto/*": ["src/events-dto/*", "../common/events-dto/*"],
       "@guards/*": ["src/guards/*"],
       "@decorators/*": ["src/decorators/*"],
       "@middlewares/*": ["src/middlewares/*"],
-      "@filters/*": ["src/filters/*"],
       "@modules/*": [
         "src/modules/*",
         "src/modules/posts/*",
