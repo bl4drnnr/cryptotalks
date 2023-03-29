@@ -21,7 +21,6 @@ export class UsersService {
   ) {}
 
   async signUp(payload: SignUpEventDto) {
-    console.log('payload', payload);
     await this.userSettingsRepository.create({
       userId: payload.userId
     });
@@ -49,9 +48,5 @@ export class UsersService {
       },
       { where: { id: payload.userId } }
     );
-  }
-
-  async getUserById({ id }: { id: string }) {
-    // return await this.userRepository.findByPk(id);
   }
 }

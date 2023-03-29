@@ -22,8 +22,10 @@ export class ApiConfigService {
     return value.replace(/\\n/g, '\n');
   }
 
-  get jwtSecret() {
+  get jwtAuthConfig() {
     return {
+      accessExpiresIn: this.getString('JWT_ACCESS_EXPIRES_IN'),
+      refreshExpiresIn: this.getString('JWT_REFRESH_EXPIRES_IN'),
       secret: this.getString('JWT_SECRET')
     };
   }

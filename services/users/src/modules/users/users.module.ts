@@ -11,7 +11,6 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
   controllers: [UsersController],
   providers: [UsersService],
   imports: [
-    // TODO But keep this
     SequelizeModule.forFeature([User, UserSettings, ConfirmationHash]),
     ClientsModule.register([
       {

@@ -1,9 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { CryptoModule } from './modules/crypto/crypto.module';
-import { FavoriteCoins } from '@models/favorites-coins.model';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { Cryptocurrency } from '@models/cryptocurrency.model';
 
 @Module({
   imports: [

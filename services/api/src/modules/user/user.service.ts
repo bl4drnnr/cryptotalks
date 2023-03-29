@@ -1,6 +1,6 @@
 import * as bcryptjs from 'bcryptjs';
 import * as crypto from 'crypto';
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { SignUpDto } from '@dto/sign-up.dto';
 import { UserSignUpEvent } from '@events/user-sign-up.event';
@@ -18,9 +18,9 @@ import { InjectModel } from '@nestjs/sequelize';
 import { ValidatorService } from '@shared/validator.service';
 import { WrongCredentialsException } from '@exceptions/wrong-credentials.exception';
 import { AccountNotConfirmedException } from '@exceptions/account-not-confirmed.exception';
-import { UpdateTokensEvent } from '@events/update-tokens.event';
 import { HashNotFoundException } from '@exceptions/hash-not-found.exception';
 import { EmailAlreadyConfirmedException } from '@exceptions/email-already-confirmed.exception';
+import { AuthService } from '@modules/auth.service';
 
 @Injectable()
 export class UserService implements OnModuleInit {
@@ -31,7 +31,9 @@ export class UserService implements OnModuleInit {
     @InjectModel(User) private readonly userRepository: typeof User,
     @InjectModel(ConfirmationHash)
     private readonly confirmHashRepository: typeof ConfirmationHash,
-    private readonly validatorService: ValidatorService
+    private readonly validatorService: ValidatorService,
+    @Inject(forwardRef(() => AuthService))
+    private readonly authService: AuthService
   ) {}
 
   async signUp(payload: SignUpDto) {
@@ -90,24 +92,10 @@ export class UserService implements OnModuleInit {
     );
     if (!passwordEquality) throw new WrongCredentialsException();
 
-    return await from(
-      new Promise<{ _at: string; _rt: string }>((resolve) => {
-        this.authClient
-          .send(
-            'update_tokens',
-            new UpdateTokensEvent({
-              userId: user.id,
-              email: user.email
-            })
-          )
-          .pipe(
-            tap((t) => {
-              resolve(t);
-            })
-          )
-          .subscribe();
-      })
-    ).toPromise();
+    return this.authService.updateTokens({
+      userId: user.id,
+      email: user.email
+    });
   }
 
   async confirmAccount({ confirmationHash }: { confirmationHash: string }) {
@@ -132,6 +120,12 @@ export class UserService implements OnModuleInit {
   logout({ userId }: { userId: string }) {
     this.authClient.emit('user_logout', new UserLogoutEvent({ userId }));
     return new ResponseDto();
+  }
+
+  getUserById({ id }: { id: string }) {
+    return this.userRepository.findByPk(id, {
+      attributes: ['id', 'email']
+    });
   }
 
   onModuleInit(): any {

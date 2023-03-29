@@ -1,30 +1,108 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
+import * as uuid from 'uuid';
+import * as jwt from 'jsonwebtoken';
+import { AccessTokenDto } from '@dto/access-token.dto';
+import { RefreshTokenDto } from '@dto/refresh-token.dto';
+import { ExpiredTokenException } from '@exceptions/expired-token.exception';
+import { InvalidTokenException } from '@exceptions/invalid-token.exception';
+import { SessionHasExpiredException } from '@exceptions/session-expired.exception';
+import { CorruptedTokenException } from '@exceptions/corrupted-token.exception';
+import { TokenPayloadDto } from '@dto/token-payload.dto';
+import { JwtService } from '@nestjs/jwt';
+import { InjectModel } from '@nestjs/sequelize';
+import { ApiConfigService } from '@shared/config.service';
+import { Session } from '@models/session.model';
 import { RefreshTokensEvent } from '@events/refresh-tokens.event';
-import { from, tap } from 'rxjs';
+import { UserService } from '@modules/user.service';
 
 @Injectable()
-export class AuthService implements OnModuleInit {
+export class AuthService {
   constructor(
-    @Inject('AUTH_SERVICE') private readonly authService: ClientKafka
+    private readonly jwtService: JwtService,
+    private readonly configService: ApiConfigService,
+    @Inject(forwardRef(() => UserService))
+    private readonly userService: UserService,
+    @InjectModel(Session) private readonly sessionRepository: typeof Session,
+    @Inject('AUTH_SERVICE') private readonly authClient: ClientKafka
   ) {}
 
-  async refreshTokens({ refreshToken }: { refreshToken: string }) {
-    return await from(
-      new Promise<any>((resolve) => {
-        this.authService
-          .send('refresh_tokens', new RefreshTokensEvent({ refreshToken }))
-          .pipe(
-            tap((t) => {
-              resolve(t);
-            })
-          )
-          .subscribe();
-      })
-    ).toPromise();
+  private generateAccessToken(accessTokenPayload: AccessTokenDto) {
+    const payload = {
+      userId: accessTokenPayload.userId,
+      email: accessTokenPayload.email,
+      type: 'access'
+    };
+    const options = {
+      expiresIn: this.configService.jwtAuthConfig.accessExpiresIn,
+      secret: this.configService.jwtAuthConfig.secret
+    };
+
+    return this.jwtService.sign(payload, options);
   }
 
-  onModuleInit(): any {
-    this.authService.subscribeToResponseOf('refresh_tokens');
+  private generateRefreshToken() {
+    const id = uuid.v4();
+    const payload = { id, type: 'refresh' };
+    const options = {
+      expiresIn: this.configService.jwtAuthConfig.refreshExpiresIn,
+      secret: this.configService.jwtAuthConfig.secret
+    };
+
+    return { id, token: this.jwtService.sign(payload, options) };
+  }
+
+  private updateRefreshToken(refreshTokenPayload: RefreshTokenDto) {
+    this.authClient.emit(
+      'update_token',
+      new RefreshTokensEvent({ ...refreshTokenPayload })
+    );
+  }
+
+  private verifyToken({ token }: { token: string }) {
+    try {
+      return this.jwtService.verify(token, {
+        secret: this.configService.jwtAuthConfig.secret
+      });
+    } catch (error: any) {
+      if (error instanceof jwt.TokenExpiredError)
+        throw new ExpiredTokenException();
+      else if (error instanceof jwt.JsonWebTokenError)
+        throw new InvalidTokenException();
+      else throw new SessionHasExpiredException();
+    }
+  }
+
+  async getTokenById(tokenId: string) {
+    return this.sessionRepository.findOne({
+      where: { tokenId }
+    });
+  }
+
+  async updateTokens(accessTokenPayload: AccessTokenDto) {
+    const accessToken = this.generateAccessToken(accessTokenPayload);
+    const refreshToken = this.generateRefreshToken();
+
+    this.updateRefreshToken({
+      userId: accessTokenPayload.userId,
+      tokenId: refreshToken.id
+    });
+
+    return { _at: accessToken, _rt: refreshToken.token };
+  }
+
+  async refreshToken({ refreshToken }: { refreshToken: string }) {
+    if (!refreshToken) throw new CorruptedTokenException();
+
+    const payload: TokenPayloadDto = this.verifyToken({ token: refreshToken });
+
+    const token = await this.getTokenById(payload.id);
+
+    const user = await this.userService.getUserById({ id: token.userId });
+
+    return await this.updateTokens({
+      userId: user.id,
+      email: user.email
+    });
   }
 }

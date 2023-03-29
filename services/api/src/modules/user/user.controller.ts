@@ -56,11 +56,11 @@ export class UserController {
   })
   @Post('sign-in')
   async signIn(@Body() payload: SignInDto, @Res({ passthrough: true }) res) {
-    const tokens = await this.userService.signIn(payload);
+    const { _at, _rt } = await this.userService.signIn(payload);
 
-    res.cookie('_rt', tokens._rt);
+    res.cookie('_rt', _rt);
 
-    return { _at: tokens._at };
+    return { _at };
   }
 
   @ApiExtraModels(ConfirmationHash)
