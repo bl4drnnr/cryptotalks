@@ -32,6 +32,7 @@ services:
       - ./services/common/events:/usr/src/cryptotalks-users/src/events
       - ./services/common/exceptions:/usr/src/cryptotalks-users/src/exceptions
       - ./services/common/event-dto:/usr/src/cryptotalks-users/src/event-dto
+      - ./services/common/mongo-schemas:/usr/src/cryptotalks-users/src/mongo-schemas
     depends_on:
       - api
     networks:
@@ -52,6 +53,7 @@ services:
       - ./services/common/events:/usr/src/cryptotalks-crypto-rates/src/events
       - ./services/common/exceptions:/usr/src/cryptotalks-crypto-rates/src/exceptions
       - ./services/common/event-dto:/usr/src/cryptotalks-crypto-rates/src/event-dto
+      - ./services/common/mongo-schemas:/usr/src/cryptotalks-crypto-rates/src/mongo-schemas
     depends_on:
       - api
     networks:
@@ -72,6 +74,7 @@ services:
       - ./services/common/events:/usr/src/cryptotalks-auth/src/events
       - ./services/common/exceptions:/usr/src/cryptotalks-auth/src/exceptions
       - ./services/common/event-dto:/usr/src/cryptotalks-auth/src/event-dto
+      - ./services/common/mongo-schemas:/usr/src/cryptotalks-auth/src/mongo-schemas
     depends_on:
       - api
     networks:
@@ -92,6 +95,7 @@ services:
       - ./services/common/events:/usr/src/cryptotalks-posts/src/events
       - ./services/common/exceptions:/usr/src/cryptotalks-posts/src/exceptions
       - ./services/common/event-dto:/usr/src/cryptotalks-posts/src/event-dto
+      - ./services/common/mongo-schemas:/usr/src/cryptotalks-posts/src/mongo-schemas
     depends_on:
       - api
     networks:

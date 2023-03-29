@@ -15,6 +15,7 @@ import { ApiConfigService } from '@shared/config.service';
 import { Session } from '@models/session.model';
 import { RefreshTokensEvent } from '@events/refresh-tokens.event';
 import { UserService } from '@modules/user.service';
+import { LogEvent } from '@events/log.event';
 
 @Injectable()
 export class AuthService {
@@ -53,6 +54,15 @@ export class AuthService {
   }
 
   private updateRefreshToken(refreshTokenPayload: RefreshTokenDto) {
+    this.authClient.emit(
+      'log_auth_action',
+      new LogEvent({
+        event: 'SIGN_IN',
+        message: `User ${refreshTokenPayload.userId} has successfully logged in.`,
+        status: 'SUCCESS',
+        timestamp: new Date()
+      })
+    );
     this.authClient.emit(
       'update_token',
       new RefreshTokensEvent({ ...refreshTokenPayload })

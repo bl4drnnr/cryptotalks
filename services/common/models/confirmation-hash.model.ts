@@ -23,7 +23,7 @@ export class ConfirmationHash extends Model<
   ConfirmationHashCreationAttributes
 > {
   @ApiProperty({
-    type: 'string',
+    type: String,
     nullable: false,
     default: 'uuidv4',
     description: 'Unique Id of the record'
@@ -34,7 +34,7 @@ export class ConfirmationHash extends Model<
   id: string;
 
   @ApiProperty({
-    type: 'string',
+    type: String,
     nullable: false,
     description: 'Confirmation hash'
   })
@@ -72,7 +72,7 @@ export class ConfirmationHash extends Model<
   createdAt: Date;
 
   @ApiProperty({
-    type: 'string',
+    type: String,
     nullable: false,
     description: 'Record update date'
   })

@@ -6,7 +6,7 @@ export class ResponseDto {
   }
 
   @ApiProperty({
-    type: 'string',
+    type: String,
     nullable: false
   })
   message: string;

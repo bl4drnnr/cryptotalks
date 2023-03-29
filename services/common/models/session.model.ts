@@ -56,7 +56,7 @@ export class Session extends Model<Session, SessionCreationAttributes> {
   createdAt: Date;
 
   @ApiProperty({
-    type: 'string',
+    type: String,
     nullable: false,
     description: 'Record update date'
   })

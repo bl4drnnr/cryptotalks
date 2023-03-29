@@ -33,7 +33,7 @@ export class User extends Model<User, UserCreationAttributes> {
   id: string;
 
   @ApiProperty({
-    type: 'string',
+    type: String,
     nullable: false,
     description: 'User email'
   })
@@ -41,7 +41,7 @@ export class User extends Model<User, UserCreationAttributes> {
   email: string;
 
   @ApiProperty({
-    type: 'string',
+    type: String,
     nullable: false,
     description: 'User hashed password'
   })
@@ -64,7 +64,7 @@ export class User extends Model<User, UserCreationAttributes> {
   accountConfirm: boolean;
 
   @ApiProperty({
-    type: 'string',
+    type: String,
     nullable: true,
     description: 'User first name'
   })
@@ -72,7 +72,7 @@ export class User extends Model<User, UserCreationAttributes> {
   firstName?: string;
 
   @ApiProperty({
-    type: 'string',
+    type: String,
     nullable: true,
     description: 'User last name'
   })
@@ -80,7 +80,7 @@ export class User extends Model<User, UserCreationAttributes> {
   lastName?: string;
 
   @ApiProperty({
-    type: 'string',
+    type: String,
     nullable: false,
     description: 'User username'
   })
@@ -88,7 +88,7 @@ export class User extends Model<User, UserCreationAttributes> {
   username: string;
 
   @ApiProperty({
-    type: 'string',
+    type: String,
     nullable: true,
     description: 'User Twitter account'
   })
@@ -96,7 +96,7 @@ export class User extends Model<User, UserCreationAttributes> {
   twitter?: string;
 
   @ApiProperty({
-    type: 'string',
+    type: String,
     nullable: true,
     description: 'User LinkedIn account'
   })
@@ -104,7 +104,7 @@ export class User extends Model<User, UserCreationAttributes> {
   linkedIn?: string;
 
   @ApiProperty({
-    type: 'string',
+    type: String,
     nullable: true,
     description: 'User personal website'
   })
@@ -112,7 +112,7 @@ export class User extends Model<User, UserCreationAttributes> {
   personalWebsite?: string;
 
   @ApiProperty({
-    type: 'string',
+    type: String,
     nullable: true,
     description: 'User account title'
   })
@@ -120,7 +120,7 @@ export class User extends Model<User, UserCreationAttributes> {
   title?: string;
 
   @ApiProperty({
-    type: 'string',
+    type: String,
     nullable: true,
     description: 'User biography'
   })
@@ -145,7 +145,7 @@ export class User extends Model<User, UserCreationAttributes> {
   createdAt: Date;
 
   @ApiProperty({
-    type: 'string',
+    type: String,
     nullable: false,
     description: 'Record update date'
   })

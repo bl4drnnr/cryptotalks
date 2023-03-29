@@ -333,58 +333,6 @@ components:
         - password
         - username
         - tac
-    TokenPayloadDto:
-      type: object
-      properties:
-        id:
-          type: string
-          nullable: false
-        type:
-          type: access | refresh
-          nullable: false
-        userId:
-          type: string
-          nullable: false
-      required:
-        - id
-        - type
-        - userId
-    UpdateTokensDto:
-      type: object
-      properties:
-        userId:
-          type: string
-          nullable: false
-        email:
-          type: string
-          nullable: false
-      required:
-        - userId
-        - email
-    RefreshTokenDto:
-      type: object
-      properties:
-        userId:
-          type: string
-          nullable: false
-        tokenId:
-          type: string
-          nullable: false
-      required:
-        - userId
-        - tokenId
-    AccessTokenDto:
-      type: object
-      properties:
-        userId:
-          type: string
-          nullable: false
-        email:
-          type: string
-          nullable: false
-      required:
-        - userId
-        - email
     Session:
       type: object
       properties:
@@ -427,14 +375,6 @@ components:
       required:
         - email
         - password
-    AccountConfirmationDto:
-      type: object
-      properties:
-        confirmationHash:
-          type: string
-          nullable: false
-      required:
-        - confirmationHash
     ConfirmationHash:
       type: object
       properties:

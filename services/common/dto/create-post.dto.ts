@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class CreatePostDto {
   @ApiProperty({
-    type: 'string',
+    type: String,
     nullable: false
   })
   title: string;

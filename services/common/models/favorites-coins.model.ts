@@ -63,7 +63,7 @@ export class FavoriteCoins extends Model<
   createdAt: Date;
 
   @ApiProperty({
-    type: 'string',
+    type: String,
     nullable: false,
     description: 'Record update date'
   })

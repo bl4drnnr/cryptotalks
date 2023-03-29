@@ -7,7 +7,6 @@ import { UserSignUpEvent } from '@events/user-sign-up.event';
 import { SignInDto } from '@dto/sign-in.dto';
 import { ConfirmAccountEvent } from '@events/confirm-account.event';
 import { UserLogoutEvent } from '@events/user-logout.event';
-import { from, tap } from 'rxjs';
 import { ResponseDto } from '@dto/response.dto';
 import { UserAlreadyExistsException } from '@exceptions/user-already-exists.exception';
 import { TacNotAcceptedException } from '@exceptions/tac-not-accepted.exception';
@@ -21,6 +20,7 @@ import { AccountNotConfirmedException } from '@exceptions/account-not-confirmed.
 import { HashNotFoundException } from '@exceptions/hash-not-found.exception';
 import { EmailAlreadyConfirmedException } from '@exceptions/email-already-confirmed.exception';
 import { AuthService } from '@modules/auth.service';
+import { LogEvent } from '@events/log.event';
 
 @Injectable()
 export class UserService implements OnModuleInit {
@@ -58,6 +58,16 @@ export class UserService implements OnModuleInit {
     });
 
     const confirmationHash = crypto.randomBytes(20).toString('hex');
+
+    this.authClient.emit(
+      'log_auth_action',
+      new LogEvent({
+        event: 'SIGN_UP',
+        message: `User ${payload.email} has successfully created an account.`,
+        status: 'SUCCESS',
+        timestamp: new Date()
+      })
+    );
 
     this.userClient.emit(
       'user_created',
