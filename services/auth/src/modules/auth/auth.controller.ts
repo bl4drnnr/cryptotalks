@@ -1,18 +1,18 @@
 import { Controller } from '@nestjs/common';
-import { EventPattern, MessagePattern } from '@nestjs/microservices';
+import { EventPattern } from '@nestjs/microservices';
 import { AuthService } from '@auth/auth.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @MessagePattern('refresh_tokens')
-  handleRefreshTokens(data: any) {
-    return this.authService.refreshToken(data);
+  @EventPattern('log_auth_action')
+  handleLogSigningIn(data: any) {
+    return this.authService.logAuthAction(data);
   }
 
-  @MessagePattern('update_tokens')
-  handleUpdateTokens(data: any) {
+  @EventPattern('update_token')
+  handleTokenUpdate(data: any) {
     return this.authService.updateTokens(data);
   }
 

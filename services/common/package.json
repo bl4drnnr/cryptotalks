@@ -6,11 +6,13 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "format": "prettier --write \"dto/*.ts\" \"events/*.ts\" \"models/*.ts\" \"exceptions/*.ts\" \"event-dto/*.ts\""
+    "format": "prettier --write \"dto/*.ts\" \"events/*.ts\" \"models/*.ts\" \"exceptions/*.ts\" \"event-dto/*.ts\" \"mongo-schemas/*.ts\""
   },
   "dependencies": {
     "@nestjs/microservices": "^9.3.12",
+    "@nestjs/mongoose": "^9.2.2",
     "@nestjs/swagger": "^6.2.1",
+    "mongoose": "^7.0.3",
     "sequelize": "^6.30.0",
     "sequelize-cli": "^6.6.0",
     "sequelize-typescript": "^2.1.5"

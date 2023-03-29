@@ -1,17 +1,16 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { SharedModule } from '@shared/shared.module';
 import { AuthModule } from '@auth/auth.module';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { Session } from '@models/session.model';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
-    SharedModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: `../../.env.${process.env.NODE_ENV}`
     }),
+    MongooseModule.forRoot(process.env.MONGO_DB_LOGS),
     SequelizeModule.forRoot({
       dialect: 'postgres',
       host: process.env.POSTGRES_HOST,
@@ -19,7 +18,6 @@ import { Session } from '@models/session.model';
       username: process.env.POSTGRES_USERNAME,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
-      models: [Session],
       autoLoadModels: true
     }),
     AuthModule

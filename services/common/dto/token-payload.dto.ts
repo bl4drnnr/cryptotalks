@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class TokenPayloadDto {
   @ApiProperty({
-    type: 'string',
+    type: String,
     nullable: false
   })
   id: string;
@@ -14,7 +14,7 @@ export class TokenPayloadDto {
   type: string;
 
   @ApiProperty({
-    type: 'string',
+    type: String,
     nullable: false
   })
   userId: string;

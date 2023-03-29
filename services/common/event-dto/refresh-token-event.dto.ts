@@ -1,15 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UpdateTokensDto {
+export class RefreshTokenEventDto {
   @ApiProperty({
-    type: 'string',
+    type: 'uuidv4',
     nullable: false
   })
   userId: string;
 
   @ApiProperty({
-    type: 'string',
+    type: 'uuidv4',
     nullable: false
   })
-  email: string;
+  tokenId: string;
 }

@@ -33,7 +33,7 @@ export class Post extends Model<Post, PostCreationAttributes> {
   id: string;
 
   @ApiProperty({
-    type: 'string',
+    type: String,
     nullable: false,
     description: 'Title of the post'
   })
@@ -41,7 +41,7 @@ export class Post extends Model<Post, PostCreationAttributes> {
   title: string;
 
   @ApiProperty({
-    type: 'string',
+    type: String,
     nullable: false,
     description: 'Slug of the post'
   })
@@ -74,7 +74,7 @@ export class Post extends Model<Post, PostCreationAttributes> {
   createdAt: Date;
 
   @ApiProperty({
-    type: 'string',
+    type: String,
     nullable: false,
     description: 'Record update date'
   })

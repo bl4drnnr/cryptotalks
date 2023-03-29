@@ -1,16 +1,20 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
-import { ClientKafka, ClientsModule, Transport } from '@nestjs/microservices';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 import { JwtModule } from '@nestjs/jwt';
 import { ApiConfigService } from '@shared/config.service';
 import { User } from '@models/user.model';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { AuthModule } from '@modules/auth.module';
+import { AuthService } from '@modules/auth.service';
+import { Session } from '@models/session.model';
 
 @Module({
   imports: [
-    SequelizeModule.forFeature([User, ConfirmationHash]),
+    forwardRef(() => AuthModule),
+    SequelizeModule.forFeature([User, ConfirmationHash, Session]),
     ClientsModule.register([
       {
         name: 'USERS_SERVICE',
@@ -54,12 +58,13 @@ import { SequelizeModule } from '@nestjs/sequelize';
     ]),
     JwtModule.registerAsync({
       useFactory: async (configService: ApiConfigService) => ({
-        secret: configService.jwtSecret.secret
+        secret: configService.jwtAuthConfig.secret
       }),
       inject: [ApiConfigService]
     })
   ],
   controllers: [UserController],
-  providers: [UserService]
+  providers: [UserService, AuthService],
+  exports: [UserService]
 })
 export class UserModule {}

@@ -1,13 +1,12 @@
 import * as bcryptjs from 'bcryptjs';
 import * as crypto from 'crypto';
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { SignUpDto } from '@dto/sign-up.dto';
 import { UserSignUpEvent } from '@events/user-sign-up.event';
 import { SignInDto } from '@dto/sign-in.dto';
 import { ConfirmAccountEvent } from '@events/confirm-account.event';
 import { UserLogoutEvent } from '@events/user-logout.event';
-import { from, tap } from 'rxjs';
 import { ResponseDto } from '@dto/response.dto';
 import { UserAlreadyExistsException } from '@exceptions/user-already-exists.exception';
 import { TacNotAcceptedException } from '@exceptions/tac-not-accepted.exception';
@@ -18,9 +17,10 @@ import { InjectModel } from '@nestjs/sequelize';
 import { ValidatorService } from '@shared/validator.service';
 import { WrongCredentialsException } from '@exceptions/wrong-credentials.exception';
 import { AccountNotConfirmedException } from '@exceptions/account-not-confirmed.exception';
-import { UpdateTokensEvent } from '@events/update-tokens.event';
 import { HashNotFoundException } from '@exceptions/hash-not-found.exception';
 import { EmailAlreadyConfirmedException } from '@exceptions/email-already-confirmed.exception';
+import { AuthService } from '@modules/auth.service';
+import { LogEvent } from '@events/log.event';
 
 @Injectable()
 export class UserService implements OnModuleInit {
@@ -31,7 +31,9 @@ export class UserService implements OnModuleInit {
     @InjectModel(User) private readonly userRepository: typeof User,
     @InjectModel(ConfirmationHash)
     private readonly confirmHashRepository: typeof ConfirmationHash,
-    private readonly validatorService: ValidatorService
+    private readonly validatorService: ValidatorService,
+    @Inject(forwardRef(() => AuthService))
+    private readonly authService: AuthService
   ) {}
 
   async signUp(payload: SignUpDto) {
@@ -56,6 +58,16 @@ export class UserService implements OnModuleInit {
     });
 
     const confirmationHash = crypto.randomBytes(20).toString('hex');
+
+    this.authClient.emit(
+      'log_auth_action',
+      new LogEvent({
+        event: 'SIGN_UP',
+        message: `User ${payload.email} has successfully created an account.`,
+        status: 'SUCCESS',
+        timestamp: new Date()
+      })
+    );
 
     this.userClient.emit(
       'user_created',
@@ -82,29 +94,29 @@ export class UserService implements OnModuleInit {
     });
 
     if (!user) throw new WrongCredentialsException();
-    if (!user.accountConfirm) throw new AccountNotConfirmedException();
+    if (!user.accountConfirm) {
+      this.authClient.emit(
+        'log_auth_action',
+        new LogEvent({
+          event: 'SIGN_IN',
+          message: `User ${user.email} tried to log in while being unconfirmed.`,
+          status: 'ERROR',
+          timestamp: new Date()
+        })
+      );
+      throw new AccountNotConfirmedException();
+    }
 
-    const passwordEquality = bcryptjs.compare(payload.password, user.password);
+    const passwordEquality = await bcryptjs.compare(
+      payload.password,
+      user.password
+    );
     if (!passwordEquality) throw new WrongCredentialsException();
 
-    return await from(
-      new Promise<{ _at: string; _rt: string }>((resolve) => {
-        this.authClient
-          .send(
-            'update_tokens',
-            new UpdateTokensEvent({
-              userId: user.id,
-              email: user.email
-            })
-          )
-          .pipe(
-            tap((t) => {
-              resolve(t);
-            })
-          )
-          .subscribe();
-      })
-    ).toPromise();
+    return this.authService.updateTokens({
+      userId: user.id,
+      email: user.email
+    });
   }
 
   async confirmAccount({ confirmationHash }: { confirmationHash: string }) {
@@ -113,7 +125,28 @@ export class UserService implements OnModuleInit {
     });
 
     if (!foundHash) throw new HashNotFoundException();
-    if (foundHash.confirmed) throw new EmailAlreadyConfirmedException();
+    if (foundHash.confirmed) {
+      this.authClient.emit(
+        'log_auth_action',
+        new LogEvent({
+          event: 'CONFIRMATION',
+          message: `User ${foundHash.id} tried to confirm account one more time.`,
+          status: 'ERROR',
+          timestamp: new Date()
+        })
+      );
+      throw new EmailAlreadyConfirmedException();
+    }
+
+    this.authClient.emit(
+      'log_auth_action',
+      new LogEvent({
+        event: 'CONFIRMATION',
+        message: `User ${foundHash.id} has successfully confirmed an account.`,
+        status: 'SUCCESS',
+        timestamp: new Date()
+      })
+    );
 
     this.userClient.emit(
       'confirm_user_account',
@@ -129,6 +162,12 @@ export class UserService implements OnModuleInit {
   logout({ userId }: { userId: string }) {
     this.authClient.emit('user_logout', new UserLogoutEvent({ userId }));
     return new ResponseDto();
+  }
+
+  getUserById({ id }: { id: string }) {
+    return this.userRepository.findByPk(id, {
+      attributes: ['id', 'email']
+    });
   }
 
   onModuleInit(): any {

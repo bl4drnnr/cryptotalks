@@ -2,13 +2,13 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class RefreshTokenDto {
   @ApiProperty({
-    type: 'string',
+    type: String,
     nullable: false
   })
   userId: string;
 
   @ApiProperty({
-    type: 'string',
+    type: String,
     nullable: false
   })
   tokenId: string;

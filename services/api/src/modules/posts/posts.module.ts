@@ -24,7 +24,7 @@ import { ApiConfigService } from '@shared/config.service';
     ]),
     JwtModule.registerAsync({
       useFactory: async (configService: ApiConfigService) => ({
-        secret: configService.jwtSecret.secret
+        secret: configService.jwtAuthConfig.secret
       }),
       inject: [ApiConfigService]
     })

@@ -23,7 +23,8 @@
       "@models/*": ["src/models/*", "../common/models/*"],
       "@dto/*": ["src/dto/*", "../common/dto/*"],
       "@events/*": ["src/events/*", "../common/events/*"],
-      "@events-dto/*": ["src/events-dto/*", "../common/events-dto/*"]
+      "@events-dto/*": ["src/events-dto/*", "../common/events-dto/*"],
+      "@mongo-schemas/*": ["src/mongo-schemas/*", "../common/mongo-schemas/*"]
     }
   }
 }

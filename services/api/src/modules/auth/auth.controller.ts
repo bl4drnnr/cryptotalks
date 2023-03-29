@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from '@modules/auth.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtGuard } from '@guards/jwt.guard';
@@ -16,13 +16,14 @@ export class AuthController {
   })
   @Get('refresh')
   @UseGuards(JwtGuard)
-  async refreshTokens(@CookieRefreshToken() refreshToken: string) {
-    const refreshedTokens = await this.authService.refreshTokens({
-      refreshToken
-    });
+  async refreshTokens(
+    @CookieRefreshToken() refreshToken: string,
+    @Res({ passthrough: true }) res
+  ) {
+    const { _rt, _at } = await this.authService.refreshToken({ refreshToken });
 
-    // res.cookie('_rt', refreshedTokens._rt);
+    res.cookie('_rt', _rt);
 
-    // return { _at: refreshedTokens._at };
+    return { _at };
   }
 }
