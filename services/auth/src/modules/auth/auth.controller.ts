@@ -8,7 +8,7 @@ export class AuthController {
 
   @EventPattern('log_auth_action')
   handleLogSigningIn(data: any) {
-    return this.authService.logSigningIn(data);
+    return this.authService.logAuthAction(data);
   }
 
   @EventPattern('update_token')

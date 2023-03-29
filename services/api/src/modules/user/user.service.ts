@@ -94,7 +94,18 @@ export class UserService implements OnModuleInit {
     });
 
     if (!user) throw new WrongCredentialsException();
-    if (!user.accountConfirm) throw new AccountNotConfirmedException();
+    if (!user.accountConfirm) {
+      this.authClient.emit(
+        'log_auth_action',
+        new LogEvent({
+          event: 'SIGN_IN',
+          message: `User ${user.email} tried to log in while being unconfirmed.`,
+          status: 'ERROR',
+          timestamp: new Date()
+        })
+      );
+      throw new AccountNotConfirmedException();
+    }
 
     const passwordEquality = await bcryptjs.compare(
       payload.password,
@@ -114,7 +125,28 @@ export class UserService implements OnModuleInit {
     });
 
     if (!foundHash) throw new HashNotFoundException();
-    if (foundHash.confirmed) throw new EmailAlreadyConfirmedException();
+    if (foundHash.confirmed) {
+      this.authClient.emit(
+        'log_auth_action',
+        new LogEvent({
+          event: 'CONFIRMATION',
+          message: `User ${foundHash.id} tried to confirm account one more time.`,
+          status: 'ERROR',
+          timestamp: new Date()
+        })
+      );
+      throw new EmailAlreadyConfirmedException();
+    }
+
+    this.authClient.emit(
+      'log_auth_action',
+      new LogEvent({
+        event: 'CONFIRMATION',
+        message: `User ${foundHash.id} has successfully confirmed an account.`,
+        status: 'SUCCESS',
+        timestamp: new Date()
+      })
+    );
 
     this.userClient.emit(
       'confirm_user_account',

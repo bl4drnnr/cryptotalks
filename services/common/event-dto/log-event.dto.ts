@@ -8,10 +8,10 @@ export class LogEventDto {
   message: string;
 
   @ApiProperty({
-    type: String,
+    type: 'SIGN_IN | SIGN_UP | CONFIRMATION | POST',
     nullable: false
   })
-  event: string;
+  event: 'SIGN_IN' | 'SIGN_UP' | 'CONFIRMATION' | 'POST';
 
   @ApiProperty({
     type: 'SUCCESS | ERROR',

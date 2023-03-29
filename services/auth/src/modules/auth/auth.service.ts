@@ -34,7 +34,7 @@ export class AuthService {
     return this.sessionRepository.destroy({ where: { userId } });
   }
 
-  async logSigningIn(payload: LogEventDto) {
+  async logAuthAction(payload: LogEventDto) {
     const log = new this.logger(payload);
     await log.save();
   }
