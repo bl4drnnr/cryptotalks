@@ -8,7 +8,7 @@ export class SignUpEventDto {
   confirmationHash?: string;
 
   @ApiProperty({
-    type: 'string',
+    type: 'uuidv4',
     nullable: false
   })
   userId: string;

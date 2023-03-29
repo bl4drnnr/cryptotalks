@@ -17,11 +17,6 @@ import {
   ApiTags
 } from '@nestjs/swagger';
 import { SignInDto } from '@dto/sign-in.dto';
-import { UpdateTokensDto } from '@dto/update-tokens.dto';
-import { AccessTokenDto } from '@dto/access-token.dto';
-import { RefreshTokenDto } from '@dto/refresh-token.dto';
-import { TokenPayloadDto } from '@dto/token-payload.dto';
-import { AccountConfirmationDto } from '@dto/account-confirmation.dto';
 import { User } from '@models/user.model';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
 import { Session } from '@models/session.model';
@@ -45,10 +40,6 @@ export class UserController {
   }
 
   @ApiExtraModels(Session)
-  @ApiExtraModels(AccessTokenDto)
-  @ApiExtraModels(RefreshTokenDto)
-  @ApiExtraModels(UpdateTokensDto)
-  @ApiExtraModels(TokenPayloadDto)
   @ApiOperation({ summary: 'Responsible for user login' })
   @ApiResponse({
     status: 201,
@@ -64,7 +55,6 @@ export class UserController {
   }
 
   @ApiExtraModels(ConfirmationHash)
-  @ApiExtraModels(AccountConfirmationDto)
   @ApiOperation({ summary: 'Confirm user registration' })
   @ApiResponse({
     status: 201,

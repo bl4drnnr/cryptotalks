@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Session } from '@models/session.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { RefreshTokenEventDto } from '@event-dto/refresh-token-event.dto';
+import { UserLogoutEventDto } from '@event-dto/user-logout-event.dto';
 
 @Injectable()
 export class AuthService {
@@ -23,7 +24,7 @@ export class AuthService {
     });
   }
 
-  deleteRefreshToken({ userId }: { userId: string }) {
+  deleteRefreshToken({ userId }: UserLogoutEventDto) {
     return this.sessionRepository.destroy({ where: { userId } });
   }
 }
