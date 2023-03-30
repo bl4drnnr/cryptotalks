@@ -20,4 +20,9 @@ export class PostsController {
   handleUpdatePost(data: any) {
     return this.postsService.updatePost(data);
   }
+
+  @EventPattern('post_action')
+  handleLogSigningIn(data: any) {
+    return this.postsService.logPostAction(data);
+  }
 }
