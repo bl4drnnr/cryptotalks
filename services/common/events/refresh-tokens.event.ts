@@ -1,4 +1,4 @@
-import { RefreshTokenEventDto } from '../event-dto/refresh-token-event.dto';
+import { RefreshTokenEventDto } from '../event-dto/refresh-token.event.dto';
 
 export class RefreshTokensEvent {
   constructor(private readonly refreshTokensPayload: RefreshTokenEventDto) {}

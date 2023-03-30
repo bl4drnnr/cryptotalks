@@ -57,6 +57,18 @@ export class Post extends Model<Post, PostCreationAttributes> {
   content: Array<string>;
 
   @ApiProperty({
+    type: [String],
+    nullable: false,
+    description: 'Search tags'
+  })
+  @Column({
+    type: DataType.ARRAY(DataType.STRING),
+    allowNull: false,
+    field: 'search_tags'
+  })
+  searchTags: Array<string>;
+
+  @ApiProperty({
     type: 'uuiv4',
     nullable: false,
     description: 'User Id'

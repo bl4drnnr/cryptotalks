@@ -1,4 +1,4 @@
-import { UpdatePostEventDto } from '../event-dto/update-post-event.dto';
+import { UpdatePostEventDto } from '../event-dto/update-post.event.dto';
 
 export class UpdatePostEvent {
   constructor(private readonly updatePostPayload: UpdatePostEventDto) {}

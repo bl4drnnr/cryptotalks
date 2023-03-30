@@ -1,4 +1,4 @@
-import { DeletePostEventDto } from '../event-dto/delete-post-event.dto';
+import { DeletePostEventDto } from '../event-dto/delete-post.event.dto';
 
 export class DeletePostEvent {
   constructor(private readonly deletePostPayload: DeletePostEventDto) {}

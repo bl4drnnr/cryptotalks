@@ -36,6 +36,40 @@ paths:
         "200":
           description: As a response function returns post
       tags: *a1
+  "/api/posts/list/{page}/{pageSize}/{order}/{orderBy}":
+    get:
+      operationId: PostsController_getAllPosts
+      summary: List posts
+      parameters:
+        - name: page
+          required: true
+          in: path
+          schema:
+            type: number
+        - name: pageSize
+          required: true
+          in: path
+          schema:
+            type: number
+        - name: order
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: orderBy
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: searchQuery
+          required: true
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: As a response function returns list of posts
+      tags: *a1
   "/api/posts/delete/{id}":
     delete:
       operationId: PostsController_deletePost
@@ -173,6 +207,12 @@ components:
           type: array
           items:
             type: string
+        searchTags:
+          nullable: false
+          description: Search tags
+          type: array
+          items:
+            type: string
         userId:
           type: uuiv4
           nullable: false
@@ -190,6 +230,7 @@ components:
         - title
         - slug
         - content
+        - searchTags
         - userId
         - createdAt
         - updatedAt

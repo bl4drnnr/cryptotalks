@@ -1,4 +1,4 @@
-import { LogEventDto } from '../event-dto/log-event.dto';
+import { LogEventDto } from '../event-dto/log.event.dto';
 
 export class LogEvent {
   constructor(private readonly logPayload: LogEventDto) {}

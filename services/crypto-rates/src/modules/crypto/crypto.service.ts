@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { FavoriteCoins } from '@models/favorites-coins.model';
 import { Cryptocurrency } from '@models/cryptocurrency.model';
-import { SignUpEventDto } from '@event-dto/sign-up-event.dto';
+import { SignUpEventDto } from '@event-dto/sign-up.event.dto';
 
 @Injectable()
 export class CryptoService {
