@@ -4,9 +4,12 @@ import { PostsService } from './posts.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { JwtModule } from '@nestjs/jwt';
 import { ApiConfigService } from '@shared/config.service';
+import { SequelizeModule } from '@nestjs/sequelize';
+import { Post } from '@models/post.model';
 
 @Module({
   imports: [
+    SequelizeModule.forFeature([Post]),
     ClientsModule.register([
       {
         name: 'POSTS_SERVICE',

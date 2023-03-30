@@ -19,7 +19,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                $ref: "#/components/schemas/ResponseDto"
       tags: &a1
         - Posts
   "/api/posts/get/{id}":
@@ -204,9 +204,21 @@ components:
           type: array
           items:
             type: string
+        userId:
+          type: uuidv4
+          nullable: false
       required:
         - title
         - content
+        - userId
+    ResponseDto:
+      type: object
+      properties:
+        message:
+          type: string
+          nullable: false
+      required:
+        - message
     User:
       type: object
       properties:
@@ -410,11 +422,3 @@ components:
         - userId
         - createdAt
         - updatedAt
-    ResponseDto:
-      type: object
-      properties:
-        message:
-          type: string
-          nullable: false
-      required:
-        - message

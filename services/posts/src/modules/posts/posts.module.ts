@@ -1,13 +1,18 @@
 import { Module } from '@nestjs/common';
 import { PostsController } from './posts.controller';
 import { PostsService } from './posts.service';
-import { User } from '@models/user.model';
-import { UserSettings } from '@models/user-settings.model';
-import { ConfirmationHash } from '@models/confirmation-hash.model';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { Post } from '@models/post.model';
+import { InformationLog, LogSchema } from '@mongo-schemas/log.schema';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
-  imports: [SequelizeModule.forFeature([User, UserSettings, ConfirmationHash])],
+  imports: [
+    SequelizeModule.forFeature([Post]),
+    MongooseModule.forFeature([
+      { name: InformationLog.name, schema: LogSchema }
+    ])
+  ],
   controllers: [PostsController],
   providers: [PostsService]
 })
