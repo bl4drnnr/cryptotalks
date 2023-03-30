@@ -1,12 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { SignUpEventDto } from '@event-dto/sign-up-event.dto';
+import { SignUpEventDto } from '@event-dto/sign-up.event.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { ClientKafka } from '@nestjs/microservices';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
 import { UserSettings } from '@models/user-settings.model';
 import { EmailService } from '@shared/email.service';
 import { User } from '@models/user.model';
-import { ConfirmAccountEventDto } from '@event-dto/confirm-account-event.dto';
+import { ConfirmAccountEventDto } from '@event-dto/confirm-account.event.dto';
 
 @Injectable()
 export class UsersService {

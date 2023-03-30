@@ -2,9 +2,15 @@ import { Module } from '@nestjs/common';
 import { CryptoController } from './crypto.controller';
 import { CryptoService } from './crypto.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { SequelizeModule } from '@nestjs/sequelize';
+import { Cryptocurrency } from '@models/cryptocurrency.model';
+import { FavoriteCoins } from '@models/favorites-coins.model';
+import { JwtModule } from '@nestjs/jwt';
+import { ApiConfigService } from '@shared/config.service';
 
 @Module({
   imports: [
+    SequelizeModule.forFeature([Cryptocurrency, FavoriteCoins]),
     ClientsModule.register([
       {
         name: 'CRYPTO_SERVICE',
@@ -19,7 +25,13 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
           }
         }
       }
-    ])
+    ]),
+    JwtModule.registerAsync({
+      useFactory: async (configService: ApiConfigService) => ({
+        secret: configService.jwtAuthConfig.secret
+      }),
+      inject: [ApiConfigService]
+    })
   ],
   controllers: [CryptoController],
   providers: [CryptoService]

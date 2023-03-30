@@ -45,6 +45,7 @@ export class UserSettings extends Model<
     nullable: true,
     description: 'If user wants to set their email as public'
   })
+  @Default(false)
   @Column({ type: DataType.BOOLEAN, allowNull: true, field: 'public_email' })
   publicEmail?: boolean;
 

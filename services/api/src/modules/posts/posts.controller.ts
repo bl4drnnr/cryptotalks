@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards
 } from '@nestjs/common';
 import { PostsService } from '@modules/posts.service';
@@ -52,8 +53,21 @@ export class PostsController {
     status: 200,
     description: 'As a response function returns list of posts'
   })
-  listPosts() {
-    return this.postsService.listPosts();
+  @Get('list/:page/:pageSize/:order/:orderBy')
+  async getAllPosts(
+    @Param('page') page: number,
+    @Param('pageSize') pageSize: number,
+    @Param('order') order: string,
+    @Param('orderBy') orderBy: string,
+    @Query('searchQuery') searchQuery: string
+  ) {
+    return this.postsService.listPosts({
+      page,
+      pageSize,
+      order,
+      orderBy,
+      searchQuery
+    });
   }
 
   @ApiOperation({ summary: 'Responsible for post deletion' })
