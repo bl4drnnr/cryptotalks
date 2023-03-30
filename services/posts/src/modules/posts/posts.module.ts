@@ -5,9 +5,12 @@ import { User } from '@models/user.model';
 import { UserSettings } from '@models/user-settings.model';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { Post } from '@models/post.model';
 
 @Module({
-  imports: [SequelizeModule.forFeature([User, UserSettings, ConfirmationHash])],
+  imports: [
+    SequelizeModule.forFeature([User, UserSettings, ConfirmationHash, Post])
+  ],
   controllers: [PostsController],
   providers: [PostsService]
 })

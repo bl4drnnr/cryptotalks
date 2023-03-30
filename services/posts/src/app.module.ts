@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { PostsModule } from '@modules/posts.module';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { SharedModule } from '@shared/shared.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
       database: process.env.POSTGRES_DATABASE,
       autoLoadModels: true
     }),
+    SharedModule,
     PostsModule
   ]
 })

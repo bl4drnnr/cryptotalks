@@ -10,4 +10,14 @@ export class PostsController {
   handlePostCreated(data: any) {
     return this.postsService.postCreated(data);
   }
+
+  @EventPattern('delete_post')
+  handleDeletePost(data: any) {
+    return this.postsService.deletePost(data);
+  }
+
+  @EventPattern('update_post')
+  handleUpdatePost(data: any) {
+    return this.postsService.updatePost(data);
+  }
 }

@@ -6,12 +6,13 @@ import { ConfirmationHash } from '@models/confirmation-hash.model';
 import { UserSettings } from '@models/user-settings.model';
 import { User } from '@models/user.model';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { Post } from '@models/post.model';
 
 @Module({
   controllers: [UsersController],
   providers: [UsersService],
   imports: [
-    SequelizeModule.forFeature([User, UserSettings, ConfirmationHash]),
+    SequelizeModule.forFeature([User, UserSettings, ConfirmationHash, Post]),
     ClientsModule.register([
       {
         name: 'AUTH_SERVICE',

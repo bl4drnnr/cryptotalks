@@ -18,6 +18,7 @@ import {
 } from '@nestjs/swagger';
 import { Post as PostModel } from '@models/post.model';
 import { JwtGuard } from '@guards/jwt.guard';
+import { UserDecorator } from '@decorators/user.decorator';
 
 @ApiTags('Posts')
 @Controller('posts')
@@ -32,8 +33,8 @@ export class PostsController {
   })
   @UseGuards(JwtGuard)
   @Post('create')
-  createPost(@Body() payload: CreatePostDto) {
-    return this.postsService.createPost(payload);
+  createPost(@UserDecorator() userId: string, @Body() payload: CreatePostDto) {
+    return this.postsService.createPost({ ...payload, userId });
   }
 
   @ApiOperation({ summary: 'Gets post by its id' })
@@ -44,6 +45,15 @@ export class PostsController {
   @Get('get/:id')
   getPostById(@Param('id') id: string) {
     return this.postsService.getPostById({ id });
+  }
+
+  @ApiOperation({ summary: 'List posts' })
+  @ApiResponse({
+    status: 200,
+    description: 'As a response function returns list of posts'
+  })
+  listPosts() {
+    return this.postsService.listPosts();
   }
 
   @ApiOperation({ summary: 'Responsible for post deletion' })
@@ -64,7 +74,7 @@ export class PostsController {
   })
   @UseGuards(JwtGuard)
   @Patch('update/:id')
-  updatePost(@Param('id') id: string, @Body() payload) {
-    return this.postsService.updatePost({ id, payload });
+  updatePost(@Param('id') postId: string, @Body() payload) {
+    return this.postsService.updatePost({ postId, ...payload });
   }
 }

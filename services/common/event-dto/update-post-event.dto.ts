@@ -1,21 +1,21 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreatePostDto {
+export class UpdatePostEventDto {
   @ApiProperty({
     type: String,
-    nullable: false
+    nullable: true
   })
-  title: string;
+  title?: string;
 
   @ApiProperty({
     type: [String],
-    nullable: false
+    nullable: true
   })
-  content: Array<string>;
+  content?: Array<string>;
 
   @ApiProperty({
     type: 'uuidv4',
     nullable: false
   })
-  userId: string;
+  postId: string;
 }
