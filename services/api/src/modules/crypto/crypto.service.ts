@@ -56,7 +56,6 @@ export class CryptoService {
 
   addCryptoToFavorites(payload: AddCryptoToFavoriteEventDto) {
     // TODO Check for errors
-    // TODO Clear common items
     this.cryptoClient.emit(
       'add_crypto_to_favorite',
       new AddCryptoToFavoriteEvent({ ...payload })

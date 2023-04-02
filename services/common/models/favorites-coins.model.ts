@@ -12,7 +12,8 @@ import { ApiProperty } from '@nestjs/swagger';
 
 interface FavoritesCoinsCreationAttributes {
   userId: string;
-  favoriteCoins: Array<string>;
+  favoriteCoins?: Array<string>;
+  coinId?: string;
 }
 
 @Table({
