@@ -49,4 +49,8 @@ export class UsersService {
       { where: { id: payload.userId } }
     );
   }
+
+  async logUserAction(payload: any) {
+    //
+  }
 }

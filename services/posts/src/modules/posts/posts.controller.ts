@@ -6,6 +6,11 @@ import { EventPattern } from '@nestjs/microservices';
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
+  @EventPattern('log_post_action')
+  handleLogSigningIn(data: any) {
+    return this.postsService.logPostAction(data);
+  }
+
   @EventPattern('post_created')
   handlePostCreated(data: any) {
     return this.postsService.postCreated(data);
@@ -21,8 +26,8 @@ export class PostsController {
     return this.postsService.updatePost(data);
   }
 
-  @EventPattern('post_action')
-  handleLogSigningIn(data: any) {
-    return this.postsService.logPostAction(data);
+  @EventPattern('leave_comment')
+  handleLeaveComment(data: any) {
+    return this.postsService.leaveComment(data);
   }
 }

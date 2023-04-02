@@ -293,6 +293,12 @@ components:
           type: uuiv4
           nullable: false
           description: User Id
+        likes:
+          nullable: false
+          description: List of users who liked post
+          type: array
+          items:
+            type: string
         createdAt:
           format: date-time
           type: string
@@ -310,6 +316,7 @@ components:
         - content
         - searchTags
         - userId
+        - likes
         - createdAt
         - updatedAt
     CreatePostDto:

@@ -10,7 +10,21 @@ import {
 } from 'sequelize-typescript';
 import { ApiProperty } from '@nestjs/swagger';
 
-interface CryptocurrencyCreationAttributes {}
+interface CryptocurrencyCreationAttributes {
+  uuid: string;
+  symbol: string;
+  name: string;
+  iconUrl: string;
+  Volume24h: string;
+  marketCap: string;
+  price: number;
+  btcPrice: number;
+  change: number;
+  coinrankingUrl: string;
+  sparkline: Array<string>;
+  rank: number;
+  tier: number;
+}
 
 @Table({
   tableName: 'cryptocurrencies'

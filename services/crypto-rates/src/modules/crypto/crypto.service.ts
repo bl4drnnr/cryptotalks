@@ -14,10 +14,18 @@ export class CryptoService {
     private readonly cryptocurrencyRepository: typeof Cryptocurrency
   ) {}
 
-  async signUp(payload: SignUpEventDto) {
+  async handleCryptoForUserCreated(payload: SignUpEventDto) {
     await this.favoriteCoinsRepository.create({
       userId: payload.userId,
       favoriteCoins: []
     });
+  }
+
+  async handleAddCryptoToFavorite(payload: any) {
+    //
+  }
+
+  async handleRemoveCryptoFromFavorite(payload: any) {
+    //
   }
 }

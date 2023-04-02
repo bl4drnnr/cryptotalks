@@ -77,6 +77,15 @@ export class Post extends Model<Post, PostCreationAttributes> {
   userId: string;
 
   @ApiProperty({
+    type: [String],
+    nullable: false,
+    description: 'List of users who liked post'
+  })
+  @Default([])
+  @Column({ type: DataType.ARRAY(DataType.STRING), allowNull: false })
+  likes: Array<string>;
+
+  @ApiProperty({
     type: Date,
     nullable: false,
     description: 'Record creation date'

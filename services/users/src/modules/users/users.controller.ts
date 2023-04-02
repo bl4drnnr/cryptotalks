@@ -6,6 +6,11 @@ import { EventPattern } from '@nestjs/microservices';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @EventPattern('log_user_action')
+  handleLogUserAction(data: any) {
+    return this.usersService.logUserAction(data);
+  }
+
   @EventPattern('user_created')
   handleSignUp(data: any) {
     return this.usersService.signUp(data);

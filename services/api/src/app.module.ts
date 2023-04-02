@@ -19,6 +19,7 @@ import { BasicAuthMiddleware } from '@middlewares/basic-auth.middleware';
 import { UserSettings } from '@models/user-settings.model';
 import { FavoriteCoins } from '@models/favorites-coins.model';
 import { Cryptocurrency } from '@models/cryptocurrency.model';
+import { PostInfo } from '@models/post-info.model';
 
 @Module({
   imports: [
@@ -40,7 +41,8 @@ import { Cryptocurrency } from '@models/cryptocurrency.model';
         ConfirmationHash,
         UserSettings,
         FavoriteCoins,
-        Cryptocurrency
+        Cryptocurrency,
+        PostInfo
       ],
       autoLoadModels: true
     }),
