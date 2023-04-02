@@ -136,7 +136,7 @@ export class User extends Model<User, UserCreationAttributes> {
   tac: boolean;
 
   @ApiProperty({
-    type: 'date',
+    type: Date,
     nullable: false,
     description: 'Record creation date'
   })
@@ -145,7 +145,7 @@ export class User extends Model<User, UserCreationAttributes> {
   createdAt: Date;
 
   @ApiProperty({
-    type: String,
+    type: Date,
     nullable: false,
     description: 'Record update date'
   })

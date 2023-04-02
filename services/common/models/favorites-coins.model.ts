@@ -54,7 +54,7 @@ export class FavoriteCoins extends Model<
   favoriteCoins?: Array<string>;
 
   @ApiProperty({
-    type: 'date',
+    type: Date,
     nullable: false,
     description: 'Record creation date'
   })
@@ -63,7 +63,7 @@ export class FavoriteCoins extends Model<
   createdAt: Date;
 
   @ApiProperty({
-    type: String,
+    type: Date,
     nullable: false,
     description: 'Record update date'
   })

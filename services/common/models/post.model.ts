@@ -77,7 +77,7 @@ export class Post extends Model<Post, PostCreationAttributes> {
   userId: string;
 
   @ApiProperty({
-    type: 'date',
+    type: Date,
     nullable: false,
     description: 'Record creation date'
   })
@@ -86,7 +86,7 @@ export class Post extends Model<Post, PostCreationAttributes> {
   createdAt: Date;
 
   @ApiProperty({
-    type: String,
+    type: Date,
     nullable: false,
     description: 'Record update date'
   })

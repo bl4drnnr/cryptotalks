@@ -28,8 +28,7 @@ So, whether you're a seasoned crypto trader, a blockchain developer, or just som
 
 ## Project architecture
 
-[//]: # ()
-[//]: # (This application has been build according to microservices approach. [In the next]&#40;#services&#41; section dedicated to services you will find the detailed description of every service that have been implemented, but before that, **let's discuss what microservices are**. )
+This application has been build according to microservices approach. [In the next](#services) section dedicated to services you will find the detailed description of every service that have been implemented, but before that, **let's discuss what microservices are**. 
 
 [//]: # ()
 [//]: # (Microservices architecture is an approach to building software applications as a collection of small, independently deployable services, each running in its own process and communicating with lightweight mechanisms, such as HTTP APIs or message queues.)

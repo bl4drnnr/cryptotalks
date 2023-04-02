@@ -47,7 +47,7 @@ export class Session extends Model<Session, SessionCreationAttributes> {
   userId: string;
 
   @ApiProperty({
-    type: 'date',
+    type: Date,
     nullable: false,
     description: 'Record creation date'
   })
@@ -56,7 +56,7 @@ export class Session extends Model<Session, SessionCreationAttributes> {
   createdAt: Date;
 
   @ApiProperty({
-    type: String,
+    type: Date,
     nullable: false,
     description: 'Record update date'
   })

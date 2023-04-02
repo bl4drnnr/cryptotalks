@@ -66,7 +66,7 @@ export class UserSettings extends Model<
   passwordChanged?: Date;
 
   @ApiProperty({
-    type: 'date',
+    type: Date,
     nullable: false,
     description: 'Record creation date'
   })
@@ -75,7 +75,7 @@ export class UserSettings extends Model<
   createdAt: Date;
 
   @ApiProperty({
-    type: String,
+    type: Date,
     nullable: false,
     description: 'Record update date'
   })
