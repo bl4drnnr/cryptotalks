@@ -384,6 +384,49 @@ tags: []
 servers: []
 components:
   schemas:
+    CreatePostEvent:
+      type: object
+      properties: {}
+    PostInfo:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          default: uuidv4
+          description: Unique Id of the record
+        postId:
+          type: string
+          format: uuid
+          nullable: false
+          description: Post Id
+        userId:
+          type: string
+          format: uuid
+          nullable: false
+          description: User Id
+        comment:
+          type: string
+          nullable: false
+          description: Comment payload
+        createdAt:
+          format: date-time
+          type: string
+          nullable: false
+          description: Record creation date
+        updatedAt:
+          format: date-time
+          type: string
+          nullable: false
+          description: Record update date
+      required:
+        - id
+        - postId
+        - userId
+        - comment
+        - createdAt
+        - updatedAt
     Post:
       type: object
       properties:
@@ -462,6 +505,18 @@ components:
         - title
         - content
         - userId
+    DeletePostEventDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+      required:
+        - id
+    DeletePostEvent:
+      type: object
+      properties: {}
     ResponseDto:
       type: object
       properties:
@@ -470,6 +525,23 @@ components:
           nullable: false
       required:
         - message
+    UpdatePostEventDto:
+      type: object
+      properties:
+        title:
+          type: string
+          nullable: true
+        content:
+          nullable: true
+          type: array
+          items:
+            type: string
+        postId:
+          type: string
+          format: uuid
+          nullable: false
+      required:
+        - postId
     UpdatePostDto:
       type: object
       properties:
@@ -481,6 +553,60 @@ components:
           type: array
           items:
             type: string
+    LeaveCommentEventDto:
+      type: object
+      properties:
+        comment:
+          type: string
+          nullable: false
+        postId:
+          type: string
+          format: uuid
+          nullable: false
+        userId:
+          type: string
+          format: uuid
+          nullable: false
+      required:
+        - comment
+        - postId
+        - userId
+    LeaveCommentEvent:
+      type: object
+      properties: {}
+    LogEventDto:
+      type: object
+      properties:
+        message:
+          type: string
+          nullable: false
+        event:
+          type: array
+          nullable: false
+          items:
+            type: string
+            enum:
+              - SIGN_IN
+              - SIGN_UP
+              - CONFIRMATION
+              - POST
+              - CLOSE_ACC
+              - USER
+        status:
+          type: SUCCESS | ERROR
+          nullable: false
+        timestamp:
+          format: date-time
+          type: string
+          nullable: false
+      required:
+        - message
+        - event
+        - status
+        - timestamp
+    LogEvent:
+      type: object
+      properties: {}
     LeaveCommentDto:
       type: object
       properties:
@@ -489,6 +615,55 @@ components:
           nullable: false
       required:
         - comment
+    UserSettings:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          default: uuidv4
+          description: Unique Id of the record
+        userId:
+          type: string
+          format: uuid
+          nullable: false
+          description: User Id
+        publicEmail:
+          type: boolean
+          nullable: true
+          description: If user wants to set their email as public
+        emailChanged:
+          type: boolean
+          nullable: false
+          description: User is allowed to change email only one time
+        twoFaToken:
+          type: boolean
+          nullable: true
+          description: Contains 2FA token if user set it up
+        passwordChanged:
+          type: boolean
+          nullable: true
+          description: Users are allowed to change password only 1 time
+        createdAt:
+          format: date-time
+          type: string
+          nullable: false
+          description: Record creation date
+        updatedAt:
+          format: date-time
+          type: string
+          nullable: false
+          description: Record update date
+      required:
+        - id
+        - userId
+        - publicEmail
+        - emailChanged
+        - twoFaToken
+        - passwordChanged
+        - createdAt
+        - updatedAt
     User:
       type: object
       properties:
@@ -574,6 +749,21 @@ components:
         - tac
         - createdAt
         - updatedAt
+    SignUpEventDto:
+      type: object
+      properties:
+        confirmationHash:
+          type: string
+          nullable: true
+        userId:
+          type: string
+          format: uuid
+          nullable: false
+        email:
+          type: string
+          nullable: true
+      required:
+        - userId
     SignUpDto:
       type: object
       properties:
@@ -703,6 +893,53 @@ components:
         - userId
         - createdAt
         - updatedAt
+    ConfirmAccountEventDto:
+      type: object
+      properties:
+        hashId:
+          type: string
+          format: uuid
+          nullable: false
+        userId:
+          type: string
+          format: uuid
+          nullable: false
+      required:
+        - hashId
+        - userId
+    ConfirmAccountEvent:
+      type: object
+      properties: {}
+    UserLogoutEventDto:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+        - userId
+    UserLogoutEvent:
+      type: object
+      properties: {}
+    UpdateUserEventDto:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+          nullable: false
+        email:
+          type: string
+          nullable: true
+        password:
+          type: string
+          nullable: true
+      required:
+        - userId
+    UpdateUserEvent:
+      type: object
+      properties: {}
     ChangeEmailDto:
       type: object
       properties:
@@ -723,6 +960,108 @@ components:
       required:
         - password
         - passwordRepeat
+    CloseAccEventDto:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+          nullable: false
+      required:
+        - userId
+    CloseAccEvent:
+      type: object
+      properties: {}
+    RefreshTokenEventDto:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+          nullable: false
+        tokenId:
+          type: string
+          format: uuid
+          nullable: false
+      required:
+        - userId
+        - tokenId
+    TokenPayloadDto:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: false
+        type:
+          type: access | refresh
+          nullable: false
+        userId:
+          type: string
+          nullable: false
+      required:
+        - id
+        - type
+        - userId
+    RefreshTokenDto:
+      type: object
+      properties:
+        userId:
+          type: string
+          nullable: false
+        tokenId:
+          type: string
+          nullable: false
+      required:
+        - userId
+        - tokenId
+    AccessTokenDto:
+      type: object
+      properties:
+        userId:
+          type: string
+          nullable: false
+        email:
+          type: string
+          nullable: false
+      required:
+        - userId
+        - email
+    FavoriteCoins:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          default: uuidv4
+          description: Unique Id of the record
+        userId:
+          type: string
+          format: uuid
+          nullable: false
+          description: User Id
+        favoriteCoins:
+          nullable: true
+          description: List of user's favorite coins
+          type: array
+          items:
+            type: string
+        createdAt:
+          format: date-time
+          type: string
+          nullable: false
+          description: Record creation date
+        updatedAt:
+          format: date-time
+          type: string
+          nullable: false
+          description: Record update date
+      required:
+        - id
+        - userId
+        - favoriteCoins
+        - createdAt
+        - updatedAt
     Cryptocurrency:
       type: object
       properties:
@@ -824,3 +1163,37 @@ components:
         - tier
         - createdAt
         - updatedAt
+    AddCryptoToFavoriteEventDto:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+          nullable: false
+        cryptoId:
+          type: string
+          format: uuid
+          nullable: false
+      required:
+        - userId
+        - cryptoId
+    AddCryptoToFavoriteEvent:
+      type: object
+      properties: {}
+    RemoveCryptoToFavoriteEventDto:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+          nullable: false
+        cryptoId:
+          type: string
+          format: uuid
+          nullable: false
+      required:
+        - userId
+        - cryptoId
+    RemoveCryptoToFavoriteEvent:
+      type: object
+      properties: {}

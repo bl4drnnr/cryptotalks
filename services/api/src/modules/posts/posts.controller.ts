@@ -22,6 +22,15 @@ import { JwtGuard } from '@guards/jwt.guard';
 import { UserDecorator } from '@decorators/user.decorator';
 import { UpdatePostDto } from '@dto/update-post.dto';
 import { LeaveCommentDto } from '@dto/leave-comment.dto';
+import { DeletePostEvent } from '@events/delete-post.event';
+import { DeletePostEventDto } from '@event-dto/delete-post.event.dto';
+import { LeaveCommentEvent } from '@events/leave-comment.event';
+import { LeaveCommentEventDto } from '@event-dto/leave-comment.event.dto';
+import { LogEvent } from '@events/log.event';
+import { LogEventDto } from '@event-dto/log.event.dto';
+import { UpdatePostEventDto } from '@event-dto/update-post.event.dto';
+import { PostInfo } from '@models/post-info.model';
+import { CreatePostEvent } from '@events/create-post.event';
 
 @ApiTags('Posts')
 @Controller('posts')
@@ -29,6 +38,8 @@ export class PostsController {
   constructor(private postsService: PostsService) {}
 
   @ApiExtraModels(PostModel)
+  @ApiExtraModels(PostInfo)
+  @ApiExtraModels(CreatePostEvent)
   @ApiOperation({ summary: 'Responsible for post creation' })
   @ApiResponse({
     status: 201,
@@ -72,6 +83,8 @@ export class PostsController {
     });
   }
 
+  @ApiExtraModels(DeletePostEvent)
+  @ApiExtraModels(DeletePostEventDto)
   @ApiOperation({ summary: 'Responsible for post deletion' })
   @ApiResponse({
     status: 201,
@@ -83,6 +96,8 @@ export class PostsController {
     return this.postsService.deletePost({ id });
   }
 
+  @ApiExtraModels(UpdatePostDto)
+  @ApiExtraModels(UpdatePostEventDto)
   @ApiOperation({ summary: 'Responsible for post update' })
   @ApiResponse({
     status: 201,
@@ -94,6 +109,10 @@ export class PostsController {
     return this.postsService.updatePost({ postId, ...payload });
   }
 
+  @ApiExtraModels(LogEvent)
+  @ApiExtraModels(LogEventDto)
+  @ApiExtraModels(LeaveCommentEvent)
+  @ApiExtraModels(LeaveCommentEventDto)
   @ApiOperation({ summary: 'Allows users to leave comments' })
   @ApiResponse({
     status: 201,
