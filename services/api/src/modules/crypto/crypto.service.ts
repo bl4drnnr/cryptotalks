@@ -43,8 +43,9 @@ export class CryptoService {
     }
 
     return await this.cryptoRepository.findAndCountAll({
+      attributes: ['id', 'uuid', 'symbol', 'name', 'description', 'iconUrl', 'sparkline', 'rank', 'tier'],
       order: [[order, orderBy]],
-      where,
+      where: { ...where },
       limit,
       offset
     });
