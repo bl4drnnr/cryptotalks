@@ -10,7 +10,7 @@ import { UserModule } from '@modules/user.module';
 import { UserService } from '@modules/user.service';
 import { User } from '@models/user.model';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
-import {UserSettings} from "@models/user-settings.model";
+import { UserSettings } from '@models/user-settings.model';
 
 @Module({
   imports: [
