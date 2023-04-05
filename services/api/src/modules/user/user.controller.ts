@@ -120,4 +120,26 @@ export class UserController {
   closeAccount(@UserDecorator() userId: string) {
     return this.userService.closeAccount({ userId });
   }
+
+  @ApiOperation({ summary: 'Sets multi-factor authentication for user' })
+  @ApiResponse({
+    status: 201,
+    description: 'As a response function returns success message'
+  })
+  @UseGuards(JwtGuard)
+  @Post('set-2fa')
+  setTwoFa(@UserDecorator() userId: string) {
+    return this.userService.setTwoFa();
+  }
+
+  @ApiOperation({ summary: 'Removes multi-factor authentication for user' })
+  @ApiResponse({
+    status: 201,
+    description: 'As a response function returns success message'
+  })
+  @UseGuards(JwtGuard)
+  @Post('remove-2fa')
+  removeTwoFa(@UserDecorator() userId: string) {
+    return this.userService.removeTwoFa();
+  }
 }

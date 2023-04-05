@@ -11,7 +11,7 @@ export const useCloseAccountService = () => {
     : Promise<CloseAccountResponse> => {
     try {
       setLoading(true);
-      const { data } = await ApiClient.patch<CloseAccountResponse>('/user/close-account', {}, {
+      const { data } = await ApiClient.post<CloseAccountResponse>('/user/close-account', {}, {
         headers: { 'x-access-token': `Bearer ${payload.token}` }
       });
 

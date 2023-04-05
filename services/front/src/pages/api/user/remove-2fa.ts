@@ -8,7 +8,7 @@ export default async (
   res: NextApiResponse
 ) => {
   try {
-    const { data } = await Api.post('/user/close-account', req.body,{
+    const { data } = await Api.post('/user/remove-2fa', req.body, {
       headers: { 'x-access-token': req.headers['x-access-token'] }
     });
 

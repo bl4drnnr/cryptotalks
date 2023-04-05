@@ -16,9 +16,9 @@ import {
   ISecuritySettings
 } from '@services/get-user-settings/get-user-settings.interface';
 import { useGetUserSettingsService } from '@services/get-user-settings/get-user-settings.service';
-import {
-  useSetPersonalUserSettingsService
-} from '@services/set-user-personal-settings/set-user-personal-settings.service';
+// import {
+//   useSetPersonalUserSettingsService
+// } from '@services/set-user-personal-settings/set-user-personal-settings.service';
 import {
   ButtonWrapper,
   Container, CreatedAtDate, CreatedAtParagraph,
@@ -40,7 +40,7 @@ const AccountSettings = () => {
 
   const { loading: l0, getUserSettings } = useGetUserSettingsService();
   const { loading: l1, closeAccount } = useCloseAccountService();
-  const { loading: l2, setPersonalUserSettings } = useSetPersonalUserSettingsService();
+  // const { loading: l2, setPersonalUserSettings } = useSetPersonalUserSettingsService();
 
   const fetchSettingsRef = React.useRef(true);
 
@@ -90,7 +90,7 @@ const AccountSettings = () => {
   const applyPersonalInformation = async () => {
     try {
       const token = sessionStorage.getItem('_at');
-      return await setPersonalUserSettings({ ...personalInformation, token });
+      // return await setPersonalUserSettings({ ...personalInformation, token });
     } catch (e) {
       return exceptionHandler(e);
     }
@@ -114,7 +114,7 @@ const AccountSettings = () => {
       <Head>
         <title>Cryptotalks | Settings</title>
       </Head>
-      <DefaultLayout loading={l0 || l1 || l2}>
+      <DefaultLayout loading={l0 || l1}>
         <Container>
           <Wrapper>
 

@@ -249,6 +249,24 @@ paths:
         "201":
           description: As a response function returns success message
       tags: *a2
+  /api/user/set-2fa:
+    post:
+      operationId: UserController_setTwoFa
+      summary: Sets multi-factor authentication for user
+      parameters: []
+      responses:
+        "201":
+          description: As a response function returns success message
+      tags: *a2
+  /api/user/remove-2fa:
+    post:
+      operationId: UserController_removeTwoFa
+      summary: Removes multi-factor authentication for user
+      parameters: []
+      responses:
+        "201":
+          description: As a response function returns success message
+      tags: *a2
   /api/auth/refresh:
     get:
       operationId: AuthController_refreshTokens

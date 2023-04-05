@@ -1,6 +1,6 @@
 import * as bcryptjs from 'bcryptjs';
 import * as crypto from 'crypto';
-import { forwardRef, Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { SignUpDto } from '@dto/sign-up.dto';
 import { UserSignUpEvent } from '@events/user-sign-up.event';
@@ -27,7 +27,7 @@ import { UserSettings } from '@models/user-settings.model';
 import { EmailChangedException } from '@exceptions/email-changed.exception';
 
 @Injectable()
-export class UserService implements OnModuleInit {
+export class UserService {
   constructor(
     @Inject('USERS_SERVICE') private readonly userClient: ClientKafka,
     @Inject('AUTH_SERVICE') private readonly authClient: ClientKafka,
@@ -260,13 +260,17 @@ export class UserService implements OnModuleInit {
         timestamp: new Date()
       })
     );
+
     this.userClient.emit('close_user_account', new CloseAccEvent({ userId }));
+
     return new ResponseDto();
   }
 
-  onModuleInit(): any {
-    this.userClient.subscribeToResponseOf('user_created');
-    this.userClient.subscribeToResponseOf('confirm_user_account');
-    this.authClient.subscribeToResponseOf('update_tokens');
+  setTwoFa() {
+    //
+  }
+
+  removeTwoFa() {
+    //
   }
 }
