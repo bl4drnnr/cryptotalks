@@ -10,6 +10,8 @@ import { UpdatePostEventDto } from '@event-dto/update-post.event.dto';
 import { Post } from '@models/post.model';
 import { InjectModel } from '@nestjs/sequelize';
 import sequelize, { Op } from 'sequelize';
+import { LeaveCommentEvent } from '@events/leave-comment.event';
+import { LeaveCommentEventDto } from '@event-dto/leave-comment.event.dto';
 
 @Injectable()
 export class PostsService {
@@ -74,6 +76,14 @@ export class PostsService {
 
   updatePost(payload: UpdatePostEventDto) {
     this.postsClient.emit('update_post', new UpdatePostEvent({ ...payload }));
+    return new ResponseDto();
+  }
+
+  leaveComment(payload: LeaveCommentEventDto) {
+    this.postsClient.emit(
+      'leave_comment',
+      new LeaveCommentEvent({ ...payload })
+    );
     return new ResponseDto();
   }
 }

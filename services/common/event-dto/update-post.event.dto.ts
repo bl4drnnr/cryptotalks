@@ -14,7 +14,8 @@ export class UpdatePostEventDto {
   content?: Array<string>;
 
   @ApiProperty({
-    type: 'uuidv4',
+    type: String,
+    format: 'uuid',
     nullable: false
   })
   postId: string;

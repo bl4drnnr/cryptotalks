@@ -2,13 +2,15 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class RemoveCryptoToFavoriteEventDto {
   @ApiProperty({
-    type: 'uuidv4',
+    type: String,
+    format: 'uuid',
     nullable: false
   })
   userId: string;
 
   @ApiProperty({
-    type: 'uuidv4',
+    type: String,
+    format: 'uuid',
     nullable: false
   })
   cryptoId: string;

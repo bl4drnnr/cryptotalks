@@ -1,5 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 
+enum LogEventType {
+  SIGN_IN = 'SIGN_IN',
+  SIGN_UP = 'SIGN_UP',
+  CONFIRMATION = 'CONFIRMATION',
+  POST = 'POST',
+  CLOSE_ACC = 'CLOSE_ACC',
+  USER = 'USER'
+}
+
 export class LogEventDto {
   @ApiProperty({
     type: String,
@@ -8,10 +17,11 @@ export class LogEventDto {
   message: string;
 
   @ApiProperty({
-    type: 'SIGN_IN | SIGN_UP | CONFIRMATION | POST',
+    enum: LogEventType,
+    isArray: true,
     nullable: false
   })
-  event: 'SIGN_IN' | 'SIGN_UP' | 'CONFIRMATION' | 'POST';
+  event: 'SIGN_IN' | 'SIGN_UP' | 'CONFIRMATION' | 'POST' | 'CLOSE_ACC' | 'USER';
 
   @ApiProperty({
     type: 'SUCCESS | ERROR',

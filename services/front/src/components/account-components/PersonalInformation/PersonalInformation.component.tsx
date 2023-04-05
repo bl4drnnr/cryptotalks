@@ -1,4 +1,10 @@
+import Image from 'next/image';
+
+import { Button } from '@components/Button/Button.component';
+import { Checkbox } from '@components/Checkbox/Checkbox.component';
+import { Input } from '@components/Input/Input.component';
 import { PersonalInformationProps } from '@components/PersonalInformation/PersonalInformation.interface';
+import { Textarea } from '@components/Textarea/Textarea.component';
 import {
   AvaWrapper,
   ChangeAvatar,
@@ -12,12 +18,6 @@ import {
   SeparationLine,
   TitleWrapper
 } from '@styles/PersonalInformation.style';
-import Image from 'next/image';
-
-import { Button } from '@components/Button/Button.component';
-import { Checkbox } from '@components/Checkbox/Checkbox.component';
-import { Input } from '@components/Input/Input.component';
-import { Textarea } from '@components/Textarea/Textarea.component';
 
 
 export const PersonalInformation = ({

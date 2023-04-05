@@ -12,14 +12,8 @@ paths:
             schema:
               $ref: "#/components/schemas/CreatePostDto"
       responses:
-        "200":
-          description: As a response function gets success message
         "201":
-          description: ""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ResponseDto"
+          description: As a response function returns success message
       tags: &a1
         - Posts
   "/api/posts/get/{id}":
@@ -34,6 +28,12 @@ paths:
             type: string
       responses:
         "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+        "201":
           description: As a response function returns post
       tags: *a1
   "/api/posts/list/{page}/{pageSize}/{order}/{orderBy}":
@@ -68,6 +68,8 @@ paths:
             type: string
       responses:
         "200":
+          description: ""
+        "201":
           description: As a response function returns list of posts
       tags: *a1
   "/api/posts/delete/{id}":
@@ -82,7 +84,13 @@ paths:
             type: string
       responses:
         "200":
-          description: As a response function gets success message
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseDto"
+        "201":
+          description: As a response function returns success message
       tags: *a1
   "/api/posts/update/{id}":
     patch:
@@ -94,9 +102,47 @@ paths:
           in: path
           schema:
             type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdatePostDto"
       responses:
         "200":
-          description: As a response function gets success message
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseDto"
+        "201":
+          description: As a response function returns success message
+      tags: *a1
+  "/api/posts/comment/{id}":
+    patch:
+      operationId: PostsController_leaveComment
+      summary: Allows users to leave comments
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeaveCommentDto"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseDto"
+        "201":
+          description: As a response function returns success message
       tags: *a1
   /api/user/sign-up:
     post:
@@ -127,7 +173,7 @@ paths:
               $ref: "#/components/schemas/SignInDto"
       responses:
         "201":
-          description: As a response function gets success message
+          description: As a response function returns success message
       tags: *a2
   "/api/user/account-confirmation/{confirmationHash}":
     get:
@@ -147,7 +193,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ResponseDto"
         "201":
-          description: As a response function gets success message
+          description: As a response function returns success message
       tags: *a2
   /api/user/logout:
     get:
@@ -162,7 +208,46 @@ paths:
               schema:
                 type: object
         "201":
-          description: As a response function gets success message
+          description: As a response function returns success message
+      tags: *a2
+  /api/user/change-email:
+    post:
+      operationId: UserController_changeEmail
+      summary: Changes user email address
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangeEmailDto"
+      responses:
+        "201":
+          description: As a response function returns success message
+      tags: *a2
+  /api/user/change-password:
+    post:
+      operationId: UserController_changePassword
+      summary: Changes user password
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangePasswordDto"
+      responses:
+        "201":
+          description: As a response function returns success message
+      tags: *a2
+  /api/user/close-account:
+    post:
+      operationId: UserController_closeAccount
+      summary: Closes are removes an account of an user
+      parameters: []
+      responses:
+        "201":
+          description: As a response function returns success message
       tags: *a2
   /api/auth/refresh:
     get:
@@ -208,6 +293,8 @@ paths:
             type: string
       responses:
         "200":
+          description: ""
+        "201":
           description: As a response function returns list of posts
       tags: &a3
         - Crypto
@@ -223,6 +310,12 @@ paths:
             type: string
       responses:
         "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cryptocurrency"
+        "201":
           description: As a response function returns cryptocurrency
       tags: *a3
   "/api/crypto/favorite/{id}":
@@ -237,6 +330,12 @@ paths:
             type: string
       responses:
         "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseDto"
+        "201":
           description: As a response function returns success message
       tags: *a3
     delete:
@@ -250,6 +349,12 @@ paths:
             type: string
       responses:
         "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseDto"
+        "201":
           description: As a response function returns success message
       tags: *a3
 info:
@@ -265,7 +370,8 @@ components:
       type: object
       properties:
         id:
-          type: uuidv4
+          type: string
+          format: uuid
           nullable: false
           default: uuidv4
           description: Unique Id of the record
@@ -331,7 +437,8 @@ components:
           items:
             type: string
         userId:
-          type: uuidv4
+          type: string
+          format: uuid
           nullable: false
       required:
         - title
@@ -345,11 +452,31 @@ components:
           nullable: false
       required:
         - message
+    UpdatePostDto:
+      type: object
+      properties:
+        title:
+          type: string
+          nullable: true
+        content:
+          nullable: true
+          type: array
+          items:
+            type: string
+    LeaveCommentDto:
+      type: object
+      properties:
+        comment:
+          type: string
+          nullable: false
+      required:
+        - comment
     User:
       type: object
       properties:
         id:
-          type: uuidv4
+          type: string
+          format: uuid
           nullable: false
           default: uuidv4
           description: Unique Id of the record
@@ -477,16 +604,19 @@ components:
       type: object
       properties:
         id:
-          type: uuidv4
+          type: string
+          format: uuid
           nullable: false
           default: uuidv4
           description: Unique Id of the record
         tokenId:
-          type: uuidv4
+          type: string
+          format: uuid
           nullable: false
           description: Id of the token
         userId:
-          type: uuidv4
+          type: string
+          format: uuid
           nullable: false
           description: User id
         createdAt:
@@ -534,7 +664,8 @@ components:
           nullable: false
           description: If hash has been confirmed
         userId:
-          type: uuidv4
+          type: string
+          format: uuid
           nullable: false
           description: User Id
         createdAt:
@@ -552,5 +683,126 @@ components:
         - confirmationHash
         - confirmed
         - userId
+        - createdAt
+        - updatedAt
+    ChangeEmailDto:
+      type: object
+      properties:
+        email:
+          type: string
+          nullable: false
+      required:
+        - email
+    ChangePasswordDto:
+      type: object
+      properties:
+        password:
+          type: string
+          nullable: false
+        passwordRepeat:
+          type: string
+          nullable: false
+      required:
+        - password
+        - passwordRepeat
+    Cryptocurrency:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          default: uuidv4
+          description: Unique Id of the record
+        uuid:
+          type: string
+          format: uuid
+          nullable: false
+          description: Unique Id of the coin provided by API
+        symbol:
+          type: string
+          nullable: false
+          description: Symbol of a coin
+        name:
+          type: string
+          nullable: false
+          description: Name of a coin
+        description:
+          type: string
+          nullable: true
+          description: Description of a coin
+        iconUrl:
+          type: string
+          nullable: false
+          description: Icon URL of a coin
+        websiteUrl:
+          type: string
+          nullable: true
+          description: Website of a coin
+        Volume24h:
+          type: string
+          nullable: false
+          description: 24H volume of a coin
+        marketCap:
+          type: string
+          nullable: false
+          description: Market cap of a coin
+        price:
+          type: number
+          nullable: false
+          description: Price of a coin
+        btcPrice:
+          type: number
+          nullable: false
+          description: Price of a coin to BTC
+        change:
+          type: number
+          nullable: false
+          description: Change of a coin
+        coinrankingUrl:
+          type: number
+          nullable: false
+          description: URL of a coin on coinranking.com
+        sparkline:
+          nullable: false
+          description: Sparkline of a coin
+          type: array
+          items:
+            type: string
+        rank:
+          type: number
+          nullable: false
+          description: Rank of a coin
+        tier:
+          type: number
+          nullable: false
+          description: Tier of a coin
+        createdAt:
+          format: date-time
+          type: string
+          nullable: false
+          description: Record creation date
+        updatedAt:
+          format: date-time
+          type: string
+          nullable: false
+          description: Record update date
+      required:
+        - id
+        - uuid
+        - symbol
+        - name
+        - description
+        - iconUrl
+        - websiteUrl
+        - Volume24h
+        - marketCap
+        - price
+        - btcPrice
+        - change
+        - coinrankingUrl
+        - sparkline
+        - rank
+        - tier
         - createdAt
         - updatedAt

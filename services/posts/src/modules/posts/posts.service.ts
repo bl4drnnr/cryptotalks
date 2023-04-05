@@ -9,12 +9,15 @@ import { LogEventDto } from '@event-dto/log.event.dto';
 import { InformationLog } from '@mongo-schemas/log.schema';
 import { Model } from 'mongoose';
 import { InjectModel as InjectModelMongo } from '@nestjs/mongoose';
+import { LeaveCommentEventDto } from '@event-dto/leave-comment.event.dto';
+import { PostInfo } from '@models/post-info.model';
 
 @Injectable()
 export class PostsService {
   constructor(
     private readonly slugService: SlugService,
     @InjectModel(Post) private readonly postRepository: typeof Post,
+    @InjectModel(PostInfo) private readonly postInfoRepository: typeof PostInfo,
     @InjectModelMongo(InformationLog.name)
     private readonly logger: Model<InformationLog>
   ) {}
@@ -46,8 +49,10 @@ export class PostsService {
     );
   }
 
-  leaveComment(payload: any) {
-    //
+  leaveComment(payload: LeaveCommentEventDto) {
+    return this.postInfoRepository.create({
+      ...payload
+    });
   }
 
   async logPostAction(payload: LogEventDto) {

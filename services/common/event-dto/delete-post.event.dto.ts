@@ -2,7 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class DeletePostEventDto {
   @ApiProperty({
-    type: 'uuidv4',
+    type: String,
+    format: 'uuid',
     nullable: false
   })
   id: string;

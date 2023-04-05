@@ -46,7 +46,7 @@ export class ConfirmationHash extends Model<
   confirmationHash: string;
 
   @ApiProperty({
-    type: 'boolean',
+    type: Boolean,
     nullable: false,
     description: 'If hash has been confirmed'
   })
@@ -55,7 +55,8 @@ export class ConfirmationHash extends Model<
   confirmed: boolean;
 
   @ApiProperty({
-    type: 'uuidv4',
+    type: String,
+    format: 'uuid',
     nullable: false,
     description: 'User Id'
   })

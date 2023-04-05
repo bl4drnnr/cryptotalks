@@ -22,7 +22,8 @@ interface PostCreationAttributes {
 })
 export class Post extends Model<Post, PostCreationAttributes> {
   @ApiProperty({
-    type: 'uuidv4',
+    type: String,
+    format: 'uuid',
     nullable: false,
     default: 'uuidv4',
     description: 'Unique Id of the record'

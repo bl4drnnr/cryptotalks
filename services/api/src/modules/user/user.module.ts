@@ -10,11 +10,12 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { AuthModule } from '@modules/auth.module';
 import { AuthService } from '@modules/auth.service';
 import { Session } from '@models/session.model';
+import { UserSettings } from '@models/user-settings.model';
 
 @Module({
   imports: [
     forwardRef(() => AuthModule),
-    SequelizeModule.forFeature([User, ConfirmationHash, Session]),
+    SequelizeModule.forFeature([User, UserSettings, ConfirmationHash, Session]),
     ClientsModule.register([
       {
         name: 'USERS_SERVICE',
