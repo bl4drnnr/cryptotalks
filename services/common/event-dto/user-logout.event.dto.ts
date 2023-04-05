@@ -2,7 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class UserLogoutEventDto {
   @ApiProperty({
-    type: 'uuidv4',
+    type: String,
+    format: 'uuid',
     nullable: true
   })
   userId: string;

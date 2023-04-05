@@ -21,7 +21,8 @@ interface PostInfoCreationAttributes {
 })
 export class PostInfo extends Model<PostInfo, PostInfoCreationAttributes> {
   @ApiProperty({
-    type: 'uuidv4',
+    type: String,
+    format: 'uuid',
     nullable: false,
     default: 'uuidv4',
     description: 'Unique Id of the record'
@@ -32,7 +33,8 @@ export class PostInfo extends Model<PostInfo, PostInfoCreationAttributes> {
   id: string;
 
   @ApiProperty({
-    type: 'uuidv4',
+    type: String,
+    format: 'uuid',
     nullable: false,
     description: 'Post Id'
   })
@@ -40,7 +42,8 @@ export class PostInfo extends Model<PostInfo, PostInfoCreationAttributes> {
   postId: string;
 
   @ApiProperty({
-    type: 'uuidv4',
+    type: String,
+    format: 'uuid',
     nullable: false,
     description: 'User Id'
   })
@@ -48,7 +51,7 @@ export class PostInfo extends Model<PostInfo, PostInfoCreationAttributes> {
   userId: string;
 
   @ApiProperty({
-    type: 'string',
+    type: String,
     nullable: false,
     description: 'Comment payload'
   })

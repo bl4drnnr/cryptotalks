@@ -22,7 +22,8 @@ interface UserCreationAttributes {
 })
 export class User extends Model<User, UserCreationAttributes> {
   @ApiProperty({
-    type: 'uuidv4',
+    type: String,
+    format: 'uuid',
     nullable: false,
     default: 'uuidv4',
     description: 'Unique Id of the record'

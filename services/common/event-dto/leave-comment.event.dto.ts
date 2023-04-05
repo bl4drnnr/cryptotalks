@@ -1,17 +1,23 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class RemoveCryptoToFavoriteEventDto {
+export class LeaveCommentEventDto {
   @ApiProperty({
     type: String,
-    format: 'uuid',
     nullable: false
   })
-  userId: string;
+  comment: string;
 
   @ApiProperty({
     type: String,
     format: 'uuid',
     nullable: false
   })
-  cryptoId: string;
+  postId: string;
+
+  @ApiProperty({
+    type: String,
+    format: 'uuid',
+    nullable: false
+  })
+  userId: string;
 }

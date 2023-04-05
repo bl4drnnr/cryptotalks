@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UpdatePostEventDto {
+export class UpdatePostDto {
   @ApiProperty({
     type: String,
     nullable: true
@@ -12,11 +12,4 @@ export class UpdatePostEventDto {
     nullable: true
   })
   content?: Array<string>;
-
-  @ApiProperty({
-    type: String,
-    format: 'uuid',
-    nullable: false
-  })
-  postId: string;
 }

@@ -22,7 +22,8 @@ export class UserSettings extends Model<
   UserSettingsCreationAttributes
 > {
   @ApiProperty({
-    type: 'uuidv4',
+    type: String,
+    format: 'uuid',
     nullable: false,
     default: 'uuidv4',
     description: 'Unique Id of the record'
@@ -33,7 +34,8 @@ export class UserSettings extends Model<
   id: string;
 
   @ApiProperty({
-    type: 'uuidv4',
+    type: String,
+    format: 'uuid',
     nullable: false,
     description: 'User Id'
   })

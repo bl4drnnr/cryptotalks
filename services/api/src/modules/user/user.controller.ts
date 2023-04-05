@@ -43,7 +43,7 @@ export class UserController {
   @ApiOperation({ summary: 'Responsible for user login' })
   @ApiResponse({
     status: 201,
-    description: 'As a response function gets success message'
+    description: 'As a response function returns success message'
   })
   @Post('sign-in')
   async signIn(@Body() payload: SignInDto, @Res({ passthrough: true }) res) {
@@ -58,7 +58,7 @@ export class UserController {
   @ApiOperation({ summary: 'Confirm user registration' })
   @ApiResponse({
     status: 201,
-    description: 'As a response function gets success message'
+    description: 'As a response function returns success message'
   })
   @Get('account-confirmation/:confirmationHash')
   confirmAccount(@Param('confirmationHash') confirmationHash: string) {
@@ -68,7 +68,7 @@ export class UserController {
   @ApiOperation({ summary: 'Logouts user' })
   @ApiResponse({
     status: 201,
-    description: 'As a response function gets success message'
+    description: 'As a response function returns success message'
   })
   @UseGuards(JwtGuard)
   @Get('logout')

@@ -20,7 +20,8 @@ interface SessionCreationAttributes {
 })
 export class Session extends Model<Session, SessionCreationAttributes> {
   @ApiProperty({
-    type: 'uuidv4',
+    type: String,
+    format: 'uuid',
     nullable: false,
     default: 'uuidv4',
     description: 'Unique Id of the record'
@@ -31,7 +32,8 @@ export class Session extends Model<Session, SessionCreationAttributes> {
   id: string;
 
   @ApiProperty({
-    type: 'uuidv4',
+    type: String,
+    format: 'uuid',
     nullable: false,
     description: 'Id of the token'
   })
@@ -39,7 +41,8 @@ export class Session extends Model<Session, SessionCreationAttributes> {
   tokenId: string;
 
   @ApiProperty({
-    type: 'uuidv4',
+    type: String,
+    format: 'uuid',
     nullable: false,
     description: 'User id'
   })

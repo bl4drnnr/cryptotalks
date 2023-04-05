@@ -34,7 +34,8 @@ export class Cryptocurrency extends Model<
   CryptocurrencyCreationAttributes
 > {
   @ApiProperty({
-    type: 'uuidv4',
+    type: String,
+    format: 'uuid',
     nullable: false,
     default: 'uuidv4',
     description: 'Unique Id of the record'
@@ -45,7 +46,8 @@ export class Cryptocurrency extends Model<
   id: string;
 
   @ApiProperty({
-    type: 'uuidv4',
+    type: String,
+    format: 'uuid',
     nullable: false,
     description: 'Unique Id of the coin provided by API'
   })

@@ -19,7 +19,7 @@ export class CryptoController {
 
   @ApiOperation({ summary: 'List cryptos' })
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: 'As a response function returns list of posts'
   })
   @Get('list/:page/:pageSize/:order/:orderBy')
@@ -41,7 +41,7 @@ export class CryptoController {
 
   @ApiOperation({ summary: 'Gets crypto by its id' })
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: 'As a response function returns cryptocurrency'
   })
   @Get('get/:id')
@@ -51,7 +51,7 @@ export class CryptoController {
 
   @ApiOperation({ summary: "Adds a crypto to user's favorites" })
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: 'As a response function returns success message'
   })
   @UseGuards(JwtGuard)
@@ -65,7 +65,7 @@ export class CryptoController {
 
   @ApiOperation({ summary: "Removes a crypto to user's favorites" })
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: 'As a response function returns success message'
   })
   @UseGuards(JwtGuard)

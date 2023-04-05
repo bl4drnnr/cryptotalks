@@ -1,7 +1,15 @@
 import React from 'react';
 
-import { SecuritySettingsProps } from '@components/SecuritySettings/SecuritySettings.interface';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
+import * as node2fa from 'node-2fa';
+
+import { Button } from '@components/Button/Button.component';
+import { Loader } from '@components/Loader/Loader.component';
 import { Modal } from '@components/Modal/Modal.component';
+import { SecuritySettingsProps } from '@components/SecuritySettings/SecuritySettings.interface';
+import { TwoFa } from '@components/TwoFa/TwoFa.component';
+import { useHandleException } from '@hooks/useHandleException.hook';
 import { useChangeEmailService } from '@services/change-email/change-email.service';
 import { useChangePasswordService } from '@services/change-password/change-password.service';
 import { useRemove2FaService } from '@services/remove-2fa/remove-2fa.service';
@@ -16,14 +24,6 @@ import {
   SecurityItemWrapper,
   SecuritySectionDescription
 } from '@styles/SecuritySettings.style';
-import Image from 'next/image';
-import { useRouter } from 'next/router';
-import * as node2fa from 'node-2fa';
-
-import { Button } from '@components/Button/Button.component';
-import { Loader } from '@components/Loader/Loader.component';
-import { TwoFa } from '@components/TwoFa/TwoFa.component';
-import { useHandleException } from '@hooks/useHandleException.hook';
 
 
 const SecuritySettings = ({ securitySettings }: SecuritySettingsProps) => {

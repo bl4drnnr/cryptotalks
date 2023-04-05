@@ -2,13 +2,15 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class ConfirmAccountEventDto {
   @ApiProperty({
-    type: 'uuidv4',
+    type: String,
+    format: 'uuid',
     nullable: false
   })
   hashId: string;
 
   @ApiProperty({
-    type: 'uuidv4',
+    type: String,
+    format: 'uuid',
     nullable: false
   })
   userId: string;
