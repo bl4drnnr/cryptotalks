@@ -43,8 +43,8 @@ export class CryptoService {
     }
 
     return await this.cryptoRepository.findAndCountAll({
-      where: {},
       order: [[order, orderBy]],
+      where,
       limit,
       offset
     });
