@@ -24,13 +24,25 @@ import { JwtGuard } from '@guards/jwt.guard';
 import { UserDecorator } from '@decorators/user.decorator';
 import { ChangeEmailDto } from '@dto/change-email.dto';
 import { ChangePasswordDto } from '@dto/change-password.dto';
+import { CloseAccEventDto } from '@event-dto/close-acc.event.dto';
+import { CloseAccEvent } from '@events/close-acc.event';
+import { ConfirmAccountEvent } from '@events/confirm-account.event';
+import { ConfirmAccountEventDto } from '@event-dto/confirm-account.event.dto';
+import { UpdateUserEvent } from '@events/update-user.event';
+import { UpdateUserEventDto } from '@event-dto/update-user.event.dto';
+import { UserLogoutEvent } from '@events/user-logout.event';
+import { UserLogoutEventDto } from '@event-dto/user-logout.event.dto';
+import { SignUpEventDto } from '@event-dto/sign-up.event.dto';
+import { UserSettings } from '@models/user-settings.model';
 
 @ApiTags('User')
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
 
+  @ApiExtraModels(SignUpEventDto)
   @ApiExtraModels(User)
+  @ApiExtraModels(UserSettings)
   @ApiOperation({ summary: 'Responsible for user account creation' })
   @ApiResponse({
     status: 201,
@@ -56,6 +68,8 @@ export class UserController {
     return { _at };
   }
 
+  @ApiExtraModels(ConfirmAccountEvent)
+  @ApiExtraModels(ConfirmAccountEventDto)
   @ApiExtraModels(ConfirmationHash)
   @ApiOperation({ summary: 'Confirm user registration' })
   @ApiResponse({
@@ -67,6 +81,8 @@ export class UserController {
     return this.userService.confirmAccount({ confirmationHash });
   }
 
+  @ApiExtraModels(UserLogoutEvent)
+  @ApiExtraModels(UserLogoutEventDto)
   @ApiOperation({ summary: 'Logouts user' })
   @ApiResponse({
     status: 201,
@@ -82,6 +98,8 @@ export class UserController {
     return res.status(HttpStatus.OK).json(response);
   }
 
+  @ApiExtraModels(UpdateUserEvent)
+  @ApiExtraModels(UpdateUserEventDto)
   @ApiOperation({ summary: 'Changes user email address' })
   @ApiResponse({
     status: 201,
@@ -110,6 +128,8 @@ export class UserController {
     return this.userService.changePassword({ userId, ...payload });
   }
 
+  @ApiExtraModels(CloseAccEvent)
+  @ApiExtraModels(CloseAccEventDto)
   @ApiOperation({ summary: 'Closes are removes an account of an user' })
   @ApiResponse({
     status: 201,
