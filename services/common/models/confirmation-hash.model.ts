@@ -46,7 +46,7 @@ export class ConfirmationHash extends Model<
   confirmationHash: string;
 
   @ApiProperty({
-    type: 'boolean',
+    type: Boolean,
     nullable: false,
     description: 'If hash has been confirmed'
   })

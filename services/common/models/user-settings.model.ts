@@ -9,6 +9,7 @@ import {
   UpdatedAt
 } from 'sequelize-typescript';
 import { ApiProperty } from '@nestjs/swagger';
+import { Col } from 'sequelize/types/utils';
 
 interface UserSettingsCreationAttributes {
   userId: string;
@@ -43,7 +44,7 @@ export class UserSettings extends Model<
   userId: string;
 
   @ApiProperty({
-    type: 'boolean',
+    type: Boolean,
     nullable: true,
     description: 'If user wants to set their email as public'
   })
@@ -52,7 +53,16 @@ export class UserSettings extends Model<
   publicEmail?: boolean;
 
   @ApiProperty({
-    type: 'boolean',
+    type: Boolean,
+    nullable: false,
+    description: 'User is allowed to change email only one time'
+  })
+  @Default(false)
+  @Column({ type: DataType.BOOLEAN, allowNull: false, field: 'email_changed' })
+  emailChanged: boolean;
+
+  @ApiProperty({
+    type: Boolean,
     nullable: true,
     description: 'Contains 2FA token if user set it up'
   })
@@ -60,7 +70,7 @@ export class UserSettings extends Model<
   twoFaToken?: string;
 
   @ApiProperty({
-    type: 'boolean',
+    type: Boolean,
     nullable: true,
     description: 'Users are allowed to change password only 1 time'
   })

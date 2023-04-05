@@ -22,6 +22,9 @@ import { EmailAlreadyConfirmedException } from '@exceptions/email-already-confir
 import { AuthService } from '@modules/auth.service';
 import { LogEvent } from '@events/log.event';
 import { CloseAccEvent } from '@events/close-acc.event';
+import { UpdateUserEvent } from '@events/update-user.event';
+import { UserSettings } from '@models/user-settings.model';
+import { EmailChangedException } from '@exceptions/email-changed.exception';
 
 @Injectable()
 export class UserService implements OnModuleInit {
@@ -30,6 +33,8 @@ export class UserService implements OnModuleInit {
     @Inject('AUTH_SERVICE') private readonly authClient: ClientKafka,
     @Inject('CRYPTO_SERVICE') private readonly cryptoClient: ClientKafka,
     @InjectModel(User) private readonly userRepository: typeof User,
+    @InjectModel(UserSettings)
+    private readonly userSettingsRepository: typeof UserSettings,
     @InjectModel(ConfirmationHash)
     private readonly confirmHashRepository: typeof ConfirmationHash,
     private readonly validatorService: ValidatorService,
@@ -171,8 +176,29 @@ export class UserService implements OnModuleInit {
     });
   }
 
-  changeEmail({ userId, email }: { userId: string; email: string }) {
-    this.userClient.emit('update_user_account', {});
+  async changeEmail({ userId, email }: { userId: string; email: string }) {
+    const existingUser = await this.userRepository.findOne({
+      where: { email }
+    });
+    if (existingUser) throw new UserAlreadyExistsException();
+
+    const currentUser = await this.userSettingsRepository.findOne({
+      where: { userId }
+    });
+    if (currentUser.emailChanged) throw new EmailChangedException();
+
+    if (!this.validatorService.validateEmail(email))
+      throw new ValidationErrorException();
+
+    // TODO Send email here and confirm it then
+
+    this.userClient.emit(
+      'update_user_account',
+      new UpdateUserEvent({
+        userId,
+        email
+      })
+    );
 
     this.userClient.emit(
       'log_user_action',
@@ -196,7 +222,20 @@ export class UserService implements OnModuleInit {
     password: string;
     passwordRepeat: string;
   }) {
-    this.userClient.emit('update_user_account', {});
+    if (
+      !this.validatorService.validatePassword(password) ||
+      !this.validatorService.validatePassword(passwordRepeat) ||
+      passwordRepeat !== password
+    )
+      throw new ValidationErrorException();
+
+    this.userClient.emit(
+      'update_user_account',
+      new UpdateUserEvent({
+        userId,
+        password
+      })
+    );
 
     this.userClient.emit(
       'log_user_action',

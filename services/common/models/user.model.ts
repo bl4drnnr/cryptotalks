@@ -50,7 +50,7 @@ export class User extends Model<User, UserCreationAttributes> {
   password: string;
 
   @ApiProperty({
-    type: 'boolean',
+    type: Boolean,
     nullable: false,
     description:
       'Checks if user confirmed account by clicking into link in email after registration',
@@ -129,7 +129,7 @@ export class User extends Model<User, UserCreationAttributes> {
   bio?: string;
 
   @ApiProperty({
-    type: 'boolean',
+    type: Boolean,
     nullable: false,
     description: 'User accepted terms and conditions'
   })

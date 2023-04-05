@@ -11,6 +11,7 @@ import { InjectModel as InjectModelMongo } from '@nestjs/mongoose';
 import { InformationLog } from '@mongo-schemas/log.schema';
 import { Model } from 'mongoose';
 import { CloseAccEventDto } from '@event-dto/close-acc.event.dto';
+import { UpdateUserEventDto } from '@event-dto/update-user.event.dto';
 
 @Injectable()
 export class UsersService {
@@ -56,11 +57,14 @@ export class UsersService {
     );
   }
 
-  async updateUserAccount(payload: any) {
+  async updateUserAccount(payload: UpdateUserEventDto) {
+    const userId = payload.userId;
+    delete payload.userId;
+
     await this.userRepository.update(
-      {},
+      { ...payload },
       {
-        where: { id: '' }
+        where: { id: userId }
       }
     );
   }

@@ -62,13 +62,13 @@ export class SignUpDto {
   bio?: string;
 
   @ApiProperty({
-    type: 'boolean',
+    type: Boolean,
     nullable: false
   })
   tac: boolean;
 
   @ApiProperty({
-    type: 'boolean',
+    type: Boolean,
     nullable: true
   })
   publicEmail?: boolean;

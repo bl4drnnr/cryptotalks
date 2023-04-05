@@ -10,11 +10,12 @@ import { UserModule } from '@modules/user.module';
 import { UserService } from '@modules/user.service';
 import { User } from '@models/user.model';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
+import {UserSettings} from "@models/user-settings.model";
 
 @Module({
   imports: [
     forwardRef(() => UserModule),
-    SequelizeModule.forFeature([User, ConfirmationHash, Session]),
+    SequelizeModule.forFeature([User, UserSettings, ConfirmationHash, Session]),
     ClientsModule.register([
       {
         name: 'AUTH_SERVICE',
