@@ -20,4 +20,14 @@ export class UsersController {
   handleConfirmUserAccount(data: any) {
     return this.usersService.accountConfirmation(data);
   }
+
+  @EventPattern('update_user_account')
+  handleUpdateUserAccount(data: any) {
+    return this.usersService.updateUserAccount(data);
+  }
+
+  @EventPattern('close_user_account')
+  handleCloseUserAccount(data: any) {
+    return this.usersService.closeUserAccount(data);
+  }
 }

@@ -22,6 +22,8 @@ import { ConfirmationHash } from '@models/confirmation-hash.model';
 import { Session } from '@models/session.model';
 import { JwtGuard } from '@guards/jwt.guard';
 import { UserDecorator } from '@decorators/user.decorator';
+import { ChangeEmailDto } from '@dto/change-email.dto';
+import { ChangePasswordDto } from '@dto/change-password.dto';
 
 @ApiTags('User')
 @Controller('user')
@@ -78,5 +80,44 @@ export class UserController {
     const response = this.userService.logout({ userId });
 
     return res.status(HttpStatus.OK).json(response);
+  }
+
+  @ApiOperation({ summary: 'Changes user email address' })
+  @ApiResponse({
+    status: 201,
+    description: 'As a response function returns success message'
+  })
+  @Post('change-email')
+  @UseGuards(JwtGuard)
+  changeEmail(
+    @UserDecorator() userId: string,
+    @Body() payload: ChangeEmailDto
+  ) {
+    return this.userService.changeEmail({ userId, ...payload });
+  }
+
+  @ApiOperation({ summary: 'Changes user password' })
+  @ApiResponse({
+    status: 201,
+    description: 'As a response function returns success message'
+  })
+  @Post('change-password')
+  @UseGuards(JwtGuard)
+  changePassword(
+    @UserDecorator() userId: string,
+    @Body() payload: ChangePasswordDto
+  ) {
+    return this.userService.changePassword({ userId, ...payload });
+  }
+
+  @ApiOperation({ summary: 'Closes are removes an account of an user' })
+  @ApiResponse({
+    status: 201,
+    description: 'As a response function returns success message'
+  })
+  @UseGuards(JwtGuard)
+  @Post('close-account')
+  closeAccount(@UserDecorator() userId: string) {
+    return this.userService.closeAccount({ userId });
   }
 }

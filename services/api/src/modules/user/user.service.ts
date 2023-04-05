@@ -21,6 +21,7 @@ import { HashNotFoundException } from '@exceptions/hash-not-found.exception';
 import { EmailAlreadyConfirmedException } from '@exceptions/email-already-confirmed.exception';
 import { AuthService } from '@modules/auth.service';
 import { LogEvent } from '@events/log.event';
+import { CloseAccEvent } from '@events/close-acc.event';
 
 @Injectable()
 export class UserService implements OnModuleInit {
@@ -168,6 +169,60 @@ export class UserService implements OnModuleInit {
     return this.userRepository.findByPk(id, {
       attributes: ['id', 'email']
     });
+  }
+
+  changeEmail({ userId, email }: { userId: string; email: string }) {
+    this.userClient.emit('update_user_account', {});
+
+    this.userClient.emit(
+      'log_user_action',
+      new LogEvent({
+        event: 'USER',
+        message: `User ${userId} has successfully changed email to ${email}`,
+        status: 'SUCCESS',
+        timestamp: new Date()
+      })
+    );
+
+    return new ResponseDto();
+  }
+
+  changePassword({
+    userId,
+    password,
+    passwordRepeat
+  }: {
+    userId: string;
+    password: string;
+    passwordRepeat: string;
+  }) {
+    this.userClient.emit('update_user_account', {});
+
+    this.userClient.emit(
+      'log_user_action',
+      new LogEvent({
+        event: 'USER',
+        message: `User ${userId} has successfully changed password`,
+        status: 'SUCCESS',
+        timestamp: new Date()
+      })
+    );
+
+    return new ResponseDto();
+  }
+
+  closeAccount({ userId }: { userId: string }) {
+    this.userClient.emit(
+      'log_user_action',
+      new LogEvent({
+        event: 'CLOSE_ACC',
+        message: `User ${userId} has successfully closed an account.`,
+        status: 'SUCCESS',
+        timestamp: new Date()
+      })
+    );
+    this.userClient.emit('close_user_account', new CloseAccEvent({ userId }));
+    return new ResponseDto();
   }
 
   onModuleInit(): any {
