@@ -1,6 +1,8 @@
 interface IPosts {
   id: string;
   title: string;
+  preview: string;
+  searchTags: Array<string>;
 }
 
 export interface ListPostsPayload {
@@ -14,5 +16,5 @@ export interface ListPostsPayload {
 
 export interface ListPostsResponse {
   count: number;
-  posts: IPosts[];
+  rows: IPosts[];
 }
