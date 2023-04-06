@@ -11,7 +11,7 @@ export const useListCryptoService = () => {
     : Promise<ListCryptoResponse> => {
     try {
       setLoading(true);
-      const { data } = await ApiClient.get(
+      const { data } = await ApiClient.get<ListCryptoResponse>(
         `/crypto/list/${page}/${pageSize}/${order}/${orderBy}?searchQuery=${searchQuery || ''}`
       );
 

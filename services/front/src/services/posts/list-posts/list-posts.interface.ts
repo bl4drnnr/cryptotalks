@@ -9,8 +9,10 @@ export interface ListPostsPayload {
   order: string;
   orderBy: string;
   searchQuery?: string;
+  userId?: string;
 }
 
 export interface ListPostsResponse {
+  count: number;
   posts: IPosts[];
 }

@@ -14,7 +14,7 @@ export const useAddCryptoToFavoritesService = () => {
     : Promise<AddCryptoToFavoritesResponse> => {
     try {
       setLoading(true);
-      const { data } = await ApiClient.patch(`/crypto/add-favorites/${payload.cryptoId}`, {}, {
+      const { data } = await ApiClient.patch<AddCryptoToFavoritesResponse>(`/crypto/add-favorites/${payload.cryptoId}`, {}, {
         headers: {
           'x-access-token': `Bearer ${payload.token}`
         }

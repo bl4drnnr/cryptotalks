@@ -62,7 +62,7 @@ const AccountConfirmation = () => {
                     <Button
                       fillButton={true}
                       text={'Sign In'}
-                      onClick={() => handleRedirect('signin')}
+                      onClick={() => handleRedirect('/signin')}
                     />
                   </MarginWrapper>
                 </>
@@ -75,7 +75,7 @@ const AccountConfirmation = () => {
                     <Button
                       fillButton={true}
                       text={'Go Home'}
-                      onClick={() => handleRedirect('')}
+                      onClick={() => handleRedirect('/')}
                     />
                   </MarginWrapper>
                 </>
@@ -91,7 +91,7 @@ const AccountConfirmation = () => {
         }
         headerLink={
           <>
-            <HeaderLink><Link onClick={() => handleRedirect('signin')}
+            <HeaderLink><Link onClick={() => handleRedirect('/signin')}
             >Sign In</Link></HeaderLink>
           </>
         }

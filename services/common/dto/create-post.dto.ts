@@ -19,4 +19,10 @@ export class CreatePostDto {
     nullable: false
   })
   userId: string;
+
+  @ApiProperty({
+    type: String,
+    nullable: false
+  })
+  preview: string;
 }

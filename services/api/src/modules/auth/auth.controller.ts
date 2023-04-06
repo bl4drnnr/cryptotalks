@@ -33,10 +33,12 @@ export class AuthController {
     @CookieRefreshToken() refreshToken: string,
     @Res({ passthrough: true }) res
   ) {
-    const { _rt, _at } = await this.authService.refreshToken({ refreshToken });
+    const { _rt, _at, user } = await this.authService.refreshToken({
+      refreshToken
+    });
 
     res.cookie('_rt', _rt);
 
-    return { _at };
+    return { _at, user };
   }
 }

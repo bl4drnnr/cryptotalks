@@ -11,7 +11,7 @@ export const useGetUserByIdService = () => {
     : Promise<GetUserByIdResponse> => {
     try {
       setLoading(true);
-      const { data } = await ApiClient.get(`/user/get/${payload.userId}`);
+      const { data } = await ApiClient.get<GetUserByIdResponse>(`/user/get/${payload.userId}`);
 
       return data;
     } catch (error: any) {

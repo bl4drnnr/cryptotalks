@@ -11,7 +11,7 @@ export const useUpdatePostService = () => {
     : Promise<UpdatePostResponse> => {
     try {
       setLoading(true);
-      const { data } = await ApiClient.patch(`/post/update/${payload.postId}`, {
+      const { data } = await ApiClient.patch<UpdatePostResponse>(`/post/update/${payload.postId}`, {
         title: payload.title, content: payload.content
       }, {
         headers: { 'x-access-token': `Bearer ${payload.token}` }

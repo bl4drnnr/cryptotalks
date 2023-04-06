@@ -72,14 +72,16 @@ export class PostsController {
     @Param('pageSize') pageSize: number,
     @Param('order') order: string,
     @Param('orderBy') orderBy: string,
-    @Query('searchQuery') searchQuery: string
+    @Query('searchQuery') searchQuery: string,
+    @Query('userId') userId: string
   ) {
     return this.postsService.listPosts({
       page,
       pageSize,
       order,
       orderBy,
-      searchQuery
+      searchQuery,
+      userId
     });
   }
 

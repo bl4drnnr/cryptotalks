@@ -11,17 +11,17 @@ export const useHandleException = () => {
     if (error instanceof ApiException) {
       showNotificationMessage({
         type: NotificationType.ERROR,
-        content: '',
+        content: error.description || error.message || error.message,
       });
     } else if (error instanceof GeneralException) {
       showNotificationMessage({
         type: NotificationType.ERROR,
-        content: '',
+        content: error.message,
       });
     } else {
       showNotificationMessage({
         type: NotificationType.ERROR,
-        content: '',
+        content: error.toString(),
       });
     }
   };

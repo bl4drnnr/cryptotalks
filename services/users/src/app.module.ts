@@ -3,6 +3,7 @@ import { UsersModule } from '@modules/users.module';
 import { SharedModule } from '@shared/shared.module';
 import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
       isGlobal: true,
       envFilePath: `../../.env.${process.env.NODE_ENV}`
     }),
+    MongooseModule.forRoot(process.env.MONGO_DB_LOGS),
     SequelizeModule.forRoot({
       dialect: 'postgres',
       host: process.env.POSTGRES_HOST,
