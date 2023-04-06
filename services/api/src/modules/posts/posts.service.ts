@@ -34,17 +34,23 @@ export class PostsService {
     pageSize,
     order,
     orderBy,
-    searchQuery
+    searchQuery,
+    userId
   }: {
     page: number;
     pageSize: number;
     order: string;
     orderBy: string;
     searchQuery?: string;
+    userId?: string;
   }) {
     const offset = page * pageSize;
     const limit = pageSize;
     const where = {};
+
+    if (userId) {
+      where['userId'] = userId;
+    }
 
     if (searchQuery) {
       where[Op.or] = [
@@ -63,7 +69,7 @@ export class PostsService {
 
     return await this.postRepository.findAndCountAll({
       where: { ...where },
-      order: [[order, orderBy]],
+      order: [[orderBy, order]],
       limit,
       offset
     });

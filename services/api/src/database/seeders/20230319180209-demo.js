@@ -19,7 +19,9 @@ module.exports = {
       linked_in: 'linkedin.com/johndoe',
       personal_website: 'stackoverflow.com',
       title: 'Just share my knowledge',
-      bio: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur dolor dolorem dolores dolorum eius esse facilis fugit inventore laborum natus necessitatibus nobis omnis, porro quam sint vel, veniam voluptates voluptatum?'
+      bio: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur dolor dolorem dolores dolorum eius esse facilis fugit inventore laborum natus necessitatibus nobis omnis, porro quam sint vel, veniam voluptates voluptatum?',
+      created_at: new Date(),
+      updated_at: new Date()
     }, {
       id: '186f0ff4-1444-4637-9be3-8c0abc168ba2',
       email: 'jan.kowalski@wp.pl',
@@ -32,7 +34,9 @@ module.exports = {
       last_name: 'Kowalski',
       twitter: 'twitter.com/milykotek',
       title: 'The best coder in the world!',
-      bio: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur dolor dolorem dolores dolorum eius esse facilis fugit inventore laborum natus necessitatibus nobis omnis, porro quam sint vel, veniam voluptates voluptatum?'
+      bio: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur dolor dolorem dolores dolorum eius esse facilis fugit inventore laborum natus necessitatibus nobis omnis, porro quam sint vel, veniam voluptates voluptatum?',
+      created_at: new Date(),
+      updated_at: new Date()
     }, {
       id: '77c93fdf-8a06-483c-8d89-2f5c71d029ed',
       email: 'geralt@protonmail.com',
@@ -46,7 +50,9 @@ module.exports = {
       twitter: 't.com/jkowalski',
       personal_website: 'https://www.cdprojektred.com/en',
       title: 'Triss or Jennifer?...',
-      bio: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur dolor dolorem dolores dolorum eius esse facilis fugit inventore laborum natus necessitatibus nobis omnis, porro quam sint vel, veniam voluptates voluptatum?'
+      bio: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur dolor dolorem dolores dolorum eius esse facilis fugit inventore laborum natus necessitatibus nobis omnis, porro quam sint vel, veniam voluptates voluptatum?',
+      created_at: new Date(),
+      updated_at: new Date()
     }]);
 
     await queryInterface.bulkInsert('user_settings', [{
@@ -59,6 +65,17 @@ module.exports = {
     }, {
       id: uuid.v4(),
       user_id: '77c93fdf-8a06-483c-8d89-2f5c71d029ed'
+    }]);
+
+    await queryInterface.bulkInsert('favorite_coins', [{
+      user_id: '8a08eaf1-c7a8-403b-b1ce-1fef8e34d000',
+      favorite_coins: []
+    }, {
+      user_id: '186f0ff4-1444-4637-9be3-8c0abc168ba2',
+      favorite_coins: []
+    }, {
+      user_id: '77c93fdf-8a06-483c-8d89-2f5c71d029ed',
+      favorite_coins: []
     }]);
 
     await queryInterface.bulkInsert('posts', [{

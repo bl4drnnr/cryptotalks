@@ -66,6 +66,11 @@ paths:
           in: query
           schema:
             type: string
+        - name: userId
+          required: true
+          in: query
+          schema:
+            type: string
       responses:
         "200":
           description: ""

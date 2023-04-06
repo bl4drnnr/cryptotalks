@@ -11,6 +11,7 @@ import { useHandleException } from '@hooks/useHandleException.hook';
 import { useNotificationMessage } from '@hooks/useShowNotificationMessage.hook';
 import DefaultLayout from '@layouts/Default.layout';
 import { IPersonalInformation } from '@services/get-user-settings/get-user-settings.interface';
+import { useListPostsService } from '@services/posts/list-posts/list-posts.service';
 import { useRefreshTokenService } from '@services/refresh-tokens/refresh-tokens.service';
 import { NotificationType } from '@store/global/global.state';
 import {
@@ -40,25 +41,38 @@ const Account = () => {
 
   const fetchTokenChecking = React.useRef(true);
   const { loading: l1, refreshToken } = useRefreshTokenService();
+  const { loading: l2, listPosts } = useListPostsService();
   const { handleException } = useHandleException();
   const { showNotificationMessage } = useNotificationMessage();
 
+  const [page, setPage] = React.useState(1);
+  const [pageSize, setPageSize] = React.useState(5);
+  const [order, setOrder] = React.useState('ASC');
+  const [orderBy, setOrderBy] = React.useState('createdAt');
   const [userData, setUserData] = React.useState<IPersonalInformation>();
+  const [userPosts, setUserPosts] = React.useState<Array<{ id: string; title: string; }>>();
 
-  // React.useEffect(() => {
-  //   if (fetchTokenChecking.current) {
-  //     fetchTokenChecking.current = false;
-  //     const token = sessionStorage.getItem('_at');
-  //
-  //     if (!token) handleRedirect('/').then();
-  //     else checkUser(token).then((res) => {
-  //       if (res) {
-  //         sessionStorage.setItem('_at', res._at);
-  //         setUserData(res.user);
-  //       }
-  //     });
-  //   }
-  // }, []);
+  React.useEffect(() => {
+    if (fetchTokenChecking.current) {
+      fetchTokenChecking.current = false;
+      const token = sessionStorage.getItem('_at');
+
+      if (!token) {
+        handleRedirect('/').then();
+      } else {
+        checkUser(token).then((res) => {
+          if (res) {
+            sessionStorage.setItem('_at', res._at);
+            setUserData(res.user);
+
+            fetchUserPosts(res.user.id).then((posts) => {
+              setUserPosts(posts?.posts);
+            });
+          }
+        });
+      }
+    }
+  }, []);
 
   const copyToClipboard = async (text: string) => {
     await navigator.clipboard.writeText(text);
@@ -74,7 +88,19 @@ const Account = () => {
 
   const checkUser = async (token: string) => {
     try {
-      // return await refreshToken({ token });
+      return await refreshToken({ token });
+    } catch (e) {
+      handleException(e);
+      sessionStorage.removeItem('_at');
+      await handleRedirect('');
+    }
+  };
+
+  const fetchUserPosts = async (userId: string) => {
+    try {
+      return await listPosts({
+        page, pageSize, order, orderBy, userId
+      });
     } catch (e) {
       handleException(e);
       sessionStorage.removeItem('_at');
@@ -87,7 +113,7 @@ const Account = () => {
       <Head>
         <title>Cryptotalks | My account</title>
       </Head>
-      <DefaultLayout loading={l1}>
+      <DefaultLayout loading={l1 || l2}>
         <Container>
           <Wrapper>
             <AccountContainer>
@@ -174,6 +200,9 @@ const Account = () => {
                   />
                 </UserSideBar>
               </AccountContentContainer>
+
+              {JSON.stringify(userPosts)}
+
             </AccountContainer>
           </Wrapper>
         </Container>

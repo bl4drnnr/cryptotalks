@@ -8,8 +8,8 @@ export default async (
   res: NextApiResponse
 ) => {
   try {
-    const { page, pageSize, order, orderBy, searchQuery } = req.query;
-    const { data } = await Api.get(`/posts/list/${page}/${pageSize}/${order}/${orderBy}?searchQuery=${searchQuery || ''}`);
+    const { page, pageSize, order, orderBy, searchQuery, userId } = req.query;
+    const { data } = await Api.get(`/posts/list/${page}/${pageSize}/${order}/${orderBy}?searchQuery=${searchQuery || ''}&userId=${userId}`);
 
     return res.json(data);
   } catch (error: any) {

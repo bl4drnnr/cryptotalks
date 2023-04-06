@@ -13,12 +13,12 @@ export const useRemoveCryptoFromFavoritesService = () => {
     : Promise<RemoveCryptoFromFavoritesResponse> => {
     try {
       setLoading(true);
-      const { data } = await ApiClient.delete(`/crypto/remove-favorites/${payload.cryptoId}`, {
+      const { data } = await ApiClient.delete<RemoveCryptoFromFavoritesResponse>(`/crypto/remove-favorites/${payload.cryptoId}`, {
         headers: {
           'x-access-token': `Bearer ${payload.token}`
         }
       });
-      
+
       return data;
     } catch (error: any) {
       throw ExceptionHandler(error);

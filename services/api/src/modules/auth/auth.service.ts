@@ -108,11 +108,15 @@ export class AuthService {
 
     const token = await this.getTokenById(payload.id);
 
-    const user = await this.userService.getUserById({ id: token.userId });
+    const user = await this.userService.getUserPersonalInformation({
+      id: token.userId
+    });
 
-    return await this.updateTokens({
+    const { _at, _rt } = await this.updateTokens({
       userId: user.id,
       email: user.email
     });
+
+    return { _at, _rt, user };
   }
 }

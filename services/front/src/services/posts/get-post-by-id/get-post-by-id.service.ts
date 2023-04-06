@@ -11,7 +11,7 @@ export const useGetPostById = () => {
     : Promise<GetPostByIdResponse> => {
     try {
       setLoading(true);
-      const { data } = await ApiClient.get(`/post/get/${payload.postId}`);
+      const { data } = await ApiClient.get<GetPostByIdResponse>(`/post/get/${payload.postId}`);
 
       return data;
     } catch (error: any) {

@@ -1,4 +1,5 @@
 export interface IPersonalInformation {
+  id: string;
   firstName: string;
   lastName: string;
   twitter: string;
@@ -12,10 +13,6 @@ export interface IPersonalInformation {
   email: string;
 }
 
-export interface INotificationSettings {
-  receiveNotifications: boolean;
-}
-
 export interface ISecuritySettings {
   emailChanged: boolean;
   lastPassChange: Date;
@@ -26,7 +23,6 @@ export interface ISecuritySettings {
 
 interface ISettings {
   personalInformation: IPersonalInformation;
-  notificationSettings: INotificationSettings;
   securitySettings: ISecuritySettings;
 }
 

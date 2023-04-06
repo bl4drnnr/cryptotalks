@@ -11,7 +11,7 @@ export const useGetCryptoByIdService = () => {
     : Promise<GetCryptoByIdResponse> => {
     try {
       setLoading(true);
-      const { data } = await ApiClient.get(`/crypto/get/${payload.cryptoId}`);
+      const { data } = await ApiClient.get<GetCryptoByIdResponse>(`/crypto/get/${payload.cryptoId}`);
 
       return data;
     } catch (error: any) {

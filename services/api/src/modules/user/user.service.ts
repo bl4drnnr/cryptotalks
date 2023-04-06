@@ -25,6 +25,7 @@ import { CloseAccEvent } from '@events/close-acc.event';
 import { UpdateUserEvent } from '@events/update-user.event';
 import { UserSettings } from '@models/user-settings.model';
 import { EmailChangedException } from '@exceptions/email-changed.exception';
+import sequelize from 'sequelize';
 
 @Injectable()
 export class UserService {
@@ -170,9 +171,21 @@ export class UserService {
     return new ResponseDto();
   }
 
-  getUserById({ id }: { id: string }) {
+  getUserPersonalInformation({ id }: { id: string }) {
     return this.userRepository.findByPk(id, {
-      attributes: ['id', 'email']
+      attributes: [
+        'id',
+        'email',
+        [sequelize.literal('first_name'), 'firstName'],
+        [sequelize.literal('last_name'), 'lastName'],
+        'twitter',
+        [sequelize.literal('linked_in'), 'linkedIn'],
+        [sequelize.literal('personal_website'), 'personalWebsite'],
+        'title',
+        'bio',
+        'username',
+        'created_at'
+      ]
     });
   }
 

@@ -1,9 +1,9 @@
-export interface LeavePostPayload {
+export interface LeaveCommentPayload {
   postId: string;
   comment: string;
   token: string | null;
 }
 
-export interface LeavePostResponse {
+export interface LeaveCommentResponse {
   message: string;
 }

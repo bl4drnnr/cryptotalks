@@ -7,11 +7,11 @@ import { ListPostsPayload, ListPostsResponse } from '@services/posts/list-posts/
 export const useListPostsService = () => {
   const [loading, setLoading] = React.useState(false);
 
-  const listPosts = async ({ page, pageSize, order, orderBy, searchQuery }: ListPostsPayload)
+  const listPosts = async ({ page, pageSize, order, orderBy, searchQuery, userId }: ListPostsPayload)
     : Promise<ListPostsResponse> => {
     try {
       setLoading(true);
-      const { data } = await ApiClient.get(`/posts/list/${page}/${pageSize}/${order}/${orderBy}?searchQuery=${searchQuery || ''}`);
+      const { data } = await ApiClient.get<ListPostsResponse>(`/post/list/${page}/${pageSize}/${order}/${orderBy}?searchQuery=${searchQuery || ''}&userId=${userId}`);
 
       return data;
     } catch (error: any) {
