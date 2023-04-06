@@ -1,3 +1,5 @@
+import React from 'react';
+
 interface ISecuritySettings {
   emailChanged: boolean;
   lastPassChange: Date;
@@ -8,4 +10,6 @@ interface ISecuritySettings {
 
 export interface SecuritySettingsProps {
   securitySettings: ISecuritySettings | undefined;
+  setSecSettings: React.Dispatch<React.SetStateAction<any>>;
+  applySecuritySettings: any;
 }

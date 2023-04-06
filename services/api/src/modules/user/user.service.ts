@@ -279,6 +279,18 @@ export class UserService {
     return new ResponseDto();
   }
 
+  async getUserSettings({ userId }: { userId: string }) {
+    //
+  }
+
+  setPersonalSettings({ userId }: { userId: string }) {
+    return new ResponseDto();
+  }
+
+  setSecuritySettings({ userId }: { userId: string }) {
+    return new ResponseDto();
+  }
+
   setTwoFa() {
     //
   }

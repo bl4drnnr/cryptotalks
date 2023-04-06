@@ -97,13 +97,17 @@ const Account = () => {
     await router.push(`/${path}`);
   };
 
+  const exceptionHandler = async (e: any) => {
+    handleException(e);
+    sessionStorage.removeItem('_at');
+    await handleRedirect('');
+  };
+
   const checkUser = async (token: string) => {
     try {
       return await refreshToken({ token });
     } catch (e) {
-      handleException(e);
-      sessionStorage.removeItem('_at');
-      await handleRedirect('');
+      await exceptionHandler(e);
     }
   };
 
@@ -113,9 +117,7 @@ const Account = () => {
         page, pageSize, order, orderBy, userId
       });
     } catch (e) {
-      handleException(e);
-      sessionStorage.removeItem('_at');
-      await handleRedirect('');
+      await exceptionHandler(e);
     }
   };
 

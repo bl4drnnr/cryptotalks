@@ -6,7 +6,7 @@ import {
   Post,
   Res,
   UseGuards,
-  HttpStatus
+  HttpStatus, Patch
 } from '@nestjs/common';
 import { UserService } from '@modules/user.service';
 import { SignUpDto } from '@dto/sign-up.dto';
@@ -161,5 +161,38 @@ export class UserController {
   @Post('remove-2fa')
   removeTwoFa(@UserDecorator() userId: string) {
     return this.userService.removeTwoFa();
+  }
+
+  @ApiOperation({ summary: '' })
+  @ApiResponse({
+    status: 201,
+    description: ''
+  })
+  @UseGuards(JwtGuard)
+  @Get('get-settings')
+  getUserSettings(@UserDecorator() userId: string) {
+    return this.userService.getUserSettings({ userId });
+  }
+
+  @ApiOperation({ summary: '' })
+  @ApiResponse({
+    status: 201,
+    description: ''
+  })
+  @UseGuards(JwtGuard)
+  @Patch('set-personal-settings')
+  setPersonalSettings(@UserDecorator() userId: string) {
+    return this.userService.setPersonalSettings({ userId });
+  }
+
+  @ApiOperation({ summary: '' })
+  @ApiResponse({
+    status: 201,
+    description: ''
+  })
+  @UseGuards(JwtGuard)
+  @Patch('set-security-settings')
+  setSecuritySettings(@UserDecorator() userId: string) {
+    return this.userService.setSecuritySettings({ userId });
   }
 }
