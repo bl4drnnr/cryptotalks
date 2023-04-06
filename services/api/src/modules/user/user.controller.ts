@@ -6,7 +6,8 @@ import {
   Post,
   Res,
   UseGuards,
-  HttpStatus, Patch
+  HttpStatus,
+  Patch
 } from '@nestjs/common';
 import { UserService } from '@modules/user.service';
 import { SignUpDto } from '@dto/sign-up.dto';
@@ -34,6 +35,8 @@ import { UserLogoutEvent } from '@events/user-logout.event';
 import { UserLogoutEventDto } from '@event-dto/user-logout.event.dto';
 import { SignUpEventDto } from '@event-dto/sign-up.event.dto';
 import { UserSettings } from '@models/user-settings.model';
+import { UpdateUserSecurityEvent } from '@events/update-user-security.event';
+import { UpdateUserSecurityEventDto } from '@event-dto/update-user-security.event.dto';
 
 @ApiTags('User')
 @Controller('user')
@@ -163,10 +166,13 @@ export class UserController {
     return this.userService.removeTwoFa();
   }
 
-  @ApiOperation({ summary: '' })
+  @ApiOperation({
+    summary: 'Allows to get user settings in order to change them'
+  })
   @ApiResponse({
     status: 201,
-    description: ''
+    description:
+      'As a response function returns both security settings and personal information'
   })
   @UseGuards(JwtGuard)
   @Get('get-settings')
@@ -174,25 +180,33 @@ export class UserController {
     return this.userService.getUserSettings({ userId });
   }
 
-  @ApiOperation({ summary: '' })
+  @ApiOperation({ summary: 'Sets user personal information settings' })
   @ApiResponse({
     status: 201,
-    description: ''
+    description: 'As a response function returns success message'
   })
   @UseGuards(JwtGuard)
   @Patch('set-personal-settings')
-  setPersonalSettings(@UserDecorator() userId: string) {
-    return this.userService.setPersonalSettings({ userId });
+  setPersonalSettings(
+    @UserDecorator() userId: string,
+    @Body() payload: UpdateUserEventDto
+  ) {
+    return this.userService.setPersonalSettings({ userId, ...payload });
   }
 
-  @ApiOperation({ summary: '' })
+  @ApiExtraModels(UpdateUserSecurityEvent)
+  @ApiExtraModels(UpdateUserSecurityEventDto)
+  @ApiOperation({ summary: 'Sets user security settings' })
   @ApiResponse({
     status: 201,
-    description: ''
+    description: 'As a response function returns success message'
   })
   @UseGuards(JwtGuard)
   @Patch('set-security-settings')
-  setSecuritySettings(@UserDecorator() userId: string) {
-    return this.userService.setSecuritySettings({ userId });
+  setSecuritySettings(
+    @UserDecorator() userId: string,
+    @Body() payload: UpdateUserSecurityEventDto
+  ) {
+    return this.userService.setSecuritySettings({ userId, ...payload });
   }
 }

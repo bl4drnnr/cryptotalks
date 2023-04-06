@@ -26,6 +26,9 @@ import { UpdateUserEvent } from '@events/update-user.event';
 import { UserSettings } from '@models/user-settings.model';
 import { EmailChangedException } from '@exceptions/email-changed.exception';
 import sequelize from 'sequelize';
+import { UpdateUserEventDto } from '@event-dto/update-user.event.dto';
+import { UpdateUserSecurityEvent } from '@events/update-user-security.event';
+import { UpdateUserSecurityEventDto } from '@event-dto/update-user-security.event.dto';
 
 @Injectable()
 export class UserService {
@@ -279,23 +282,31 @@ export class UserService {
     return new ResponseDto();
   }
 
-  async getUserSettings({ userId }: { userId: string }) {
-    //
-  }
-
-  setPersonalSettings({ userId }: { userId: string }) {
-    return new ResponseDto();
-  }
-
-  setSecuritySettings({ userId }: { userId: string }) {
-    return new ResponseDto();
-  }
-
   setTwoFa() {
     //
   }
 
   removeTwoFa() {
     //
+  }
+
+  async getUserSettings({ userId }: { userId: string }) {
+    //
+  }
+
+  setPersonalSettings(payload: UpdateUserEventDto) {
+    this.userClient.emit(
+      'update_user_account',
+      new UpdateUserEvent({ ...payload })
+    );
+    return new ResponseDto();
+  }
+
+  setSecuritySettings(payload: UpdateUserSecurityEventDto) {
+    this.userClient.emit(
+      'update_user_security_settings',
+      new UpdateUserSecurityEvent({ ...payload })
+    );
+    return new ResponseDto();
   }
 }
