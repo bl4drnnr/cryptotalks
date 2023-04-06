@@ -26,6 +26,11 @@ export class UsersController {
     return this.usersService.updateUserAccount(data);
   }
 
+  @EventPattern('update_user_security_settings')
+  handleUpdateUserSecuritySettings(data: any) {
+    return this.usersService.updateUserSecuritySettings(data);
+  }
+
   @EventPattern('close_user_account')
   handleCloseUserAccount(data: any) {
     return this.usersService.closeUserAccount(data);

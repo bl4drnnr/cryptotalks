@@ -12,6 +12,7 @@ import { InformationLog } from '@mongo-schemas/log.schema';
 import { Model } from 'mongoose';
 import { CloseAccEventDto } from '@event-dto/close-acc.event.dto';
 import { UpdateUserEventDto } from '@event-dto/update-user.event.dto';
+import { UpdateUserSecurityEventDto } from '@event-dto/update-user-security.event.dto';
 
 @Injectable()
 export class UsersService {
@@ -66,6 +67,16 @@ export class UsersService {
       {
         where: { id: userId }
       }
+    );
+  }
+
+  async updateUserSecuritySettings(payload: UpdateUserSecurityEventDto) {
+    const userId = payload.userId;
+    delete payload.userId;
+
+    await this.userSettingsRepository.update(
+      { ...payload },
+      { where: { id: userId } }
     );
   }
 

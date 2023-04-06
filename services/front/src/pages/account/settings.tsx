@@ -16,9 +16,8 @@ import {
   ISecuritySettings
 } from '@services/get-user-settings/get-user-settings.interface';
 import { useGetUserSettingsService } from '@services/get-user-settings/get-user-settings.service';
-// import {
-//   useSetPersonalUserSettingsService
-// } from '@services/set-user-personal-settings/set-user-personal-settings.service';
+import { useSetPersonalSettingsService } from '@services/set-personal-settings/set-personal-settings.service';
+import { useSetSecuritySettingsService } from '@services/set-security-settings/set-security-settings.service';
 import {
   ButtonWrapper,
   Container, CreatedAtDate, CreatedAtParagraph,
@@ -40,12 +39,13 @@ const AccountSettings = () => {
 
   const { loading: l0, getUserSettings } = useGetUserSettingsService();
   const { loading: l1, closeAccount } = useCloseAccountService();
-  // const { loading: l2, setPersonalUserSettings } = useSetPersonalUserSettingsService();
+  const { loading: l2, setPersonalSettings } = useSetPersonalSettingsService();
+  const { loading: l3, setSecuritySettings } = useSetSecuritySettingsService();
 
   const fetchSettingsRef = React.useRef(true);
 
   const [personalInformation, setPersonalInformation] = React.useState<IPersonalInformation>();
-  const [securitySettings, setSecuritySettings] = React.useState<ISecuritySettings>();
+  const [secSettings, setSecSettings] = React.useState<ISecuritySettings>();
 
   const [section, setSection] = React.useState('personalInformation');
   const [sections, ] = React.useState([
@@ -81,7 +81,7 @@ const AccountSettings = () => {
       const { settings } = await getUserSettings({ token });
 
       setPersonalInformation(settings.personalInformation);
-      setSecuritySettings(settings.securitySettings);
+      setSecSettings(settings.securitySettings);
     } catch (e) {
       return exceptionHandler(e);
     }
@@ -90,7 +90,16 @@ const AccountSettings = () => {
   const applyPersonalInformation = async () => {
     try {
       const token = sessionStorage.getItem('_at');
-      // return await setPersonalUserSettings({ ...personalInformation, token });
+      return await setPersonalSettings({ ...personalInformation, token });
+    } catch (e) {
+      return exceptionHandler(e);
+    }
+  };
+
+  const applySecuritySettings = async () => {
+    try {
+      const token = sessionStorage.getItem('_at');
+      return await setSecuritySettings({  ...secSettings, token });
     } catch (e) {
       return exceptionHandler(e);
     }
@@ -114,7 +123,7 @@ const AccountSettings = () => {
       <Head>
         <title>Cryptotalks | Settings</title>
       </Head>
-      <DefaultLayout loading={l0 || l1}>
+      <DefaultLayout loading={l0 || l1 || l2 || l3}>
         <Container>
           <Wrapper>
 
@@ -128,7 +137,7 @@ const AccountSettings = () => {
 
                 <SettingsHeaderItemsWrapper>
                   <SettingsHeaderTextWrapper>
-                    <Nickname>{personalInformation?.username} ({securitySettings?.email})</Nickname>
+                    <Nickname>{personalInformation?.username} ({secSettings?.email})</Nickname>
                     <PersonalAccount>Your personal account</PersonalAccount>
                   </SettingsHeaderTextWrapper>
                 </SettingsHeaderItemsWrapper>
@@ -170,7 +179,9 @@ const AccountSettings = () => {
                   />
                 ) : (section === 'securitySettings' ? (
                   <SecuritySettings
-                    securitySettings={securitySettings}
+                    securitySettings={secSettings}
+                    setSecSettings={setSecSettings}
+                    applySecuritySettings={applySecuritySettings}
                   />
                 ) : (<></>))}
               </SettingsContent>

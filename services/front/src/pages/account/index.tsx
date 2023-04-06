@@ -33,12 +33,18 @@ import {
   UserTitle,
   UserProfilePictureWrapper,
   ContactField,
-  ContactIcon, ContactInformationWrapper
+  ContactIcon,
+  ContactInformationWrapper,
+  LatestPostsContainer,
+  NoPostsTitle,
+  PostContainer,
+  PostTitle,
+  PostPreview, PostsTitle, PostSearchTags, PostTag
 } from '@styles/account.style';
 
 interface IPosts {
   count: number;
-  posts: Array<{ id: string; title: string; }>
+  rows: Array<{ id: string; title: string; preview: string; searchTags: Array<string> }>
 }
 
 const Account = () => {
@@ -91,13 +97,17 @@ const Account = () => {
     await router.push(`/${path}`);
   };
 
+  const exceptionHandler = async (e: any) => {
+    handleException(e);
+    sessionStorage.removeItem('_at');
+    await handleRedirect('');
+  };
+
   const checkUser = async (token: string) => {
     try {
       return await refreshToken({ token });
     } catch (e) {
-      handleException(e);
-      sessionStorage.removeItem('_at');
-      await handleRedirect('');
+      await exceptionHandler(e);
     }
   };
 
@@ -107,9 +117,7 @@ const Account = () => {
         page, pageSize, order, orderBy, userId
       });
     } catch (e) {
-      handleException(e);
-      sessionStorage.removeItem('_at');
-      await handleRedirect('');
+      await exceptionHandler(e);
     }
   };
 
@@ -206,6 +214,28 @@ const Account = () => {
                     onClick={() => handleRedirect('account/settings')}
                   />
                 </UserSideBar>
+                <LatestPostsContainer>
+                  {userPosts?.rows.length ? (
+                    <>
+                      <PostsTitle>User latest posts</PostsTitle>
+                      {userPosts?.rows.map((post, key) => (
+                        <PostContainer key={key}>
+                          <PostTitle>{post.title}</PostTitle>
+                          <PostPreview>{post.preview}</PostPreview>
+                          <PostSearchTags>
+                            {post.searchTags.map((searchTag, postKey) => (
+                              <PostTag key={postKey}>{searchTag}</PostTag>
+                            ))}
+                          </PostSearchTags>
+                        </PostContainer>
+                      ))}
+                    </>
+                  ) : (
+                    <NoPostsTitle>
+                      No posts yet.
+                    </NoPostsTitle>
+                  )}
+                </LatestPostsContainer>
               </AccountContentContainer>
             </AccountContainer>
           </Wrapper>
