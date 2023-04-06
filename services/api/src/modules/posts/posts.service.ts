@@ -49,7 +49,7 @@ export class PostsService {
     const where = {};
 
     if (userId) {
-      where['userId'] = userId;
+      where['user_id'] = userId;
     }
 
     if (searchQuery) {
@@ -71,7 +71,13 @@ export class PostsService {
       where: { ...where },
       order: [[orderBy, order]],
       limit,
-      offset
+      offset,
+      attributes: [
+        'id',
+        'title',
+        'preview',
+        [sequelize.literal('search_tags'), 'searchTags']
+      ]
     });
   }
 

@@ -33,8 +33,13 @@ import {
   UserTitle,
   UserProfilePictureWrapper,
   ContactField,
-  ContactIcon
+  ContactIcon, ContactInformationWrapper
 } from '@styles/account.style';
+
+interface IPosts {
+  count: number;
+  posts: Array<{ id: string; title: string; }>
+}
 
 const Account = () => {
   const router = useRouter();
@@ -45,12 +50,12 @@ const Account = () => {
   const { handleException } = useHandleException();
   const { showNotificationMessage } = useNotificationMessage();
 
-  const [page, setPage] = React.useState(1);
+  const [page, setPage] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(5);
   const [order, setOrder] = React.useState('ASC');
   const [orderBy, setOrderBy] = React.useState('createdAt');
   const [userData, setUserData] = React.useState<IPersonalInformation>();
-  const [userPosts, setUserPosts] = React.useState<Array<{ id: string; title: string; }>>();
+  const [userPosts, setUserPosts] = React.useState<IPosts>();
 
   React.useEffect(() => {
     if (fetchTokenChecking.current) {
@@ -66,7 +71,7 @@ const Account = () => {
             setUserData(res.user);
 
             fetchUserPosts(res.user.id).then((posts) => {
-              setUserPosts(posts?.posts);
+              setUserPosts(posts);
             });
           }
         });
@@ -125,51 +130,6 @@ const Account = () => {
                       <UserTitle>
                         {userData.title}
                       </UserTitle>
-                      {userData.twitter && (
-                        <ContactField
-                          onClick={() => copyToClipboard(userData.twitter)}
-                        >
-                          <ContactIcon>
-                            <Image src={'/img/twitter.svg'} width={32} height={32}  alt={'t'} />
-                          </ContactIcon>
-                          <Input
-                            disabled={true}
-                            value={userData.twitter}
-                            placeholder={''}
-                            onChange={() => {}}
-                          />
-                        </ContactField>
-                      )}
-                      {userData.linkedIn && (
-                        <ContactField
-                          onClick={() => copyToClipboard(userData.linkedIn)}
-                        >
-                          <ContactIcon>
-                            <Image src={'/img/linkedin.svg'} width={32} height={32}  alt={'l'} />
-                          </ContactIcon>
-                          <Input
-                            disabled={true}
-                            value={userData.linkedIn}
-                            placeholder={''}
-                            onChange={() => {}}
-                          />
-                        </ContactField>
-                      )}
-                      {userData.personalWebsite && (
-                        <ContactField
-                          onClick={() => copyToClipboard(userData.personalWebsite)}
-                        >
-                          <ContactIcon>
-                            <Image src={'/img/tag.svg'} width={32} height={32}  alt={'w'} />
-                          </ContactIcon>
-                          <Input
-                            disabled={true}
-                            value={userData.personalWebsite}
-                            placeholder={''}
-                            onChange={() => {}}
-                          />
-                        </ContactField>
-                      )}
                     </UserProfilePictureWrapper>
 
                     <AccountInfoContainer>
@@ -181,6 +141,53 @@ const Account = () => {
                         )}
                       </AccountInfo>
                       <UserBio>{userData.bio}</UserBio>
+                      <ContactInformationWrapper>
+                        {userData.twitter && (
+                          <ContactField
+                            onClick={() => copyToClipboard(userData.twitter)}
+                          >
+                            <ContactIcon>
+                              <Image src={'/img/twitter.svg'} width={32} height={32}  alt={'t'} />
+                            </ContactIcon>
+                            <Input
+                              disabled={true}
+                              value={userData.twitter}
+                              placeholder={''}
+                              onChange={() => {}}
+                            />
+                          </ContactField>
+                        )}
+                        {userData.linkedIn && (
+                          <ContactField
+                            onClick={() => copyToClipboard(userData.linkedIn)}
+                          >
+                            <ContactIcon>
+                              <Image src={'/img/linkedin.svg'} width={32} height={32}  alt={'l'} />
+                            </ContactIcon>
+                            <Input
+                              disabled={true}
+                              value={userData.linkedIn}
+                              placeholder={''}
+                              onChange={() => {}}
+                            />
+                          </ContactField>
+                        )}
+                        {userData.personalWebsite && (
+                          <ContactField
+                            onClick={() => copyToClipboard(userData.personalWebsite)}
+                          >
+                            <ContactIcon>
+                              <Image src={'/img/tag.svg'} width={32} height={32}  alt={'w'} />
+                            </ContactIcon>
+                            <Input
+                              disabled={true}
+                              value={userData.personalWebsite}
+                              placeholder={''}
+                              onChange={() => {}}
+                            />
+                          </ContactField>
+                        )}
+                      </ContactInformationWrapper>
                     </AccountInfoContainer>
 
                     <AccountCreatedAtContainer>

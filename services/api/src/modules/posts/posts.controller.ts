@@ -80,7 +80,8 @@ export class PostsController {
       pageSize,
       order,
       orderBy,
-      searchQuery
+      searchQuery,
+      userId
     });
   }
 

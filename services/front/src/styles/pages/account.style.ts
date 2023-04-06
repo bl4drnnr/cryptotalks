@@ -96,16 +96,6 @@ export const UserProfilePictureWrapper = styled.div`
     text-align: center;
   }
 `;
-
-export const AccountCreatedAtContainer = styled.div`
-  min-width: 250px;
-  padding: 15px 30px;
-
-  @media only screen and (max-width: 1000px) {
-    display: flex;
-  }
-`;
-
 export const CreatedAtParagraph = styled.p`
   color: rgba(${(props) => props.theme.colors.textColor});
   text-align: end;
@@ -115,6 +105,19 @@ export const CreatedAtDate = styled.p`
   color: rgba(${(props) => props.theme.colors.textColor}, .5);
   text-align: end;
 `;
+
+export const AccountCreatedAtContainer = styled.div`
+  min-width: 250px;
+  padding: 15px 30px;
+
+  @media only screen and (max-width: 1000px) {
+    display: flex;
+    ${CreatedAtDate} {
+      margin: 0 5px;
+    }
+  }
+`;
+
 
 export const UserTitle = styled.p`
   color: rgba(${(props) => props.theme.colors.textColor}, .5);
@@ -131,4 +134,15 @@ export const ContactField = styled.div`
 export const ContactIcon = styled.div`
   margin: 0 5px;
   filter: ${(props) => props.theme.colors.svgIcon};
+`;
+
+export const ContactInformationWrapper = styled.div`
+  display: block;
+  max-width: 240px;
+  margin-bottom: 10px;
+
+  @media only screen and (max-width: 1000px) {
+    width: 100%;
+    max-width: none;
+  }
 `;

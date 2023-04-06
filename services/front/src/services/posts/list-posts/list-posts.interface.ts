@@ -13,5 +13,6 @@ export interface ListPostsPayload {
 }
 
 export interface ListPostsResponse {
+  count: number;
   posts: IPosts[];
 }

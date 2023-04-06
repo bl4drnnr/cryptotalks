@@ -455,6 +455,10 @@ components:
           type: array
           items:
             type: string
+        preview:
+          type: string
+          nullable: false
+          description: Short preview of the post
         searchTags:
           nullable: false
           description: Search tags
@@ -486,6 +490,7 @@ components:
         - title
         - slug
         - content
+        - preview
         - searchTags
         - userId
         - likes
@@ -506,10 +511,14 @@ components:
           type: string
           format: uuid
           nullable: false
+        preview:
+          type: string
+          nullable: false
       required:
         - title
         - content
         - userId
+        - preview
     DeletePostEventDto:
       type: object
       properties:

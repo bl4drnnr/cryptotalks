@@ -14,6 +14,7 @@ interface PostCreationAttributes {
   title: string;
   slug: string;
   content: Array<string>;
+  preview: string;
   userId: string;
 }
 
@@ -56,6 +57,14 @@ export class Post extends Model<Post, PostCreationAttributes> {
   })
   @Column({ type: DataType.ARRAY(DataType.TEXT), allowNull: false })
   content: Array<string>;
+
+  @ApiProperty({
+    type: String,
+    nullable: false,
+    description: 'Short preview of the post'
+  })
+  @Column({ type: DataType.TEXT, allowNull: false })
+  preview: string;
 
   @ApiProperty({
     type: [String],
