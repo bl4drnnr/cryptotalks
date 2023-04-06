@@ -207,9 +207,6 @@ const Account = () => {
                   />
                 </UserSideBar>
               </AccountContentContainer>
-
-              {JSON.stringify(userPosts)}
-
             </AccountContainer>
           </Wrapper>
         </Container>
