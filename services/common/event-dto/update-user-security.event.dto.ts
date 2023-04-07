@@ -7,4 +7,22 @@ export class UpdateUserSecurityEventDto {
     nullable: false
   })
   userId: string;
+
+  @ApiProperty({
+    type: Boolean,
+    nullable: true
+  })
+  publicEmail?: boolean;
+
+  @ApiProperty({
+    type: String,
+    nullable: true
+  })
+  twoFaToken?: string;
+
+  @ApiProperty({
+    type: String,
+    nullable: true
+  })
+  phone?: string;
 }

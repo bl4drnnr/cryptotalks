@@ -6,7 +6,7 @@ import { ExceptionHandler } from '@exception-handler';
 export const useSetSecuritySettingsService = () => {
   const [loading, setLoading] = React.useState(false);
 
-  const setSecuritySettings = async (payload: any) => {
+  const setSecurityUserSettings = async (payload: any) => {
     try {
       setLoading(true);
       const { data } = await ApiClient.patch('/user/set-security-settings', {}, {
@@ -21,5 +21,5 @@ export const useSetSecuritySettingsService = () => {
     }
   };
 
-  return { setSecuritySettings, loading };
+  return { setSecurityUserSettings, loading };
 };

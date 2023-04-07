@@ -19,4 +19,52 @@ export class UpdateUserEventDto {
     nullable: true
   })
   password?: string;
+
+  @ApiProperty({
+    type: String,
+    nullable: true
+  })
+  bio?: string;
+
+  @ApiProperty({
+    type: String,
+    nullable: true
+  })
+  firstName?: string;
+
+  @ApiProperty({
+    type: String,
+    nullable: true
+  })
+  lastName?: string;
+
+  @ApiProperty({
+    type: String,
+    nullable: true
+  })
+  linkedIn?: string;
+
+  @ApiProperty({
+    type: String,
+    nullable: true
+  })
+  personalWebsite?: string;
+
+  @ApiProperty({
+    type: String,
+    nullable: true
+  })
+  title?: string;
+
+  @ApiProperty({
+    type: String,
+    nullable: true
+  })
+  twitter?: string;
+
+  @ApiProperty({
+    type: String,
+    nullable: true
+  })
+  username?: string;
 }

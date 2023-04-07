@@ -9,6 +9,6 @@ interface ISecuritySettings {
 
 export interface SecuritySettingsProps {
   securitySettings: ISecuritySettings | undefined;
-  setSecSettings: React.Dispatch<React.SetStateAction<any>>;
+  setSecuritySettings: React.Dispatch<React.SetStateAction<any>>;
   applySecuritySettings: any;
 }
