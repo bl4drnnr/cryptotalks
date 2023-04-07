@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import cookie from 'cookie';
+import cookie, { serialize } from 'cookie';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import { Api } from '@api';
@@ -33,6 +33,13 @@ export default async (
 
     return res.json(data);
   } catch (error: any) {
+    res.setHeader('Set-Cookie', serialize(
+      '_rt', '', {
+        path: '/',
+        httpOnly: true,
+        maxAge: -1
+      }
+    ));
     return res
       .status((error as AxiosError).response?.status as number)
       .json((error as AxiosError).response?.data);

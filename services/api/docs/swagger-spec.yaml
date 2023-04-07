@@ -709,6 +709,10 @@ components:
           type: boolean
           nullable: true
           description: Contains 2FA token if user set it up
+        phone:
+          type: string
+          nullable: true
+          description: User phone. Alternate 2FA method
         passwordChanged:
           type: boolean
           nullable: true
@@ -729,6 +733,7 @@ components:
         - publicEmail
         - emailChanged
         - twoFaToken
+        - phone
         - passwordChanged
         - createdAt
         - updatedAt

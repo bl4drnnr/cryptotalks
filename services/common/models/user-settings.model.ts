@@ -69,6 +69,14 @@ export class UserSettings extends Model<
   twoFaToken?: string;
 
   @ApiProperty({
+    type: String,
+    nullable: true,
+    description: 'User phone. Alternate 2FA method'
+  })
+  @Column({ type: DataType.STRING, allowNull: true })
+  phone?: string;
+
+  @ApiProperty({
     type: Boolean,
     nullable: true,
     description: 'Users are allowed to change password only 1 time'
