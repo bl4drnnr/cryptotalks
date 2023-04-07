@@ -25,7 +25,7 @@ import { CloseAccEvent } from '@events/close-acc.event';
 import { UpdateUserEvent } from '@events/update-user.event';
 import { UserSettings } from '@models/user-settings.model';
 import { EmailChangedException } from '@exceptions/email-changed.exception';
-import sequelize from 'sequelize';
+import sequelize, { Op } from 'sequelize';
 import { UpdateUserEventDto } from '@event-dto/update-user.event.dto';
 import { UpdateUserSecurityEvent } from '@events/update-user-security.event';
 import { UpdateUserSecurityEventDto } from '@event-dto/update-user-security.event.dto';
@@ -48,7 +48,16 @@ export class UserService {
 
   async signUp(payload: SignUpDto) {
     const alreadyExistingUser = await this.userRepository.findOne({
-      where: { email: payload.email }
+      where: {
+        [Op.or]: [
+          {
+            email: payload.email
+          },
+          {
+            username: payload.username
+          }
+        ]
+      }
     });
     if (alreadyExistingUser) throw new UserAlreadyExistsException();
 
@@ -329,7 +338,16 @@ export class UserService {
     return { securitySettings, personalSettings: userPersonalSettings };
   }
 
-  setPersonalSettings(payload: UpdateUserEventDto) {
+  async setPersonalSettings(payload: UpdateUserEventDto) {
+    const existingUser = await this.userRepository.findOne({
+      where: { username: payload.username }
+    });
+    if (existingUser && existingUser.id !== payload.userId)
+      throw new UserAlreadyExistsException(
+        'username-taken',
+        'Username is taken'
+      );
+
     this.userClient.emit(
       'update_user_account',
       new UpdateUserEvent({ ...payload })

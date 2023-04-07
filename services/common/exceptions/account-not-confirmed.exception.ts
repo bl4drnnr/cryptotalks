@@ -1,7 +1,10 @@
 import { ForbiddenException } from '@nestjs/common';
 
 export class AccountNotConfirmedException extends ForbiddenException {
-  constructor() {
-    super('account-not-confirmed', 'Account not confirmed');
+  constructor(
+    message = 'account-not-confirmed',
+    description = 'Account not confirmed'
+  ) {
+    super(message, description);
   }
 }

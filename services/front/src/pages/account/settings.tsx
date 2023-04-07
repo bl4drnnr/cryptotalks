@@ -74,8 +74,10 @@ const AccountSettings = () => {
 
   const exceptionHandler = async (e: any) => {
     handleException(e);
-    sessionStorage.removeItem('_at');
-    await handleRedirect('');
+    if (e.message !== 'username-taken') {
+      sessionStorage.removeItem('_at');
+      await handleRedirect('');
+    }
   };
 
   const fetchUserSettings = async (token: string) => {
@@ -92,7 +94,8 @@ const AccountSettings = () => {
   const applyPersonalInformation = async () => {
     try {
       const token = sessionStorage.getItem('_at');
-      return await setPersonalSettings({ ...personalInformation, token });
+      await setPersonalSettings({ ...personalInformation, token });
+      return handleRedirect('account');
     } catch (e) {
       return exceptionHandler(e);
     }
@@ -101,7 +104,8 @@ const AccountSettings = () => {
   const applySecuritySettings = async () => {
     try {
       const token = sessionStorage.getItem('_at');
-      return await setSecurityUserSettings({  ...securitySettings, token });
+      await setSecurityUserSettings({  ...securitySettings, token });
+      return handleRedirect('account');
     } catch (e) {
       return exceptionHandler(e);
     }
