@@ -28,10 +28,8 @@ export const PersonalInformation = ({
   return (
     <>
       <PublicInfoTitleBox>
-        <PublicInfoTitle>
-
-        </PublicInfoTitle>
-        <PersonalInfoSectionDescription></PersonalInfoSectionDescription>
+        <PublicInfoTitle>Personal information</PublicInfoTitle>
+        <PersonalInfoSectionDescription>Manage your public visible personal information settings</PersonalInfoSectionDescription>
       </PublicInfoTitleBox>
       <SeparationLine className={'margin-bottom'} />
 
@@ -44,7 +42,7 @@ export const PersonalInformation = ({
                   value={personalInformation.username}
                   placeholder={'Username'}
                   onChange={(e) => setPersonalInformation({ ...personalInformation, username: e.target.value })}
-                  inputDescription={''}
+                  inputDescription={'Username should be unique and will be shown publicly'}
                 />
                 <Input
                   value={personalInformation.firstName}
@@ -83,12 +81,6 @@ export const PersonalInformation = ({
                   placeholder={'Biography'}
                   onChange={(e) => setPersonalInformation({ ...personalInformation, bio: e.target.value })}
                   inputDescription={'Tell something about yourself'}
-                />
-                <SeparationLine />
-                <Checkbox
-                  value={personalInformation.publicEmail}
-                  label={'Do you want your email be public?'}
-                  onChange={(e) => setPersonalInformation({ ...personalInformation, publicEmail: !personalInformation.publicEmail })}
                 />
               </>
             )}

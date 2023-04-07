@@ -9,7 +9,6 @@ import {
   UpdatedAt
 } from 'sequelize-typescript';
 import { ApiProperty } from '@nestjs/swagger';
-import { Col } from 'sequelize/types/utils';
 
 interface UserSettingsCreationAttributes {
   userId: string;

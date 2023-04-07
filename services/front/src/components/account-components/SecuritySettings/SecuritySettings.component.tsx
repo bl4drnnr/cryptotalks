@@ -99,33 +99,31 @@ const SecuritySettings = ({ securitySettings }: SecuritySettingsProps) => {
     <>
       <Loader loading={l0 || l1 || l2 || l3} />
       <SecurityTitleBox>
-        <SecurityTitle>
-          {''}
-        </SecurityTitle>
-        <SecuritySectionDescription>{''}</SecuritySectionDescription>
+        <SecurityTitle>Security settings</SecurityTitle>
+        <SecuritySectionDescription>Manage security of your account</SecuritySectionDescription>
       </SecurityTitleBox>
       <SeparationLine className={'margin-bottom'} />
 
       <SecurityItemBlock>
         <SecurityItemWrapper>
-          <ItemTitle>{''}</ItemTitle>
-          <ItemDescription>{''}</ItemDescription>
+          <ItemTitle>Set 2FA</ItemTitle>
+          <ItemDescription>Secure your account with two-factor authentication (2FA).</ItemDescription>
         </SecurityItemWrapper>
         <SecurityItemWrapper className={'button'}>
           <Button
-            text={''}
+            text={'Set 2FA'}
             onClick={() => openTwoFaModalAndGenerateToken()}
           />
           {twoFaModal ? (
             <Modal
               onClose={() => setTwoFaModal(false)}
-              header={''}
-              description={''}
+              header={'Set 2FA'}
+              description={'Secure your account with two-factor authentication (2FA).'}
             >
               <>
                 <Image src={twoFaQr} alt={'2fa'} width={200} height={200} />
                 <TwoFa
-                  title={''}
+                  title={'Two factor authentication code'}
                   setTwoFaCode={setTwoFa}
                 />
                 <Button
@@ -140,19 +138,19 @@ const SecuritySettings = ({ securitySettings }: SecuritySettingsProps) => {
 
       <SecurityItemBlock>
         <SecurityItemWrapper>
-          <ItemTitle>{''}</ItemTitle>
-          <ItemDescription>{''}</ItemDescription>
+          <ItemTitle>Set mobile phone</ItemTitle>
+          <ItemDescription>Secure your account with mobile MFA.</ItemDescription>
         </SecurityItemWrapper>
         <SecurityItemWrapper className={'button'}>
           <Button
-            text={''}
+            text={'Set phone'}
             onClick={() => setPhoneModal(true)}
           />
           {phoneModal ? (
             <Modal
               onClose={() => setPhoneModal(false)}
-              header={''}
-              description={''}
+              header={'Set mobile phone'}
+              description={'Secure your account with mobile MFA.'}
             ><></></Modal>
           ) : null}
         </SecurityItemWrapper>
@@ -160,19 +158,19 @@ const SecuritySettings = ({ securitySettings }: SecuritySettingsProps) => {
 
       <SecurityItemBlock>
         <SecurityItemWrapper>
-          <ItemTitle>{''}</ItemTitle>
-          <ItemDescription>{''}</ItemDescription>
+          <ItemTitle>Change password</ItemTitle>
+          <ItemDescription>Be careful! Some operations won't be available for 24h after change.</ItemDescription>
         </SecurityItemWrapper>
         <SecurityItemWrapper className={'button'}>
           <Button
-            text={''}
+            text={'Change password'}
             onClick={() => setPasswordChangeModal(true)}
           />
           {passwordChangeModal ? (
             <Modal
               onClose={() => setPasswordChangeModal(false)}
-              header={''}
-              description={''}
+              header={'Change password'}
+              description={'Be careful! Some operations won\'t be available for 24h after change.'}
             ><></></Modal>
           ) : null}
         </SecurityItemWrapper>
@@ -180,19 +178,19 @@ const SecuritySettings = ({ securitySettings }: SecuritySettingsProps) => {
 
       <SecurityItemBlock>
         <SecurityItemWrapper>
-          <ItemTitle>{''}</ItemTitle>
-          <ItemDescription>{''}</ItemDescription>
+          <ItemTitle>{'Change email'}</ItemTitle>
+          <ItemDescription>{'Be careful! You are able to change email only one time.'}</ItemDescription>
         </SecurityItemWrapper>
         <SecurityItemWrapper className={'button'}>
           <Button
-            text={''}
+            text={'Change email'}
             onClick={() => setChangeEmailModal(true)}
           />
           {changeEmailModal ? (
             <Modal
               onClose={() => setChangeEmailModal(false)}
-              header={''}
-              description={''}
+              header={'Change email'}
+              description={'Be careful! You are able to change email only one time.'}
             ><></></Modal>
           ) : null}
         </SecurityItemWrapper>

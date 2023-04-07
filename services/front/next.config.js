@@ -7,6 +7,9 @@ const nextConfig = {
   swcMinify: true,
   eslint: {
     ignoreDuringBuilds: true,
+  },
+  images: {
+    domains: ['chart.googleapis.com', 'cdn.coinranking.com']
   }
 };
 

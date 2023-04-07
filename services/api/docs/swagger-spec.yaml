@@ -272,6 +272,60 @@ paths:
         "201":
           description: As a response function returns success message
       tags: *a2
+  /api/user/get-settings:
+    get:
+      operationId: UserController_getUserSettings
+      summary: Allows to get user settings in order to change them
+      parameters: []
+      responses:
+        "200":
+          description: ""
+        "201":
+          description: As a response function returns both security settings and personal
+            information
+      tags: *a2
+  /api/user/set-personal-settings:
+    patch:
+      operationId: UserController_setPersonalSettings
+      summary: Sets user personal information settings
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserEventDto"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseDto"
+        "201":
+          description: As a response function returns success message
+      tags: *a2
+  /api/user/set-security-settings:
+    patch:
+      operationId: UserController_setSecuritySettings
+      summary: Sets user security settings
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserSecurityEventDto"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseDto"
+        "201":
+          description: As a response function returns success message
+      tags: *a2
   /api/auth/refresh:
     get:
       operationId: AuthController_refreshTokens
@@ -984,6 +1038,18 @@ components:
       required:
         - userId
     CloseAccEvent:
+      type: object
+      properties: {}
+    UpdateUserSecurityEventDto:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+          nullable: false
+      required:
+        - userId
+    UpdateUserSecurityEvent:
       type: object
       properties: {}
     RefreshTokenEventDto:

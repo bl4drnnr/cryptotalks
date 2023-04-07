@@ -12,7 +12,7 @@ export const useGetUserSettingsService = () => {
     try {
       setLoading(true);
       const { data } = await ApiClient.get<GetUserSettingsResponse>('/user/get-settings', {
-        headers: { 'Application-Authorization': `Bearer ${payload.token}` }
+        headers: { 'x-access-token': `Bearer ${payload.token}` }
       });
 
       return data;

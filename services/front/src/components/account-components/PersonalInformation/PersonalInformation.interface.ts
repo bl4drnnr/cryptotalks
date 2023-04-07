@@ -9,7 +9,6 @@ interface IPersonalInformation {
   title: string;
   bio: string;
   username: string;
-  publicEmail: boolean;
 }
 
 export interface PersonalInformationProps {

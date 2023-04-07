@@ -291,7 +291,40 @@ export class UserService {
   }
 
   async getUserSettings({ userId }: { userId: string }) {
-    //
+    const userPersonalSettings = await this.userRepository.findByPk(userId, {
+      attributes: [
+        'id',
+        'email',
+        [sequelize.literal('first_name'), 'firstName'],
+        [sequelize.literal('last_name'), 'lastName'],
+        'username',
+        'twitter',
+        [sequelize.literal('linked_in'), 'linkedIn'],
+        [sequelize.literal('personal_website'), 'personalWebsite'],
+        'title',
+        'bio',
+        [sequelize.literal('created_at'), 'createdAt']
+      ]
+    });
+
+    const userSecuritySettings = await this.userSettingsRepository.findOne({
+      where: { userId },
+      attributes: [
+        [sequelize.literal('public_email'), 'publicEmail'],
+        [sequelize.literal('email_changed'), 'emailChanged'],
+        [sequelize.literal('password_changed'), 'passwordChanged']
+      ]
+    });
+
+    const securitySettings = {
+      publicEmail: userSecuritySettings.publicEmail,
+      emailChanged: userSecuritySettings.emailChanged,
+      passwordChanged: userSecuritySettings.passwordChanged,
+      email: userPersonalSettings.email
+    };
+    delete userPersonalSettings.email;
+
+    return { securitySettings, personalSettings: userPersonalSettings };
   }
 
   setPersonalSettings(payload: UpdateUserEventDto) {

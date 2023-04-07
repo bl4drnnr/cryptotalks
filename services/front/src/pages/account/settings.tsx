@@ -78,10 +78,10 @@ const AccountSettings = () => {
 
   const fetchUserSettings = async (token: string) => {
     try {
-      const { settings } = await getUserSettings({ token });
+      const { personalSettings, securitySettings } = await getUserSettings({ token });
 
-      setPersonalInformation(settings.personalInformation);
-      setSecSettings(settings.securitySettings);
+      setPersonalInformation(personalSettings);
+      setSecSettings(securitySettings);
     } catch (e) {
       return exceptionHandler(e);
     }

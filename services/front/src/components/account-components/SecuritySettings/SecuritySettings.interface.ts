@@ -2,10 +2,9 @@ import React from 'react';
 
 interface ISecuritySettings {
   emailChanged: boolean;
-  lastPassChange: Date;
-  twoFaType: string;
+  publicEmail: boolean;
+  passwordChanged: Date;
   email: string;
-  phoneNumber: string;
 }
 
 export interface SecuritySettingsProps {
