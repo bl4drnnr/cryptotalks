@@ -16,6 +16,7 @@ export interface ISecuritySettings {
   passwordChanged: Date;
   email: string;
   publicEmail: boolean;
+  phone: string | null;
 }
 
 export interface GetUserSettingsPayload {

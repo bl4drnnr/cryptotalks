@@ -310,6 +310,7 @@ export class UserService {
     const userSecuritySettings = await this.userSettingsRepository.findOne({
       where: { userId },
       attributes: [
+        'phone',
         [sequelize.literal('public_email'), 'publicEmail'],
         [sequelize.literal('email_changed'), 'emailChanged'],
         [sequelize.literal('password_changed'), 'passwordChanged']
@@ -320,6 +321,7 @@ export class UserService {
       publicEmail: userSecuritySettings.publicEmail,
       emailChanged: userSecuritySettings.emailChanged,
       passwordChanged: userSecuritySettings.passwordChanged,
+      phone: userSecuritySettings.phone,
       email: userPersonalSettings.email
     };
     delete userPersonalSettings.email;

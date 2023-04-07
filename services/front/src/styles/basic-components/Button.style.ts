@@ -11,7 +11,7 @@ export const ButtonContent = styled.p`
   font-weight: 500;
   font-family: "Inter", sans-serif;
   color: rgb(${(props) => props.theme.colors.textColor});
-  padding: 0 5px;  
+  padding: 0 5px;
 `;
 
 
@@ -23,7 +23,7 @@ export const BasicButton = styled.button`
   border: 1px solid rgb(${(props) => props.theme.colors.primary}, .5);
   transition: .3s;
   background-color: rgba(${(props) => props.theme.colors.inputBackground}, .85);
-  
+
   &.fillButton {
     background-color: rgb(${(props) => props.theme.colors.primary});
     color: black;
@@ -34,16 +34,16 @@ export const BasicButton = styled.button`
       background-color: rgb(${(props) => props.theme.colors.primary});
     }
   }
-  
+
   &.highHeight {
     height: 48px;
   }
-  
+
   &.disabled {
     background-color: rgba(${(props) => props.theme.colors.disableColor}, .20);
     cursor: auto;
   }
-    
+
   &.danger {
     border: 1px solid rgb(${(props) => props.theme.colors.error}, .5);
     &:hover {
@@ -51,7 +51,7 @@ export const BasicButton = styled.button`
       background-color: rgba(${(props) => props.theme.colors.error}, .20);
     }
   }
-  
+
   &.fillDanger {
     border: 1px solid rgb(${(props) => props.theme.colors.error});
     background-color: rgba(${(props) => props.theme.colors.error});
@@ -64,5 +64,12 @@ export const BasicButton = styled.button`
   &:hover {
     border: 1px solid rgb(${(props) => props.theme.colors.primary}, 1);
     background-color: rgba(${(props) => props.theme.colors.primary}, .20);
+  }
+
+  &.onWhite {
+    background-color: rgba(${(props) => props.theme.colors.inputBackground}, .15);
+    ${ButtonContent} {
+      color: black;
+    }
   }
 `;

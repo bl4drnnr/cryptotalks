@@ -1,10 +1,5 @@
 import styled from 'styled-components';
 
-export const Container = styled.div`
-  width: 100%;
-  display: flex;
-`;
-
 export const InputTwoFa = styled.input`
   margin: 4px;
   height: 4rem;
@@ -44,5 +39,28 @@ export const Placeholder = styled.p`
   font-size: 16px;
   margin: 15px 5px;
   font-weight: 200;
+  color: rgb(${(props) => props.theme.colors.textColor});
 `;
 
+export const Container = styled.div`
+  width: 100%;
+  display: flex;
+`;
+
+export const TwoFaWrapper = styled.div`
+  &.justifyCenter {
+    ${Container} {
+      justify-content: center;
+    }
+  }
+
+  &.onWhite {
+    ${Placeholder} {
+      color: black;
+    }
+    ${InputTwoFa} {
+      background-color: rgba(${(props) => props.theme.colors.inputBackground}, .15);
+      color: black;
+    }
+  }
+`;

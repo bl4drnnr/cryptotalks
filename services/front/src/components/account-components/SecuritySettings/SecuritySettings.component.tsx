@@ -22,7 +22,7 @@ import {
   SecurityTitle,
   SecurityTitleBox,
   SecurityItemWrapper,
-  SecuritySectionDescription
+  SecuritySectionDescription, ModalItemsWrapper
 } from '@styles/SecuritySettings.style';
 
 
@@ -120,17 +120,19 @@ const SecuritySettings = ({ securitySettings }: SecuritySettingsProps) => {
               header={'Set 2FA'}
               description={'Secure your account with two-factor authentication (2FA).'}
             >
-              <>
+              <ModalItemsWrapper>
                 <Image src={twoFaQr} alt={'2fa'} width={200} height={200} />
                 <TwoFa
+                  styles={{ justifyCenter: true, onWhite: true }}
                   title={'Two factor authentication code'}
                   setTwoFaCode={setTwoFa}
                 />
                 <Button
+                  onWhite={true}
                   text={'Confirm 2FA code'}
                   onClick={() => fetchSetTwoFa()}
                 />
-              </>
+              </ModalItemsWrapper>
             </Modal>
           ) : null}
         </SecurityItemWrapper>

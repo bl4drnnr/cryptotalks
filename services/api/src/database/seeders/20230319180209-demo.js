@@ -158,5 +158,6 @@ module.exports = {
     await queryInterface.bulkDelete('posts', null, {});
     await queryInterface.bulkDelete('user_settings', null, {});
     await queryInterface.bulkDelete('favorite_coins', null, {});
+    await queryInterface.bulkDelete('sessions', null, {});
   }
 };
