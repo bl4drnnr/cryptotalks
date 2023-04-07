@@ -7,4 +7,5 @@ export interface ButtonProps {
   fillButton?: boolean;
   danger?: boolean;
   fillDanger?: boolean;
+  onWhite?: boolean;
 }

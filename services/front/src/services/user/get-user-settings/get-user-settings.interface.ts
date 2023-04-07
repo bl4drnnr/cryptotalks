@@ -8,22 +8,15 @@ export interface IPersonalInformation {
   title: string;
   bio: string;
   username: string;
-  publicEmail: boolean;
   createdAt: string;
-  email: string;
 }
 
 export interface ISecuritySettings {
   emailChanged: boolean;
-  lastPassChange: Date;
-  twoFaType: string;
+  passwordChanged: Date;
   email: string;
-  phoneNumber: string;
-}
-
-interface ISettings {
-  personalInformation: IPersonalInformation;
-  securitySettings: ISecuritySettings;
+  publicEmail: boolean;
+  phone: string | null;
 }
 
 export interface GetUserSettingsPayload {
@@ -31,5 +24,6 @@ export interface GetUserSettingsPayload {
 }
 
 export interface GetUserSettingsResponse {
-  settings: ISettings;
+  personalSettings: IPersonalInformation;
+  securitySettings: ISecuritySettings;
 }

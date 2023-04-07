@@ -10,7 +10,8 @@ export const Button = ({
    highHeight,
    fillButton,
    danger,
-   fillDanger
+   fillDanger,
+   onWhite
 }: ButtonProps): JSX.Element => {
   return (
     <Container>
@@ -22,7 +23,8 @@ export const Button = ({
           highHeight,
           fillButton,
           danger,
-          fillDanger
+          fillDanger,
+          onWhite
         })}
       >
         <ButtonContent>{text}</ButtonContent>

@@ -2,14 +2,13 @@ import React from 'react';
 
 interface ISecuritySettings {
   emailChanged: boolean;
-  lastPassChange: Date;
-  twoFaType: string;
+  publicEmail: boolean;
+  passwordChanged: Date;
   email: string;
-  phoneNumber: string;
 }
 
 export interface SecuritySettingsProps {
   securitySettings: ISecuritySettings | undefined;
-  setSecSettings: React.Dispatch<React.SetStateAction<any>>;
+  setSecuritySettings: React.Dispatch<React.SetStateAction<any>>;
   applySecuritySettings: any;
 }

@@ -108,6 +108,8 @@ export class AuthService {
 
     const token = await this.getTokenById(payload.id);
 
+    if (!token) throw new InvalidTokenException();
+
     const user = await this.userService.getUserPersonalInformation({
       id: token.userId
     });

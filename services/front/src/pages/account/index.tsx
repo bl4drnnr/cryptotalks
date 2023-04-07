@@ -144,9 +144,6 @@ const Account = () => {
                       <AccountInfo>
                         <Nickname>{userData.username}</Nickname>
                         <FullName>aka {userData.firstName} {userData.lastName}</FullName>
-                        {userData?.email && (
-                          <FullName>({userData?.email})</FullName>
-                        )}
                       </AccountInfo>
                       <UserBio>{userData.bio}</UserBio>
                       <ContactInformationWrapper>

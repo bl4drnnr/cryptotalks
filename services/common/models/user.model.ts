@@ -6,6 +6,7 @@ import {
   Model,
   PrimaryKey,
   Table,
+  Unique,
   UpdatedAt
 } from 'sequelize-typescript';
 import { ApiProperty } from '@nestjs/swagger';
@@ -85,7 +86,7 @@ export class User extends Model<User, UserCreationAttributes> {
     nullable: false,
     description: 'User username'
   })
-  @Column({ type: DataType.STRING, allowNull: false })
+  @Column({ type: DataType.STRING, allowNull: false, unique: true })
   username: string;
 
   @ApiProperty({

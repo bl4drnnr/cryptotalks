@@ -63,3 +63,7 @@ export const SecurityItemWrapper = styled.div`
 export const SecuritySectionDescription = styled.p`
   color: rgb(${(props) => props.theme.colors.textColor}, .75);
 `;
+
+export const ModalItemsWrapper = styled.div`
+  text-align: center;
+`;

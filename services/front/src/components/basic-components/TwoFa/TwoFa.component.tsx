@@ -1,10 +1,12 @@
 import React from 'react';
 
+import classNames from 'classnames';
+
 import { TwoFaProps } from '@components/TwoFa/TwoFa.interface';
 import { validate2fa } from '@hooks/useValidators.hook';
-import { Container, InputTwoFa, Placeholder } from '@styles/TwoFa.style';
+import { Container, InputTwoFa, Placeholder, TwoFaWrapper } from '@styles/TwoFa.style';
 
-export const TwoFa = ({ title, setTwoFaCode }: TwoFaProps) => {
+export const TwoFa = ({ title, setTwoFaCode, styles }: TwoFaProps) => {
   const [n1, setN1] = React.useState('');
   const [n2, setN2] = React.useState('');
   const [n3, setN3] = React.useState('');
@@ -56,7 +58,7 @@ export const TwoFa = ({ title, setTwoFaCode }: TwoFaProps) => {
   };
 
   return (
-    <div>
+    <TwoFaWrapper className={classNames({ ...styles })}>
       <Placeholder>{title}</Placeholder>
       <Container>
         <InputTwoFa
@@ -101,6 +103,6 @@ export const TwoFa = ({ title, setTwoFaCode }: TwoFaProps) => {
           ref={n6Ref}
         />
       </Container>
-    </div>
+    </TwoFaWrapper>
   );
 };

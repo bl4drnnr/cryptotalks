@@ -1,7 +1,10 @@
 import { ForbiddenException } from '@nestjs/common';
 
 export class EmailAlreadyConfirmedException extends ForbiddenException {
-  constructor() {
-    super('email-already-confirmed', 'Email address already confirmed');
+  constructor(
+    message = 'email-already-confirmed',
+    description = 'Email address already confirmed'
+  ) {
+    super(message, description);
   }
 }

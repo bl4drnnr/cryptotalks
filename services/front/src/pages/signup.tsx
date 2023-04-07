@@ -190,6 +190,7 @@ const Signup = () => {
                   value={username}
                   placeholder={'Username'}
                   onChange={(e) => setUsername(e.target.value)}
+                  inputDescription={'Username should be unique'}
                 />
               </MarginWrapper>
 
