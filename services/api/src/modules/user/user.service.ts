@@ -342,16 +342,29 @@ export class UserService {
     const existingUser = await this.userRepository.findOne({
       where: { username: payload.username }
     });
-    if (existingUser && existingUser.id !== payload.userId)
+
+    if (existingUser && existingUser.id !== payload.userId) {
       throw new UserAlreadyExistsException(
         'username-taken',
         'Username is taken'
       );
+    }
+
+    this.userClient.emit(
+      'log_user_action',
+      new LogEvent({
+        event: 'USER',
+        message: `User ${payload.userId} has successfully updated personal settings ${JSON.stringify(payload)}`,
+        status: 'SUCCESS',
+        timestamp: new Date()
+      })
+    );
 
     this.userClient.emit(
       'update_user_account',
       new UpdateUserEvent({ ...payload })
     );
+
     return new ResponseDto();
   }
 
