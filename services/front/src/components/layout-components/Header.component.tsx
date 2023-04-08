@@ -81,6 +81,12 @@ export const Header = () => {
               <>
                 <Button
                   className={classNames({ logIn: true })}
+                  onClick={() => handleRedirect('posts/create')}
+                >
+                  Create post
+                </Button>
+                <Button
+                  className={classNames({ logIn: true })}
                   onClick={() => handleRedirect('account')}
                 >
                   My account
