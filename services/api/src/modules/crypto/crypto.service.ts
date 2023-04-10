@@ -9,8 +9,8 @@ import { AddCryptoToFavoriteEvent } from '@events/add-crypto-to-favorite.event';
 import { RemoveCryptoToFavoriteEvent } from '@events/remove-crypto-from-favorite.event';
 import { Op } from 'sequelize';
 import { NoCryptoException } from '@exceptions/no-crypto.exception';
-import { UpdateCoinEventDto } from '@event-dto/update-coin.event.dto';
 import { UpdateCoinEvent } from '@events/update-coin.event';
+import {MarketStats} from "@models/market-stats.model";
 
 @Injectable()
 export class CryptoService {
@@ -19,6 +19,8 @@ export class CryptoService {
     private readonly cryptoRepository: typeof Cryptocurrency,
     @InjectModel(FavoriteCoins)
     private readonly favoriteCoinsRepo: typeof FavoriteCoins,
+    @InjectModel(MarketStats)
+    private readonly marketStatsRepository: typeof MarketStats,
     @Inject('CRYPTO_SERVICE') private readonly cryptoClient: ClientKafka
   ) {}
 
@@ -77,6 +79,11 @@ export class CryptoService {
     }
 
     return foundCrypto;
+  }
+
+  async getMarketStats() {
+    const marketStats = await this.marketStatsRepository.findAll();
+    return marketStats[0];
   }
 
   async addCryptoToFavorites(payload: AddCryptoToFavoriteEventDto) {
