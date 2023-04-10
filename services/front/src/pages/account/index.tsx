@@ -11,6 +11,7 @@ import { useHandleException } from '@hooks/useHandleException.hook';
 import { useNotificationMessage } from '@hooks/useShowNotificationMessage.hook';
 import DefaultLayout from '@layouts/Default.layout';
 import { IPersonalInformation } from '@services/get-user-settings/get-user-settings.interface';
+import { ListPostsResponse } from '@services/posts/list-posts/list-posts.interface';
 import { useListPostsService } from '@services/posts/list-posts/list-posts.service';
 import { useRefreshTokenService } from '@services/refresh-tokens/refresh-tokens.service';
 import { NotificationType } from '@store/global/global.state';
@@ -42,11 +43,6 @@ import {
   PostPreview, PostsTitle, PostSearchTags, PostTag
 } from '@styles/account.style';
 
-interface IPosts {
-  count: number;
-  rows: Array<{ id: string; title: string; preview: string; searchTags: Array<string> }>
-}
-
 const Account = () => {
   const router = useRouter();
 
@@ -61,7 +57,7 @@ const Account = () => {
   const [order, setOrder] = React.useState('ASC');
   const [orderBy, setOrderBy] = React.useState('createdAt');
   const [userData, setUserData] = React.useState<IPersonalInformation>();
-  const [userPosts, setUserPosts] = React.useState<IPosts>();
+  const [userPosts, setUserPosts] = React.useState<ListPostsResponse>();
 
   React.useEffect(() => {
     if (fetchTokenChecking.current) {
