@@ -21,6 +21,9 @@ import { AddCryptoToFavoriteEventDto } from '@event-dto/add-crypto-to-favorite.e
 import { RemoveCryptoToFavoriteEvent } from '@events/remove-crypto-from-favorite.event';
 import { RemoveCryptoToFavoriteEventDto } from '@event-dto/remove-crypto-from-favorite.event.dto';
 import { FavoriteCoins } from '@models/favorites-coins.model';
+import { MarketStats } from '@models/market-stats.model';
+import { UpdateCoinEventDto } from '@event-dto/update-coin.event.dto';
+import { UpdateCoinEvent } from '@events/update-coin.event';
 
 @ApiTags('Crypto')
 @Controller('crypto')
@@ -50,6 +53,9 @@ export class CryptoController {
   }
 
   @ApiExtraModels(FavoriteCoins)
+  @ApiExtraModels(MarketStats)
+  @ApiExtraModels(UpdateCoinEvent)
+  @ApiExtraModels(UpdateCoinEventDto)
   @ApiOperation({ summary: 'Gets crypto by its id' })
   @ApiResponse({
     status: 201,
