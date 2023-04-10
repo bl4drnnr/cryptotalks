@@ -7,10 +7,10 @@ import { ResponseDto } from '@dto/response.dto';
 import { AddCryptoToFavoriteEventDto } from '@event-dto/add-crypto-to-favorite.event.dto';
 import { AddCryptoToFavoriteEvent } from '@events/add-crypto-to-favorite.event';
 import { RemoveCryptoToFavoriteEvent } from '@events/remove-crypto-from-favorite.event';
-import { Op } from 'sequelize';
+import sequelize, { Op } from 'sequelize';
 import { NoCryptoException } from '@exceptions/no-crypto.exception';
-import { UpdateCoinEventDto } from '@event-dto/update-coin.event.dto';
 import { UpdateCoinEvent } from '@events/update-coin.event';
+import { MarketStats } from '@models/market-stats.model';
 
 @Injectable()
 export class CryptoService {
@@ -19,6 +19,8 @@ export class CryptoService {
     private readonly cryptoRepository: typeof Cryptocurrency,
     @InjectModel(FavoriteCoins)
     private readonly favoriteCoinsRepo: typeof FavoriteCoins,
+    @InjectModel(MarketStats)
+    private readonly marketStatsRepository: typeof MarketStats,
     @Inject('CRYPTO_SERVICE') private readonly cryptoClient: ClientKafka
   ) {}
 
@@ -40,27 +42,41 @@ export class CryptoService {
     const where = {};
 
     if (searchQuery) {
-      where['title'] = {
-        [Op.iLike]: `%${searchQuery}%`
-      };
+      where[Op.or] = [
+        {
+          name: {
+            [Op.iLike]: `%${searchQuery}%`
+          }
+        },
+        {
+          symbol: {
+            [Op.iLike]: `%${searchQuery}%`
+          }
+        }
+      ];
     }
 
     return await this.cryptoRepository.findAndCountAll({
+      where: { ...where },
+      order: [[orderBy, order]],
+      limit,
+      offset,
       attributes: [
         'id',
         'uuid',
         'symbol',
         'name',
-        'description',
         'iconUrl',
+        'Volume24h',
+        'marketCap',
+        'price',
+        'btcPrice',
+        'change',
+        'coinrankingUrl',
         'sparkline',
         'rank',
         'tier'
-      ],
-      order: [[order, orderBy]],
-      where: { ...where },
-      limit,
-      offset
+      ]
     });
   }
 
@@ -77,6 +93,20 @@ export class CryptoService {
     }
 
     return foundCrypto;
+  }
+
+  async getMarketStats() {
+    const marketStats = await this.marketStatsRepository.findAll({
+      attributes: [
+        'total',
+        [sequelize.literal('total_coins'), 'totalCoins'],
+        [sequelize.literal('total_markets'), 'totalMarkets'],
+        [sequelize.literal('total_exchanges'), 'totalExchanges'],
+        [sequelize.literal('total_market_cap'), 'totalMarketCap'],
+        [sequelize.literal('total_daily_volume'), 'total24hVolume']
+      ]
+    });
+    return marketStats[0];
   }
 
   async addCryptoToFavorites(payload: AddCryptoToFavoriteEventDto) {

@@ -53,7 +53,6 @@ export class CryptoController {
   }
 
   @ApiExtraModels(FavoriteCoins)
-  @ApiExtraModels(MarketStats)
   @ApiExtraModels(UpdateCoinEvent)
   @ApiExtraModels(UpdateCoinEventDto)
   @ApiOperation({ summary: 'Gets crypto by its id' })
@@ -64,6 +63,17 @@ export class CryptoController {
   @Get('get/:id')
   getCryptoById(@Param('id') id: string) {
     return this.cryptoService.getCryptoById({ id });
+  }
+
+  @ApiExtraModels(MarketStats)
+  @ApiOperation({ summary: 'Get market stats' })
+  @ApiResponse({
+    status: 201,
+    description: 'As a response function returns market stats'
+  })
+  @Get('market-stats')
+  getMarketStats() {
+    return this.cryptoService.getMarketStats();
   }
 
   @ApiExtraModels(AddCryptoToFavoriteEvent)

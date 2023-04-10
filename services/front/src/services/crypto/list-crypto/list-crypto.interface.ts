@@ -1,11 +1,16 @@
-interface ICoins {
+export interface ICoins {
   id: string;
   uuid: string;
   symbol: string;
   name: string;
-  description?: string;
   iconUrl: string;
-  sparkline: Array<string>;
+  Volume24h: string;
+  marketCap: string;
+  price: string;
+  btcPrice: string;
+  change: number;
+  coinrankingUrl: string;
+  sparkline: any;
   rank: number;
   tier: number;
 }
@@ -19,5 +24,6 @@ export interface ListCryptoPayload {
 }
 
 export interface ListCryptoResponse {
-  coins: ICoins[];
+  count: number;
+  rows: ICoins[];
 }

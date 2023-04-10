@@ -23,7 +23,7 @@ import {
 const ForgotPassword = () => {
   const router = useRouter();
   const [hideLeftSide, setHideLeftSide] = React.useState(false);
-  const { height, width } = useWindowDimensions();
+  const { width } = useWindowDimensions();
 
   const [passwordRecoveryMethod, setPasswordRecoveryMethod] = React.useState('email');
   const [email, setEmail] = React.useState('');

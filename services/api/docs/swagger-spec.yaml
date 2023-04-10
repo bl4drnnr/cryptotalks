@@ -395,6 +395,21 @@ paths:
         "201":
           description: As a response function returns cryptocurrency
       tags: *a3
+  /api/crypto/market-stats:
+    get:
+      operationId: CryptoController_getMarketStats
+      summary: Get market stats
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarketStats"
+        "201":
+          description: As a response function returns market stats
+      tags: *a3
   "/api/crypto/favorite/{id}":
     patch:
       operationId: CryptoController_addCryptoToFavorites
@@ -1145,6 +1160,17 @@ components:
       required:
         - userId
         - email
+    UpdateCoinEventDto:
+      type: object
+      properties:
+        coinId:
+          type: string
+          nullable: false
+      required:
+        - coinId
+    UpdateCoinEvent:
+      type: object
+      properties: {}
     FavoriteCoins:
       type: object
       properties:
@@ -1279,6 +1305,59 @@ components:
         - sparkline
         - rank
         - tier
+        - createdAt
+        - updatedAt
+    MarketStats:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          default: uuidv4
+          description: Unique Id of the record
+        total:
+          type: number
+          nullable: false
+          description: Total
+        totalCoins:
+          type: number
+          nullable: false
+          description: Total coins
+        totalMarkets:
+          type: number
+          nullable: false
+          description: Total markets
+        totalExchanges:
+          type: number
+          nullable: false
+          description: Total exchanges
+        totalMarketCap:
+          type: string
+          nullable: false
+          description: Total market cap
+        total24hVolume:
+          type: string
+          nullable: false
+          description: Total 24h volume
+        createdAt:
+          format: date-time
+          type: string
+          nullable: false
+          description: Record creation date
+        updatedAt:
+          format: date-time
+          type: string
+          nullable: false
+          description: Record update date
+      required:
+        - id
+        - total
+        - totalCoins
+        - totalMarkets
+        - totalExchanges
+        - totalMarketCap
+        - total24hVolume
         - createdAt
         - updatedAt
     AddCryptoToFavoriteEventDto:
