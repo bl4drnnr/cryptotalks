@@ -42,9 +42,18 @@ export class CryptoService {
     const where = {};
 
     if (searchQuery) {
-      where['title'] = {
-        [Op.iLike]: `%${searchQuery}%`
-      };
+      where[Op.or] = [
+        {
+          name: {
+            [Op.iLike]: `%${searchQuery}%`
+          }
+        },
+        {
+          symbol: {
+            [Op.iLike]: `%${searchQuery}%`
+          }
+        }
+      ];
     }
 
     return await this.cryptoRepository.findAndCountAll({

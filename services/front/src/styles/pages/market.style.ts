@@ -18,11 +18,22 @@ export const Container = styled.div`
 
 export const MarketStatsTable = styled.table`
   width: 100%;
+  margin-bottom: 10px;
 `;
 
-export const MarketStatsTitle = styled.h1`
+export const MarketTitle = styled.h1`
   color: rgb(${(props) => props.theme.colors.textColor});
   margin-bottom: 20px;
+  
+  &.main {
+    font-size: 64px;
+    text-align: center;
+  }
+`;
+
+export const MarketParagraph = styled.p`
+  color: rgb(${(props) => props.theme.colors.textColor});
+  margin: 10px 0;
 `;
 
 export const MarketStatsBody = styled.tbody``;
@@ -47,6 +58,14 @@ export const SearchInputWrapper = styled.div`
 
   @media only screen and (max-width: 1000px) {
     width: 100%;
+  }
+`;
+
+export const SortWrapper = styled.div`
+  display: flex;
+  
+  @media only screen and (max-width: 1000px) {
+    display: block;
   }
 `;
 
@@ -101,9 +120,26 @@ export const SortItem = styled.span`
   }
 `;
 
+export const TypeOfSortItem = styled.div`
+  height: 35px;
+  min-width: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgb(${(props) => props.theme.colors.primary}, .5);
+  border-radius: 8px;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: .2s;
+  color: rgb(${(props) => props.theme.colors.textColor});
+
+  @media only screen and (max-width: 1000px) {
+    margin: 10px 0;
+  }
+`;
+
 export const CryptoItem = styled.div`
   width: 100%;
-  height: 100px;
   margin-bottom: 10px;
   border-radius: 8px;
   transition: .2s;
@@ -115,7 +151,11 @@ export const CryptoItem = styled.div`
 
   &:hover {
     transform: scale(1.02);
-    border: 1px solid rgb(${(props) => props.theme.colors.opposite});
+    border: 1px solid rgb(${(props) => props.theme.colors.primary});
+  }
+
+  @media only screen and (max-width: 1200px) {
+    display: block;
   }
 `;
 
@@ -123,9 +163,12 @@ export const CryptoItemSide = styled.div`
   display: flex;
   align-items: center;
   width: 300px;
-  
-  &.small-width {
-    width: 100px;
+
+  @media only screen and (max-width: 1200px) {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 10px 0;
   }
 `;
 
@@ -151,5 +194,13 @@ export const CryptoMetadata = styled.p`
   }
   &.error {
     color: rgba(${(props) => props.theme.colors.error}, .5);
+  }
+`;
+
+export const LineChartWrapper = styled.div`
+  @media only screen and (max-width: 1200px) {
+    display: flex;
+    justify-content: center;
+    width: 100%;
   }
 `;
