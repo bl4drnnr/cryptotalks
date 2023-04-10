@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { CryptoModule } from './modules/crypto/crypto.module';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { SharedModule } from '@shared/shared.module';
+import { WebjobsModule } from './webjobs/webjobs.module';
 
 @Module({
   imports: [
@@ -18,7 +20,9 @@ import { SequelizeModule } from '@nestjs/sequelize';
       database: process.env.POSTGRES_DATABASE,
       autoLoadModels: true
     }),
-    CryptoModule
+    CryptoModule,
+    SharedModule,
+    WebjobsModule
   ]
 })
 export class AppModule {}

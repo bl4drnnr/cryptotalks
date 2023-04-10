@@ -354,7 +354,11 @@ export class UserService {
       'log_user_action',
       new LogEvent({
         event: 'USER',
-        message: `User ${payload.userId} has successfully updated personal settings ${JSON.stringify(payload)}`,
+        message: `User ${
+          payload.userId
+        } has successfully updated personal settings ${JSON.stringify(
+          payload
+        )}`,
         status: 'SUCCESS',
         timestamp: new Date()
       })
