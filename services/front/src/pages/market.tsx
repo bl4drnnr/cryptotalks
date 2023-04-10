@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { Line, LineChart, YAxis } from 'recharts';
 
 import { Input } from '@components/Input/Input.component';
+import Pagination from '@components/Pagination/Pagination.component';
 import { useWindowDimensions } from '@hooks/useGetWindowDimensions.hook';
 import { useHandleException } from '@hooks/useHandleException.hook';
 import DefaultLayout from '@layouts/Default.layout';
@@ -331,6 +332,12 @@ const Market = () => {
               )}
             </>
           )}
+
+          <Pagination
+            currentPage={page}
+            onPageChange={() => {}}
+            totalPages={9}
+          />
 
         </Container>
       </DefaultLayout>
