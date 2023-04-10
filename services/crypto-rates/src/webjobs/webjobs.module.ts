@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { UpdateRatesWebjob } from '@webjobs/update-rates.webjob';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Cryptocurrency } from '@models/cryptocurrency.model';
+import { UpdateRatesWebjob } from '@webjobs/update-rates.webjob';
 
 const providers = [UpdateRatesWebjob];
 

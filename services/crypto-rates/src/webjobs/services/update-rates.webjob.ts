@@ -69,11 +69,8 @@ export class UpdateRatesWebjob {
       delete item['listedAt'];
     });
 
-    filteredCoins.map(async (item) => {
-      await this.cryptoRepository.upsert({
-        uuid: item.uuid,
-        ...item
-      });
-    });
+    await this.cryptoRepository.bulkCreate(filteredCoins, {
+      updateOnDuplicate: ["uuid"]
+    })
   }
 }

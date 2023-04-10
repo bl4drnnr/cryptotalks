@@ -3,7 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 import { CryptoModule } from './modules/crypto/crypto.module';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { SharedModule } from '@shared/shared.module';
-import { WebjobsModule } from './webjobs/webjobs.module';
+import { WebjobsModule } from '@webjobs/webjobs.module';
+import {ScheduleModule} from "@nestjs/schedule";
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { WebjobsModule } from './webjobs/webjobs.module';
       isGlobal: true,
       envFilePath: `../../.env.${process.env.NODE_ENV}`
     }),
+    ScheduleModule.forRoot(),
     SequelizeModule.forRoot({
       dialect: 'postgres',
       host: process.env.POSTGRES_HOST,

@@ -1191,7 +1191,6 @@ components:
           description: Unique Id of the record
         uuid:
           type: string
-          format: uuid
           nullable: false
           description: Unique Id of the coin provided by API
         symbol:

@@ -47,11 +47,10 @@ export class Cryptocurrency extends Model<
 
   @ApiProperty({
     type: String,
-    format: 'uuid',
     nullable: false,
     description: 'Unique Id of the coin provided by API'
   })
-  @Column({ type: DataType.UUID, allowNull: false })
+  @Column({ type: DataType.STRING, allowNull: false, unique: true })
   uuid: string;
 
   @ApiProperty({
