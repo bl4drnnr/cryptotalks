@@ -660,6 +660,7 @@ components:
               - POST
               - CLOSE_ACC
               - USER
+              - CRYPTO
         status:
           type: SUCCESS | ERROR
           nullable: false
@@ -1191,7 +1192,6 @@ components:
           description: Unique Id of the record
         uuid:
           type: string
-          format: uuid
           nullable: false
           description: Unique Id of the coin provided by API
         symbol:

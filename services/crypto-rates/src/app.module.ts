@@ -2,6 +2,10 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { CryptoModule } from './modules/crypto/crypto.module';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { SharedModule } from '@shared/shared.module';
+import { WebjobsModule } from '@webjobs/webjobs.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
@@ -9,6 +13,8 @@ import { SequelizeModule } from '@nestjs/sequelize';
       isGlobal: true,
       envFilePath: `../../.env.${process.env.NODE_ENV}`
     }),
+    MongooseModule.forRoot(process.env.MONGO_DB_LOGS),
+    ScheduleModule.forRoot(),
     SequelizeModule.forRoot({
       dialect: 'postgres',
       host: process.env.POSTGRES_HOST,
@@ -18,7 +24,9 @@ import { SequelizeModule } from '@nestjs/sequelize';
       database: process.env.POSTGRES_DATABASE,
       autoLoadModels: true
     }),
-    CryptoModule
+    CryptoModule,
+    SharedModule,
+    WebjobsModule
   ]
 })
 export class AppModule {}
