@@ -4,7 +4,8 @@ import { CryptoModule } from './modules/crypto/crypto.module';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { SharedModule } from '@shared/shared.module';
 import { WebjobsModule } from '@webjobs/webjobs.module';
-import {ScheduleModule} from "@nestjs/schedule";
+import { ScheduleModule } from '@nestjs/schedule';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import {ScheduleModule} from "@nestjs/schedule";
       isGlobal: true,
       envFilePath: `../../.env.${process.env.NODE_ENV}`
     }),
+    MongooseModule.forRoot(process.env.MONGO_DB_LOGS),
     ScheduleModule.forRoot(),
     SequelizeModule.forRoot({
       dialect: 'postgres',

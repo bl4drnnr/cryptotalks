@@ -660,6 +660,7 @@ components:
               - POST
               - CLOSE_ACC
               - USER
+              - CRYPTO
         status:
           type: SUCCESS | ERROR
           nullable: false

@@ -31,6 +31,7 @@
     "@nestjs/sequelize": "^9.0.0",
     "@nestjs/swagger": "^6.2.1",
     "kafkajs": "^2.2.4",
+    "mongoose": "^7.0.3",
     "pg": "^8.10.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",

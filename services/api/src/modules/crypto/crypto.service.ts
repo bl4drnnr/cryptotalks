@@ -8,6 +8,9 @@ import { AddCryptoToFavoriteEventDto } from '@event-dto/add-crypto-to-favorite.e
 import { AddCryptoToFavoriteEvent } from '@events/add-crypto-to-favorite.event';
 import { RemoveCryptoToFavoriteEvent } from '@events/remove-crypto-from-favorite.event';
 import { Op } from 'sequelize';
+import { NoCryptoException } from '@exceptions/no-crypto.exception';
+import { UpdateCoinEventDto } from '@event-dto/update-coin.event.dto';
+import { UpdateCoinEvent } from '@events/update-coin.event';
 
 @Injectable()
 export class CryptoService {
@@ -61,12 +64,27 @@ export class CryptoService {
     });
   }
 
-  getCryptoById({ id }: { id: string }) {
-    return this.cryptoRepository.findByPk(id);
+  async getCryptoById({ id }: { id: string }) {
+    const foundCrypto = await this.cryptoRepository.findByPk(id);
+    if (!foundCrypto) throw new NoCryptoException();
+
+    if (!foundCrypto.description) {
+      this.cryptoClient.send(
+        'update_coin',
+        new UpdateCoinEvent({ coinId: foundCrypto.uuid })
+      );
+      return;
+    }
+
+    return foundCrypto;
   }
 
-  addCryptoToFavorites(payload: AddCryptoToFavoriteEventDto) {
-    // TODO Check for errors
+  async addCryptoToFavorites(payload: AddCryptoToFavoriteEventDto) {
+    const favoriteCrypto = await this.cryptoRepository.findByPk(
+      payload.cryptoId
+    );
+    if (!favoriteCrypto) throw new NoCryptoException();
+
     this.cryptoClient.emit(
       'add_crypto_to_favorite',
       new AddCryptoToFavoriteEvent({ ...payload })
@@ -74,7 +92,12 @@ export class CryptoService {
     return new ResponseDto();
   }
 
-  removeCryptoFromFavorites(payload: AddCryptoToFavoriteEventDto) {
+  async removeCryptoFromFavorites(payload: AddCryptoToFavoriteEventDto) {
+    const favoriteCrypto = await this.cryptoRepository.findByPk(
+      payload.cryptoId
+    );
+    if (!favoriteCrypto) throw new NoCryptoException();
+
     this.cryptoClient.emit(
       'remove_crypto_from_favorite',
       new RemoveCryptoToFavoriteEvent({ ...payload })

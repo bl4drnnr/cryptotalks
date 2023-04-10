@@ -4,6 +4,10 @@ import { HttpService } from '@shared/http.service';
 import { ApiConfigService } from '@shared/config.service';
 import { Cryptocurrency } from '@models/cryptocurrency.model';
 import { InjectModel } from '@nestjs/sequelize';
+import { MarketStats } from '@models/market-stats.model';
+import { InjectModel as InjectModelMongo } from '@nestjs/mongoose';
+import { InformationLog } from '@mongo-schemas/log.schema';
+import { Model } from 'mongoose';
 
 interface ICoinsDataStats {
   total: number;
@@ -27,50 +31,77 @@ interface ICoinsResponse {
 @Injectable()
 export class UpdateRatesWebjob {
   constructor(
-    private readonly httpService: HttpService,
-    private readonly configService: ApiConfigService,
     @InjectModel(Cryptocurrency)
-    private readonly cryptoRepository: typeof Cryptocurrency
+    private readonly cryptoRepository: typeof Cryptocurrency,
+    @InjectModel(MarketStats)
+    private readonly marketStatsRepository: typeof MarketStats,
+    @InjectModelMongo(InformationLog.name)
+    private readonly logger: Model<InformationLog>,
+    private readonly httpService: HttpService,
+    private readonly configService: ApiConfigService
   ) {}
 
-  @Cron('0 * * * *')
+  @Cron('0 * * * * *')
   async handleCron() {
-    const cryptocurrencies: ICoinsResponse = await this.httpService.sendRequest(
-      {
-        endpoint: 'coins',
-        url: this.configService.coinrankingCredentials.url,
-        headers: {
-          'X-RapidAPI-Key': this.configService.coinrankingCredentials.key,
-          'X-RapidAPI-Host': this.configService.coinrankingCredentials.host
-        },
-        params: {
-          referenceCurrencyUuid:
-            this.configService.coinrankingCredentials.reference_currency_uuid,
-          timePeriod: this.configService.coinrankingCredentials.time_period,
-          limit: this.configService.coinrankingCredentials.limit,
-          'tiers[0]': '1'
-        }
+    try {
+      const cryptocurrencies: ICoinsResponse =
+        await this.httpService.sendRequest({
+          endpoint: 'coins',
+          url: this.configService.coinrankingCredentials.url,
+          headers: {
+            'X-RapidAPI-Key': this.configService.coinrankingCredentials.key,
+            'X-RapidAPI-Host': this.configService.coinrankingCredentials.host
+          },
+          params: {
+            referenceCurrencyUuid:
+              this.configService.coinrankingCredentials.reference_currency_uuid,
+            timePeriod: this.configService.coinrankingCredentials.time_period,
+            limit: this.configService.coinrankingCredentials.limit,
+            'tiers[0]': '1'
+          }
+        });
+
+      if (cryptocurrencies.status === 'success') {
+        const coinsList = cryptocurrencies.data.coins;
+        const marketStats = cryptocurrencies.data.stats;
+
+        const filteredCoins = coinsList.map((o) => {
+          return {
+            ...o,
+            Volume24h: o['24hVolume']
+          };
+        });
+
+        await this.cryptoRepository.bulkCreate(filteredCoins, {
+          updateOnDuplicate: ['uuid']
+        });
+        await this.marketStatsRepository.create({ ...marketStats });
+
+        const log = new this.logger({
+          message:
+            'Rates of cryptocurrencies and market stats have been successfully updated.',
+          event: 'CRYPTO',
+          status: 'SUCCESS',
+          timestamp: new Date()
+        });
+        await log.save();
+      } else {
+        const log = new this.logger({
+          message: `Something is about the status: ${cryptocurrencies.status}`,
+          event: 'CRYPTO',
+          status: 'ERROR',
+          timestamp: new Date()
+        });
+        await log.save();
       }
-    );
-    const coinsList = cryptocurrencies.data.coins;
-
-    const filteredCoins = coinsList.map((o) => {
-      return {
-        ...o,
-        Volume24h: o['24hVolume'],
-        sparkline: o['sparkline']
-      };
-    });
-
-    filteredCoins.forEach((item) => {
-      delete item['24hVolume'];
-      delete item['lowVolume'];
-      delete item['color'];
-      delete item['listedAt'];
-    });
-
-    await this.cryptoRepository.bulkCreate(filteredCoins, {
-      updateOnDuplicate: ["uuid"]
-    })
+    } catch (error: any) {
+      const log = new this.logger({
+        message: `Error while updating coins webjob: ${error.toString()}`,
+        event: 'CRYPTO',
+        status: 'ERROR',
+        timestamp: new Date()
+      });
+      await log.save();
+    }
   }
 }

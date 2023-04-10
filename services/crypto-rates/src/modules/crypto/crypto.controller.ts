@@ -1,6 +1,6 @@
 import { Controller } from '@nestjs/common';
 import { CryptoService } from './crypto.service';
-import { EventPattern } from '@nestjs/microservices';
+import { EventPattern, MessagePattern } from '@nestjs/microservices';
 
 @Controller('crypto')
 export class CryptoController {
@@ -19,5 +19,10 @@ export class CryptoController {
   @EventPattern('remove_crypto_from_favorite')
   handleRemoveCryptoFromFavorite(data: any) {
     return this.cryptoService.handleRemoveCryptoFromFavorite(data);
+  }
+
+  @MessagePattern('update_coin')
+  handleUpdateCoin(data: any) {
+    return this.cryptoService.handleUpdateCoin(data);
   }
 }

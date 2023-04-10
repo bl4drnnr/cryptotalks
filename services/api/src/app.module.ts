@@ -20,6 +20,7 @@ import { UserSettings } from '@models/user-settings.model';
 import { FavoriteCoins } from '@models/favorites-coins.model';
 import { Cryptocurrency } from '@models/cryptocurrency.model';
 import { PostInfo } from '@models/post-info.model';
+import { MarketStats } from '@models/market-stats.model';
 
 @Module({
   imports: [
@@ -42,7 +43,8 @@ import { PostInfo } from '@models/post-info.model';
         UserSettings,
         FavoriteCoins,
         Cryptocurrency,
-        PostInfo
+        PostInfo,
+        MarketStats
       ],
       autoLoadModels: true
     }),
