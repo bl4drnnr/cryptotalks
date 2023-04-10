@@ -46,6 +46,7 @@ const Market = () => {
   const [showMobileTable, setShowMobileTable] = React.useState(false);
   const [page, setPage] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(5);
+  const [totalPages, setTotalPages] = React.useState<number>(0);
   const [order, setOrder] = React.useState('ASC');
   const [orderBy, setOrderBy] = React.useState('rank');
   const [searchQuery, setSearchQuery] = React.useState('');
@@ -109,7 +110,7 @@ const Market = () => {
 
   const fetchListCrypto = async () => {
     try {
-      const { rows } = await listCrypto({
+      const { rows, count } = await listCrypto({
         page, pageSize, order, orderBy, searchQuery
       });
 
@@ -129,6 +130,7 @@ const Market = () => {
       });
 
       setListOfCrypto(parsedCoins);
+      setTotalPages(count);
     } catch (e) {
       await handleException(e);
     }
@@ -262,7 +264,10 @@ const Market = () => {
           {listOfCrypto && (
             <>
               {listOfCrypto.map((item) =>
-                <CryptoItem key={item.id}>
+                <CryptoItem
+                  key={item.id}
+                  onClick={() => handleRedirect(`market/${item.id}`)}
+                >
 
                   <CryptoItemSide className={'small-width'}>
                     <Image src={item.iconUrl} alt={item.name} width={48} height={48} />
@@ -334,9 +339,11 @@ const Market = () => {
           )}
 
           <Pagination
-            currentPage={page}
-            onPageChange={() => {}}
-            totalPages={9}
+            currentPage={page + 1}
+            pageSize={pageSize}
+            onPageChange={setPage}
+            onPageSizeChange={setPageSize}
+            totalPages={Math.ceil(totalPages / pageSize)}
           />
 
         </Container>
