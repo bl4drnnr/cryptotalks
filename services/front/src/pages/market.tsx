@@ -198,7 +198,7 @@ const Market = () => {
               <MarketStatsBody>
                 <MarketStatsHeader>Total</MarketStatsHeader>
               </MarketStatsBody>
-              <MarketStatsBody>
+              <MarketStatsBody> (parseFloat(item.marketCap) / 1000000000).toFixed(2)
                 <MarketStatsItem>{marketStats?.total}</MarketStatsItem>
               </MarketStatsBody>
               <MarketStatsBody>
@@ -223,13 +223,17 @@ const Market = () => {
                 <MarketStatsHeader>Total market cap</MarketStatsHeader>
               </MarketStatsBody>
               <MarketStatsBody>
-                <MarketStatsItem>{marketStats?.totalMarketCap}</MarketStatsItem>
+                <MarketStatsItem>
+                  {(parseInt(marketStats?.totalMarketCap || '0') / 1000000000).toFixed(2)} bln $
+                </MarketStatsItem>
               </MarketStatsBody>
               <MarketStatsBody>
                 <MarketStatsHeader>Total 24H volume</MarketStatsHeader>
               </MarketStatsBody>
               <MarketStatsBody>
-                <MarketStatsItem>{marketStats?.total24hVolume}</MarketStatsItem>
+                <MarketStatsItem>
+                  {(parseInt(marketStats?.total24hVolume || '0') / 1000000000).toFixed(2)} bln $
+                </MarketStatsItem>
               </MarketStatsBody>
             </MarketStatsTable>
             ) : (
@@ -250,8 +254,12 @@ const Market = () => {
                   <MarketStatsItem>{marketStats?.totalCoins}</MarketStatsItem>
                   <MarketStatsItem>{marketStats?.totalMarkets}</MarketStatsItem>
                   <MarketStatsItem>{marketStats?.totalExchanges}</MarketStatsItem>
-                  <MarketStatsItem>{marketStats?.totalMarketCap}</MarketStatsItem>
-                  <MarketStatsItem>{marketStats?.total24hVolume}</MarketStatsItem>
+                  <MarketStatsItem>
+                    {(parseInt(marketStats?.totalMarketCap || '0') / 1000000000).toFixed(2)} bln $
+                  </MarketStatsItem>
+                  <MarketStatsItem>
+                    {(parseInt(marketStats?.total24hVolume || '0') / 1000000000).toFixed(2)} bln $
+                  </MarketStatsItem>
                 </MarketStatsRow>
               </MarketStatsBody>
             </MarketStatsTable>

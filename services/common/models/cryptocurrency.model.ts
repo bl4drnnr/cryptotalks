@@ -16,7 +16,7 @@ interface CryptocurrencyCreationAttributes {
   name: string;
   iconUrl: string;
   Volume24h: string;
-  marketCap: string;
+  marketCap: number;
   price: number;
   btcPrice: number;
   change: number;
@@ -106,8 +106,8 @@ export class Cryptocurrency extends Model<
     nullable: false,
     description: 'Market cap of a coin'
   })
-  @Column({ type: DataType.STRING, allowNull: false, field: 'market_cap' })
-  marketCap: string;
+  @Column({ type: DataType.BIGINT, allowNull: false, field: 'market_cap' })
+  marketCap: number;
 
   @ApiProperty({
     type: Number,

@@ -20,12 +20,12 @@ const Pagination = ({
 }: PaginationProps) => {
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages && page !== currentPage) {
-      onPageChange(page);
+      onPageChange(page - 1);
     }
   };
 
-  const handlePageSizeChange = (pageSize: number) => {
-    onPageSizeChange(pageSize);
+  const handlePageSizeChange = (pageSize: any) => {
+    onPageSizeChange(parseInt(pageSize));
   };
 
   return (
@@ -55,7 +55,7 @@ const Pagination = ({
             value={pageSize}
             type={'number'}
             min={'1'}
-            onChange={(e) => handlePageSizeChange(e.target.value as unknown as number)}
+            onChange={(e) => handlePageSizeChange(e.target.value)}
           />
         </PaginationWrapper>
 
