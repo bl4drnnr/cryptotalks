@@ -4,7 +4,7 @@ export interface ICoins {
   symbol: string;
   name: string;
   iconUrl: string;
-  Volume24h: string;
+  volume24h: string;
   marketCap: string;
   price: string;
   btcPrice: string;

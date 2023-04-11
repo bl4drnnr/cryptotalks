@@ -15,7 +15,7 @@ interface CryptocurrencyCreationAttributes {
   symbol: string;
   name: string;
   iconUrl: string;
-  Volume24h: string;
+  volume24h: string;
   marketCap: number;
   price: number;
   btcPrice: number;
@@ -87,7 +87,7 @@ export class Cryptocurrency extends Model<
     nullable: true,
     description: 'Description of a coin'
   })
-  @Column({ type: DataType.STRING, allowNull: true })
+  @Column({ type: DataType.TEXT, allowNull: true })
   description?: string;
 
   @ApiProperty({
@@ -104,7 +104,7 @@ export class Cryptocurrency extends Model<
     description: '24H volume of a coin'
   })
   @Column({ type: DataType.STRING, allowNull: false, field: 'volume_24h' })
-  Volume24h: string;
+  volume24h: string;
 
   @ApiProperty({
     type: String,

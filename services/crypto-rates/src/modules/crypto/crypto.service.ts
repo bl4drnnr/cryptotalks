@@ -73,6 +73,6 @@ export class CryptoService {
     return await this.cryptocurrencyRepository.update(
       { description: coinInformation.description.en },
       { where: { id: coin.id }, returning: true }
-    )
+    );
   }
 }
