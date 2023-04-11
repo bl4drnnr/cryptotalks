@@ -61,13 +61,18 @@ export class CryptoService {
   }
 
   async handleUpdateCoin(payload: UpdateCoinEventDto) {
-    const { symbol } = await this.cryptocurrencyRepository.findOne({
+    const coin = await this.cryptocurrencyRepository.findOne({
       where: { uuid: payload.coinId }
     });
 
     const coinInformation = await this.httpService.sendRequest({
-      endpoint: `coins/${symbol.toLowerCase()}`,
+      endpoint: `coins/${coin.symbolId}`,
       url: this.configService.coinGeckoUrl
     });
+
+    return await this.cryptocurrencyRepository.update(
+      { description: coinInformation.description.en },
+      { where: { id: coin.id }, returning: true }
+    )
   }
 }

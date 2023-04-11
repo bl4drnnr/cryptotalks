@@ -274,7 +274,7 @@ const Market = () => {
               {listOfCrypto.map((item) =>
                 <CryptoItem
                   key={item.id}
-                  onClick={() => handleRedirect(`market/${item.id}`)}
+                  onClick={() => handleRedirect(`market/${item.uuid}`)}
                 >
 
                   <CryptoItemSide className={'small-width'}>

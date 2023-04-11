@@ -41,7 +41,7 @@ export class UpdateRatesWebjob {
     private readonly configService: ApiConfigService
   ) {}
 
-  @Cron('30 * * * * *')
+  @Cron('0 0 * * * *')
   async handleCron() {
     try {
       const cryptocurrencies: ICoinsResponse =
