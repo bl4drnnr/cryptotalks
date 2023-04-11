@@ -35,21 +35,23 @@ export class PostsService {
     order,
     orderBy,
     searchQuery,
-    userId
+    username
   }: {
     page: number;
     pageSize: number;
     order: string;
     orderBy: string;
     searchQuery?: string;
-    userId?: string;
+    username?: string;
   }) {
     const offset = page * pageSize;
     const limit = pageSize;
     const where = {};
 
-    if (userId) {
-      where['user_id'] = userId;
+    if (username) {
+      where['username'] = {
+        [Op.iLike]: `%${username}%`
+      };
     }
 
     if (searchQuery) {
@@ -67,6 +69,8 @@ export class PostsService {
       ];
     }
 
+    // TODO Here should be sync between tables
+    // I mean, I should have an access to username field without querying database.
     return await this.postRepository.findAndCountAll({
       where: { ...where },
       order: [[orderBy, order]],

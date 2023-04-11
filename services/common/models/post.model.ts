@@ -79,7 +79,8 @@ export class Post extends Model<Post, PostCreationAttributes> {
   searchTags: Array<string>;
 
   @ApiProperty({
-    type: 'uuiv4',
+    type: String,
+    format: 'uuid',
     nullable: false,
     description: 'User Id'
   })

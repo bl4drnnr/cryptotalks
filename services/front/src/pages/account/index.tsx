@@ -72,7 +72,7 @@ const Account = () => {
             sessionStorage.setItem('_at', res._at);
             setUserData(res.user);
 
-            fetchUserPosts(res.user.id).then((posts) => {
+            fetchUserPosts(res.user.username).then((posts) => {
               setUserPosts(posts);
             });
           }
@@ -107,10 +107,10 @@ const Account = () => {
     }
   };
 
-  const fetchUserPosts = async (userId: string) => {
+  const fetchUserPosts = async (username: string) => {
     try {
       return await listPosts({
-        page, pageSize, order, orderBy, userId
+        page, pageSize, order, orderBy, username
       });
     } catch (e) {
       await exceptionHandler(e);

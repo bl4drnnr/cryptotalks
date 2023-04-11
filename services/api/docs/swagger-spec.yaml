@@ -535,7 +535,8 @@ components:
           items:
             type: string
         userId:
-          type: uuiv4
+          type: string
+          format: uuid
           nullable: false
           description: User Id
         likes:
@@ -583,11 +584,17 @@ components:
         preview:
           type: string
           nullable: false
+        searchTags:
+          nullable: false
+          type: array
+          items:
+            type: string
       required:
         - title
         - content
         - userId
         - preview
+        - searchTags
     DeletePostEventDto:
       type: object
       properties:
