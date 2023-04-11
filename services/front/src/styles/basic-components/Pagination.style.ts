@@ -30,6 +30,11 @@ export const PaginationButton = styled.div`
   &:hover {
     border: 1px solid rgba(${(props) => props.theme.colors.primary});
   }
+  
+  &.disabled {
+    color: rgba(${(props) => props.theme.colors.textColor}, .5);
+    border: 1px solid rgba(${(props) => props.theme.colors.primary}, .25);
+  }
 `;
 
 export const PaginationInfo = styled.span`

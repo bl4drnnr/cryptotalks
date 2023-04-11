@@ -13,8 +13,8 @@ export class HttpService {
     endpoint
   }: {
     url: string;
-    headers: any;
-    params: any;
+    headers?: any;
+    params?: any;
     endpoint: string;
   }) {
     try {

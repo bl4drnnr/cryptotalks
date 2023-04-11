@@ -15,10 +15,8 @@ export class CryptoService {
   constructor(
     @InjectModel(FavoriteCoins)
     private readonly favoriteCoinsRepository: typeof FavoriteCoins,
-
     @InjectModel(Cryptocurrency)
     private readonly cryptocurrencyRepository: typeof Cryptocurrency,
-
     private readonly httpService: HttpService,
     private readonly configService: ApiConfigService
   ) {}
@@ -63,18 +61,18 @@ export class CryptoService {
   }
 
   async handleUpdateCoin(payload: UpdateCoinEventDto) {
-    const crypto: any = await this.httpService.sendRequest({
-      endpoint: `coin/${payload.coinId}`,
-      url: this.configService.coinrankingCredentials.url,
-      headers: {
-        'X-RapidAPI-Key': this.configService.coinrankingCredentials.key,
-        'X-RapidAPI-Host': this.configService.coinrankingCredentials.host
-      },
-      params: {
-        referenceCurrencyUuid:
-          this.configService.coinrankingCredentials.reference_currency_uuid,
-        timePeriod: this.configService.coinrankingCredentials.time_period
-      }
+    const coin = await this.cryptocurrencyRepository.findOne({
+      where: { uuid: payload.coinId }
     });
+
+    const coinInformation = await this.httpService.sendRequest({
+      endpoint: `coins/${coin.symbolId}`,
+      url: this.configService.coinGeckoUrl
+    });
+
+    return await this.cryptocurrencyRepository.update(
+      { description: coinInformation.description.en },
+      { where: { id: coin.id }, returning: true }
+    )
   }
 }

@@ -16,7 +16,7 @@ interface CryptocurrencyCreationAttributes {
   name: string;
   iconUrl: string;
   Volume24h: string;
-  marketCap: string;
+  marketCap: number;
   price: number;
   btcPrice: number;
   change: number;
@@ -48,10 +48,23 @@ export class Cryptocurrency extends Model<
   @ApiProperty({
     type: String,
     nullable: false,
-    description: 'Unique Id of the coin provided by API'
+    description: 'Unique Id of the coin provided by Coinranking API'
   })
   @Column({ type: DataType.STRING, allowNull: false, unique: true })
   uuid: string;
+
+  @ApiProperty({
+    type: String,
+    nullable: false,
+    description: 'Id provided by CoinGecko API for detailed info'
+  })
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+    unique: true,
+    field: 'symbol_id'
+  })
+  symbolId: string;
 
   @ApiProperty({
     type: String,
@@ -87,14 +100,6 @@ export class Cryptocurrency extends Model<
 
   @ApiProperty({
     type: String,
-    nullable: true,
-    description: 'Website of a coin'
-  })
-  @Column({ type: DataType.STRING, allowNull: true, field: 'website_url' })
-  websiteUrl?: string;
-
-  @ApiProperty({
-    type: String,
     nullable: false,
     description: '24H volume of a coin'
   })
@@ -106,8 +111,8 @@ export class Cryptocurrency extends Model<
     nullable: false,
     description: 'Market cap of a coin'
   })
-  @Column({ type: DataType.STRING, allowNull: false, field: 'market_cap' })
-  marketCap: string;
+  @Column({ type: DataType.BIGINT, allowNull: false, field: 'market_cap' })
+  marketCap: number;
 
   @ApiProperty({
     type: Number,
