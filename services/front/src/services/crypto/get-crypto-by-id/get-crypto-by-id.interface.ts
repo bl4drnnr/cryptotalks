@@ -9,7 +9,6 @@ export interface GetCryptoByIdResponse {
   name: string;
   description?: string;
   iconUrl: string;
-  websiteUrl?: string;
   Volume24h: string;
   marketCap: string;
   price: number;

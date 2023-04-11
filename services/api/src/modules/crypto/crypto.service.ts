@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Cryptocurrency } from '@models/cryptocurrency.model';
 import { ClientKafka } from '@nestjs/microservices';
@@ -13,7 +13,7 @@ import { UpdateCoinEvent } from '@events/update-coin.event';
 import { MarketStats } from '@models/market-stats.model';
 
 @Injectable()
-export class CryptoService {
+export class CryptoService implements OnModuleInit {
   constructor(
     @InjectModel(Cryptocurrency)
     private readonly cryptoRepository: typeof Cryptocurrency,
@@ -80,8 +80,10 @@ export class CryptoService {
     });
   }
 
-  async getCryptoById({ id }: { id: string }) {
-    const foundCrypto = await this.cryptoRepository.findByPk(id);
+  async getCryptoById({ uuid }: { uuid: string }) {
+    const foundCrypto = await this.cryptoRepository.findOne({
+      where: { uuid }
+    });
     if (!foundCrypto) throw new NoCryptoException();
 
     if (!foundCrypto.description) {
@@ -133,5 +135,9 @@ export class CryptoService {
       new RemoveCryptoToFavoriteEvent({ ...payload })
     );
     return new ResponseDto();
+  }
+
+  onModuleInit(): any {
+    this.cryptoClient.subscribeToResponseOf('update_coin');
   }
 }

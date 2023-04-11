@@ -60,9 +60,9 @@ export class CryptoController {
     status: 201,
     description: 'As a response function returns cryptocurrency'
   })
-  @Get('get/:id')
-  getCryptoById(@Param('id') id: string) {
-    return this.cryptoService.getCryptoById({ id });
+  @Get('get/:uuid')
+  getCryptoById(@Param('uuid') uuid: string) {
+    return this.cryptoService.getCryptoById({ uuid });
   }
 
   @ApiExtraModels(MarketStats)

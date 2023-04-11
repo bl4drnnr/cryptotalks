@@ -41,7 +41,7 @@ export class UpdateRatesWebjob {
     private readonly configService: ApiConfigService
   ) {}
 
-  @Cron('0 0 * * * *')
+  @Cron('30 * * * * *')
   async handleCron() {
     try {
       const cryptocurrencies: ICoinsResponse =
@@ -76,6 +76,43 @@ export class UpdateRatesWebjob {
           updateOnDuplicate: ['uuid']
         });
         await this.marketStatsRepository.create({ ...marketStats });
+
+        const coinToCheckId = await this.cryptoRepository.findOne();
+
+        if (!coinToCheckId.symbolId) {
+          const coinGeckoIds: Array<{
+            id: string;
+            symbol: string;
+            name: string;
+          }> = await this.httpService.sendRequest({
+            endpoint: 'coins/list',
+            url: this.configService.coinGeckoUrl
+          });
+
+          const allAvailableCrypto = await this.cryptoRepository.findAll();
+
+          const cryptoToUpdate = [];
+
+          allAvailableCrypto.forEach((crypto) => {
+            coinGeckoIds.forEach((geckoCrypto) => {
+              if (crypto.symbol.toLowerCase() === geckoCrypto.symbol) {
+                cryptoToUpdate.push({
+                  uuid: crypto.uuid,
+                  symbolId: geckoCrypto.id
+                });
+              }
+            });
+          });
+
+          await Promise.all(
+            cryptoToUpdate.map(async (record) => {
+              await this.cryptoRepository.update(
+                { symbolId: record.symbolId },
+                { where: { uuid: record.uuid } }
+              );
+            })
+          );
+        }
 
         const log = new this.logger({
           message:

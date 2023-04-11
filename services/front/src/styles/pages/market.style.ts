@@ -177,7 +177,7 @@ export const CryptoNames = styled.div`
 `;
 
 export const CryptoSymbol = styled.h1`
-  font-size: 18px;
+  font-size: 16px;
   color: rgb(${(props) => props.theme.colors.textColor});
 `;
 

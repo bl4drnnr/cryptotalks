@@ -32,4 +32,8 @@ export class ApiConfigService {
       limit: this.getString('X_RAPIDAPI_LIMIT')
     };
   }
+
+  get coinGeckoUrl() {
+    return this.getString('COINGECKO_API_URL');
+  }
 }

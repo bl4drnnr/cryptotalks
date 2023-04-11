@@ -122,7 +122,7 @@ const Market = () => {
         return {
           ...item,
           sparkline: parsedSparklines,
-          price: parseFloat(item.price).toFixed(4),
+          price: parseFloat(item.price).toFixed(2),
           marketCap: (parseFloat(item.marketCap) / 1000000000).toFixed(2),
           Volume24h: (parseFloat(item.Volume24h) / 1000000000).toFixed(2),
           btcPrice: parseFloat(item.btcPrice).toFixed(8)
