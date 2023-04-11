@@ -67,7 +67,7 @@ export class CryptoService implements OnModuleInit {
         'symbol',
         'name',
         'iconUrl',
-        'Volume24h',
+        'volume24h',
         'marketCap',
         'price',
         'btcPrice',

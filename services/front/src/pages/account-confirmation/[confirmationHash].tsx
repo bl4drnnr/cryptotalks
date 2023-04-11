@@ -25,7 +25,7 @@ const AccountConfirmation = () => {
   }, [router.query]);
 
   const handleRedirect = async (path: string) => {
-    await router.push(path);
+    await router.push(`/${path}`);
   };
 
   const confirmAccountRegistration = async (hash: string) => {

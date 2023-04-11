@@ -124,7 +124,7 @@ const Market = () => {
           sparkline: parsedSparklines,
           price: parseFloat(item.price).toFixed(2),
           marketCap: (parseFloat(item.marketCap) / 1000000000).toFixed(2),
-          Volume24h: (parseFloat(item.Volume24h) / 1000000000).toFixed(2),
+          volume24h: (parseFloat(item.volume24h) / 1000000000).toFixed(2),
           btcPrice: parseFloat(item.btcPrice).toFixed(8)
         };
       });
@@ -310,7 +310,7 @@ const Market = () => {
                   <CryptoItemSide>
                     <CryptoNames>
                       <CryptoMetadata>
-                        24H Volume: {item.Volume24h} bln $
+                        24H Volume: {item.volume24h} bln $
                       </CryptoMetadata>
                       <CryptoMetadata>
                         BTC Price: {item.btcPrice}

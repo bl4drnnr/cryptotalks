@@ -68,7 +68,7 @@ export class UpdateRatesWebjob {
         const filteredCoins = coinsList.map((o) => {
           return {
             ...o,
-            Volume24h: o['24hVolume']
+            volume24h: o['24hVolume']
           };
         });
 

@@ -65,7 +65,7 @@ const Coin = () => {
   };
 
   const handleRedirect = async (path: string) => {
-    await router.push(path);
+    await router.push(`/${path}`);
   };
 
   return (
