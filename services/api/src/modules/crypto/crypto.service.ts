@@ -87,11 +87,10 @@ export class CryptoService implements OnModuleInit {
     if (!foundCrypto) throw new NoCryptoException();
 
     if (!foundCrypto.description) {
-      this.cryptoClient.send(
-        'update_coin',
-        new UpdateCoinEvent({ coinId: foundCrypto.uuid })
-      );
-      return;
+      const updatedCoin = await this.cryptoClient
+        .send('update_coin', new UpdateCoinEvent({ coinId: foundCrypto.uuid }))
+        .toPromise();
+      return updatedCoin[1][0];
     }
 
     return foundCrypto;

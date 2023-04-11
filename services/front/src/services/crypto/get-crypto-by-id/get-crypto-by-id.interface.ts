@@ -6,6 +6,7 @@ export interface GetCryptoByIdResponse {
   id: string;
   uuid: string;
   symbol: string;
+  symbolId: string;
   name: string;
   description?: string;
   iconUrl: string;

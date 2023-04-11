@@ -20,9 +20,7 @@ const AccountConfirmation = () => {
     const { confirmationHash } = router.query;
     if (confirmationHash) {
       confirmAccountRegistration(confirmationHash as string)
-        .then((res) => {
-          if (res?.message === 'success') setConfirmationStatus(2);
-        });
+        .then((res) => setConfirmationStatus(2));
     }
   }, [router.query]);
 

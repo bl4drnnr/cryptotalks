@@ -87,7 +87,7 @@ export class Cryptocurrency extends Model<
     nullable: true,
     description: 'Description of a coin'
   })
-  @Column({ type: DataType.STRING, allowNull: true })
+  @Column({ type: DataType.TEXT, allowNull: true })
   description?: string;
 
   @ApiProperty({
