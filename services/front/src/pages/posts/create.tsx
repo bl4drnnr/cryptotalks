@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 
 import { Button } from '@components/Button/Button.component';
 import { Input } from '@components/Input/Input.component';
+import PostPreview from '@components/PostPreview/PostPreview.component';
 import { Textarea } from '@components/Textarea/Textarea.component';
 import { useHandleException } from '@hooks/useHandleException.hook';
 import DefaultLayout from '@layouts/Default.layout';
@@ -145,9 +146,14 @@ const CreatePost = () => {
               <CreatePostTitle className={'subtitle'}>
                 Your latest posts
               </CreatePostTitle>
-              {userLatestPosts.rows.map((post) => (
-                <>
-                </>
+              {userLatestPosts.rows.map((post, key) => (
+                <PostPreview
+                  title={post.title}
+                  preview={post.preview}
+                  searchTags={post.searchTags}
+                  createdAt={post.createdAt}
+                  key={key}
+                />
               ))}
             </>
           ) : (

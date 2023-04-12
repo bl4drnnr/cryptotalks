@@ -7,6 +7,8 @@ import { useRouter } from 'next/router';
 
 import { Button } from '@components/Button/Button.component';
 import { Input } from '@components/Input/Input.component';
+import PostPreviewComponent from '@components/PostPreview/PostPreview.component';
+import PostPreview from '@components/PostPreview/PostPreview.component';
 import { useHandleException } from '@hooks/useHandleException.hook';
 import { useNotificationMessage } from '@hooks/useShowNotificationMessage.hook';
 import DefaultLayout from '@layouts/Default.layout';
@@ -38,9 +40,7 @@ import {
   ContactInformationWrapper,
   LatestPostsContainer,
   NoPostsTitle,
-  PostContainer,
-  PostTitle,
-  PostPreview, PostsTitle, PostSearchTags, PostTag
+  PostsTitle,
 } from '@styles/account.style';
 
 const Account = () => {
@@ -53,8 +53,8 @@ const Account = () => {
   const { showNotificationMessage } = useNotificationMessage();
 
   const [page, setPage] = React.useState(0);
-  const [pageSize, setPageSize] = React.useState(5);
-  const [order, setOrder] = React.useState('ASC');
+  const [pageSize, setPageSize] = React.useState(3);
+  const [order, setOrder] = React.useState('DESC');
   const [orderBy, setOrderBy] = React.useState('createdAt');
   const [userData, setUserData] = React.useState<IPersonalInformation>();
   const [userPosts, setUserPosts] = React.useState<ListPostsResponse>();
@@ -212,15 +212,12 @@ const Account = () => {
                     <>
                       <PostsTitle>User latest posts</PostsTitle>
                       {userPosts?.rows.map((post, key) => (
-                        <PostContainer key={key}>
-                          <PostTitle>{post.title}</PostTitle>
-                          <PostPreview>{post.preview}</PostPreview>
-                          <PostSearchTags>
-                            {post.searchTags.map((searchTag, postKey) => (
-                              <PostTag key={postKey}>{searchTag}</PostTag>
-                            ))}
-                          </PostSearchTags>
-                        </PostContainer>
+                        <PostPreview
+                          title={post.title}
+                          preview={post.preview}
+                          searchTags={post.searchTags}
+                          key={key}
+                        />
                       ))}
                     </>
                   ) : (

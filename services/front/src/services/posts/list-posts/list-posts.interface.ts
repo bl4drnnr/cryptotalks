@@ -2,6 +2,7 @@ interface IPosts {
   id: string;
   title: string;
   preview: string;
+  createdAt: string;
   searchTags: Array<string>;
 }
 
