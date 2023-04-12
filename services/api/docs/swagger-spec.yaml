@@ -16,12 +16,12 @@ paths:
           description: As a response function returns success message
       tags: &a1
         - Posts
-  "/api/posts/get/{id}":
+  "/api/posts/get/{slug}":
     get:
-      operationId: PostsController_getPostById
-      summary: Gets post by its id
+      operationId: PostsController_getPostBySlug
+      summary: Gets post by its slug
       parameters:
-        - name: id
+        - name: slug
           required: true
           in: path
           schema:
@@ -66,7 +66,7 @@ paths:
           in: query
           schema:
             type: string
-        - name: userId
+        - name: username
           required: true
           in: query
           schema:
@@ -510,6 +510,15 @@ components:
           nullable: false
           default: uuidv4
           description: Unique Id of the record
+        userId:
+          type: string
+          format: uuid
+          nullable: false
+          description: User Id
+        username:
+          type: string
+          nullable: false
+          description: Username of post creator
         title:
           type: string
           nullable: false
@@ -534,10 +543,6 @@ components:
           type: array
           items:
             type: string
-        userId:
-          type: uuiv4
-          nullable: false
-          description: User Id
         likes:
           nullable: false
           description: List of users who liked post
@@ -556,12 +561,13 @@ components:
           description: Record update date
       required:
         - id
+        - userId
+        - username
         - title
         - slug
         - content
         - preview
         - searchTags
-        - userId
         - likes
         - createdAt
         - updatedAt
@@ -580,14 +586,24 @@ components:
           type: string
           format: uuid
           nullable: false
+        username:
+          type: string
+          nullable: false
         preview:
           type: string
           nullable: false
+        searchTags:
+          nullable: false
+          type: array
+          items:
+            type: string
       required:
         - title
         - content
         - userId
+        - username
         - preview
+        - searchTags
     DeletePostEventDto:
       type: object
       properties:

@@ -7,6 +7,8 @@ import { useRouter } from 'next/router';
 
 import { Button } from '@components/Button/Button.component';
 import { Input } from '@components/Input/Input.component';
+import PostPreviewComponent from '@components/PostPreview/PostPreview.component';
+import PostPreview from '@components/PostPreview/PostPreview.component';
 import { useHandleException } from '@hooks/useHandleException.hook';
 import { useNotificationMessage } from '@hooks/useShowNotificationMessage.hook';
 import DefaultLayout from '@layouts/Default.layout';
@@ -38,9 +40,7 @@ import {
   ContactInformationWrapper,
   LatestPostsContainer,
   NoPostsTitle,
-  PostContainer,
-  PostTitle,
-  PostPreview, PostsTitle, PostSearchTags, PostTag
+  PostsTitle,
 } from '@styles/account.style';
 
 const Account = () => {
@@ -52,10 +52,6 @@ const Account = () => {
   const { handleException } = useHandleException();
   const { showNotificationMessage } = useNotificationMessage();
 
-  const [page, setPage] = React.useState(0);
-  const [pageSize, setPageSize] = React.useState(5);
-  const [order, setOrder] = React.useState('ASC');
-  const [orderBy, setOrderBy] = React.useState('createdAt');
   const [userData, setUserData] = React.useState<IPersonalInformation>();
   const [userPosts, setUserPosts] = React.useState<ListPostsResponse>();
 
@@ -67,12 +63,12 @@ const Account = () => {
       if (!token) {
         handleRedirect('/').then();
       } else {
-        checkUser(token).then((res) => {
+        fetchCheckUser(token).then((res) => {
           if (res) {
             sessionStorage.setItem('_at', res._at);
             setUserData(res.user);
 
-            fetchUserPosts(res.user.id).then((posts) => {
+            fetchUserPosts(res.user.username).then((posts) => {
               setUserPosts(posts);
             });
           }
@@ -99,7 +95,7 @@ const Account = () => {
     await handleRedirect('');
   };
 
-  const checkUser = async (token: string) => {
+  const fetchCheckUser = async (token: string) => {
     try {
       return await refreshToken({ token });
     } catch (e) {
@@ -107,10 +103,14 @@ const Account = () => {
     }
   };
 
-  const fetchUserPosts = async (userId: string) => {
+  const fetchUserPosts = async (username: string) => {
     try {
       return await listPosts({
-        page, pageSize, order, orderBy, userId
+        page: 0,
+        pageSize: 3,
+        order: 'DESC',
+        orderBy: 'createdAt',
+        username
       });
     } catch (e) {
       await exceptionHandler(e);
@@ -212,15 +212,13 @@ const Account = () => {
                     <>
                       <PostsTitle>User latest posts</PostsTitle>
                       {userPosts?.rows.map((post, key) => (
-                        <PostContainer key={key}>
-                          <PostTitle>{post.title}</PostTitle>
-                          <PostPreview>{post.preview}</PostPreview>
-                          <PostSearchTags>
-                            {post.searchTags.map((searchTag, postKey) => (
-                              <PostTag key={postKey}>{searchTag}</PostTag>
-                            ))}
-                          </PostSearchTags>
-                        </PostContainer>
+                        <PostPreview
+                          title={post.title}
+                          preview={post.preview}
+                          searchTags={post.searchTags}
+                          createdAt={post.createdAt}
+                          key={key}
+                        />
                       ))}
                     </>
                   ) : (

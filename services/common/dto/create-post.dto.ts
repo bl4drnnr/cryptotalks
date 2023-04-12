@@ -24,5 +24,17 @@ export class CreatePostDto {
     type: String,
     nullable: false
   })
+  username: string;
+
+  @ApiProperty({
+    type: String,
+    nullable: false
+  })
   preview: string;
+
+  @ApiProperty({
+    type: [String],
+    nullable: false
+  })
+  searchTags: Array<string>;
 }

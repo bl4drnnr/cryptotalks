@@ -16,20 +16,6 @@ export class AuthService {
     private readonly logger: Model<InformationLog>
   ) {}
 
-  async updateTokens(payload: RefreshTokenEventDto) {
-    const currentSession = await this.sessionRepository.findOne({
-      where: { userId: payload.userId }
-    });
-    if (currentSession) {
-      await this.sessionRepository.destroy({
-        where: { id: currentSession.id }
-      });
-    }
-    await this.sessionRepository.create({
-      ...payload
-    });
-  }
-
   deleteRefreshToken({ userId }: UserLogoutEventDto) {
     return this.sessionRepository.destroy({ where: { userId } });
   }

@@ -12,6 +12,8 @@ import { InjectModel } from '@nestjs/sequelize';
 import sequelize, { Op } from 'sequelize';
 import { LeaveCommentEvent } from '@events/leave-comment.event';
 import { LeaveCommentEventDto } from '@event-dto/leave-comment.event.dto';
+import { AlreadyExistingPostException } from '@exceptions/already-existing-post.exception';
+import { PostNotFoundException } from '@exceptions/post-not-found.exception';
 
 @Injectable()
 export class PostsService {
@@ -20,13 +22,31 @@ export class PostsService {
     @Inject('POSTS_SERVICE') private readonly postsClient: ClientKafka
   ) {}
 
-  createPost(payload: CreatePostDto) {
-    this.postsClient.emit('post_created', new CreatePostEvent({ ...payload }));
+  async createPost(payload: CreatePostDto) {
+    const existingPost = await this.postRepository.findOne({
+      where: { title: { [Op.iLike]: `%${payload.title}%` } }
+    });
+
+    if (existingPost) throw new AlreadyExistingPostException();
+
+    console.log('payload', payload);
+    this.postsClient.emit(
+      'post_created',
+      new CreatePostEvent({
+        ...payload
+      })
+    );
     return new ResponseDto();
   }
 
-  getPostById({ id }: { id: string }) {
-    return this.postRepository.findByPk(id);
+  async getPostBySlug({ slug }: { slug: string }) {
+    const post = await this.postRepository.findOne({
+      where: { slug }
+    });
+
+    if (!post) throw new PostNotFoundException();
+
+    return post;
   }
 
   async listPosts({
@@ -35,21 +55,23 @@ export class PostsService {
     order,
     orderBy,
     searchQuery,
-    userId
+    username
   }: {
     page: number;
     pageSize: number;
     order: string;
     orderBy: string;
     searchQuery?: string;
-    userId?: string;
+    username?: string;
   }) {
     const offset = page * pageSize;
     const limit = pageSize;
     const where = {};
 
-    if (userId) {
-      where['user_id'] = userId;
+    if (username) {
+      where['username'] = {
+        [Op.iLike]: `%${username}%`
+      };
     }
 
     if (searchQuery) {
@@ -76,7 +98,8 @@ export class PostsService {
         'id',
         'title',
         'preview',
-        [sequelize.literal('search_tags'), 'searchTags']
+        [sequelize.literal('search_tags'), 'searchTags'],
+        [sequelize.literal('created_at'), 'createdAt']
       ]
     });
   }

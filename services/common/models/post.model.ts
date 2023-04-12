@@ -16,6 +16,7 @@ interface PostCreationAttributes {
   content: Array<string>;
   preview: string;
   userId: string;
+  username: string;
 }
 
 @Table({
@@ -36,10 +37,27 @@ export class Post extends Model<Post, PostCreationAttributes> {
 
   @ApiProperty({
     type: String,
+    format: 'uuid',
+    nullable: false,
+    description: 'User Id'
+  })
+  @Column({ type: DataType.UUID, allowNull: false, field: 'user_id' })
+  userId: string;
+
+  @ApiProperty({
+    type: String,
+    nullable: false,
+    description: 'Username of post creator'
+  })
+  @Column({ type: DataType.STRING, allowNull: false })
+  username: string;
+
+  @ApiProperty({
+    type: String,
     nullable: false,
     description: 'Title of the post'
   })
-  @Column({ type: DataType.STRING, allowNull: false })
+  @Column({ type: DataType.STRING, allowNull: false, unique: true })
   title: string;
 
   @ApiProperty({
@@ -47,7 +65,7 @@ export class Post extends Model<Post, PostCreationAttributes> {
     nullable: false,
     description: 'Slug of the post'
   })
-  @Column({ type: DataType.STRING, allowNull: false })
+  @Column({ type: DataType.STRING, allowNull: false, unique: true })
   slug: string;
 
   @ApiProperty({
@@ -77,14 +95,6 @@ export class Post extends Model<Post, PostCreationAttributes> {
     field: 'search_tags'
   })
   searchTags: Array<string>;
-
-  @ApiProperty({
-    type: 'uuiv4',
-    nullable: false,
-    description: 'User Id'
-  })
-  @Column({ type: DataType.UUID, allowNull: false, field: 'user_id' })
-  userId: string;
 
   @ApiProperty({
     type: [String],

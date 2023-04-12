@@ -11,11 +11,6 @@ export class AuthController {
     return this.authService.logAuthAction(data);
   }
 
-  @EventPattern('update_token')
-  handleTokenUpdate(data: any) {
-    return this.authService.updateTokens(data);
-  }
-
   @EventPattern('user_logout')
   handleLogout(data: any) {
     return this.authService.deleteRefreshToken(data);

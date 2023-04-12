@@ -51,14 +51,14 @@ export class PostsController {
     return this.postsService.createPost({ ...payload, userId });
   }
 
-  @ApiOperation({ summary: 'Gets post by its id' })
+  @ApiOperation({ summary: 'Gets post by its slug' })
   @ApiResponse({
     status: 201,
     description: 'As a response function returns post'
   })
-  @Get('get/:id')
-  getPostById(@Param('id') id: string) {
-    return this.postsService.getPostById({ id });
+  @Get('get/:slug')
+  getPostBySlug(@Param('slug') slug: string) {
+    return this.postsService.getPostBySlug({ slug });
   }
 
   @ApiOperation({ summary: 'List posts' })
@@ -73,7 +73,7 @@ export class PostsController {
     @Param('order') order: string,
     @Param('orderBy') orderBy: string,
     @Query('searchQuery') searchQuery: string,
-    @Query('userId') userId: string
+    @Query('username') username: string
   ) {
     return this.postsService.listPosts({
       page,
@@ -81,7 +81,7 @@ export class PostsController {
       order,
       orderBy,
       searchQuery,
-      userId
+      username
     });
   }
 

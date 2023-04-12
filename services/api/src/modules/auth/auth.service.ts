@@ -13,7 +13,6 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/sequelize';
 import { ApiConfigService } from '@shared/config.service';
 import { Session } from '@models/session.model';
-import { RefreshTokensEvent } from '@events/refresh-tokens.event';
 import { UserService } from '@modules/user.service';
 import { LogEvent } from '@events/log.event';
 
@@ -53,7 +52,7 @@ export class AuthService {
     return { id, token: this.jwtService.sign(payload, options) };
   }
 
-  private updateRefreshToken(refreshTokenPayload: RefreshTokenDto) {
+  private async updateRefreshToken(refreshTokenPayload: RefreshTokenDto) {
     this.authClient.emit(
       'log_auth_action',
       new LogEvent({
@@ -63,10 +62,17 @@ export class AuthService {
         timestamp: new Date()
       })
     );
-    this.authClient.emit(
-      'update_token',
-      new RefreshTokensEvent({ ...refreshTokenPayload })
-    );
+    const currentSession = await this.sessionRepository.findOne({
+      where: { userId: refreshTokenPayload.userId }
+    });
+    if (currentSession) {
+      await this.sessionRepository.destroy({
+        where: { id: currentSession.id }
+      });
+    }
+    await this.sessionRepository.create({
+      ...refreshTokenPayload
+    });
   }
 
   private verifyToken({ token }: { token: string }) {
@@ -93,7 +99,7 @@ export class AuthService {
     const accessToken = this.generateAccessToken(accessTokenPayload);
     const refreshToken = this.generateRefreshToken();
 
-    this.updateRefreshToken({
+    await this.updateRefreshToken({
       userId: accessTokenPayload.userId,
       tokenId: refreshToken.id
     });

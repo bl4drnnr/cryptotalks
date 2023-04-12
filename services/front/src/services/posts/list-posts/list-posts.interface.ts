@@ -2,6 +2,7 @@ interface IPosts {
   id: string;
   title: string;
   preview: string;
+  createdAt: string;
   searchTags: Array<string>;
 }
 
@@ -11,7 +12,7 @@ export interface ListPostsPayload {
   order: string;
   orderBy: string;
   searchQuery?: string;
-  userId?: string;
+  username?: string;
 }
 
 export interface ListPostsResponse {
