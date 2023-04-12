@@ -1,6 +1,6 @@
 import React from 'react';
 
-const PostId = () => {
+const PostSlug = () => {
   return (
     <div>
 
@@ -8,4 +8,4 @@ const PostId = () => {
   );
 };
 
-export default PostId;
+export default PostSlug;

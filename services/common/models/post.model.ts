@@ -57,7 +57,7 @@ export class Post extends Model<Post, PostCreationAttributes> {
     nullable: false,
     description: 'Title of the post'
   })
-  @Column({ type: DataType.STRING, allowNull: false })
+  @Column({ type: DataType.STRING, allowNull: false, unique: true })
   title: string;
 
   @ApiProperty({
@@ -65,7 +65,7 @@ export class Post extends Model<Post, PostCreationAttributes> {
     nullable: false,
     description: 'Slug of the post'
   })
-  @Column({ type: DataType.STRING, allowNull: false })
+  @Column({ type: DataType.STRING, allowNull: false, unique: true })
   slug: string;
 
   @ApiProperty({

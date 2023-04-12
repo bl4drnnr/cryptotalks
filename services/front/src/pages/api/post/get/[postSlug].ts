@@ -8,7 +8,7 @@ export default async (
   res: NextApiResponse
 ) => {
   try {
-    const { data } = await Api.get(`/posts/get/${req.query.postId}`);
+    const { data } = await Api.get(`/posts/get/${req.query.postSlug}`);
 
     return res.json(data);
   } catch (error: any) {

@@ -8,11 +8,13 @@ import { Input } from '@components/Input/Input.component';
 import PostPreview from '@components/PostPreview/PostPreview.component';
 import { Textarea } from '@components/Textarea/Textarea.component';
 import { useHandleException } from '@hooks/useHandleException.hook';
+import { useNotificationMessage } from '@hooks/useShowNotificationMessage.hook';
 import DefaultLayout from '@layouts/Default.layout';
 import { useCreatePostService } from '@services/posts/create-post/create-post.service';
 import { ListPostsResponse } from '@services/posts/list-posts/list-posts.interface';
 import { useListPostsService } from '@services/posts/list-posts/list-posts.service';
 import { useRefreshTokenService } from '@services/refresh-tokens/refresh-tokens.service';
+import { NotificationType } from '@store/global/global.state';
 import {
   ButtonWrapper,
   Container,
@@ -41,6 +43,7 @@ const CreatePost = () => {
   const [userLatestPosts, setUserLatestPosts] = React.useState<ListPostsResponse>();
 
   const { handleException } = useHandleException();
+  const { showNotificationMessage } = useNotificationMessage();
   const { loading: l0, listPosts } = useListPostsService();
   const { loading: l1, createPost } = useCreatePostService();
   const { loading: l2, refreshToken } = useRefreshTokenService();
@@ -129,7 +132,7 @@ const CreatePost = () => {
       const titleErr = title.length < 2;
       const previewErr = preview.length < 2;
       const contentErr = contentString.length < 2;
-      const searchTagsErr = searchTags.length === 1 && searchTags[0] === '' || searchTags.length >= 6;
+      const searchTagsErr = (searchTags.length === 1 && searchTags[0] === '') || searchTags.length >= 6;
       setTitleError(titleErr);
       setPreviewError(previewErr);
       setContentError(contentErr);
@@ -138,13 +141,14 @@ const CreatePost = () => {
       if (titleErr || previewErr || contentErr || searchTagsErr) return;
 
       const token = sessionStorage.getItem('_at');
-      return await createPost({
+      await createPost({
         token,
         title,
         content,
         preview,
         searchTags
       });
+      return await handleRedirect(`posts/post/${getPostSlug(title)}`);
     } catch (e) {
       await handleException(e);
     }
@@ -162,6 +166,14 @@ const CreatePost = () => {
 
   const handleRedirect = async (path: string) => {
     await router.push(`/${path}`);
+  };
+
+  const getPostSlug = (postName: string) => {
+    return postName
+      .toLowerCase()
+      .replace(/ /g, '-')
+      .replace(/[-]+/g, '-')
+      .replace(/[^\w-]+/g, '');
   };
 
   return (

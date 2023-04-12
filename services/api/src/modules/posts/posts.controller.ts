@@ -51,14 +51,14 @@ export class PostsController {
     return this.postsService.createPost({ ...payload, userId });
   }
 
-  @ApiOperation({ summary: 'Gets post by its id' })
+  @ApiOperation({ summary: 'Gets post by its slug' })
   @ApiResponse({
     status: 201,
     description: 'As a response function returns post'
   })
-  @Get('get/:id')
-  getPostById(@Param('id') id: string) {
-    return this.postsService.getPostById({ id });
+  @Get('get/:slug')
+  getPostBySlug(@Param('slug') slug: string) {
+    return this.postsService.getPostBySlug({ slug });
   }
 
   @ApiOperation({ summary: 'List posts' })
