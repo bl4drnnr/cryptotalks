@@ -22,6 +22,10 @@ export const CreatePostTitle = styled.h1`
     font-family: "Lato", sans-serif;
     text-align: start;
     margin-top: 20px;
+    
+    &.center {
+      text-align: center;
+    }
   }
 `;
 

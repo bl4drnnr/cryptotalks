@@ -16,6 +16,7 @@ interface PostCreationAttributes {
   content: Array<string>;
   preview: string;
   userId: string;
+  username: string;
 }
 
 @Table({
@@ -33,6 +34,23 @@ export class Post extends Model<Post, PostCreationAttributes> {
   @Default(DataType.UUIDV4)
   @Column(DataType.UUID)
   id: string;
+
+  @ApiProperty({
+    type: String,
+    format: 'uuid',
+    nullable: false,
+    description: 'User Id'
+  })
+  @Column({ type: DataType.UUID, allowNull: false, field: 'user_id' })
+  userId: string;
+
+  @ApiProperty({
+    type: String,
+    nullable: false,
+    description: 'Username of post creator'
+  })
+  @Column({ type: DataType.STRING, allowNull: false })
+  username: string;
 
   @ApiProperty({
     type: String,
@@ -77,15 +95,6 @@ export class Post extends Model<Post, PostCreationAttributes> {
     field: 'search_tags'
   })
   searchTags: Array<string>;
-
-  @ApiProperty({
-    type: String,
-    format: 'uuid',
-    nullable: false,
-    description: 'User Id'
-  })
-  @Column({ type: DataType.UUID, allowNull: false, field: 'user_id' })
-  userId: string;
 
   @ApiProperty({
     type: [String],

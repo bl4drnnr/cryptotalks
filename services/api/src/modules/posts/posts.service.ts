@@ -69,8 +69,6 @@ export class PostsService {
       ];
     }
 
-    // TODO Here should be sync between tables
-    // I mean, I should have an access to username field without querying database.
     return await this.postRepository.findAndCountAll({
       where: { ...where },
       order: [[orderBy, order]],
@@ -80,7 +78,8 @@ export class PostsService {
         'id',
         'title',
         'preview',
-        [sequelize.literal('search_tags'), 'searchTags']
+        [sequelize.literal('search_tags'), 'searchTags'],
+        [sequelize.literal('created_at'), 'createdAt']
       ]
     });
   }

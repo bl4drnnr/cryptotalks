@@ -67,7 +67,7 @@ const Account = () => {
       if (!token) {
         handleRedirect('/').then();
       } else {
-        checkUser(token).then((res) => {
+        fetchCheckUser(token).then((res) => {
           if (res) {
             sessionStorage.setItem('_at', res._at);
             setUserData(res.user);
@@ -99,7 +99,7 @@ const Account = () => {
     await handleRedirect('');
   };
 
-  const checkUser = async (token: string) => {
+  const fetchCheckUser = async (token: string) => {
     try {
       return await refreshToken({ token });
     } catch (e) {

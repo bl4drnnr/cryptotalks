@@ -11,10 +11,13 @@ import DefaultLayout from '@layouts/Default.layout';
 import { useCreatePostService } from '@services/posts/create-post/create-post.service';
 import { ListPostsResponse } from '@services/posts/list-posts/list-posts.interface';
 import { useListPostsService } from '@services/posts/list-posts/list-posts.service';
+import { useRefreshTokenService } from '@services/refresh-tokens/refresh-tokens.service';
 import { ButtonWrapper, Container, CreatePostTitle } from '@styles/create-post.style';
 
 const CreatePost = () => {
   const router = useRouter();
+
+  const fetchTokenChecking = React.useRef(true);
 
   const [title, setTitle] = React.useState<string>('');
   const [preview, setPreview] = React.useState<string>('');
@@ -27,6 +30,7 @@ const CreatePost = () => {
   const { handleException } = useHandleException();
   const { loading: l0, listPosts } = useListPostsService();
   const { loading: l1, createPost } = useCreatePostService();
+  const { loading: l2, refreshToken } = useRefreshTokenService();
 
   const setPostContent = (contentString: string) => {
     setContent(contentString.split('\n'));
@@ -36,24 +40,36 @@ const CreatePost = () => {
     setSearchTags(searchTagsString.split(' '));
   };
 
-  // React.useEffect(() => {
-  //   const token = sessionStorage.getItem('_at');
-  //
-  //   if (!token) handleRedirect('').then();
-  //
-  //
-  // }, []);
+  React.useEffect(() => {
+    if (fetchTokenChecking.current) {
+      fetchTokenChecking.current = false;
 
-  const fetchUserLatestPosts = async () => {
+      const token = sessionStorage.getItem('_at');
+
+      if (!token) handleRedirect('').then();
+      else {
+        fetchCheckUser(token).then((res) => {
+          if (res) {
+            sessionStorage.setItem('_at', res._at);
+
+            fetchUserLatestPosts(res.user.username).then((posts) => {
+              setUserLatestPosts(posts);
+            });
+          }
+        });
+      }
+    }
+  }, []);
+
+  const fetchUserLatestPosts = async (username: string) => {
     try {
-      // TODO get username from refresh token endpoint?
-      const posts = await listPosts({
+      return await listPosts({
         page: 0,
         pageSize: 3,
-        order: '',
-        orderBy: ''
+        order: 'DESC',
+        orderBy: 'createdAt',
+        username
       });
-      setUserLatestPosts(posts);
     } catch (e) {
       await handleException(e);
     }
@@ -74,6 +90,16 @@ const CreatePost = () => {
     }
   };
 
+  const fetchCheckUser = async (token: string) => {
+    try {
+      return await refreshToken({ token });
+    } catch (e) {
+      handleException(e);
+      sessionStorage.removeItem('_at');
+      await handleRedirect('');
+    }
+  };
+
   const handleRedirect = async (path: string) => {
     await router.push(`/${path}`);
   };
@@ -83,7 +109,7 @@ const CreatePost = () => {
       <Head>
         <title>Cryptotalks | Create post</title>
       </Head>
-      <DefaultLayout loading={l0 || l1}>
+      <DefaultLayout loading={l0 || l1 || l2}>
         <Container>
           <CreatePostTitle>Create post</CreatePostTitle>
           <Input
@@ -119,9 +145,15 @@ const CreatePost = () => {
               <CreatePostTitle className={'subtitle'}>
                 Your latest posts
               </CreatePostTitle>
+              {userLatestPosts.rows.map((post) => (
+                <>
+                </>
+              ))}
             </>
           ) : (
-            <CreatePostTitle>No posts yet. Go create one!</CreatePostTitle>
+            <CreatePostTitle
+              className={'subtitle center'}
+            >No posts yet. Go create one!</CreatePostTitle>
           )}
         </Container>
       </DefaultLayout>
