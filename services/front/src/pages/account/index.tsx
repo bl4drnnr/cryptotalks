@@ -52,10 +52,6 @@ const Account = () => {
   const { handleException } = useHandleException();
   const { showNotificationMessage } = useNotificationMessage();
 
-  const [page, setPage] = React.useState(0);
-  const [pageSize, setPageSize] = React.useState(3);
-  const [order, setOrder] = React.useState('DESC');
-  const [orderBy, setOrderBy] = React.useState('createdAt');
   const [userData, setUserData] = React.useState<IPersonalInformation>();
   const [userPosts, setUserPosts] = React.useState<ListPostsResponse>();
 
@@ -110,7 +106,11 @@ const Account = () => {
   const fetchUserPosts = async (username: string) => {
     try {
       return await listPosts({
-        page, pageSize, order, orderBy, username
+        page: 0,
+        pageSize: 3,
+        order: 'DESC',
+        orderBy: 'createdAt',
+        username
       });
     } catch (e) {
       await exceptionHandler(e);
