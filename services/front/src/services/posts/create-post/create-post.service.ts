@@ -13,7 +13,10 @@ export const useCreatePostService = () => {
       setLoading(true);
       const { data } = await ApiClient.post<CreatePostResponse>('/post/create-post', {
         title: payload.title,
-        content: payload.content
+        content: payload.content,
+        preview: payload.preview,
+        searchTags: payload.searchTags,
+        username: payload.username
       }, {
         headers: {
           'x-access-token': `Bearer ${payload.token}`

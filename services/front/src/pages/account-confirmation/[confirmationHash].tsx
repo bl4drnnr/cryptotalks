@@ -7,7 +7,16 @@ import { Button } from '@components/Button/Button.component';
 import { useHandleException } from '@hooks/useHandleException.hook';
 import CredentialsLayout from '@layouts/Credentials.layout';
 import { useAccountConfirmationService } from '@services/account-confirmation/account-confirmation.service';
-import { Box, HeaderLink, Link, MarginWrapper, SubTitle, Title, WelcomeText, WelcomeTitle } from '@styles/login.style';
+import {
+  Box,
+  HeaderLink,
+  Link,
+  MarginWrapper,
+  SubTitle,
+  Title,
+  WelcomeText,
+  WelcomeTitle
+} from '@styles/login.style';
 
 const AccountConfirmation = () => {
   const router = useRouter();
@@ -20,7 +29,7 @@ const AccountConfirmation = () => {
     const { confirmationHash } = router.query;
     if (confirmationHash) {
       confirmAccountRegistration(confirmationHash as string)
-        .then((res) => setConfirmationStatus(2));
+        .then(() => setConfirmationStatus(2));
     }
   }, [router.query]);
 

@@ -5,10 +5,11 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { Post } from '@models/post.model';
 import { InformationLog, LogSchema } from '@mongo-schemas/log.schema';
 import { MongooseModule } from '@nestjs/mongoose';
+import { PostInfo } from '@models/post-info.model';
 
 @Module({
   imports: [
-    SequelizeModule.forFeature([Post]),
+    SequelizeModule.forFeature([Post, PostInfo]),
     MongooseModule.forFeature([
       { name: InformationLog.name, schema: LogSchema }
     ])

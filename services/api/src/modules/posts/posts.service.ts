@@ -29,7 +29,13 @@ export class PostsService {
 
     if (existingPost) throw new AlreadyExistingPostException();
 
-    this.postsClient.emit('post_created', new CreatePostEvent({ ...payload }));
+    console.log('payload', payload);
+    this.postsClient.emit(
+      'post_created',
+      new CreatePostEvent({
+        ...payload
+      })
+    );
     return new ResponseDto();
   }
 

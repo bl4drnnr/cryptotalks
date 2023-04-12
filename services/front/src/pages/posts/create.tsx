@@ -8,13 +8,11 @@ import { Input } from '@components/Input/Input.component';
 import PostPreview from '@components/PostPreview/PostPreview.component';
 import { Textarea } from '@components/Textarea/Textarea.component';
 import { useHandleException } from '@hooks/useHandleException.hook';
-import { useNotificationMessage } from '@hooks/useShowNotificationMessage.hook';
 import DefaultLayout from '@layouts/Default.layout';
 import { useCreatePostService } from '@services/posts/create-post/create-post.service';
 import { ListPostsResponse } from '@services/posts/list-posts/list-posts.interface';
 import { useListPostsService } from '@services/posts/list-posts/list-posts.service';
 import { useRefreshTokenService } from '@services/refresh-tokens/refresh-tokens.service';
-import { NotificationType } from '@store/global/global.state';
 import {
   ButtonWrapper,
   Container,
@@ -29,6 +27,7 @@ const CreatePost = () => {
 
   const fetchTokenChecking = React.useRef(true);
 
+  const [username, setUsername] = React.useState<string>('');
   const [title, setTitle] = React.useState<string>('');
   const [titleError, setTitleError] = React.useState<boolean>(false);
   const [preview, setPreview] = React.useState<string>('');
@@ -43,7 +42,6 @@ const CreatePost = () => {
   const [userLatestPosts, setUserLatestPosts] = React.useState<ListPostsResponse>();
 
   const { handleException } = useHandleException();
-  const { showNotificationMessage } = useNotificationMessage();
   const { loading: l0, listPosts } = useListPostsService();
   const { loading: l1, createPost } = useCreatePostService();
   const { loading: l2, refreshToken } = useRefreshTokenService();
@@ -89,6 +87,7 @@ const CreatePost = () => {
             sessionStorage.setItem('_at', res._at);
 
             fetchUserLatestPosts(res.user.username).then((posts) => {
+              setUsername(res.user.username);
               setUserLatestPosts(posts);
             });
           }
@@ -146,6 +145,7 @@ const CreatePost = () => {
         title,
         content,
         preview,
+        username,
         searchTags
       });
       return await handleRedirect(`posts/post/${getPostSlug(title)}`);

@@ -16,12 +16,12 @@ paths:
           description: As a response function returns success message
       tags: &a1
         - Posts
-  "/api/posts/get/{id}":
+  "/api/posts/get/{slug}":
     get:
-      operationId: PostsController_getPostById
-      summary: Gets post by its id
+      operationId: PostsController_getPostBySlug
+      summary: Gets post by its slug
       parameters:
-        - name: id
+        - name: slug
           required: true
           in: path
           schema:
