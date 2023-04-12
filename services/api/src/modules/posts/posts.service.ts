@@ -67,7 +67,7 @@ export class PostsService {
     const limit = pageSize;
     const where = {};
 
-    if (username) {
+    if (username || username !== 'undefined') {
       where['username'] = {
         [Op.iLike]: `%${username}%`
       };

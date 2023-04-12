@@ -2,7 +2,7 @@ import React from 'react';
 
 import { ApiClient } from '@api-client';
 import { ExceptionHandler } from '@exception-handler';
-import { GetPostBySlugPayload, GetPostBySlugResponse } from '@services/posts/get-post-by-id/get-post-by-slug.interface';
+import { GetPostBySlugPayload, GetPostBySlugResponse } from '@services/posts/get-post-by-slug/get-post-by-slug.interface';
 
 export const useGetPostBySlug = () => {
   const [loading, setLoading] = React.useState(false);
