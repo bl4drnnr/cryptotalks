@@ -29,7 +29,6 @@ export class PostsService {
 
     if (existingPost) throw new AlreadyExistingPostException();
 
-    console.log('payload', payload);
     this.postsClient.emit(
       'post_created',
       new CreatePostEvent({

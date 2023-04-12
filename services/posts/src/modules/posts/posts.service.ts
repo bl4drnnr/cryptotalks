@@ -23,12 +23,6 @@ export class PostsService {
   ) {}
 
   postCreated(payload: CreatePostDto) {
-    console.log('---------');
-    console.log({
-      ...payload,
-      slug: this.slugService.createSlug(payload.title)
-    });
-    console.log('---------');
     return this.postRepository.create({
       ...payload,
       slug: this.slugService.createSlug(payload.title)
