@@ -29,7 +29,6 @@ export class PostsService {
 
     if (existingPost) throw new AlreadyExistingPostException();
 
-    console.log('payload', payload);
     this.postsClient.emit(
       'post_created',
       new CreatePostEvent({
@@ -68,7 +67,7 @@ export class PostsService {
     const limit = pageSize;
     const where = {};
 
-    if (username) {
+    if (username || username !== 'undefined') {
       where['username'] = {
         [Op.iLike]: `%${username}%`
       };

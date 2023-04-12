@@ -5,8 +5,8 @@ import { useRouter } from 'next/router';
 
 import { useHandleException } from '@hooks/useHandleException.hook';
 import DefaultLayout from '@layouts/Default.layout';
-import { GetPostBySlugResponse } from '@services/posts/get-post-by-id/get-post-by-slug.interface';
-import { useGetPostBySlug } from '@services/posts/get-post-by-id/get-post-by-slug.service';
+import { GetPostBySlugResponse } from '@services/posts/get-post-by-slug/get-post-by-slug.interface';
+import { useGetPostBySlug } from '@services/posts/get-post-by-slug/get-post-by-slug.service';
 import { Container } from '@styles/post.style';
 
 const PostSlug = () => {
@@ -39,7 +39,7 @@ const PostSlug = () => {
   return (
     <>
       <Head>
-        <title>Cryptotalks | </title>
+        <title>Cryptotalks | {post?.title}</title>
       </Head>
       <DefaultLayout loading={l0}>
         <Container>
