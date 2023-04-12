@@ -28,11 +28,16 @@ const CreatePost = () => {
   const fetchTokenChecking = React.useRef(true);
 
   const [title, setTitle] = React.useState<string>('');
+  const [titleError, setTitleError] = React.useState<boolean>(false);
   const [preview, setPreview] = React.useState<string>('');
+  const [previewError, setPreviewError] = React.useState<boolean>(false);
   const [content, setContent] = React.useState<Array<string>>(['']);
   const [contentString, setContentString] = React.useState<string>('');
+  const [contentError, setContentError] = React.useState<boolean>(false);
   const [searchTags, setSearchTags] = React.useState<Array<string>>(['']);
   const [searchTagsString, setSearchTagsString] = React.useState<string>('');
+  const [searchTagsError, setSearchTagsError] = React.useState<boolean>(false);
+
   const [userLatestPosts, setUserLatestPosts] = React.useState<ListPostsResponse>();
 
   const { handleException } = useHandleException();
@@ -54,7 +59,8 @@ const CreatePost = () => {
       const tags = searchTags;
       if (
         searchTagsString.length > 1 &&
-        !searchTags.includes(searchTagsString.replace(' ', ''))
+        !searchTags.includes(searchTagsString.replace(' ', '')) &&
+        searchTags.length <= 5
       ) {
         tags.push(searchTagsString.replace(' ', ''));
       }
@@ -88,6 +94,22 @@ const CreatePost = () => {
     }
   }, []);
 
+  React.useEffect(() => {
+    setSearchTagsError(searchTags.length === 6);
+  }, [searchTags.length]);
+
+  React.useEffect(() => {
+    setTitleError(title !== '' && title.length < 2);
+  }, [title]);
+
+  React.useEffect(() => {
+    setPreviewError(preview !== '' && preview.length < 2);
+  }, [preview]);
+
+  React.useEffect(() => {
+    setContentError(contentString !== '' && contentString.length < 2);
+  }, [contentString]);
+
   const fetchUserLatestPosts = async (username: string) => {
     try {
       return await listPosts({
@@ -104,6 +126,17 @@ const CreatePost = () => {
 
   const fetchCreatePost = async () => {
     try {
+      const titleErr = title.length < 2;
+      const previewErr = preview.length < 2;
+      const contentErr = contentString.length < 2;
+      const searchTagsErr = searchTags.length === 1 && searchTags[0] === '' || searchTags.length >= 6;
+      setTitleError(titleErr);
+      setPreviewError(previewErr);
+      setContentError(contentErr);
+      setSearchTagsError(searchTagsErr);
+
+      if (titleErr || previewErr || contentErr || searchTagsErr) return;
+
       const token = sessionStorage.getItem('_at');
       return await createPost({
         token,
@@ -140,16 +173,22 @@ const CreatePost = () => {
         <Container>
           <CreatePostTitle>Create post</CreatePostTitle>
           <Input
+            onError={titleError}
+            onErrorMessage={'Title is required. Min length is 2 symbols.'}
             value={title}
             placeholder={'Title of a post'}
             onChange={(e) => setTitle(e.target.value)}
           />
           <Textarea
+            onError={previewError}
+            onErrorMessage={'Preview is required. Min length is 2 symbols.'}
             value={preview}
             placeholder={'Preview of a post'}
             onChange={(e) => setPreview(e.target.value)}
           />
           <Textarea
+            onError={contentError}
+            onErrorMessage={'Content is required.'}
             value={contentString}
             placeholder={'Content'}
             onChange={(e) => setPostContent(e.target.value)}
@@ -158,6 +197,8 @@ const CreatePost = () => {
             onKeyDown={(e) => clearPostSearchTags(e)}
           >
             <Input
+              onError={searchTagsError}
+              onErrorMessage={'Max quantity of search tags is 5. Min quantity of search tags is 1.'}
               value={searchTagsString}
               placeholder={'Search tags'}
               onChange={(e) => setPostSearchTags(e.target.value)}
@@ -182,6 +223,7 @@ const CreatePost = () => {
             <Button
               text={'Create posts'}
               onClick={() => fetchCreatePost()}
+              disabled={titleError || previewError || contentError || searchTagsError}
             />
           </ButtonWrapper>
 
