@@ -13,7 +13,14 @@ import { useCreatePostService } from '@services/posts/create-post/create-post.se
 import { ListPostsResponse } from '@services/posts/list-posts/list-posts.interface';
 import { useListPostsService } from '@services/posts/list-posts/list-posts.service';
 import { useRefreshTokenService } from '@services/refresh-tokens/refresh-tokens.service';
-import { ButtonWrapper, Container, CreatePostTitle } from '@styles/create-post.style';
+import {
+  ButtonWrapper,
+  Container,
+  CreatePostTitle,
+  InputKeyWrapper,
+  SearchTagItem,
+  SearchTagsWrapper
+} from '@styles/create-post.style';
 
 const CreatePost = () => {
   const router = useRouter();
@@ -34,11 +41,30 @@ const CreatePost = () => {
   const { loading: l2, refreshToken } = useRefreshTokenService();
 
   const setPostContent = (contentString: string) => {
+    setContentString(contentString);
     setContent(contentString.split('\n'));
   };
 
   const setPostSearchTags = (searchTagsString: string) => {
-    setSearchTags(searchTagsString.split(' '));
+    setSearchTagsString(searchTagsString);
+  };
+
+  const clearPostSearchTags = (e?: any) => {
+    if (e && e.key === ' ') {
+      const tags = searchTags;
+      if (
+        searchTagsString.length > 1 &&
+        !searchTags.includes(searchTagsString.replace(' ', ''))
+      ) {
+        tags.push(searchTagsString.replace(' ', ''));
+      }
+      setSearchTags(tags);
+      setSearchTagsString('');
+    }
+  };
+
+  const removeSearchTag = (searchTag: string) => {
+    setSearchTags(searchTags.filter(tag => tag !== searchTag));
   };
 
   React.useEffect(() => {
@@ -128,11 +154,29 @@ const CreatePost = () => {
             placeholder={'Content'}
             onChange={(e) => setPostContent(e.target.value)}
           />
-          <Input
-            value={searchTagsString}
-            placeholder={'Search tags'}
-            onChange={(e) => setPostSearchTags(e.target.value)}
-          />
+          <InputKeyWrapper
+            onKeyDown={(e) => clearPostSearchTags(e)}
+          >
+            <Input
+              value={searchTagsString}
+              placeholder={'Search tags'}
+              onChange={(e) => setPostSearchTags(e.target.value)}
+            />
+          </InputKeyWrapper>
+
+          {searchTags.length > 1 ? (
+            <SearchTagsWrapper>
+              {searchTags.map((tag, key) => (
+                <div key={key}>
+                  {tag !== '' ? (
+                    <SearchTagItem
+                      onClick={() => removeSearchTag(tag)}
+                    >{tag}</SearchTagItem>
+                  ) : (<></>)}
+                </div>
+              ))}
+            </SearchTagsWrapper>
+          ): (<></>)}
 
           <ButtonWrapper>
             <Button

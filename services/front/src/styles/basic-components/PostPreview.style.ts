@@ -40,7 +40,7 @@ export const PostTag = styled.p`
 `;
 
 export const PostCreatedAt = styled.p`
-  color: rgb(${(props) => props.theme.colors.textColor});
+  color: rgb(${(props) => props.theme.colors.textColor}, .5);
   margin-top: 10px;
 `;
 

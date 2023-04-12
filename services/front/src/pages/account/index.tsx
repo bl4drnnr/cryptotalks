@@ -216,6 +216,7 @@ const Account = () => {
                           title={post.title}
                           preview={post.preview}
                           searchTags={post.searchTags}
+                          createdAt={post.createdAt}
                           key={key}
                         />
                       ))}
