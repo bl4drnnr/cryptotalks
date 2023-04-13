@@ -128,8 +128,8 @@ const Home = () => {
           </HomeDescriptionSide>
           <HomeDescriptionSide>
             <HomePostsTitle className={'subtitle'}>Hello there! How&apos;s going?</HomePostsTitle>
-            <HomeParagraph className={'small'}>Welcome to our forum dedicated to cryptocurrencies! We're thrilled to have you join our community of like-minded individuals who are passionate about the world of digital currencies. Your presence here is greatly appreciated, and we look forward to engaging in meaningful discussions, sharing insights, and learning from each other's experiences in the exciting realm of cryptocurrencies.</HomeParagraph>
-            <HomeParagraph className={'small'}>We're delighted to see you on our cryptocurrency forum! Your participation adds immense value to our community, and we're excited to have you contribute your unique perspectives and knowledge about the ever-evolving world of blockchain technology and cryptocurrencies. Thank you for joining us, and we can't wait to embark on this cryptocurrency journey together!</HomeParagraph>
+            <HomeParagraph className={'small'}>Welcome to our forum dedicated to cryptocurrencies! We&apos;re thrilled to have you join our community of like-minded individuals who are passionate about the world of digital currencies. Your presence here is greatly appreciated, and we look forward to engaging in meaningful discussions, sharing insights, and learning from each other&apos;s experiences in the exciting realm of cryptocurrencies.</HomeParagraph>
+            <HomeParagraph className={'small'}>We&apos;re delighted to see you on our cryptocurrency forum! Your participation adds immense value to our community, and we&apos;re excited to have you contribute your unique perspectives and knowledge about the ever-evolving world of blockchain technology and cryptocurrencies. Thank you for joining us, and we can&apos;t wait to embark on this cryptocurrency journey together!</HomeParagraph>
           </HomeDescriptionSide>
           <HomeDescriptionSide>
             <HomePostsContainer className={'align-center'}>

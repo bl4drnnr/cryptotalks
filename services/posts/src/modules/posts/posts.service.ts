@@ -61,6 +61,14 @@ export class PostsService {
     });
   }
 
+  ratePost(payload: any) {
+    //
+  }
+
+  rateComment(payload: any) {
+    //
+  }
+
   async logPostAction(payload: LogEventDto) {
     const log = new this.logger(payload);
     await log.save();

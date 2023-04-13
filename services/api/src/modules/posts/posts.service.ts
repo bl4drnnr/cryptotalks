@@ -120,4 +120,14 @@ export class PostsService {
     );
     return new ResponseDto();
   }
+
+  ratePost(payload: any) {
+    this.postsClient.emit('rate_post', {});
+    return new ResponseDto();
+  }
+
+  rateComment(payload: any) {
+    this.postsClient.emit('rate_comment', {});
+    return new ResponseDto();
+  }
 }
