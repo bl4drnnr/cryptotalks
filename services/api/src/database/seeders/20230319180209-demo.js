@@ -91,7 +91,7 @@ module.exports = {
     }]);
 
     await queryInterface.bulkInsert('posts', [{
-      id: uuid.v4(),
+      id: 'b5a12b9c-afb2-4fbc-a35f-c8fee31024a4',
       user_id: '8a08eaf1-c7a8-403b-b1ce-1fef8e34d000',
       username: 'JohnDoe',
       title: 'Cryptocurrencies: Understanding the Basics',
@@ -102,7 +102,7 @@ module.exports = {
       created_at: new Date('2022-01-01'),
       updated_at: new Date()
     }, {
-      id: uuid.v4(),
+      id: '8c0e572a-166e-466f-a1b5-8abcdca269af',
       user_id: '8a08eaf1-c7a8-403b-b1ce-1fef8e34d000',
       username: 'JohnDoe',
       title: 'Understanding Blockchain: How it Works and its Applications',
@@ -113,7 +113,7 @@ module.exports = {
       created_at: new Date('2022-02-02'),
       updated_at: new Date()
     }, {
-      id: uuid.v4(),
+      id: 'bfbb0bf5-c05f-473c-84bb-ff01a9655b90',
       user_id: '8a08eaf1-c7a8-403b-b1ce-1fef8e34d000',
       username: 'JohnDoe',
       title: 'Web3 and Decentralized Applications: The Future of the Internet?',
@@ -124,7 +124,7 @@ module.exports = {
       created_at: new Date('2022-03-03'),
       updated_at: new Date()
     }, {
-      id: uuid.v4(),
+      id: 'aa3098da-64dd-4837-9f84-ec8c56f675ee',
       user_id: '186f0ff4-1444-4637-9be3-8c0abc168ba2',
       username: 'MilyKotek',
       title: 'NFTs and Web3: The Rise of Digital Ownership',
@@ -135,7 +135,7 @@ module.exports = {
       created_at: new Date(),
       updated_at: new Date()
     }, {
-      id: uuid.v4(),
+      id: '891d1a79-c4c1-4378-99a2-4920b462c8fd',
       user_id: '77c93fdf-8a06-483c-8d89-2f5c71d029ed',
       username: 'TopWiedzmin1337',
       title: 'Web3 and the Future of Finance: Decentralized Finance (DeFi)',
@@ -146,7 +146,7 @@ module.exports = {
       created_at: new Date(),
       updated_at: new Date()
     }, {
-      id: uuid.v4(),
+      id: '5a7805c5-3803-45ce-90d9-5ac0c701e7a1',
       user_id: '77c93fdf-8a06-483c-8d89-2f5c71d029ed',
       username: 'TopWiedzmin1337',
       title: 'The Promise and Potential of Web3 for Social Impact',
@@ -157,11 +157,14 @@ module.exports = {
       created_at: new Date(),
       updated_at: new Date()
     }]);
+
+    await queryInterface.bulkInsert('comments', [{}]);
   },
 
   async down (queryInterface, Sequelize) {
     await queryInterface.bulkDelete('users', null, {});
     await queryInterface.bulkDelete('posts', null, {});
+    await queryInterface.bulkDelete('comments', null, {});
     await queryInterface.bulkDelete('user_settings', null, {});
     await queryInterface.bulkDelete('favorite_coins', null, {});
     await queryInterface.bulkDelete('sessions', null, {});
