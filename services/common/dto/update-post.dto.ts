@@ -12,4 +12,16 @@ export class UpdatePostDto {
     nullable: true
   })
   content?: Array<string>;
+
+  @ApiProperty({
+    type: String,
+    nullable: true
+  })
+  preview?: string;
+
+  @ApiProperty({
+    type: [String],
+    nullable: true
+  })
+  searchTags?: Array<string>;
 }

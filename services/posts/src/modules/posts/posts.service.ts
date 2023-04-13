@@ -35,8 +35,14 @@ export class PostsService {
     });
   }
 
-  updatePost({ title, postId, content }: UpdatePostEventDto) {
-    let updatedFields = { content };
+  updatePost({
+    title,
+    postId,
+    content,
+    preview,
+    searchTags
+  }: UpdatePostEventDto) {
+    let updatedFields = { content, preview, searchTags };
 
     if (title) {
       updatedFields['title'] = title;

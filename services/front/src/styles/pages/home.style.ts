@@ -252,6 +252,10 @@ export const HomePostsContainer = styled.div`
     align-items: center;
     justify-content: center;
   }
+
+  @media only screen and (max-width: 1200px) {
+    display: block;
+  }
 `;
 
 export const HomePostsTitle = styled.h1`
@@ -281,4 +285,11 @@ export const HomeParagraph = styled.p`
 
 export const HomeDescriptionSide = styled.div`
   width: 100%;
+
+  &.image {
+    @media only screen and (max-width: 1200px) {
+      display: flex;
+      justify-content: center;
+    } 
+  }
 `;

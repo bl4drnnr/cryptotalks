@@ -5,7 +5,12 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 
 import { Input } from '@components/Input/Input.component';
+import { useHandleException } from '@hooks/useHandleException.hook';
 import DefaultLayout from '@layouts/Default.layout';
+import { ListCryptoResponse } from '@services/list-crypto/list-crypto.interface';
+import { useListCryptoService } from '@services/list-crypto/list-crypto.service';
+import { ListPostsResponse } from '@services/posts/list-posts/list-posts.interface';
+import { useListPostsService } from '@services/posts/list-posts/list-posts.service';
 import {
   Bold,
   BoldWeb3,
@@ -27,6 +32,43 @@ const Home = () => {
   const router = useRouter();
 
   const [email, setEmail] = React.useState('');
+  const [posts, setPosts] = React.useState<ListPostsResponse>();
+  const [coins, setCoins] = React.useState<ListCryptoResponse>();
+
+  const { handleException } = useHandleException();
+  const { loading: l0, listPosts } = useListPostsService();
+  const { loading: l1, listCrypto } = useListCryptoService();
+
+  React.useEffect(() => {
+    fetchListCoins().then((res) => setCoins(res));
+    fetchListPosts().then((res) => setPosts(res));
+  }, []);
+
+  const fetchListCoins = async () => {
+    try {
+      return await listCrypto({
+        page: 0,
+        pageSize: 3,
+        order: '',
+        orderBy: ''
+      });
+    } catch (e) {
+      await handleException(e);
+    }
+  };
+
+  const fetchListPosts = async () => {
+    try {
+      return await listPosts({
+        page: 0,
+        pageSize: 3,
+        order: '',
+        orderBy: ''
+      });
+    } catch (e) {
+      await handleException(e);
+    }
+  };
 
   const handleRedirect = async (path: string) => {
     await router.push(`/${path}`);
@@ -76,7 +118,7 @@ const Home = () => {
         </MainHomeWelcomeContainer>
 
         <HomePostsContainer>
-          <HomeDescriptionSide>
+          <HomeDescriptionSide className={'image'}>
             <Image
               src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/skeleton-hello.gif`}
               alt={'skeleton'}
@@ -114,7 +156,7 @@ const Home = () => {
               />
             </HomePostsContainer>
           </HomeDescriptionSide>
-          <HomeDescriptionSide>
+          <HomeDescriptionSide className={'image'}>
             <Image
               src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/skeleton-talk.gif`}
               alt={'skeleton'}
@@ -136,7 +178,7 @@ const Home = () => {
         </HomePostsContainer>
 
         <HomePostsContainer>
-          <HomeDescriptionSide>
+          <HomeDescriptionSide className={'image'}>
             <Image
               src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/skeleton-cheetos.gif`}
               alt={'skeleton'}
@@ -164,7 +206,7 @@ const Home = () => {
               </StartButton>
             </InputWrapper>
           </HomeDescriptionSide>
-          <HomeDescriptionSide>
+          <HomeDescriptionSide className={'image'}>
             <Image
               src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/skeleton-like.gif`}
               alt={'skeleton'}

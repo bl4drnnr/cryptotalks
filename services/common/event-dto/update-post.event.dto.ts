@@ -15,6 +15,18 @@ export class UpdatePostEventDto {
 
   @ApiProperty({
     type: String,
+    nullable: true
+  })
+  preview?: string;
+
+  @ApiProperty({
+    type: [String],
+    nullable: true
+  })
+  searchTags?: Array<string>;
+
+  @ApiProperty({
+    type: String,
     format: 'uuid',
     nullable: false
   })
