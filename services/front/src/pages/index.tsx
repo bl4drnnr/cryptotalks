@@ -9,7 +9,11 @@ import DefaultLayout from '@layouts/Default.layout';
 import {
   Bold,
   BoldWeb3,
-  ButtonText, HomeDescriptionSide, HomePostsContainer, HomePostsTitle,
+  ButtonText,
+  HomeDescriptionSide,
+  HomeParagraph,
+  HomePostsContainer,
+  HomePostsTitle,
   HomeWelcomeBox,
   HomeWelcomeTitle,
   InputWrapper,
@@ -74,11 +78,16 @@ const Home = () => {
         <HomePostsContainer>
           <HomeDescriptionSide>
             <Image
-              src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/skeleton.gif`}
+              src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/skeleton-hello.gif`}
               alt={'skeleton'}
               width={500}
               height={500}
             />
+          </HomeDescriptionSide>
+          <HomeDescriptionSide>
+            <HomePostsTitle className={'subtitle'}>Hello there! How&apos;s going?</HomePostsTitle>
+            <HomeParagraph className={'small'}>Welcome to our forum dedicated to cryptocurrencies! We're thrilled to have you join our community of like-minded individuals who are passionate about the world of digital currencies. Your presence here is greatly appreciated, and we look forward to engaging in meaningful discussions, sharing insights, and learning from each other's experiences in the exciting realm of cryptocurrencies.</HomeParagraph>
+            <HomeParagraph className={'small'}>We're delighted to see you on our cryptocurrency forum! Your participation adds immense value to our community, and we're excited to have you contribute your unique perspectives and knowledge about the ever-evolving world of blockchain technology and cryptocurrencies. Thank you for joining us, and we can't wait to embark on this cryptocurrency journey together!</HomeParagraph>
           </HomeDescriptionSide>
           <HomeDescriptionSide>
             <HomePostsContainer className={'align-center'}>
@@ -90,6 +99,78 @@ const Home = () => {
                 height={58}
               />
             </HomePostsContainer>
+          </HomeDescriptionSide>
+        </HomePostsContainer>
+
+        <HomePostsContainer>
+          <HomeDescriptionSide>
+            <HomePostsContainer className={'align-center'}>
+              <HomePostsTitle>The most hot coins</HomePostsTitle>
+              <Image
+                src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/fire.png`}
+                alt={'fire'}
+                width={58}
+                height={58}
+              />
+            </HomePostsContainer>
+          </HomeDescriptionSide>
+          <HomeDescriptionSide>
+            <Image
+              src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/skeleton-talk.gif`}
+              alt={'skeleton'}
+              width={500}
+              height={500}
+            />
+          </HomeDescriptionSide>
+          <HomeDescriptionSide>
+            <HomePostsContainer className={'align-center'}>
+              <HomePostsTitle>Here is what you can find here</HomePostsTitle>
+              <Image
+                src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/fire.png`}
+                alt={'fire'}
+                width={58}
+                height={58}
+              />
+            </HomePostsContainer>
+          </HomeDescriptionSide>
+        </HomePostsContainer>
+
+        <HomePostsContainer>
+          <HomeDescriptionSide>
+            <Image
+              src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/skeleton-cheetos.gif`}
+              alt={'skeleton'}
+              width={500}
+              height={500}
+            />
+          </HomeDescriptionSide>
+          <HomeDescriptionSide>
+            <HomePostsTitle className={'subtitle'}>Anyway, glad you are here!</HomePostsTitle>
+            <HomeParagraph>If you are interested in all this cryptogeek stuff, we always will be glad to see you as a part of this community.</HomeParagraph>
+            <InputWrapper>
+              <Input
+                high={true}
+                value={email}
+                placeholder={'Email'}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </InputWrapper>
+
+            <InputWrapper>
+              <StartButton onClick={() => handleRedirect(`signup?email=${email}`)}>
+                <ButtonText>
+                  Let&apos;s roll!
+                </ButtonText>
+              </StartButton>
+            </InputWrapper>
+          </HomeDescriptionSide>
+          <HomeDescriptionSide>
+            <Image
+              src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/skeleton-like.gif`}
+              alt={'skeleton'}
+              width={500}
+              height={500}
+            />
           </HomeDescriptionSide>
         </HomePostsContainer>
       </DefaultLayout>

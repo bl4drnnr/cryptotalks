@@ -246,9 +246,9 @@ export const Line = styled.div`
 
 export const HomePostsContainer = styled.div`
   display: flex;
-  margin-top: 20px;
   
   &.align-center {
+    padding: 20px 0;
     align-items: center;
     justify-content: center;
   }
@@ -256,9 +256,27 @@ export const HomePostsContainer = styled.div`
 
 export const HomePostsTitle = styled.h1`
   color: rgb(${(props) => props.theme.colors.textColor});
-  font-size: 58px;
+  font-size: 42px;
   font-weight: 100;
   font-family: "Lato", sans-serif;
+  
+  &.subtitle {
+    text-align: center;
+    padding: 20px 0;
+  }
+`;
+
+export const HomeParagraph = styled.p`
+  color: rgb(${(props) => props.theme.colors.textColor});
+  font-size: 22px;
+  padding: 10px;
+  font-weight: 100;
+  text-align: center;
+  
+  &.small {
+    font-size: 18px;
+    padding: 20px;
+  }
 `;
 
 export const HomeDescriptionSide = styled.div`
