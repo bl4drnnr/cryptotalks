@@ -130,7 +130,7 @@ const Account = () => {
                 {userData && (
                   <UserProfilePicture>
                     <UserProfilePictureWrapper>
-                      <Image className={'ava'} src={'/img/testava.jpg'} alt={'ava'} width={225} height={225}/>
+                      <Image className={'ava'} src={`${process.env.PUBLIC_S3_BUCKET_URL}/testava.jpg`} alt={'ava'} width={225} height={225}/>
                       <UserTitle>
                         {userData.title}
                       </UserTitle>
@@ -148,7 +148,12 @@ const Account = () => {
                             onClick={() => copyToClipboard(userData.twitter)}
                           >
                             <ContactIcon>
-                              <Image src={'/img/twitter.svg'} width={32} height={32}  alt={'t'} />
+                              <Image
+                                src={`${process.env.PUBLIC_S3_BUCKET_URL}/twitter.svg`}
+                                width={32}
+                                height={32}
+                                alt={'t'}
+                              />
                             </ContactIcon>
                             <Input
                               disabled={true}
@@ -163,7 +168,12 @@ const Account = () => {
                             onClick={() => copyToClipboard(userData.linkedIn)}
                           >
                             <ContactIcon>
-                              <Image src={'/img/linkedin.svg'} width={32} height={32}  alt={'l'} />
+                              <Image
+                                src={`${process.env.PUBLIC_S3_BUCKET_URL}/linkedin.svg`}
+                                width={32}
+                                height={32}
+                                alt={'l'}
+                              />
                             </ContactIcon>
                             <Input
                               disabled={true}
@@ -178,7 +188,12 @@ const Account = () => {
                             onClick={() => copyToClipboard(userData.personalWebsite)}
                           >
                             <ContactIcon>
-                              <Image src={'/img/tag.svg'} width={32} height={32}  alt={'w'} />
+                              <Image
+                                src={`${process.env.PUBLIC_S3_BUCKET_URL}/tag.svg`}
+                                width={32}
+                                height={32}
+                                alt={'w'}
+                              />
                             </ContactIcon>
                             <Input
                               disabled={true}

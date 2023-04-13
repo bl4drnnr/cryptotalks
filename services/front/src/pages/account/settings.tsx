@@ -138,7 +138,7 @@ const AccountSettings = () => {
                 onClick={() => handleRedirect('account')}
               >
                 <UserProfilePicture>
-                  <Image className={'ava'} src={'/img/testava.jpg'} alt={'ava'} width={128} height={128}/>
+                  <Image className={'ava'} src={`${process.env.PUBLIC_S3_BUCKET_URL}/testava.jpg`} alt={'ava'} width={128} height={128}/>
                 </UserProfilePicture>
 
                 <SettingsHeaderItemsWrapper>

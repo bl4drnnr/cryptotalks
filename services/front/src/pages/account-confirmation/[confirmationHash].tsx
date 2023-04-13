@@ -63,7 +63,7 @@ const AccountConfirmation = () => {
               ) : (confirmationStatus === 2 ? (
                 <>
                   <MarginWrapper>
-                    <SubTitle>Success! Welcome here, newbie! It's nice to see you, hang around here and try to find some fun.</SubTitle>
+                    <SubTitle>Success! Welcome here, newbie! It&apos;s nice to see you, hang around here and try to find some fun.</SubTitle>
                   </MarginWrapper>
                   <MarginWrapper>
                     <Button

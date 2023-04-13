@@ -147,7 +147,7 @@ const Market = () => {
           <MarketTitle className={'main'}>Markets</MarketTitle>
 
           <MarketParagraph>
-            Welcome to our cryptocurrency rate tracker! Here, you can stay up-to-date with the latest rates of various cryptocurrencies. Whether you're a seasoned investor, a crypto enthusiast, or just curious about the current market trends, our web page provides you with a comprehensive and user-friendly platform to explore the ever-changing world of cryptocurrencies.
+            Welcome to our cryptocurrency rate tracker! Here, you can stay up-to-date with the latest rates of various cryptocurrencies. Whether you&apos;re a seasoned investor, a crypto enthusiast, or just curious about the current market trends, our web page provides you with a comprehensive and user-friendly platform to explore the ever-changing world of cryptocurrencies.
           </MarketParagraph>
           <MarketParagraph>
             On our web page, you can easily access real-time rates of popular cryptocurrencies such as Bitcoin (BTC), Ethereum (ETH), Ripple (XRP), Litecoin (LTC), and many more. Our rates are updated in real-time to ensure you have the most accurate and reliable information at your fingertips.
@@ -159,7 +159,7 @@ const Market = () => {
             Our web page is designed to be user-friendly, with a sleek and modern interface that makes it easy to navigate and find the information you need. You can customize your experience by selecting your preferred currency, time zone, and display options, allowing you to personalize the data to suit your needs.
           </MarketParagraph>
           <MarketParagraph>
-            Whether you're a seasoned trader, a long-term investor, or just interested in learning more about cryptocurrencies, our web page provides you with a reliable and comprehensive resource to stay informed and make informed decisions. Stay ahead of the market with our cryptocurrency rate tracker and empower yourself with the knowledge to navigate the exciting world of digital currencies. Start exploring now!
+            Whether you&apos;re a seasoned trader, a long-term investor, or just interested in learning more about cryptocurrencies, our web page provides you with a reliable and comprehensive resource to stay informed and make informed decisions. Stay ahead of the market with our cryptocurrency rate tracker and empower yourself with the knowledge to navigate the exciting world of digital currencies. Start exploring now!
           </MarketParagraph>
 
           <SearchInputWrapper>

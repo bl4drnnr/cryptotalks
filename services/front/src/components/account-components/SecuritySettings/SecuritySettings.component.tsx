@@ -161,7 +161,7 @@ const SecuritySettings = ({ securitySettings }: SecuritySettingsProps) => {
       <SecurityItemBlock>
         <SecurityItemWrapper>
           <ItemTitle>Change password</ItemTitle>
-          <ItemDescription>Be careful! Some operations won't be available for 24h after change.</ItemDescription>
+          <ItemDescription>Be careful! Some operations won&apos;t be available for 24h after change.</ItemDescription>
         </SecurityItemWrapper>
         <SecurityItemWrapper className={'button'}>
           <Button

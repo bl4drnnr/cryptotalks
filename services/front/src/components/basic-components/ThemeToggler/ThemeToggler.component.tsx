@@ -9,9 +9,19 @@ export const ThemeToggler = ({ theme, onClick }: ThemeTogglerProps) => {
   return (
     <Toggler onClick={onClick}>
       {theme === 'dark' ? (
-        <><Image src={'/img/sun.svg'} alt={'Sun'} width={30} height={30}/></>
+        <><Image
+          src={`${process.env.PUBLIC_S3_BUCKET_URL}/sun.svg`}
+          alt={'Sun'}
+          width={30}
+          height={30}
+        /></>
       ) : (
-        <><Image src={'/img/moon.svg'} alt={'Moon'} width={30} height={30}/></>
+        <><Image
+          src={`${process.env.PUBLIC_S3_BUCKET_URL}/moon.svg`}
+          alt={'Moon'}
+          width={30}
+          height={30}
+        /></>
       )}
     </Toggler>
   );
