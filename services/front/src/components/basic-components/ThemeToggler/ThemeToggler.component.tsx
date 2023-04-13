@@ -10,14 +10,14 @@ export const ThemeToggler = ({ theme, onClick }: ThemeTogglerProps) => {
     <Toggler onClick={onClick}>
       {theme === 'dark' ? (
         <><Image
-          src={`${process.env.PUBLIC_S3_BUCKET_URL}/sun.svg`}
+          src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/sun.svg`}
           alt={'Sun'}
           width={30}
           height={30}
         /></>
       ) : (
         <><Image
-          src={`${process.env.PUBLIC_S3_BUCKET_URL}/moon.svg`}
+          src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/moon.svg`}
           alt={'Moon'}
           width={30}
           height={30}

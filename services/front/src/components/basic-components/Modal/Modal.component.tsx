@@ -9,7 +9,7 @@ export const Modal = ({ onClose, header, description, children }: ModalProps) =>
       <Wrapper onClick={(e) => e.stopPropagation()}>
         <WindowHeader>
           <Image
-            src={`${process.env.PUBLIC_S3_BUCKET_URL}/backarrowmodal.svg`}
+            src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/backarrowmodal.svg`}
             alt={'close'}
             width={72}
             height={72}

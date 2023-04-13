@@ -130,7 +130,7 @@ const Account = () => {
                 {userData && (
                   <UserProfilePicture>
                     <UserProfilePictureWrapper>
-                      <Image className={'ava'} src={`${process.env.PUBLIC_S3_BUCKET_URL}/testava.jpg`} alt={'ava'} width={225} height={225}/>
+                      <Image className={'ava'} src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/testava.jpg`} alt={'ava'} width={225} height={225}/>
                       <UserTitle>
                         {userData.title}
                       </UserTitle>
@@ -149,7 +149,7 @@ const Account = () => {
                           >
                             <ContactIcon>
                               <Image
-                                src={`${process.env.PUBLIC_S3_BUCKET_URL}/twitter.svg`}
+                                src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/twitter.svg`}
                                 width={32}
                                 height={32}
                                 alt={'t'}
@@ -169,7 +169,7 @@ const Account = () => {
                           >
                             <ContactIcon>
                               <Image
-                                src={`${process.env.PUBLIC_S3_BUCKET_URL}/linkedin.svg`}
+                                src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/linkedin.svg`}
                                 width={32}
                                 height={32}
                                 alt={'l'}
@@ -189,7 +189,7 @@ const Account = () => {
                           >
                             <ContactIcon>
                               <Image
-                                src={`${process.env.PUBLIC_S3_BUCKET_URL}/tag.svg`}
+                                src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/tag.svg`}
                                 width={32}
                                 height={32}
                                 alt={'w'}
