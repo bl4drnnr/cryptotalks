@@ -246,6 +246,7 @@ export const Line = styled.div`
 
 export const HomePostsContainer = styled.div`
   display: flex;
+  margin-top: 20px;
   
   &.align-center {
     align-items: center;
