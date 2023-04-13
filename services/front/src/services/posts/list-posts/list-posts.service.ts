@@ -11,7 +11,22 @@ export const useListPostsService = () => {
     : Promise<ListPostsResponse> => {
     try {
       setLoading(true);
-      const { data } = await ApiClient.get<ListPostsResponse>(`/post/list/${page}/${pageSize}/${order}/${orderBy}?searchQuery=${searchQuery || ''}&username=${username}`);
+
+      const queryParams = [];
+      let listPostsPath = `/post/list/${page}/${pageSize}/${order}/${orderBy}?`;
+
+      if (searchQuery) queryParams.push({ searchQuery });
+      if (username) queryParams.push({ username });
+
+      if (queryParams.length) {
+        queryParams.forEach((item) => {
+          Object.entries(item).forEach(([key, value]) => {
+            listPostsPath += `${key}=${value}&`;
+          });
+        });
+      }
+
+      const { data } = await ApiClient.get<ListPostsResponse>(listPostsPath);
 
       return data;
     } catch (error: any) {

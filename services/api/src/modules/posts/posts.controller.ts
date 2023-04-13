@@ -129,4 +129,24 @@ export class PostsController {
   ) {
     return this.postsService.leaveComment({ ...payload, userId, postId });
   }
+
+  @UseGuards(JwtGuard)
+  @Patch('rate/post/:id')
+  ratePost(
+    @Param('id') postId: string,
+    @UserDecorator() userId: string,
+    @Body() payload
+  ) {
+    return this.postsService.ratePost({ ...payload, userId, postId });
+  }
+
+  @UseGuards(JwtGuard)
+  @Patch('rate/comment/:id')
+  rateComment(
+    @Param('id') commentId: string,
+    @UserDecorator() userId: string,
+    @Body() payload
+  ) {
+    return this.postsService.rateComment({ ...payload, userId, commentId });
+  }
 }

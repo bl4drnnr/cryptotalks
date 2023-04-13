@@ -254,7 +254,7 @@ const Signup = () => {
                   <HeaderSmall>Tell us a little about yourself</HeaderSmall>
                 </MarginWrapper>
                 <MarginWrapper>
-                  <Paragraph>Don't worry, you can skip this step and fill information you want later</Paragraph>
+                  <Paragraph>Don&apos;t worry, you can skip this step and fill information you want later</Paragraph>
                 </MarginWrapper>
 
                 <MarginWrapper>

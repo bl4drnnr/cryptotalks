@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const MainHomeWelcomeContainer = styled.div`
   height: 100vh;
   background-color: rgb(${(props) => props.theme.colors.darkBackground});
-  z-index: -6;
+  border-bottom: 1px solid rgba(${(props) => props.theme.colors.textColor}, .25);
 `;
 
 export const HomeWelcomeBox = styled.div`
@@ -147,16 +147,7 @@ export const ButtonText = styled.h3`
   }
 `;
 
-export const Lines = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100%;
-  margin: auto;
-  width: 90vw;
-  z-index: 0;
-`;
+export const Lines = styled.div``;
 
 export const Line = styled.div`
   position: absolute;
@@ -250,5 +241,55 @@ export const Line = styled.div`
     &::after {
       animation-delay: 2.2s;
     }
+  }
+`;
+
+export const HomePostsContainer = styled.div`
+  display: flex;
+  
+  &.align-center {
+    padding: 20px 0;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media only screen and (max-width: 1200px) {
+    display: block;
+  }
+`;
+
+export const HomePostsTitle = styled.h1`
+  color: rgb(${(props) => props.theme.colors.textColor});
+  font-size: 42px;
+  font-weight: 100;
+  font-family: "Lato", sans-serif;
+  
+  &.subtitle {
+    text-align: center;
+    padding: 20px 0;
+  }
+`;
+
+export const HomeParagraph = styled.p`
+  color: rgb(${(props) => props.theme.colors.textColor});
+  font-size: 22px;
+  padding: 10px;
+  font-weight: 100;
+  text-align: center;
+  
+  &.small {
+    font-size: 18px;
+    padding: 20px;
+  }
+`;
+
+export const HomeDescriptionSide = styled.div`
+  width: 100%;
+
+  &.image {
+    @media only screen and (max-width: 1200px) {
+      display: flex;
+      justify-content: center;
+    } 
   }
 `;

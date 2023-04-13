@@ -98,7 +98,7 @@ export const PersonalInformation = ({
 
         <PersonalInfoItemsWrapper className={'end'}>
           <AvaWrapper>
-            <Image className={'ava'} src={'/img/testava.jpg'} alt={'ava'} width={225} height={225}/>
+            <Image className={'ava'} src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/testava.jpg`} alt={'ava'} width={225} height={225}/>
             <ChangeAvatar>
               <Button
                 text={'Change avatar'}
