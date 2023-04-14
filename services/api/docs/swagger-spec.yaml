@@ -149,6 +149,40 @@ paths:
         "201":
           description: As a response function returns success message
       tags: *a1
+  "/api/posts/rate/post/{id}":
+    patch:
+      operationId: PostsController_ratePost
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseDto"
+      tags: *a1
+  "/api/posts/rate/comment/{id}":
+    patch:
+      operationId: PostsController_rateComment
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseDto"
+      tags: *a1
   /api/user/sign-up:
     post:
       operationId: UserController_signUp
@@ -259,6 +293,12 @@ paths:
       operationId: UserController_setTwoFa
       summary: Sets multi-factor authentication for user
       parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Set2faDto"
       responses:
         "201":
           description: As a response function returns success message
@@ -268,6 +308,12 @@ paths:
       operationId: UserController_removeTwoFa
       summary: Removes multi-factor authentication for user
       parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Remove2faDto"
       responses:
         "201":
           description: As a response function returns success message
@@ -295,27 +341,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/UpdateUserEventDto"
-      responses:
-        "200":
-          description: ""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ResponseDto"
-        "201":
-          description: As a response function returns success message
-      tags: *a2
-  /api/user/set-security-settings:
-    patch:
-      operationId: UserController_setSecuritySettings
-      summary: Sets user security settings
-      parameters: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UpdateUserSecurityEventDto"
       responses:
         "200":
           description: ""
@@ -461,6 +486,22 @@ components:
     CreatePostEvent:
       type: object
       properties: {}
+    IRate:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+          nullable: false
+          default: uuidv4
+          description: Unique Id of the user
+        rate:
+          type: string
+          nullable: false
+          description: Rate (either positive or negative)
+      required:
+        - userId
+        - rate
     PostInfo:
       type: object
       properties:
@@ -475,15 +516,18 @@ components:
           format: uuid
           nullable: false
           description: Post Id
-        userId:
-          type: string
-          format: uuid
+        rates:
           nullable: false
-          description: User Id
-        comment:
-          type: string
+          description: List of users rates of post
+          type: array
+          items:
+            $ref: "#/components/schemas/IRate"
+        comments:
           nullable: false
-          description: Comment payload
+          description: List of id of comments
+          type: array
+          items:
+            type: string
         createdAt:
           format: date-time
           type: string
@@ -497,8 +541,8 @@ components:
       required:
         - id
         - postId
-        - userId
-        - comment
+        - rates
+        - comments
         - createdAt
         - updatedAt
     Post:
@@ -543,12 +587,6 @@ components:
           type: array
           items:
             type: string
-        likes:
-          nullable: false
-          description: List of users who liked post
-          type: array
-          items:
-            type: string
         createdAt:
           format: date-time
           type: string
@@ -568,7 +606,6 @@ components:
         - content
         - preview
         - searchTags
-        - likes
         - createdAt
         - updatedAt
     CreatePostDto:
@@ -635,6 +672,14 @@ components:
           type: array
           items:
             type: string
+        preview:
+          type: string
+          nullable: true
+        searchTags:
+          nullable: true
+          type: array
+          items:
+            type: string
         postId:
           type: string
           format: uuid
@@ -648,6 +693,14 @@ components:
           type: string
           nullable: true
         content:
+          nullable: true
+          type: array
+          items:
+            type: string
+        preview:
+          type: string
+          nullable: true
+        searchTags:
           nullable: true
           type: array
           items:
@@ -1101,27 +1154,26 @@ components:
     CloseAccEvent:
       type: object
       properties: {}
-    UpdateUserSecurityEventDto:
+    Set2faDto:
       type: object
       properties:
-        userId:
-          type: string
-          format: uuid
-          nullable: false
-        publicEmail:
-          type: boolean
-          nullable: true
         twoFaToken:
           type: string
-          nullable: true
-        phone:
+          nullable: false
+        twoFaCode:
           type: string
-          nullable: true
+          nullable: false
       required:
-        - userId
-    UpdateUserSecurityEvent:
+        - twoFaToken
+        - twoFaCode
+    Remove2faDto:
       type: object
-      properties: {}
+      properties:
+        twoFaCode:
+          type: string
+          nullable: false
+      required:
+        - twoFaCode
     RefreshTokenEventDto:
       type: object
       properties:

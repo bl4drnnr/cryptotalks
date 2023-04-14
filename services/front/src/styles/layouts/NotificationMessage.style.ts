@@ -8,7 +8,7 @@ export const Container = styled.div`
   left: 0;
   position: fixed;
   text-align: center;
-  z-index: 100;
+  z-index: 1000;
   max-width: 280px;
   border-radius: 8px;
   border: 1px solid rgb(${(props) => props.theme.colors.primary});

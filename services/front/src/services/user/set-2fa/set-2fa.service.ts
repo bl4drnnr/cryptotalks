@@ -11,7 +11,10 @@ export const useSet2FaService = () => {
     : Promise<Set2FaResponse> => {
     try {
       setLoading(true);
-      const { data } = await ApiClient.post<Set2FaResponse>('/twofactor/set', {}, {
+      const { data } = await ApiClient.post<Set2FaResponse>('/user/set-2fa', {
+        twoFaToken: payload.twoFaToken,
+        twoFaCode: payload.twoFaCode
+      }, {
         headers: { 'x-access-token': `Bearer ${payload.token}` }
       });
 

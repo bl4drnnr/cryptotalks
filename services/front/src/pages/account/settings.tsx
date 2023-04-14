@@ -17,7 +17,6 @@ import {
 } from '@services/get-user-settings/get-user-settings.interface';
 import { useGetUserSettingsService } from '@services/get-user-settings/get-user-settings.service';
 import { useSetPersonalSettingsService } from '@services/set-personal-settings/set-personal-settings.service';
-import { useSetSecuritySettingsService } from '@services/set-security-settings/set-security-settings.service';
 import {
   ButtonWrapper,
   Container,
@@ -42,10 +41,10 @@ const AccountSettings = () => {
   const { loading: l0, getUserSettings } = useGetUserSettingsService();
   const { loading: l1, closeAccount } = useCloseAccountService();
   const { loading: l2, setPersonalSettings } = useSetPersonalSettingsService();
-  const { loading: l3, setSecurityUserSettings } = useSetSecuritySettingsService();
 
   const fetchSettingsRef = React.useRef(true);
 
+  const [internalLoader, setInternalLoader] = React.useState<boolean>(false);
   const [personalInformation, setPersonalInformation] = React.useState<IPersonalInformation>();
   const [securitySettings, setSecuritySettings] = React.useState<ISecuritySettings>();
 
@@ -104,7 +103,7 @@ const AccountSettings = () => {
   const applySecuritySettings = async () => {
     try {
       const token = sessionStorage.getItem('_at');
-      await setSecurityUserSettings({  ...securitySettings, token });
+      // await setSecurityUserSettings({  ...securitySettings, token });
       return handleRedirect('account');
     } catch (e) {
       return exceptionHandler(e);
@@ -129,7 +128,7 @@ const AccountSettings = () => {
       <Head>
         <title>Cryptotalks | Settings</title>
       </Head>
-      <DefaultLayout loading={l0 || l1 || l2 || l3}>
+      <DefaultLayout loading={l0 || l1 || l2 || internalLoader}>
         <Container>
           <Wrapper>
 
@@ -187,6 +186,7 @@ const AccountSettings = () => {
                   <SecuritySettings
                     securitySettings={securitySettings}
                     setSecuritySettings={setSecuritySettings}
+                    setInternalLoader={setInternalLoader}
                     applySecuritySettings={applySecuritySettings}
                   />
                 ) : (<></>))}

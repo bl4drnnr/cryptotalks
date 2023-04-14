@@ -40,8 +40,8 @@ const Home = () => {
   const { loading: l1, listCrypto } = useListCryptoService();
 
   React.useEffect(() => {
-    fetchListCoins().then((res) => setCoins(res));
-    fetchListPosts().then((res) => setPosts(res));
+    // fetchListCoins().then((res) => setCoins(res));
+    // fetchListPosts().then((res) => setPosts(res));
   }, []);
 
   const fetchListCoins = async () => {

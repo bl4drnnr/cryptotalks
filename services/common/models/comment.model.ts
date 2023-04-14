@@ -1,6 +1,5 @@
 import {
   Column,
-  Comment,
   CreatedAt,
   DataType,
   Default,
@@ -11,10 +10,10 @@ import {
 } from 'sequelize-typescript';
 import { ApiProperty } from '@nestjs/swagger';
 
-interface PostInfoCreationAttributes {
+interface CommentCreationAttributes {
   postId: string;
   userId: string;
-  comment: string;
+  payload: string;
 }
 
 class IRate {
@@ -36,9 +35,9 @@ class IRate {
 }
 
 @Table({
-  tableName: 'post_info'
+  tableName: 'comments'
 })
-export class PostInfo extends Model<PostInfo, PostInfoCreationAttributes> {
+export class Comment extends Model<Comment, CommentCreationAttributes> {
   @ApiProperty({
     type: String,
     format: 'uuid',
@@ -55,28 +54,36 @@ export class PostInfo extends Model<PostInfo, PostInfoCreationAttributes> {
     type: String,
     format: 'uuid',
     nullable: false,
+    description: 'User Id'
+  })
+  @Column({ type: DataType.UUID, allowNull: false, field: 'user_id' })
+  userId: string;
+
+  @ApiProperty({
+    type: String,
+    format: 'uuid',
+    nullable: false,
     description: 'Post Id'
   })
   @Column({ type: DataType.UUID, allowNull: false, field: 'post_id' })
   postId: string;
 
   @ApiProperty({
+    type: String,
+    nullable: false,
+    description: 'Comment payload'
+  })
+  @Column({ type: DataType.TEXT, allowNull: false })
+  payload: string;
+
+  @ApiProperty({
     type: [IRate],
     nullable: false,
-    description: 'List of users rates of post'
+    description: 'List of users rates of comment'
   })
   @Default([])
   @Column({ type: DataType.JSONB, allowNull: false })
   rates: Array<IRate>;
-
-  @ApiProperty({
-    type: [String],
-    nullable: false,
-    description: 'List of id of comments'
-  })
-  @Default([])
-  @Column({ type: DataType.ARRAY(DataType.STRING), allowNull: false })
-  comments: Array<string>;
 
   @ApiProperty({
     type: Date,

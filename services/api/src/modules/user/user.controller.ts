@@ -35,8 +35,8 @@ import { UserLogoutEvent } from '@events/user-logout.event';
 import { UserLogoutEventDto } from '@event-dto/user-logout.event.dto';
 import { SignUpEventDto } from '@event-dto/sign-up.event.dto';
 import { UserSettings } from '@models/user-settings.model';
-import { UpdateUserSecurityEvent } from '@events/update-user-security.event';
-import { UpdateUserSecurityEventDto } from '@event-dto/update-user-security.event.dto';
+import { Set2faDto } from '@dto/set-2fa.dto';
+import { Remove2faDto } from '@dto/remove-2fa.dto';
 
 @ApiTags('User')
 @Controller('user')
@@ -151,8 +151,8 @@ export class UserController {
   })
   @UseGuards(JwtGuard)
   @Post('set-2fa')
-  setTwoFa(@UserDecorator() userId: string) {
-    return this.userService.setTwoFa();
+  setTwoFa(@UserDecorator() userId: string, @Body() payload: Set2faDto) {
+    return this.userService.setTwoFa({ userId, ...payload });
   }
 
   @ApiOperation({ summary: 'Removes multi-factor authentication for user' })
@@ -162,8 +162,8 @@ export class UserController {
   })
   @UseGuards(JwtGuard)
   @Post('remove-2fa')
-  removeTwoFa(@UserDecorator() userId: string) {
-    return this.userService.removeTwoFa();
+  removeTwoFa(@UserDecorator() userId: string, @Body() payload: Remove2faDto) {
+    return this.userService.removeTwoFa({ userId, ...payload });
   }
 
   @ApiOperation({
@@ -192,21 +192,5 @@ export class UserController {
     @Body() payload: UpdateUserEventDto
   ) {
     return this.userService.setPersonalSettings({ userId, ...payload });
-  }
-
-  @ApiExtraModels(UpdateUserSecurityEvent)
-  @ApiExtraModels(UpdateUserSecurityEventDto)
-  @ApiOperation({ summary: 'Sets user security settings' })
-  @ApiResponse({
-    status: 201,
-    description: 'As a response function returns success message'
-  })
-  @UseGuards(JwtGuard)
-  @Patch('set-security-settings')
-  setSecuritySettings(
-    @UserDecorator() userId: string,
-    @Body() payload: UpdateUserSecurityEventDto
-  ) {
-    return this.userService.setSecuritySettings({ userId, ...payload });
   }
 }

@@ -4,7 +4,7 @@ export const LoadingBackground = styled.div`
   width: 100%;
   height: 100vh;
   position: fixed;
-  z-index: 999;
+  z-index: 1001;
   background-color: rgba(${(props) => props.theme.colors.disableColor}, .35);
 `;
 

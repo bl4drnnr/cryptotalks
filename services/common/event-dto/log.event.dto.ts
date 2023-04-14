@@ -29,7 +29,9 @@ export class LogEventDto {
     | 'POST'
     | 'CLOSE_ACC'
     | 'USER'
-    | 'CRYPTO';
+    | 'CRYPTO'
+    | 'SETTINGS'
+    | 'SECURITY';
 
   @ApiProperty({
     type: 'SUCCESS | ERROR',

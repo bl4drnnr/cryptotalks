@@ -67,3 +67,7 @@ export const SecuritySectionDescription = styled.p`
 export const ModalItemsWrapper = styled.div`
   text-align: center;
 `;
+
+export const ModalButtonWrapper = styled.div`
+  padding: 0 13px
+`;

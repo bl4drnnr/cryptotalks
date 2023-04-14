@@ -5,34 +5,42 @@ import { useRouter } from 'next/router';
 import * as node2fa from 'node-2fa';
 
 import { Button } from '@components/Button/Button.component';
-import { Loader } from '@components/Loader/Loader.component';
 import { Modal } from '@components/Modal/Modal.component';
 import { SecuritySettingsProps } from '@components/SecuritySettings/SecuritySettings.interface';
 import { TwoFa } from '@components/TwoFa/TwoFa.component';
 import { useHandleException } from '@hooks/useHandleException.hook';
+import { useNotificationMessage } from '@hooks/useShowNotificationMessage.hook';
 import { useChangeEmailService } from '@services/change-email/change-email.service';
 import { useChangePasswordService } from '@services/change-password/change-password.service';
 import { useRemove2FaService } from '@services/remove-2fa/remove-2fa.service';
 import { useSet2FaService } from '@services/set-2fa/set-2fa.service';
+import { NotificationType } from '@store/global/global.state';
 import {
   ItemDescription,
   ItemTitle,
-  SeparationLine,
+  ModalButtonWrapper,
+  ModalItemsWrapper,
   SecurityItemBlock,
+  SecurityItemWrapper,
+  SecuritySectionDescription,
   SecurityTitle,
   SecurityTitleBox,
-  SecurityItemWrapper,
-  SecuritySectionDescription, ModalItemsWrapper
+  SeparationLine
 } from '@styles/SecuritySettings.style';
 
 
-const SecuritySettings = ({ securitySettings }: SecuritySettingsProps) => {
+const SecuritySettings = ({
+  securitySettings,
+  setInternalLoader
+}: SecuritySettingsProps) => {
+  const router = useRouter();
+
   const [twoFaModal, setTwoFaModal] = React.useState(false);
   const [phoneModal, setPhoneModal] = React.useState(false);
   const [passwordChangeModal, setPasswordChangeModal] = React.useState(false);
   const [changeEmailModal, setChangeEmailModal] = React.useState(false);
 
-  const [twoFa, setTwoFa] = React.useState('');
+  const [twoFaCode, setTwoFaCode] = React.useState('');
   const [twoFaToken, setTwoFaToken] = React.useState('');
   const [twoFaQr, setTwoFaQr] = React.useState('');
 
@@ -42,7 +50,11 @@ const SecuritySettings = ({ securitySettings }: SecuritySettingsProps) => {
   const { loading: l3, changePassword } = useChangePasswordService();
 
   const { handleException } = useHandleException();
-  const router = useRouter();
+  const { showNotificationMessage } = useNotificationMessage();
+
+  React.useEffect(() => {
+    setInternalLoader(l0 || l1 || l2 || l3);
+  }, [l0, l1, l2, l3]);
 
   const exceptionHandler = async (e: any) => {
     handleException(e);
@@ -50,26 +62,40 @@ const SecuritySettings = ({ securitySettings }: SecuritySettingsProps) => {
     await handleRedirect('');
   };
 
-  const openTwoFaModalAndGenerateToken = () => {
+  const openTwoFaModal = ({ generateToken }: { generateToken: boolean; }) => {
     setTwoFaModal(true);
-    const { qr, secret } = node2fa.generateSecret({
-      name: 'Cryptodistrict', account: securitySettings!.email
-    });
-    setTwoFaToken(secret);
-    setTwoFaQr(qr);
+    if (generateToken) {
+      const { qr, secret } = node2fa.generateSecret({
+        name: 'Cryptodistrict', account: securitySettings!.email
+      });
+      setTwoFaToken(secret);
+      setTwoFaQr(qr);
+    }
   };
 
   const fetchSetTwoFa = async () => {
     try {
-
+      const token = sessionStorage.getItem('_at');
+      await set2Fa({ token, twoFaToken, twoFaCode });
+      showNotificationMessage({
+        type: NotificationType.SUCCESS,
+        content: '2FA has been successfully set'
+      });
+      setTwoFaModal(false);
     } catch (e) {
-      return exceptionHandler(e);
+      handleException(e);
     }
   };
 
   const fetchRemoveTwoFa = async () => {
     try {
-
+      const token = sessionStorage.getItem('_at');
+      await remove2Fa({ token, twoFaCode });
+      showNotificationMessage({
+        type: NotificationType.SUCCESS,
+        content: '2FA has been successfully removed'
+      });
+      setTwoFaModal(false);
     } catch (e) {
       return exceptionHandler(e);
     }
@@ -97,7 +123,6 @@ const SecuritySettings = ({ securitySettings }: SecuritySettingsProps) => {
 
   return (
     <>
-      <Loader loading={l0 || l1 || l2 || l3} />
       <SecurityTitleBox>
         <SecurityTitle>Security settings</SecurityTitle>
         <SecuritySectionDescription>Manage security of your account</SecuritySectionDescription>
@@ -105,37 +130,80 @@ const SecuritySettings = ({ securitySettings }: SecuritySettingsProps) => {
       <SeparationLine className={'margin-bottom'} />
 
       <SecurityItemBlock>
-        <SecurityItemWrapper>
-          <ItemTitle>Set 2FA</ItemTitle>
-          <ItemDescription>Secure your account with two-factor authentication (2FA).</ItemDescription>
-        </SecurityItemWrapper>
-        <SecurityItemWrapper className={'button'}>
-          <Button
-            text={'Set 2FA'}
-            onClick={() => openTwoFaModalAndGenerateToken()}
-          />
-          {twoFaModal ? (
-            <Modal
-              onClose={() => setTwoFaModal(false)}
-              header={'Set 2FA'}
-              description={'Secure your account with two-factor authentication (2FA).'}
-            >
-              <ModalItemsWrapper>
-                <Image src={twoFaQr} alt={'2fa'} width={200} height={200} />
-                <TwoFa
-                  styles={{ justifyCenter: true, onWhite: true }}
-                  title={'Two factor authentication code'}
-                  setTwoFaCode={setTwoFa}
-                />
-                <Button
-                  onWhite={true}
-                  text={'Confirm 2FA code'}
-                  onClick={() => fetchSetTwoFa()}
-                />
-              </ModalItemsWrapper>
-            </Modal>
-          ) : null}
-        </SecurityItemWrapper>
+        {!securitySettings?.twoFaToken ? (
+          <>
+            <SecurityItemWrapper>
+              <ItemTitle>Set 2FA</ItemTitle>
+              <ItemDescription>Secure your account with two-factor authentication (2FA).</ItemDescription>
+            </SecurityItemWrapper>
+            <SecurityItemWrapper className={'button'}>
+              <Button
+                text={'Set 2FA'}
+                onClick={() => openTwoFaModal({ generateToken: true })}
+              />
+              {twoFaModal ? (
+                <Modal
+                  onClose={() => setTwoFaModal(false)}
+                  header={'Set 2FA'}
+                  description={'Secure your account with two-factor authentication (2FA).'}
+                >
+                  <ModalItemsWrapper>
+                    <Image src={twoFaQr} alt={'2fa'} width={200} height={200} />
+                    <TwoFa
+                      styles={{ justifyCenter: true, onWhite: true }}
+                      title={'Two factor authentication code'}
+                      setTwoFaCode={setTwoFaCode}
+                    />
+                    <ModalButtonWrapper>
+                      <Button
+                        onWhite={true}
+                        text={'Confirm 2FA code'}
+                        onClick={() => fetchSetTwoFa()}
+                      />
+                    </ModalButtonWrapper>
+                  </ModalItemsWrapper>
+                </Modal>
+              ) : null}
+            </SecurityItemWrapper>
+          </>
+        ) : (
+          <>
+            <SecurityItemWrapper>
+              <ItemTitle>Disable 2FA</ItemTitle>
+              <ItemDescription>You have set up Two-factor authentication (2FA) for your account.</ItemDescription>
+            </SecurityItemWrapper>
+            <SecurityItemWrapper className={'button'}>
+              <Button
+                danger={true}
+                text={'Disable 2FA'}
+                onClick={() => openTwoFaModal({ generateToken: false })}
+              />
+              {twoFaModal ? (
+                <Modal
+                  onClose={() => setTwoFaModal(false)}
+                  header={'Disable 2FA'}
+                  description={'You are about deactivate your Two-factor authentication. Be careful! This action will decrease your account security. We recommend to have 2FA either mobile phone for security purposes.'}
+                >
+                  <ModalItemsWrapper>
+                    <TwoFa
+                      styles={{ justifyCenter: true, onWhite: true }}
+                      title={'Two factor authentication code'}
+                      setTwoFaCode={setTwoFaCode}
+                    />
+                    <ModalButtonWrapper>
+                      <Button
+                        onWhite={true}
+                        danger={true}
+                        text={'Disable 2FA'}
+                        onClick={() => fetchRemoveTwoFa()}
+                      />
+                    </ModalButtonWrapper>
+                  </ModalItemsWrapper>
+                </Modal>
+              ) : null}
+            </SecurityItemWrapper>
+          </>
+        )}
       </SecurityItemBlock>
 
       <SecurityItemBlock>
