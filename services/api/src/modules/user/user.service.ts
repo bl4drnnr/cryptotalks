@@ -291,12 +291,20 @@ export class UserService {
     return new ResponseDto();
   }
 
-  setTwoFa() {
-    //
+  setTwoFa(payload: UpdateUserSecurityEventDto) {
+    this.userClient.emit(
+      'update_user_security_settings',
+      new UpdateUserSecurityEvent({ ...payload })
+    );
+    return new ResponseDto();
   }
 
-  removeTwoFa() {
-    //
+  removeTwoFa(payload: UpdateUserSecurityEventDto) {
+    this.userClient.emit(
+      'update_user_security_settings',
+      new UpdateUserSecurityEvent({ ...payload })
+    );
+    return new ResponseDto();
   }
 
   async getUserSettings({ userId }: { userId: string }) {
@@ -369,14 +377,6 @@ export class UserService {
       new UpdateUserEvent({ ...payload })
     );
 
-    return new ResponseDto();
-  }
-
-  setSecuritySettings(payload: UpdateUserSecurityEventDto) {
-    this.userClient.emit(
-      'update_user_security_settings',
-      new UpdateUserSecurityEvent({ ...payload })
-    );
     return new ResponseDto();
   }
 }

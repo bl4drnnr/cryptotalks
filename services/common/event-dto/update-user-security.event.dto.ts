@@ -22,6 +22,12 @@ export class UpdateUserSecurityEventDto {
 
   @ApiProperty({
     type: String,
+    nullable: false
+  })
+  twoFaCode?: string;
+
+  @ApiProperty({
+    type: String,
     nullable: true
   })
   phone?: string;

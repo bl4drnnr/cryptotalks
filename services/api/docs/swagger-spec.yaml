@@ -293,6 +293,12 @@ paths:
       operationId: UserController_setTwoFa
       summary: Sets multi-factor authentication for user
       parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Set2faDto"
       responses:
         "201":
           description: As a response function returns success message
@@ -302,6 +308,12 @@ paths:
       operationId: UserController_removeTwoFa
       summary: Removes multi-factor authentication for user
       parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Remove2faDto"
       responses:
         "201":
           description: As a response function returns success message
@@ -1163,6 +1175,26 @@ components:
     CloseAccEvent:
       type: object
       properties: {}
+    Set2faDto:
+      type: object
+      properties:
+        twoFaToken:
+          type: string
+          nullable: false
+        twoFaCode:
+          type: string
+          nullable: false
+      required:
+        - twoFaToken
+        - twoFaCode
+    Remove2faDto:
+      type: object
+      properties:
+        twoFaCode:
+          type: string
+          nullable: false
+      required:
+        - twoFaCode
     UpdateUserSecurityEventDto:
       type: object
       properties:

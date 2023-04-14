@@ -32,7 +32,7 @@ const SecuritySettings = ({ securitySettings }: SecuritySettingsProps) => {
   const [passwordChangeModal, setPasswordChangeModal] = React.useState(false);
   const [changeEmailModal, setChangeEmailModal] = React.useState(false);
 
-  const [twoFa, setTwoFa] = React.useState('');
+  const [twoFaCode, setTwoFaCode] = React.useState('');
   const [twoFaToken, setTwoFaToken] = React.useState('');
   const [twoFaQr, setTwoFaQr] = React.useState('');
 
@@ -61,7 +61,8 @@ const SecuritySettings = ({ securitySettings }: SecuritySettingsProps) => {
 
   const fetchSetTwoFa = async () => {
     try {
-
+      const token = sessionStorage.getItem('_at');
+      await set2Fa({ token, twoFaToken, twoFaCode });
     } catch (e) {
       return exceptionHandler(e);
     }
@@ -125,7 +126,7 @@ const SecuritySettings = ({ securitySettings }: SecuritySettingsProps) => {
                 <TwoFa
                   styles={{ justifyCenter: true, onWhite: true }}
                   title={'Two factor authentication code'}
-                  setTwoFaCode={setTwoFa}
+                  setTwoFaCode={setTwoFaCode}
                 />
                 <Button
                   onWhite={true}
