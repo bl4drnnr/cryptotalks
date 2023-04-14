@@ -66,7 +66,7 @@ export class PostInfo extends Model<PostInfo, PostInfoCreationAttributes> {
     description: 'List of users rates of post'
   })
   @Default([])
-  @Column({ type: DataType.ARRAY(DataType.JSON), allowNull: false })
+  @Column({ type: DataType.JSONB, allowNull: false })
   rates: Array<IRate>;
 
   @ApiProperty({
