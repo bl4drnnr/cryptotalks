@@ -25,7 +25,9 @@ export class LoggerService {
       | 'POST'
       | 'CLOSE_ACC'
       | 'USER'
-      | 'CRYPTO';
+      | 'CRYPTO'
+      | 'SETTINGS'
+      | 'SECURITY';
     status: 'SUCCESS' | 'ERROR';
     payload: any;
   }) {
@@ -52,6 +54,7 @@ export class LoggerService {
           case 'CLOSE_ACC':
             break;
           case 'CONFIRMATION':
+            message = `User ${payload.hashId} tried to confirm account one more time.`;
             break;
           case 'CRYPTO':
             break;
@@ -64,6 +67,10 @@ export class LoggerService {
             break;
           case 'USER':
             break;
+          case 'SETTINGS':
+            break;
+          case 'SECURITY':
+            break;
           default:
             return;
         }
@@ -71,19 +78,39 @@ export class LoggerService {
       case 'SUCCESS':
         switch (event) {
           case 'CLOSE_ACC':
+            message = `User ${payload.userId} has successfully closed an account.`;
             break;
           case 'CONFIRMATION':
+            message = `User ${payload.hashId} has successfully confirmed an account.`;
             break;
           case 'CRYPTO':
             break;
           case 'POST':
             break;
           case 'SIGN_IN':
+            message = `User ${payload.userId} has successfully logged in.`;
             break;
           case 'SIGN_UP':
             message = `User ${payload.email} has successfully created an account.`;
             break;
           case 'USER':
+            message =
+              'email' in payload
+                ? `User ${payload.userId} has successfully changed email to ${payload.email}`
+                : `User ${payload.userId} has successfully changed password`;
+            break;
+          case 'SETTINGS':
+            message = `User ${
+              payload.userId
+            } has successfully updated personal settings ${JSON.stringify(
+              payload
+            )}`;
+            break;
+          case 'SECURITY':
+            message =
+              'twoFaToken' in payload
+                ? `MFA for user ${payload.userId} has been successfully set`
+                : `MFA for user ${payload.userId} has been successfully removed.`;
             break;
           default:
             return;

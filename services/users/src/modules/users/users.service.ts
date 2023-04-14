@@ -76,7 +76,7 @@ export class UsersService {
 
     await this.userSettingsRepository.update(
       { ...payload },
-      { where: { id: userId } }
+      { where: { userId } }
     );
   }
 

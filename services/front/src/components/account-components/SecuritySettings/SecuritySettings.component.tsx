@@ -5,7 +5,6 @@ import { useRouter } from 'next/router';
 import * as node2fa from 'node-2fa';
 
 import { Button } from '@components/Button/Button.component';
-import { Loader } from '@components/Loader/Loader.component';
 import { Modal } from '@components/Modal/Modal.component';
 import { SecuritySettingsProps } from '@components/SecuritySettings/SecuritySettings.interface';
 import { TwoFa } from '@components/TwoFa/TwoFa.component';
@@ -26,7 +25,10 @@ import {
 } from '@styles/SecuritySettings.style';
 
 
-const SecuritySettings = ({ securitySettings }: SecuritySettingsProps) => {
+const SecuritySettings = ({
+  securitySettings,
+  setInternalLoader
+}: SecuritySettingsProps) => {
   const [twoFaModal, setTwoFaModal] = React.useState(false);
   const [phoneModal, setPhoneModal] = React.useState(false);
   const [passwordChangeModal, setPasswordChangeModal] = React.useState(false);
@@ -43,6 +45,10 @@ const SecuritySettings = ({ securitySettings }: SecuritySettingsProps) => {
 
   const { handleException } = useHandleException();
   const router = useRouter();
+
+  React.useEffect(() => {
+    setInternalLoader(l0 || l1 || l2 || l3);
+  }, [l0, l1, l2, l3]);
 
   const exceptionHandler = async (e: any) => {
     handleException(e);
@@ -64,7 +70,7 @@ const SecuritySettings = ({ securitySettings }: SecuritySettingsProps) => {
       const token = sessionStorage.getItem('_at');
       await set2Fa({ token, twoFaToken, twoFaCode });
     } catch (e) {
-      return exceptionHandler(e);
+      handleException(e);
     }
   };
 
@@ -98,7 +104,6 @@ const SecuritySettings = ({ securitySettings }: SecuritySettingsProps) => {
 
   return (
     <>
-      <Loader loading={l0 || l1 || l2 || l3} />
       <SecurityTitleBox>
         <SecurityTitle>Security settings</SecurityTitle>
         <SecuritySectionDescription>Manage security of your account</SecuritySectionDescription>

@@ -31,6 +31,7 @@ import { UpdateUserEventDto } from '@event-dto/update-user.event.dto';
 import { UpdateUserSecurityEvent } from '@events/update-user-security.event';
 import { UpdateUserSecurityEventDto } from '@event-dto/update-user-security.event.dto';
 import { LoggerService } from '@shared/logger.service';
+import { Wrong2faException } from '@exceptions/wrong-2fa.exception';
 
 @Injectable()
 export class UserService {
@@ -142,27 +143,21 @@ export class UserService {
 
     if (!foundHash) throw new HashNotFoundException();
     if (foundHash.confirmed) {
-      this.authClient.emit(
-        'log_auth_action',
-        new LogEvent({
-          event: 'CONFIRMATION',
-          message: `User ${foundHash.id} tried to confirm account one more time.`,
-          status: 'ERROR',
-          timestamp: new Date()
-        })
-      );
+      this.loggerService.log({
+        action: 'log_auth_action',
+        event: 'CONFIRMATION',
+        status: 'ERROR',
+        payload: { hashId: foundHash.id }
+      });
       throw new EmailAlreadyConfirmedException();
     }
 
-    this.authClient.emit(
-      'log_auth_action',
-      new LogEvent({
-        event: 'CONFIRMATION',
-        message: `User ${foundHash.id} has successfully confirmed an account.`,
-        status: 'SUCCESS',
-        timestamp: new Date()
-      })
-    );
+    this.loggerService.log({
+      action: 'log_auth_action',
+      event: 'CONFIRMATION',
+      status: 'SUCCESS',
+      payload: { hashId: foundHash.id }
+    });
 
     this.userClient.emit(
       'confirm_user_account',
@@ -222,15 +217,12 @@ export class UserService {
       })
     );
 
-    this.userClient.emit(
-      'log_user_action',
-      new LogEvent({
-        event: 'USER',
-        message: `User ${userId} has successfully changed email to ${email}`,
-        status: 'SUCCESS',
-        timestamp: new Date()
-      })
-    );
+    this.loggerService.log({
+      action: 'log_user_action',
+      event: 'USER',
+      status: 'SUCCESS',
+      payload: { userId, email }
+    });
 
     return new ResponseDto();
   }
@@ -259,29 +251,23 @@ export class UserService {
       })
     );
 
-    this.userClient.emit(
-      'log_user_action',
-      new LogEvent({
-        event: 'USER',
-        message: `User ${userId} has successfully changed password`,
-        status: 'SUCCESS',
-        timestamp: new Date()
-      })
-    );
+    this.loggerService.log({
+      action: 'log_user_action',
+      event: 'USER',
+      status: 'SUCCESS',
+      payload: { userId }
+    });
 
     return new ResponseDto();
   }
 
   closeAccount({ userId }: { userId: string }) {
-    this.userClient.emit(
-      'log_user_action',
-      new LogEvent({
-        event: 'CLOSE_ACC',
-        message: `User ${userId} has successfully closed an account.`,
-        status: 'SUCCESS',
-        timestamp: new Date()
-      })
-    );
+    this.loggerService.log({
+      action: 'log_user_action',
+      event: 'CLOSE_ACC',
+      status: 'SUCCESS',
+      payload: { userId }
+    });
 
     this.userClient.emit('close_user_account', new CloseAccEvent({ userId }));
 
@@ -289,10 +275,20 @@ export class UserService {
   }
 
   setTwoFa(payload: UpdateUserSecurityEventDto) {
-    // this.userClient.emit(
-    //   'log_user_action',
-    //   new LogEvent()
-    // );
+    const tokenVerification = node2fa.verifyToken(
+      payload.twoFaToken,
+      payload.twoFaCode
+    );
+
+    if (!tokenVerification || tokenVerification.delta !== 0)
+      throw new Wrong2faException();
+
+    this.loggerService.log({
+      action: 'log_user_action',
+      event: 'SECURITY',
+      status: 'SUCCESS',
+      payload: { ...payload }
+    });
     this.userClient.emit(
       'update_user_security_settings',
       new UpdateUserSecurityEvent({ ...payload })
@@ -301,6 +297,12 @@ export class UserService {
   }
 
   removeTwoFa(payload: UpdateUserSecurityEventDto) {
+    this.loggerService.log({
+      action: 'log_user_action',
+      event: 'SECURITY',
+      status: 'SUCCESS',
+      payload: { ...payload }
+    });
     this.userClient.emit(
       'update_user_security_settings',
       new UpdateUserSecurityEvent({ ...payload })
@@ -359,19 +361,12 @@ export class UserService {
       );
     }
 
-    this.userClient.emit(
-      'log_user_action',
-      new LogEvent({
-        event: 'USER',
-        message: `User ${
-          payload.userId
-        } has successfully updated personal settings ${JSON.stringify(
-          payload
-        )}`,
-        status: 'SUCCESS',
-        timestamp: new Date()
-      })
-    );
+    this.loggerService.log({
+      action: 'log_user_action',
+      event: 'SETTINGS',
+      status: 'SUCCESS',
+      payload: { userId: payload.userId, payload: JSON.stringify(payload) }
+    });
 
     this.userClient.emit(
       'update_user_account',

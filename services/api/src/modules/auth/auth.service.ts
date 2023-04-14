@@ -14,7 +14,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { ApiConfigService } from '@shared/config.service';
 import { Session } from '@models/session.model';
 import { UserService } from '@modules/user.service';
-import { LogEvent } from '@events/log.event';
+import { LoggerService } from '@shared/logger.service';
 
 @Injectable()
 export class AuthService {
@@ -24,7 +24,8 @@ export class AuthService {
     @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
     @InjectModel(Session) private readonly sessionRepository: typeof Session,
-    @Inject('AUTH_SERVICE') private readonly authClient: ClientKafka
+    @Inject('AUTH_SERVICE') private readonly authClient: ClientKafka,
+    private readonly loggerService: LoggerService
   ) {}
 
   private generateAccessToken(accessTokenPayload: AccessTokenDto) {
@@ -53,15 +54,12 @@ export class AuthService {
   }
 
   private async updateRefreshToken(refreshTokenPayload: RefreshTokenDto) {
-    this.authClient.emit(
-      'log_auth_action',
-      new LogEvent({
-        event: 'SIGN_IN',
-        message: `User ${refreshTokenPayload.userId} has successfully logged in.`,
-        status: 'SUCCESS',
-        timestamp: new Date()
-      })
-    );
+    this.loggerService.log({
+      action: 'log_auth_action',
+      event: 'SIGN_IN',
+      status: 'SUCCESS',
+      payload: { userId: refreshTokenPayload.userId }
+    });
     const currentSession = await this.sessionRepository.findOne({
       where: { userId: refreshTokenPayload.userId }
     });

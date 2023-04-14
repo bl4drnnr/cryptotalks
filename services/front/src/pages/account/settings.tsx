@@ -44,6 +44,7 @@ const AccountSettings = () => {
 
   const fetchSettingsRef = React.useRef(true);
 
+  const [internalLoader, setInternalLoader] = React.useState<boolean>(false);
   const [personalInformation, setPersonalInformation] = React.useState<IPersonalInformation>();
   const [securitySettings, setSecuritySettings] = React.useState<ISecuritySettings>();
 
@@ -127,7 +128,7 @@ const AccountSettings = () => {
       <Head>
         <title>Cryptotalks | Settings</title>
       </Head>
-      <DefaultLayout loading={l0 || l1 || l2}>
+      <DefaultLayout loading={l0 || l1 || l2 || internalLoader}>
         <Container>
           <Wrapper>
 
@@ -185,6 +186,7 @@ const AccountSettings = () => {
                   <SecuritySettings
                     securitySettings={securitySettings}
                     setSecuritySettings={setSecuritySettings}
+                    setInternalLoader={setInternalLoader}
                     applySecuritySettings={applySecuritySettings}
                   />
                 ) : (<></>))}
