@@ -296,7 +296,21 @@ export class UserService {
     return new ResponseDto();
   }
 
-  removeTwoFa(payload: UpdateUserSecurityEventDto) {
+  async removeTwoFa(payload: UpdateUserSecurityEventDto) {
+    const { twoFaToken } = await this.userSettingsRepository.findOne({
+      where: { userId: payload.userId }
+    });
+
+    const tokenVerification = node2fa.verifyToken(
+      twoFaToken,
+      payload.twoFaCode
+    );
+
+    if (!tokenVerification || tokenVerification.delta !== 0)
+      throw new Wrong2faException();
+
+    payload.twoFaToken = null;
+
     this.loggerService.log({
       action: 'log_user_action',
       event: 'SECURITY',
@@ -333,7 +347,8 @@ export class UserService {
         'phone',
         [sequelize.literal('public_email'), 'publicEmail'],
         [sequelize.literal('email_changed'), 'emailChanged'],
-        [sequelize.literal('password_changed'), 'passwordChanged']
+        [sequelize.literal('password_changed'), 'passwordChanged'],
+        [sequelize.literal('two_fa_token'), 'twoFaToken']
       ]
     });
 
@@ -342,7 +357,8 @@ export class UserService {
       emailChanged: userSecuritySettings.emailChanged,
       passwordChanged: userSecuritySettings.passwordChanged,
       phone: userSecuritySettings.phone,
-      email: userPersonalSettings.email
+      email: userPersonalSettings.email,
+      twoFaToken: !!userSecuritySettings.twoFaToken
     };
     delete userPersonalSettings.email;
 

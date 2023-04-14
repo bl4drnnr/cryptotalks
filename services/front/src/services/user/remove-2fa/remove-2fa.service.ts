@@ -11,7 +11,9 @@ export const useRemove2FaService = () => {
     : Promise<Remove2FaResponse> => {
     try {
       setLoading(true);
-      const { data } = await ApiClient.post<Remove2FaResponse>('/twofactor/remove', {}, {
+      const { data } = await ApiClient.post<Remove2FaResponse>('/user/remove-2fa', {
+        twoFaCode: payload.twoFaCode
+      }, {
         headers: { 'x-access-token': `Bearer ${payload.token}` }
       });
 

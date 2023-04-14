@@ -17,6 +17,7 @@ export interface ISecuritySettings {
   email: string;
   publicEmail: boolean;
   phone: string | null;
+  twoFaToken: boolean;
 }
 
 export interface GetUserSettingsPayload {
