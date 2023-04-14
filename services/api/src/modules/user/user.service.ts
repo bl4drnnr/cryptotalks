@@ -1,5 +1,6 @@
 import * as bcryptjs from 'bcryptjs';
 import * as crypto from 'crypto';
+import * as node2fa from 'node-2fa';
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { SignUpDto } from '@dto/sign-up.dto';
@@ -29,6 +30,7 @@ import sequelize, { Op } from 'sequelize';
 import { UpdateUserEventDto } from '@event-dto/update-user.event.dto';
 import { UpdateUserSecurityEvent } from '@events/update-user-security.event';
 import { UpdateUserSecurityEventDto } from '@event-dto/update-user-security.event.dto';
+import { LoggerService } from '@shared/logger.service';
 
 @Injectable()
 export class UserService {
@@ -43,7 +45,8 @@ export class UserService {
     private readonly confirmHashRepository: typeof ConfirmationHash,
     private readonly validatorService: ValidatorService,
     @Inject(forwardRef(() => AuthService))
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly loggerService: LoggerService
   ) {}
 
   async signUp(payload: SignUpDto) {
@@ -78,15 +81,12 @@ export class UserService {
 
     const confirmationHash = crypto.randomBytes(20).toString('hex');
 
-    this.authClient.emit(
-      'log_auth_action',
-      new LogEvent({
-        event: 'SIGN_UP',
-        message: `User ${payload.email} has successfully created an account.`,
-        status: 'SUCCESS',
-        timestamp: new Date()
-      })
-    );
+    this.loggerService.log({
+      action: 'log_auth_action',
+      event: 'SIGN_UP',
+      status: 'SUCCESS',
+      payload: { email: payload.email }
+    });
 
     this.userClient.emit(
       'user_created',
@@ -114,15 +114,12 @@ export class UserService {
 
     if (!user) throw new WrongCredentialsException();
     if (!user.accountConfirm) {
-      this.authClient.emit(
-        'log_auth_action',
-        new LogEvent({
-          event: 'SIGN_IN',
-          message: `User ${user.email} tried to log in while being unconfirmed.`,
-          status: 'ERROR',
-          timestamp: new Date()
-        })
-      );
+      this.loggerService.log({
+        action: 'log_auth_action',
+        event: 'SIGN_IN',
+        status: 'ERROR',
+        payload: { email: user.email }
+      });
       throw new AccountNotConfirmedException();
     }
 
@@ -292,6 +289,10 @@ export class UserService {
   }
 
   setTwoFa(payload: UpdateUserSecurityEventDto) {
+    // this.userClient.emit(
+    //   'log_user_action',
+    //   new LogEvent()
+    // );
     this.userClient.emit(
       'update_user_security_settings',
       new UpdateUserSecurityEvent({ ...payload })

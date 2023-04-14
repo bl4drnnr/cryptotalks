@@ -37,6 +37,7 @@
     "jsonwebtoken": "^9.0.0",
     "kafkajs": "^2.2.4",
     "nestjs-grpc-exceptions": "^0.2.0",
+    "node-2fa": "^2.0.3",
     "pg": "^8.10.0",
     "pg-hstore": "^2.3.4",
     "reflect-metadata": "^0.1.13",

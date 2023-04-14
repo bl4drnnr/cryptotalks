@@ -351,27 +351,6 @@ paths:
         "201":
           description: As a response function returns success message
       tags: *a2
-  /api/user/set-security-settings:
-    patch:
-      operationId: UserController_setSecuritySettings
-      summary: Sets user security settings
-      parameters: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UpdateUserSecurityEventDto"
-      responses:
-        "200":
-          description: ""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ResponseDto"
-        "201":
-          description: As a response function returns success message
-      tags: *a2
   /api/auth/refresh:
     get:
       operationId: AuthController_refreshTokens
@@ -1195,27 +1174,6 @@ components:
           nullable: false
       required:
         - twoFaCode
-    UpdateUserSecurityEventDto:
-      type: object
-      properties:
-        userId:
-          type: string
-          format: uuid
-          nullable: false
-        publicEmail:
-          type: boolean
-          nullable: true
-        twoFaToken:
-          type: string
-          nullable: true
-        phone:
-          type: string
-          nullable: true
-      required:
-        - userId
-    UpdateUserSecurityEvent:
-      type: object
-      properties: {}
     RefreshTokenEventDto:
       type: object
       properties:
