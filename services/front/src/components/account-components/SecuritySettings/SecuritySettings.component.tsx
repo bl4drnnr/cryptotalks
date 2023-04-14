@@ -28,7 +28,6 @@ import {
   SeparationLine
 } from '@styles/SecuritySettings.style';
 
-
 const SecuritySettings = ({
   securitySettings,
   setInternalLoader

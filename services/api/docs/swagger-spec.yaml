@@ -1010,6 +1010,9 @@ components:
         password:
           type: string
           nullable: false
+        twoFaCode:
+          type: string
+          nullable: true
       required:
         - email
         - password

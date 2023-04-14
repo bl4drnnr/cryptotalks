@@ -21,7 +21,7 @@ import {
   LoginOption,
   MarginWrapper,
   Title,
-  HeaderLink
+  HeaderLink, Paragraph
 } from '@styles/login.style';
 
 
@@ -32,13 +32,13 @@ const Signin = () => {
   const [rightSideHide, setRightSideHide] = React.useState(false);
   const { height, width } = useWindowDimensions();
 
-  const [step, setStep] = React.useState(1);
+  const [step, setStep] = React.useState(2);
   const [loginOption, setLoginOption] = React.useState('email');
   const [email, setEmail] = React.useState('');
   const [emailError, setEmailError] = React.useState(false);
   const [password, setPassword] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
-  const [twoFa, setTwoFa] = React.useState('');
+  const [twoFaCode, setTwoFaCode] = React.useState('');
 
   const handleRedirect = async (path: string) => {
     await router.push(`/${path}`);
@@ -47,9 +47,13 @@ const Signin = () => {
   const signInUser = async (e?: any) => {
     try {
       if ((e && e.key === 'Enter') || !e) {
-        const { _at } = await signIn({
-          email, password
+        const { _at, message } = await signIn({
+          email, password, twoFaCode
         });
+        if (message && message === 'two-fa-required') {
+          setStep(1);
+          return;
+        }
         sessionStorage.setItem('_at', _at);
         await handleRedirect('account');
       }
@@ -142,13 +146,19 @@ const Signin = () => {
             <Box>
               <Title>Sign in</Title>
               <MarginWrapper className={'big'}>
+                <Paragraph>This account has been protected by MFA, in order to continue, please, provide one-time 6-digit verification code.</Paragraph>
                 <TwoFa
                   title={'Two FA'}
-                  setTwoFaCode={setTwoFa}
+                  setTwoFaCode={setTwoFaCode}
                 />
               </MarginWrapper>
               <MarginWrapper>
-                <Button highHeight={true} text={''} fillButton={true}/>
+                <Button
+                  highHeight={true}
+                  text={'Sign in'}
+                  fillButton={true}
+                  onClick={() => signInUser()}
+                />
               </MarginWrapper>
             </Box>
           )}

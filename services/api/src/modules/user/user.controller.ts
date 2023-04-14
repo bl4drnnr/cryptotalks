@@ -37,6 +37,7 @@ import { SignUpEventDto } from '@event-dto/sign-up.event.dto';
 import { UserSettings } from '@models/user-settings.model';
 import { Set2faDto } from '@dto/set-2fa.dto';
 import { Remove2faDto } from '@dto/remove-2fa.dto';
+import { ResponseDto } from '@dto/response.dto';
 
 @ApiTags('User')
 @Controller('user')
@@ -64,11 +65,15 @@ export class UserController {
   })
   @Post('sign-in')
   async signIn(@Body() payload: SignInDto, @Res({ passthrough: true }) res) {
-    const { _at, _rt } = await this.userService.signIn(payload);
+    const response = await this.userService.signIn(payload);
 
-    res.cookie('_rt', _rt);
+    if (response instanceof ResponseDto) {
+      return response;
+    } else if ('_rt' in response && '_at' in response) {
+      res.cookie('_rt', response._rt);
 
-    return { _at };
+      return { _at: response._at };
+    }
   }
 
   @ApiExtraModels(ConfirmAccountEvent)

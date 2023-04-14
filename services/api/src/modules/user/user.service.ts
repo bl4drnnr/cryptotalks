@@ -130,10 +130,31 @@ export class UserService {
     );
     if (!passwordEquality) throw new WrongCredentialsException();
 
-    return this.authService.updateTokens({
-      userId: user.id,
-      email: user.email
+    const userSecuritySettings = await this.userSettingsRepository.findOne({
+      where: { userId: user.id }
     });
+
+    if (userSecuritySettings.twoFaToken && !payload.twoFaCode) {
+      return new ResponseDto('two-fa-required');
+    } else if (userSecuritySettings.twoFaToken && payload.twoFaCode) {
+      const tokenVerification = node2fa.verifyToken(
+        userSecuritySettings.twoFaToken,
+        payload.twoFaCode
+      );
+
+      if (!tokenVerification || tokenVerification.delta !== 0)
+        throw new Wrong2faException();
+
+      return this.authService.updateTokens({
+        userId: user.id,
+        email: user.email
+      });
+    } else {
+      return this.authService.updateTokens({
+        userId: user.id,
+        email: user.email
+      });
+    }
   }
 
   async confirmAccount({ confirmationHash }: { confirmationHash: string }) {

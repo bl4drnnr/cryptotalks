@@ -12,4 +12,10 @@ export class SignInDto {
     nullable: false
   })
   password: string;
+
+  @ApiProperty({
+    type: String,
+    nullable: true
+  })
+  twoFaCode?: string;
 }

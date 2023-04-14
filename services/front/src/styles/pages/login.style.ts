@@ -35,6 +35,7 @@ export const MarginWrapper = styled.div`
   
   &.big {
     margin: 45px 0;
+    justify-content: center;
   }
 
   @media only screen and (max-width: 780px) {
