@@ -318,6 +318,24 @@ paths:
         "201":
           description: As a response function returns success message
       tags: *a2
+  /api/user/set-phone:
+    post:
+      operationId: UserController_setPhone
+      summary: Sets multi-factor authentication for user (phone)
+      parameters: []
+      responses:
+        "201":
+          description: As a response function returns success message
+      tags: *a2
+  /api/user/remove-phone:
+    post:
+      operationId: UserController_removePhone
+      summary: Removes phone from user account
+      parameters: []
+      responses:
+        "201":
+          description: As a response function returns success message
+      tags: *a2
   /api/user/get-settings:
     get:
       operationId: UserController_getUserSettings

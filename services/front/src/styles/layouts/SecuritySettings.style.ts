@@ -69,5 +69,10 @@ export const ModalItemsWrapper = styled.div`
 `;
 
 export const ModalButtonWrapper = styled.div`
-  padding: 0 13px
+  padding: 0 13px;
+
+  &.vertical-margin {
+    padding: 0;
+    margin: 10px 0;
+  }
 `;

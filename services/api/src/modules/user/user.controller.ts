@@ -172,6 +172,30 @@ export class UserController {
   }
 
   @ApiOperation({
+    summary: 'Sets multi-factor authentication for user (phone)'
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'As a response function returns success message'
+  })
+  @UseGuards(JwtGuard)
+  @Post('set-phone')
+  setPhone(@UserDecorator() userId: string) {
+    return this.userService.setPhone();
+  }
+
+  @ApiOperation({ summary: 'Removes phone from user account' })
+  @ApiResponse({
+    status: 201,
+    description: 'As a response function returns success message'
+  })
+  @UseGuards(JwtGuard)
+  @Post('remove-phone')
+  removePhone(@UserDecorator() userId: string) {
+    return this.userService.removePhone();
+  }
+
+  @ApiOperation({
     summary: 'Allows to get user settings in order to change them'
   })
   @ApiResponse({

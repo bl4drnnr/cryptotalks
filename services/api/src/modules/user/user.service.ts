@@ -345,6 +345,14 @@ export class UserService {
     return new ResponseDto();
   }
 
+  async setPhone() {
+    //
+  }
+
+  async removePhone() {
+    //
+  }
+
   async getUserSettings({ userId }: { userId: string }) {
     const userPersonalSettings = await this.userRepository.findByPk(userId, {
       attributes: [

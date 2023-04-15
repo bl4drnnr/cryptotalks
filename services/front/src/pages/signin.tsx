@@ -21,7 +21,8 @@ import {
   LoginOption,
   MarginWrapper,
   Title,
-  HeaderLink, Paragraph
+  HeaderLink,
+  Paragraph
 } from '@styles/login.style';
 
 
@@ -32,7 +33,7 @@ const Signin = () => {
   const [rightSideHide, setRightSideHide] = React.useState(false);
   const { height, width } = useWindowDimensions();
 
-  const [step, setStep] = React.useState(2);
+  const [step, setStep] = React.useState(1);
   const [loginOption, setLoginOption] = React.useState('email');
   const [email, setEmail] = React.useState('');
   const [emailError, setEmailError] = React.useState(false);
@@ -51,7 +52,7 @@ const Signin = () => {
           email, password, twoFaCode
         });
         if (message && message === 'two-fa-required') {
-          setStep(1);
+          setStep(2);
           return;
         }
         sessionStorage.setItem('_at', _at);

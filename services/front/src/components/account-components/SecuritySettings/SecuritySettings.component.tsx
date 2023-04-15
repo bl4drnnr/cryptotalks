@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import * as node2fa from 'node-2fa';
 
 import { Button } from '@components/Button/Button.component';
+import { Input } from '@components/Input/Input.component';
 import { Modal } from '@components/Modal/Modal.component';
 import { SecuritySettingsProps } from '@components/SecuritySettings/SecuritySettings.interface';
 import { TwoFa } from '@components/TwoFa/TwoFa.component';
@@ -13,7 +14,9 @@ import { useNotificationMessage } from '@hooks/useShowNotificationMessage.hook';
 import { useChangeEmailService } from '@services/change-email/change-email.service';
 import { useChangePasswordService } from '@services/change-password/change-password.service';
 import { useRemove2FaService } from '@services/remove-2fa/remove-2fa.service';
+import { useRemovePhoneService } from '@services/remove-phone/remove-phone.service';
 import { useSet2FaService } from '@services/set-2fa/set-2fa.service';
+import { useSetPhoneService } from '@services/set-phone/set-phone.service';
 import { NotificationType } from '@store/global/global.state';
 import {
   ItemDescription,
@@ -30,7 +33,8 @@ import {
 
 const SecuritySettings = ({
   securitySettings,
-  setInternalLoader
+  setInternalLoader,
+  setSecuritySettings
 }: SecuritySettingsProps) => {
   const router = useRouter();
 
@@ -43,17 +47,23 @@ const SecuritySettings = ({
   const [twoFaToken, setTwoFaToken] = React.useState('');
   const [twoFaQr, setTwoFaQr] = React.useState('');
 
+  const [phoneStep, setPhoneStep] = React.useState(1);
+  const [phone, setMobilePhone] = React.useState('');
+  const [code, setCode] = React.useState('');
+
   const { loading: l0, set2Fa } = useSet2FaService();
   const { loading: l1, remove2Fa } = useRemove2FaService();
   const { loading: l2, changeEmail } = useChangeEmailService();
   const { loading: l3, changePassword } = useChangePasswordService();
+  const { loading: l4, setPhone } = useSetPhoneService();
+  const { loading: l5, removePhone } = useRemovePhoneService();
 
   const { handleException } = useHandleException();
   const { showNotificationMessage } = useNotificationMessage();
 
   React.useEffect(() => {
-    setInternalLoader(l0 || l1 || l2 || l3);
-  }, [l0, l1, l2, l3]);
+    setInternalLoader(l0 || l1 || l2 || l3 || l4 || l5);
+  }, [l0, l1, l2, l3, l4, l5]);
 
   const exceptionHandler = async (e: any) => {
     handleException(e);
@@ -81,8 +91,9 @@ const SecuritySettings = ({
         content: '2FA has been successfully set'
       });
       setTwoFaModal(false);
+      setSecuritySettings({ ...securitySettings, twoFaToken: true });
     } catch (e) {
-      handleException(e);
+      return exceptionHandler(e);
     }
   };
 
@@ -95,6 +106,35 @@ const SecuritySettings = ({
         content: '2FA has been successfully removed'
       });
       setTwoFaModal(false);
+      setSecuritySettings({ ...securitySettings, twoFaToken: false });
+    } catch (e) {
+      return exceptionHandler(e);
+    }
+  };
+
+  const fetchSetPhone = async () => {
+    try {
+      const token = sessionStorage.getItem('_at');
+      await setPhone({ token, phone, code });
+      showNotificationMessage({
+        type: NotificationType.SUCCESS,
+        content: 'Phone has been successfully set'
+      });
+      setPhoneModal(false);
+    } catch (e) {
+      return exceptionHandler(e);
+    }
+  };
+
+  const fetchRemovePhone = async () => {
+    try {
+      const token = sessionStorage.getItem('_at');
+      await removePhone({ token, code });
+      showNotificationMessage({
+        type: NotificationType.SUCCESS,
+        content: 'Phone has been successfully removed'
+      });
+      setPhoneModal(false);
     } catch (e) {
       return exceptionHandler(e);
     }
@@ -206,23 +246,54 @@ const SecuritySettings = ({
       </SecurityItemBlock>
 
       <SecurityItemBlock>
-        <SecurityItemWrapper>
-          <ItemTitle>Set mobile phone</ItemTitle>
-          <ItemDescription>Secure your account with mobile MFA.</ItemDescription>
-        </SecurityItemWrapper>
-        <SecurityItemWrapper className={'button'}>
-          <Button
-            text={'Set phone'}
-            onClick={() => setPhoneModal(true)}
-          />
-          {phoneModal ? (
-            <Modal
-              onClose={() => setPhoneModal(false)}
-              header={'Set mobile phone'}
-              description={'Secure your account with mobile MFA.'}
-            ><></></Modal>
-          ) : null}
-        </SecurityItemWrapper>
+        {!securitySettings?.phone ? (
+          <>
+            <SecurityItemWrapper>
+              <ItemTitle>Set mobile phone</ItemTitle>
+              <ItemDescription>Secure your account with mobile MFA.</ItemDescription>
+            </SecurityItemWrapper>
+            <SecurityItemWrapper className={'button'}>
+              <Button
+                text={'Set phone'}
+                onClick={() => setPhoneModal(true)}
+              />
+              {phoneModal ? (
+                <Modal
+                  onClose={() => setPhoneModal(false)}
+                  header={'Set mobile phone'}
+                  description={'Secure your account with mobile MFA. Alternative way of MFA, instead of authenticator application.'}
+                >
+                  <>
+                    <Input
+                      disabled={phoneStep === 2}
+                      onWhite={true}
+                      value={phone}
+                      placeholder={'Mobile phone (with prefix (+1, for instance), without spaces)'}
+                      onChange={(e) => setMobilePhone(e.target.value)}
+                    />
+                    {phoneStep === 2 ? (
+                      <Input
+                        value={code}
+                        placeholder={'Provide code from SMS message'}
+                        onChange={(e) => setCode(e.target.value)}
+                      />
+                    ) : null}
+                    <ModalButtonWrapper className={'vertical-margin'}>
+                      <Button
+                        onWhite={true}
+                        text={'Set mobile phone'}
+                        onClick={() => fetchSetPhone()}
+                      />
+                    </ModalButtonWrapper>
+                  </>
+                </Modal>
+              ) : null}
+            </SecurityItemWrapper>
+          </>
+        ) : (
+          <>
+          </>
+        )}
       </SecurityItemBlock>
 
       <SecurityItemBlock>
