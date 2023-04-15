@@ -323,6 +323,12 @@ paths:
       operationId: UserController_setPhone
       summary: Sets multi-factor authentication for user (phone)
       parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SetPhoneDto"
       responses:
         "201":
           description: As a response function returns success message
@@ -332,6 +338,12 @@ paths:
       operationId: UserController_removePhone
       summary: Removes phone from user account
       parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RemovePhoneDto"
       responses:
         "201":
           description: As a response function returns success message
@@ -816,6 +828,15 @@ components:
           type: string
           nullable: true
           description: User phone. Alternate 2FA method
+        phoneVerificationCode:
+          type: string
+          nullable: true
+          description: Phone verification code
+        verificationCodeCreatedAt:
+          format: date-time
+          type: string
+          nullable: true
+          description: Verification code creation timestamp
         passwordChanged:
           type: boolean
           nullable: true
@@ -837,6 +858,8 @@ components:
         - emailChanged
         - twoFaToken
         - phone
+        - phoneVerificationCode
+        - verificationCodeCreatedAt
         - passwordChanged
         - createdAt
         - updatedAt
@@ -1195,6 +1218,23 @@ components:
           nullable: false
       required:
         - twoFaCode
+    SetPhoneDto:
+      type: object
+      properties:
+        phone:
+          type: string
+          nullable: false
+        code:
+          type: string
+          nullable: true
+      required:
+        - phone
+    RemovePhoneDto:
+      type: object
+      properties:
+        code:
+          type: string
+          nullable: true
     RefreshTokenEventDto:
       type: object
       properties:

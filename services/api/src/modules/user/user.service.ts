@@ -1,7 +1,12 @@
 import * as bcryptjs from 'bcryptjs';
 import * as crypto from 'crypto';
 import * as node2fa from 'node-2fa';
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
+  Injectable
+} from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { SignUpDto } from '@dto/sign-up.dto';
 import { UserSignUpEvent } from '@events/user-sign-up.event';
@@ -295,7 +300,13 @@ export class UserService {
     return new ResponseDto();
   }
 
-  setTwoFa(payload: UpdateUserSecurityEventDto) {
+  async setTwoFa(payload: UpdateUserSecurityEventDto) {
+    const { twoFaToken, phone } = await this.userSettingsRepository.findOne({
+      where: { userId: payload.userId }
+    });
+
+    if (twoFaToken || phone) throw new BadRequestException();
+
     const tokenVerification = node2fa.verifyToken(
       payload.twoFaToken,
       payload.twoFaCode
@@ -345,12 +356,29 @@ export class UserService {
     return new ResponseDto();
   }
 
-  async setPhone() {
-    //
+  async setPhone(payload: UpdateUserSecurityEventDto) {
+    const { twoFaToken, phone } = await this.userSettingsRepository.findOne({
+      where: { userId: payload.userId }
+    });
+
+    if (twoFaToken || phone) throw new BadRequestException();
+
+    if (!payload.code) {
+      this.userClient.emit(
+        'send_verification_mobile_code',
+        new UpdateUserSecurityEvent({
+          userId: payload.userId,
+          phone: payload.phone
+        })
+      );
+      return new ResponseDto('code-sent');
+    } else if (payload.code) {
+      return new ResponseDto();
+    }
   }
 
-  async removePhone() {
-    //
+  async removePhone(payload: UpdateUserSecurityEventDto) {
+    return new ResponseDto();
   }
 
   async getUserSettings({ userId }: { userId: string }) {

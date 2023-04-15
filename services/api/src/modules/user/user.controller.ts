@@ -38,6 +38,8 @@ import { UserSettings } from '@models/user-settings.model';
 import { Set2faDto } from '@dto/set-2fa.dto';
 import { Remove2faDto } from '@dto/remove-2fa.dto';
 import { ResponseDto } from '@dto/response.dto';
+import { SetPhoneDto } from '@dto/set-phone.dto';
+import { RemovePhoneDto } from '@dto/remove-phone.dto';
 
 @ApiTags('User')
 @Controller('user')
@@ -180,8 +182,8 @@ export class UserController {
   })
   @UseGuards(JwtGuard)
   @Post('set-phone')
-  setPhone(@UserDecorator() userId: string) {
-    return this.userService.setPhone();
+  setPhone(@UserDecorator() userId: string, @Body() payload: SetPhoneDto) {
+    return this.userService.setPhone({ userId, ...payload });
   }
 
   @ApiOperation({ summary: 'Removes phone from user account' })
@@ -191,8 +193,11 @@ export class UserController {
   })
   @UseGuards(JwtGuard)
   @Post('remove-phone')
-  removePhone(@UserDecorator() userId: string) {
-    return this.userService.removePhone();
+  removePhone(
+    @UserDecorator() userId: string,
+    @Body() payload: RemovePhoneDto
+  ) {
+    return this.userService.removePhone({ userId, ...payload });
   }
 
   @ApiOperation({

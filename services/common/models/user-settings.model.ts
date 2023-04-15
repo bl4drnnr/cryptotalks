@@ -77,6 +77,30 @@ export class UserSettings extends Model<
   phone?: string;
 
   @ApiProperty({
+    type: String,
+    nullable: true,
+    description: 'Phone verification code'
+  })
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+    field: 'phone_verification_code'
+  })
+  phoneVerificationCode?: string;
+
+  @ApiProperty({
+    type: Date,
+    nullable: true,
+    description: 'Verification code creation timestamp'
+  })
+  @Column({
+    type: DataType.DATE,
+    allowNull: true,
+    field: 'verification_code_created_at'
+  })
+  verificationCodeCreatedAt?: Date;
+
+  @ApiProperty({
     type: Boolean,
     nullable: true,
     description: 'Users are allowed to change password only 1 time'
