@@ -75,7 +75,7 @@ const SecuritySettings = ({
     setTwoFaModal(true);
     if (generateToken) {
       const { qr, secret } = node2fa.generateSecret({
-        name: 'Cryptodistrict', account: securitySettings!.email
+        name: 'Cryptotalks', account: securitySettings!.email
       });
       setTwoFaToken(secret);
       setTwoFaQr(qr);
@@ -86,10 +86,12 @@ const SecuritySettings = ({
     try {
       const token = sessionStorage.getItem('_at');
       await set2Fa({ token, twoFaToken, twoFaCode });
+
       showNotificationMessage({
         type: NotificationType.SUCCESS,
         content: '2FA has been successfully set'
       });
+
       setTwoFaModal(false);
       setSecuritySettings({ ...securitySettings, twoFaToken: true });
     } catch (e) {
@@ -101,10 +103,12 @@ const SecuritySettings = ({
     try {
       const token = sessionStorage.getItem('_at');
       await remove2Fa({ token, twoFaCode });
+
       showNotificationMessage({
         type: NotificationType.SUCCESS,
         content: '2FA has been successfully removed'
       });
+
       setTwoFaModal(false);
       setSecuritySettings({ ...securitySettings, twoFaToken: false });
     } catch (e) {
@@ -115,12 +119,20 @@ const SecuritySettings = ({
   const fetchSetPhone = async () => {
     try {
       const token = sessionStorage.getItem('_at');
-      await setPhone({ token, phone, code });
-      showNotificationMessage({
-        type: NotificationType.SUCCESS,
-        content: 'Phone has been successfully set'
-      });
+      const { message } = await setPhone({ token, phone, code });
+
+      if (message === 'code-sent') {
+        setPhoneStep(2);
+      } else {
+        showNotificationMessage({
+          type: NotificationType.SUCCESS,
+          content: 'Phone has been successfully set'
+        });
+        setPhoneModal(false);
+      }
+
       setPhoneModal(false);
+      setSecuritySettings({ ...securitySettings, phone });
     } catch (e) {
       return exceptionHandler(e);
     }
@@ -128,13 +140,24 @@ const SecuritySettings = ({
 
   const fetchRemovePhone = async () => {
     try {
+      setPhoneModal(true);
       const token = sessionStorage.getItem('_at');
-      await removePhone({ token, code });
-      showNotificationMessage({
-        type: NotificationType.SUCCESS,
-        content: 'Phone has been successfully removed'
-      });
-      setPhoneModal(false);
+      const { message } = await removePhone({ token, code });
+
+      if (message === 'code-sent') {
+        showNotificationMessage({
+          type: NotificationType.SUCCESS,
+          content: 'SMS message has been sent'
+        });
+      } else {
+        showNotificationMessage({
+          type: NotificationType.SUCCESS,
+          content: 'Phone has been successfully removed'
+        });
+
+        setPhoneModal(false);
+        setSecuritySettings({ ...securitySettings, phone: null });
+      }
     } catch (e) {
       return exceptionHandler(e);
     }
@@ -177,6 +200,7 @@ const SecuritySettings = ({
             </SecurityItemWrapper>
             <SecurityItemWrapper className={'button'}>
               <Button
+                disabled={!!securitySettings?.phone}
                 text={'Set 2FA'}
                 onClick={() => openTwoFaModal({ generateToken: true })}
               />
@@ -254,6 +278,7 @@ const SecuritySettings = ({
             </SecurityItemWrapper>
             <SecurityItemWrapper className={'button'}>
               <Button
+                disabled={securitySettings?.twoFaToken}
                 text={'Set phone'}
                 onClick={() => setPhoneModal(true)}
               />
@@ -261,7 +286,7 @@ const SecuritySettings = ({
                 <Modal
                   onClose={() => setPhoneModal(false)}
                   header={'Set mobile phone'}
-                  description={'Secure your account with mobile MFA. Alternative way of MFA, instead of authenticator application.'}
+                  description={'You are about deactivate your Two-factor authentication. Be careful! This action will decrease your account security. We recommend to have 2FA either mobile phone for security purposes.'}
                 >
                   <>
                     <Input
@@ -272,10 +297,10 @@ const SecuritySettings = ({
                       onChange={(e) => setMobilePhone(e.target.value)}
                     />
                     {phoneStep === 2 ? (
-                      <Input
-                        value={code}
-                        placeholder={'Provide code from SMS message'}
-                        onChange={(e) => setCode(e.target.value)}
+                      <TwoFa
+                        styles={{ justifyCenter: true, onWhite: true }}
+                        title={'Provide code from SMS message'}
+                        setTwoFaCode={setCode}
                       />
                     ) : null}
                     <ModalButtonWrapper className={'vertical-margin'}>
@@ -292,6 +317,39 @@ const SecuritySettings = ({
           </>
         ) : (
           <>
+            <SecurityItemWrapper>
+              <ItemTitle>Disable mobile phone</ItemTitle>
+              <ItemDescription>You have set up 2FA for your account with mobile phone.</ItemDescription>
+            </SecurityItemWrapper>
+            <SecurityItemWrapper className={'button'}>
+              <Button
+                danger={true}
+                text={'Disable phone'}
+                onClick={() => fetchRemovePhone()}
+              />
+              {phoneModal ? (
+                <Modal
+                  onClose={() => setPhoneModal(false)}
+                  header={'Disable mobile phone'}
+                  description={'Secure your account with mobile MFA. Alternative way of MFA, instead of authenticator application.'}
+                >
+                  <>
+                    <TwoFa
+                      styles={{ justifyCenter: true, onWhite: true }}
+                      title={'Provide code from SMS message'}
+                      setTwoFaCode={setCode}
+                    />
+                    <ModalButtonWrapper>
+                      <Button
+                        onWhite={true}
+                        text={'Remove mobile phone'}
+                        onClick={() => fetchRemovePhone()}
+                      />
+                    </ModalButtonWrapper>
+                  </>
+                </Modal>
+              ) : null}
+            </SecurityItemWrapper>
           </>
         )}
       </SecurityItemBlock>

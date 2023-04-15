@@ -1,6 +1,7 @@
 import * as bcryptjs from 'bcryptjs';
 import * as crypto from 'crypto';
 import * as node2fa from 'node-2fa';
+import * as dayjs from 'dayjs';
 import {
   BadRequestException,
   forwardRef,
@@ -26,7 +27,6 @@ import { AccountNotConfirmedException } from '@exceptions/account-not-confirmed.
 import { HashNotFoundException } from '@exceptions/hash-not-found.exception';
 import { EmailAlreadyConfirmedException } from '@exceptions/email-already-confirmed.exception';
 import { AuthService } from '@modules/auth.service';
-import { LogEvent } from '@events/log.event';
 import { CloseAccEvent } from '@events/close-acc.event';
 import { UpdateUserEvent } from '@events/update-user.event';
 import { UserSettings } from '@models/user-settings.model';
@@ -37,6 +37,7 @@ import { UpdateUserSecurityEvent } from '@events/update-user-security.event';
 import { UpdateUserSecurityEventDto } from '@event-dto/update-user-security.event.dto';
 import { LoggerService } from '@shared/logger.service';
 import { Wrong2faException } from '@exceptions/wrong-2fa.exception';
+import { PhoneCodeErrorException } from '@exceptions/phone-code-error.exception';
 
 @Injectable()
 export class UserService {
@@ -373,12 +374,65 @@ export class UserService {
       );
       return new ResponseDto('code-sent');
     } else if (payload.code) {
+      const { phoneVerificationCode, verificationCodeCreatedAt } =
+        await this.userSettingsRepository.findOne({
+          where: { userId: payload.userId }
+        });
+
+      const time = dayjs(verificationCodeCreatedAt);
+      const timeDifferenceInMinutes = dayjs().diff(time, 'minute');
+
+      if (payload.code !== phoneVerificationCode || timeDifferenceInMinutes > 5)
+        throw new PhoneCodeErrorException();
+
+      this.userClient.emit(
+        'update_user_security_settings',
+        new UpdateUserSecurityEvent({
+          userId: payload.userId,
+          phone: payload.phone
+        })
+      );
       return new ResponseDto();
     }
   }
 
   async removePhone(payload: UpdateUserSecurityEventDto) {
-    return new ResponseDto();
+    const { phone } = await this.userSettingsRepository.findOne({
+      where: { userId: payload.userId }
+    });
+
+    if (!phone) throw new BadRequestException();
+
+    if (!payload.code) {
+      this.userClient.emit(
+        'send_verification_mobile_code',
+        new UpdateUserSecurityEvent({
+          userId: payload.userId,
+          phone
+        })
+      );
+      return new ResponseDto('code-sent');
+    } else if (payload.code) {
+      const { phoneVerificationCode, verificationCodeCreatedAt } =
+        await this.userSettingsRepository.findOne({
+          where: { userId: payload.userId }
+        });
+
+      const time = dayjs(verificationCodeCreatedAt);
+      const timeDifferenceInMinutes = dayjs().diff(time, 'minute');
+
+      if (payload.code !== phoneVerificationCode || timeDifferenceInMinutes > 5)
+        throw new PhoneCodeErrorException();
+
+      this.userClient.emit(
+        'update_user_security_settings',
+        new UpdateUserSecurityEvent({
+          userId: payload.userId,
+          phone: null
+        })
+      );
+      return new ResponseDto();
+    }
   }
 
   async getUserSettings({ userId }: { userId: string }) {

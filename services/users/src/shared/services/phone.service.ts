@@ -13,7 +13,7 @@ export class PhoneService {
     const verificationCode = Math.round(Math.random() * 1000000);
 
     await this.twilioService.client.messages.create({
-      body: `Cryptodistrict verification code: ${verificationCode}.\nWill be valid for 5 minutes.`,
+      body: `Cryptotalks verification code: ${verificationCode}.\nWill be valid for 5 minutes.`,
       from: this.configService.twilioCredentials.twilio_auth_phone,
       to: targetPhoneNumber
     });
