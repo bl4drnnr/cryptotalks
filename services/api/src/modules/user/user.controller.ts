@@ -37,6 +37,9 @@ import { SignUpEventDto } from '@event-dto/sign-up.event.dto';
 import { UserSettings } from '@models/user-settings.model';
 import { Set2faDto } from '@dto/set-2fa.dto';
 import { Remove2faDto } from '@dto/remove-2fa.dto';
+import { ResponseDto } from '@dto/response.dto';
+import { SetPhoneDto } from '@dto/set-phone.dto';
+import { RemovePhoneDto } from '@dto/remove-phone.dto';
 
 @ApiTags('User')
 @Controller('user')
@@ -64,11 +67,15 @@ export class UserController {
   })
   @Post('sign-in')
   async signIn(@Body() payload: SignInDto, @Res({ passthrough: true }) res) {
-    const { _at, _rt } = await this.userService.signIn(payload);
+    const response = await this.userService.signIn(payload);
 
-    res.cookie('_rt', _rt);
+    if (response instanceof ResponseDto) {
+      return response;
+    } else if ('_rt' in response && '_at' in response) {
+      res.cookie('_rt', response._rt);
 
-    return { _at };
+      return { _at: response._at };
+    }
   }
 
   @ApiExtraModels(ConfirmAccountEvent)
@@ -164,6 +171,33 @@ export class UserController {
   @Post('remove-2fa')
   removeTwoFa(@UserDecorator() userId: string, @Body() payload: Remove2faDto) {
     return this.userService.removeTwoFa({ userId, ...payload });
+  }
+
+  @ApiOperation({
+    summary: 'Sets multi-factor authentication for user (phone)'
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'As a response function returns success message'
+  })
+  @UseGuards(JwtGuard)
+  @Post('set-phone')
+  setPhone(@UserDecorator() userId: string, @Body() payload: SetPhoneDto) {
+    return this.userService.setPhone({ userId, ...payload });
+  }
+
+  @ApiOperation({ summary: 'Removes phone from user account' })
+  @ApiResponse({
+    status: 201,
+    description: 'As a response function returns success message'
+  })
+  @UseGuards(JwtGuard)
+  @Post('remove-phone')
+  removePhone(
+    @UserDecorator() userId: string,
+    @Body() payload: RemovePhoneDto
+  ) {
+    return this.userService.removePhone({ userId, ...payload });
   }
 
   @ApiOperation({

@@ -10,6 +10,10 @@ export const Placeholder = styled.p`
   margin: 14px 0;
   color: rgb(${(props) => props.theme.colors.textColor});
   font-weight: 200;
+
+  &.onWhite {
+    color: black;
+  }
 `;
 
 export const BasicInput = styled.input`
@@ -44,6 +48,11 @@ export const BasicInput = styled.input`
   &:disabled {
     cursor: pointer;
   }
+  
+  &.onWhite {
+    background-color: rgba(${(props) => props.theme.colors.inputBackground}, .15);
+    color: black;
+  }
 `;
 
 export const OnErrorMessage = styled.p`
@@ -59,4 +68,8 @@ export const InputDescription = styled.p`
   font-weight: 200;
   opacity: .5;
   margin-top: 5px;
+  
+  &.onWhite {
+    color: rgb(${(props) => props.theme.colors.opposite});
+  }
 `;

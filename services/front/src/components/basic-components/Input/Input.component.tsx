@@ -6,6 +6,7 @@ import { BasicInput, Container, InputDescription, OnErrorMessage, Placeholder } 
 export const Input = ({
   value,
   placeholder,
+  onWhite,
   type,
   onChange,
   onError,
@@ -17,17 +18,21 @@ export const Input = ({
 }: InputProps) => {
   return (
     <Container>
-      {(placeholder.length) > 0 && <Placeholder>{placeholder}</Placeholder>}
+      {(placeholder.length) > 0 && <Placeholder
+        className={classNames({ onWhite })}
+      >{placeholder}</Placeholder>}
       <BasicInput
         disabled={disabled}
-        className={classNames({ onError, high, disabled })}
+        className={classNames({ onError, high, disabled, onWhite })}
         type={type}
         value={value}
         onChange={onChange}
         placeholder={innerPlaceholder?.length ? innerPlaceholder : ''}
       />
       {onError && onErrorMessage?.length && (<OnErrorMessage>{onErrorMessage}</OnErrorMessage>)}
-      {inputDescription && (<InputDescription>{inputDescription}</InputDescription>)}
+      {inputDescription && (
+        <InputDescription className={classNames({ onWhite })}>{inputDescription}</InputDescription>
+      )}
     </Container>
   );
 };

@@ -31,4 +31,10 @@ export class UpdateUserSecurityEventDto {
     nullable: true
   })
   phone?: string;
+
+  @ApiProperty({
+    type: String,
+    nullable: true
+  })
+  code?: string;
 }

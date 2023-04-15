@@ -35,4 +35,9 @@ export class UsersController {
   handleCloseUserAccount(data: any) {
     return this.usersService.closeUserAccount(data);
   }
+
+  @EventPattern('send_verification_mobile_code')
+  handleSendVerificationMobileCode(data: any) {
+    return this.usersService.sendVerificationMobileCode(data);
+  }
 }

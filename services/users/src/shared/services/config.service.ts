@@ -32,4 +32,12 @@ export class ApiConfigService {
   get frontEndUrl() {
     return this.getString('FRONT_END_URL');
   }
+
+  get twilioCredentials() {
+    return {
+      twilio_auth_phone: this.getString('TWILIO_AUTH_PHONE'),
+      twilio_account_sid: this.getString('TWILIO_ACCOUNT_SID'),
+      twilio_auth_token: this.getString('TWILIO_AUTH_TOKEN')
+    };
+  }
 }

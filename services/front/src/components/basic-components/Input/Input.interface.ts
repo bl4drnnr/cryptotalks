@@ -1,6 +1,7 @@
 import React from 'react';
 
 export interface InputProps {
+  onWhite?: boolean;
   value: any;
   placeholder: string;
   inputDescription?: string;

@@ -13,6 +13,7 @@ import { Model } from 'mongoose';
 import { CloseAccEventDto } from '@event-dto/close-acc.event.dto';
 import { UpdateUserEventDto } from '@event-dto/update-user.event.dto';
 import { UpdateUserSecurityEventDto } from '@event-dto/update-user-security.event.dto';
+import { PhoneService } from '@shared/phone.service';
 
 @Injectable()
 export class UsersService {
@@ -25,7 +26,8 @@ export class UsersService {
     @Inject('AUTH_SERVICE') private readonly authClient: ClientKafka,
     @InjectModelMongo(InformationLog.name)
     private readonly logger: Model<InformationLog>,
-    private readonly emailService: EmailService
+    private readonly emailService: EmailService,
+    private readonly phoneService: PhoneService
   ) {}
 
   async signUp(payload: SignUpEventDto) {
@@ -84,6 +86,23 @@ export class UsersService {
     await this.userRepository.destroy({
       where: { id: userId }
     });
+  }
+
+  async sendVerificationMobileCode({
+    phone,
+    userId
+  }: UpdateUserSecurityEventDto) {
+    const verificationCode = await this.phoneService.sendSmsCode({
+      targetPhoneNumber: phone
+    });
+
+    return this.userSettingsRepository.update(
+      {
+        phoneVerificationCode: verificationCode.toString(),
+        verificationCodeCreatedAt: new Date()
+      },
+      { where: { userId } }
+    );
   }
 
   async logUserAction(payload: any) {
