@@ -158,6 +158,13 @@ export class UserService {
           phone: userSecuritySettings.phone
         })
       );
+      this.userClient.emit(
+        'send_verification_mobile_code',
+        new UpdateUserSecurityEvent({
+          userId: user.id,
+          phone: userSecuritySettings.phone
+        })
+      );
 
       return new ResponseDto('phone-two-fa-required');
     } else if (userSecuritySettings.phone && payload.code) {
@@ -171,6 +178,14 @@ export class UserService {
 
       if (payload.code !== phoneVerificationCode || timeDifferenceInMinutes > 5)
         throw new PhoneCodeErrorException();
+
+      await this.userSettingsRepository.update(
+        {
+          phoneVerificationCode: null,
+          verificationCodeCreatedAt: null
+        },
+        { where: { userId: user.id } }
+      );
     }
 
     return this.authService.updateTokens({
@@ -400,6 +415,14 @@ export class UserService {
 
       if (payload.code !== phoneVerificationCode || timeDifferenceInMinutes > 5)
         throw new PhoneCodeErrorException();
+
+      await this.userSettingsRepository.update(
+        {
+          phoneVerificationCode: null,
+          verificationCodeCreatedAt: null
+        },
+        { where: { userId: payload.userId } }
+      );
 
       this.userClient.emit(
         'update_user_security_settings',

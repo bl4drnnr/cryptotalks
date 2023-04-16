@@ -153,7 +153,7 @@ const Signin = () => {
               <Title>Sign in</Title>
               <MarginWrapper className={'big'}>
                 <Paragraph>
-                  {mfaType === 'two-fa-required' ? 'This account has been protected by MFA, in order to continue, please, provide one-time 6-digit verification code.' : ''}
+                  {mfaType === 'two-fa-required' ? 'This account has been protected by MFA, in order to continue, please, provide one-time 6-digit verification code.' : 'This account has been protected by mobile MFA, in order to continue, please, provide code from the SMS message.'}
                 </Paragraph>
                 {mfaType === 'two-fa-required' ? (
                   <TwoFa
@@ -162,7 +162,7 @@ const Signin = () => {
                   />
                 ) : (
                   <TwoFa
-                    title={'Mobile one-time authentication code'}
+                    title={'Mobile one-time authentication code has been sent. Please, provide code from the SMS message.'}
                     setTwoFaCode={setCode}
                   />
                 )}
