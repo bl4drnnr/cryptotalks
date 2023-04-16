@@ -838,9 +838,10 @@ components:
           nullable: true
           description: Verification code creation timestamp
         passwordChanged:
-          type: boolean
+          format: date-time
+          type: string
           nullable: true
-          description: Users are allowed to change password only 1 time
+          description: Users are allowed to change password only 1 time in 24h
         createdAt:
           format: date-time
           type: string
@@ -1186,6 +1187,12 @@ components:
         passwordRepeat:
           type: string
           nullable: false
+        code:
+          type: string
+          nullable: true
+        twoFaCode:
+          type: string
+          nullable: true
       required:
         - password
         - passwordRepeat

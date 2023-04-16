@@ -1,5 +1,7 @@
 import React from 'react';
 
+import classNames from 'classnames';
+import dayjs from 'dayjs';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import * as node2fa from 'node-2fa';
@@ -11,6 +13,7 @@ import { SecuritySettingsProps } from '@components/SecuritySettings/SecuritySett
 import { TwoFa } from '@components/TwoFa/TwoFa.component';
 import { useHandleException } from '@hooks/useHandleException.hook';
 import { useNotificationMessage } from '@hooks/useShowNotificationMessage.hook';
+import { validatePassword, validatePasswordRules } from '@hooks/useValidators.hook';
 import { useChangeEmailService } from '@services/change-email/change-email.service';
 import { useChangePasswordService } from '@services/change-password/change-password.service';
 import { useRemove2FaService } from '@services/remove-2fa/remove-2fa.service';
@@ -18,6 +21,7 @@ import { useRemovePhoneService } from '@services/remove-phone/remove-phone.servi
 import { useSet2FaService } from '@services/set-2fa/set-2fa.service';
 import { useSetPhoneService } from '@services/set-phone/set-phone.service';
 import { NotificationType } from '@store/global/global.state';
+import { Dot, PasswordCheckBox, PasswordCheckLine } from '@styles/login.style';
 import {
   ItemDescription,
   ItemTitle,
@@ -53,6 +57,22 @@ const SecuritySettings = ({
   const [phone, setMobilePhone] = React.useState('');
   const [code, setCode] = React.useState('');
 
+  const [passwordChangeStep, setPasswordChangeStep] = React.useState(1);
+  const [passwordError, setPasswordError] = React.useState({
+    passwordMismatch: false,
+    passwordRequirement: false,
+    passwordRules: false
+  });
+  const [passwordRulesList, setPasswordRulesList] = React.useState([
+    { error: false, text: 'Password length should be more than 8 characters' },
+    { error: false, text: 'Password should contain at least one uppercase character' },
+    { error: false, text: 'Password should contain at least one lowercase character' },
+    { error: false, text: 'Password should contain at least one special character' },
+    { error: false, text: 'Password should contain at least one digit character' }
+  ]);
+  const [currentPassword, setCurrentPassword] = React.useState('');
+  const [changedPassword, setChangedPassword] = React.useState({ password: '', repeatPassword: '' });
+
   const { loading: l0, set2Fa } = useSet2FaService();
   const { loading: l1, remove2Fa } = useRemove2FaService();
   const { loading: l2, changeEmail } = useChangeEmailService();
@@ -62,6 +82,28 @@ const SecuritySettings = ({
 
   const { handleException } = useHandleException();
   const { showNotificationMessage } = useNotificationMessage();
+
+  React.useEffect(() => {
+    if (changedPassword.password === changedPassword.repeatPassword)
+      setPasswordError({ ...passwordError, passwordMismatch: false });
+
+    const passwordRuleCheck = validatePasswordRules(changedPassword.password);
+    setPasswordRulesList(passwordRuleCheck);
+
+    setPasswordError({
+      passwordMismatch: !!((changedPassword.password && changedPassword.repeatPassword) && (changedPassword.password !== changedPassword.repeatPassword)),
+      passwordRequirement: !changedPassword.password || !changedPassword.repeatPassword,
+      passwordRules: (!validatePassword(changedPassword.password) || !validatePassword(changedPassword.repeatPassword))
+    });
+
+    if (!changedPassword.password && !changedPassword.repeatPassword) {
+      setPasswordError({
+        passwordMismatch: false,
+        passwordRequirement: false,
+        passwordRules: false
+      });
+    }
+  }, [changedPassword.password, changedPassword.repeatPassword]);
 
   React.useEffect(() => {
     setInternalLoader(l0 || l1 || l2 || l3 || l4 || l5);
@@ -173,7 +215,24 @@ const SecuritySettings = ({
 
   const fetchChangePassword = async () => {
     try {
+      const token = sessionStorage.getItem('_at');
+      const { message } = await changePassword({
+        password: changedPassword.password,
+        passwordRepeat: changedPassword.repeatPassword,
+        token
+      });
 
+      if (message !== 'success') {
+        return setPasswordChangeStep(2);
+      }
+
+      showNotificationMessage({
+        type: NotificationType.SUCCESS,
+        content: 'Password has been successfully changed'
+      });
+
+      setPasswordChangeModal(false);
+      setSecuritySettings({ ...securitySettings, passwordChanged: dayjs().add(24, 'hours') });
     } catch (e) {
       return exceptionHandler(e);
     }
@@ -181,6 +240,14 @@ const SecuritySettings = ({
 
   const handleRedirect = async (path: string) => {
     await router.push(`/${path}`);
+  };
+
+  const validateFields = () => {
+    return changedPassword.password &&
+      changedPassword.repeatPassword &&
+      !passwordError.passwordMismatch &&
+      !passwordError.passwordRequirement &&
+      !passwordError.passwordRules;
   };
 
   return (
@@ -431,7 +498,48 @@ const SecuritySettings = ({
               onClose={() => setPasswordChangeModal(false)}
               header={'Change password'}
               description={'Be careful! Some operations won\'t be available for 24h after change.'}
-            ><></></Modal>
+            >
+              <Input
+                type={'password'}
+                onWhite={true}
+                value={currentPassword}
+                placeholder={'Current password'}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+              />
+              <Input
+                type={'password'}
+                onWhite={true}
+                value={changedPassword.password}
+                placeholder={'New password'}
+                onChange={(e) => setChangedPassword({ ...changedPassword, password: e.target.value })}
+              />
+              <Input
+                type={'password'}
+                onWhite={true}
+                value={changedPassword.repeatPassword}
+                placeholder={'Repeat new password'}
+                onChange={(e) => setChangedPassword({ ...changedPassword, repeatPassword: e.target.value })}
+              />
+              {passwordError.passwordRules ? (
+                <PasswordCheckBox className={'no-padding'}>
+                  {passwordRulesList.map(rule => {
+                    return (
+                      <PasswordCheckLine className={'on-white'} key={rule.text}>
+                        <Dot className={classNames({ error: !rule.error })}/>
+                        <p>{rule.text}</p>
+                      </PasswordCheckLine>);
+                  })}
+                </PasswordCheckBox>
+              ) : (<></>)}
+              <ModalButtonWrapper className={'vertical-margin'}>
+                <Button
+                  disabled={!validateFields()}
+                  onWhite={true}
+                  text={'Change password'}
+                  onClick={() => fetchChangePassword()}
+                />
+              </ModalButtonWrapper>
+            </Modal>
           ) : null}
         </SecurityItemWrapper>
       </SecurityItemBlock>
@@ -451,7 +559,9 @@ const SecuritySettings = ({
               onClose={() => setChangeEmailModal(false)}
               header={'Change email'}
               description={'Be careful! You are able to change email only one time.'}
-            ><></></Modal>
+            >
+              <></>
+            </Modal>
           ) : null}
         </SecurityItemWrapper>
       </SecurityItemBlock>

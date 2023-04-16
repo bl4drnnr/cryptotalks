@@ -51,6 +51,10 @@ export const MarginVerticalWrapper = styled.span`
 export const PasswordCheckBox = styled.div`
   width: 100%;
   padding: 15px;
+  
+  &.no-padding {
+    padding: 0;
+  }
 `;
 
 export const PasswordCheckLine = styled.div`
@@ -61,6 +65,10 @@ export const PasswordCheckLine = styled.div`
   margin: 5px 0;
   font-weight: 100;
   color: rgb(${(props) => props.theme.colors.textColor});
+  
+  &.on-white {
+    color: black;
+  }
 `;
 
 export const Dot = styled.div`

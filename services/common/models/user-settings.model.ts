@@ -101,9 +101,9 @@ export class UserSettings extends Model<
   verificationCodeCreatedAt?: Date;
 
   @ApiProperty({
-    type: Boolean,
+    type: Date,
     nullable: true,
-    description: 'Users are allowed to change password only 1 time'
+    description: 'Users are allowed to change password only 1 time in 24h'
   })
   @Column({ type: DataType.DATE, allowNull: true, field: 'password_changed' })
   passwordChanged?: Date;

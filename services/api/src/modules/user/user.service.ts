@@ -285,14 +285,18 @@ export class UserService {
     return new ResponseDto();
   }
 
-  changePassword({
+  async changePassword({
     userId,
     password,
-    passwordRepeat
+    passwordRepeat,
+    code,
+    twoFaCode
   }: {
     userId: string;
     password: string;
     passwordRepeat: string;
+    code?: string;
+    twoFaCode?: string;
   }) {
     if (
       !this.validatorService.validatePassword(password) ||
@@ -301,11 +305,60 @@ export class UserService {
     )
       throw new ValidationErrorException();
 
+    const userSettings = await this.userSettingsRepository.findOne({
+      where: { userId }
+    });
+
+    if (userSettings.phone && !code) {
+      this.userClient.emit(
+        'send_verification_mobile_code',
+        new UpdateUserSecurityEvent({
+          userId,
+          phone: userSettings.phone
+        })
+      );
+
+      return new ResponseDto('code-sent');
+    } else if (userSettings.phone && code) {
+      const { phoneVerificationCode, verificationCodeCreatedAt } =
+        await this.userSettingsRepository.findOne({
+          where: { userId }
+        });
+
+      const time = dayjs(verificationCodeCreatedAt);
+      const timeDifferenceInMinutes = dayjs().diff(time, 'minute');
+
+      if (code !== phoneVerificationCode || timeDifferenceInMinutes > 5)
+        throw new PhoneCodeErrorException();
+    } else if (userSettings.twoFaToken && !twoFaCode) {
+      return new ResponseDto('two-fa-required');
+    } else if (userSettings.twoFaToken && twoFaCode) {
+      const tokenVerification = node2fa.verifyToken(
+        userSettings.twoFaToken,
+        twoFaCode
+      );
+
+      if (!tokenVerification || tokenVerification.delta !== 0)
+        throw new Wrong2faException();
+    } else {
+      throw new BadRequestException();
+    }
+
+    const hashedPassword = await bcryptjs.hash(password, 10);
+
     this.userClient.emit(
       'update_user_account',
       new UpdateUserEvent({
         userId,
-        password
+        password: hashedPassword
+      })
+    );
+
+    this.userClient.emit(
+      'update_user_security_settings',
+      new UpdateUserSecurityEvent({
+        userId,
+        passwordChanged: new Date()
       })
     );
 
