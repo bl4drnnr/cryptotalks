@@ -34,6 +34,7 @@ import {
   SecurityTitleBox,
   SeparationLine,
   Tooltip,
+  TooltipImageWrapper,
   TooltipWrapper
 } from '@styles/SecuritySettings.style';
 
@@ -281,13 +282,14 @@ const SecuritySettings = ({
                     className={'tooltip'}
                     data-tool-tip='You can set up only 2FA or mobile phone as an additional way to secure your account'
                   >
-                    <Image
-                      src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/info.svg`}
-                      className={'tooltip-image'}
-                      alt={'info'}
-                      width={20}
-                      height={20}
-                    />
+                    <TooltipImageWrapper>
+                      <Image
+                        src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/info.svg`}
+                        alt={'info'}
+                        width={20}
+                        height={20}
+                      />
+                    </TooltipImageWrapper>
                   </Tooltip>
                   <Tooltip className={'activated activated--deactivated'} data-tool-tip='Not active'/>
                 </ItemTitle>
@@ -334,13 +336,14 @@ const SecuritySettings = ({
                   className={'tooltip'}
                   data-tool-tip='You can set up only 2FA or mobile phone as an additional way to secure your account'
                 >
-                  <Image
-                    src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/info.svg`}
-                    className={'tooltip-image'}
-                    alt={'info'}
-                    width={20}
-                    height={20}
-                  />
+                  <TooltipImageWrapper>
+                    <Image
+                      src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/info.svg`}
+                      alt={'info'}
+                      width={20}
+                      height={20}
+                    />
+                  </TooltipImageWrapper>
                 </Tooltip>
                 <Tooltip className={'activated'} data-tool-tip='Active'/>
               </ItemTitle>
@@ -390,13 +393,14 @@ const SecuritySettings = ({
                   className={'tooltip'}
                   data-tool-tip='You can set up only 2FA or mobile phone as an additional way to secure your account'
                 >
-                  <Image
-                    src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/info.svg`}
-                    className={'tooltip-image'}
-                    alt={'info'}
-                    width={20}
-                    height={20}
-                  />
+                  <TooltipImageWrapper>
+                    <Image
+                      src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/info.svg`}
+                      alt={'info'}
+                      width={20}
+                      height={20}
+                    />
+                  </TooltipImageWrapper>
                 </Tooltip>
                 <Tooltip className={'activated activated--deactivated'} data-tool-tip='Not active'/>
               </ItemTitle>
@@ -450,13 +454,14 @@ const SecuritySettings = ({
                   className={'tooltip'}
                   data-tool-tip='You can set up only 2FA or mobile phone as an additional way to secure your account'
                 >
-                  <Image
-                    src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/info.svg`}
-                    className={'tooltip-image'}
-                    alt={'info'}
-                    width={20}
-                    height={20}
-                  />
+                  <TooltipImageWrapper>
+                    <Image
+                      src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/info.svg`}
+                      alt={'info'}
+                      width={20}
+                      height={20}
+                    />
+                  </TooltipImageWrapper>
                 </Tooltip>
                 <Tooltip className={'activated'} data-tool-tip='Active'/>
               </ItemTitle>
@@ -497,11 +502,16 @@ const SecuritySettings = ({
 
       <SecurityItemBlock>
         <SecurityItemWrapper>
-          <ItemTitle>Change password</ItemTitle>
+          <ItemTitle>Change password
+            {dayjs().diff(securitySettings?.passwordChanged, 'hours') < 24 ? (
+              <Tooltip className={'pending'} data-tool-tip='Pending'/>
+            ) : null}
+          </ItemTitle>
           <ItemDescription>Be careful! Some operations won&apos;t be available for 24h after change.</ItemDescription>
         </SecurityItemWrapper>
         <SecurityItemWrapper className={'button'}>
           <Button
+            disabled={dayjs().diff(securitySettings?.passwordChanged, 'hours') < 24}
             text={'Change password'}
             onClick={() => setPasswordChangeModal(true)}
           />

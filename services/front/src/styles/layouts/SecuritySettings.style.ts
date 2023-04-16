@@ -82,6 +82,11 @@ export const TooltipWrapper = styled.span`
   display: flex;
 `;
 
+export const TooltipImageWrapper = styled.span`
+  filter: ${(props) => props.theme.colors.svgIconInvert};
+  margin: 0 5px;
+`;
+
 export const Tooltip = styled.span`
   opacity: .9;
 
@@ -102,13 +107,23 @@ export const Tooltip = styled.span`
       }
     }
   }
+  
+  &.pending[data-tool-tip] {
+    margin: 0 10px;
+    position: relative;
+    &::after {
+      content: attr(data-tool-tip);
+      border: 1px solid rgb(${(props) => props.theme.colors.pending});
+      color: rgb(${(props) => props.theme.colors.pending});
+      border-radius: 6px;
+      padding: 3px;
+      font-size: 12px;
+    }
+  }
 
   &.tooltip[data-tool-tip] {
     position: relative;
     cursor: pointer;
-    .tooltip-image {
-      margin: 0 5px;
-    }
     
     &::after {
       background: rgba(${(props) => props.theme.colors.darkBackground});
