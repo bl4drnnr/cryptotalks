@@ -10,7 +10,7 @@ export class PhoneService {
   ) {}
 
   async sendSmsCode({ targetPhoneNumber }: { targetPhoneNumber: string }) {
-    const verificationCode = Math.round(Math.random() * 1000000);
+    const verificationCode = Math.floor(100000 + Math.random() * 900000);
 
     await this.twilioService.client.messages.create({
       body: `Cryptotalks verification code: ${verificationCode}.\nWill be valid for 5 minutes.`,

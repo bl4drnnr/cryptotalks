@@ -1054,6 +1054,9 @@ components:
         twoFaCode:
           type: string
           nullable: true
+        code:
+          type: string
+          nullable: true
       required:
         - email
         - password

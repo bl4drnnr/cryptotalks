@@ -150,17 +150,33 @@ export class UserService {
 
       if (!tokenVerification || tokenVerification.delta !== 0)
         throw new Wrong2faException();
+    } else if (userSecuritySettings.phone && !payload.code) {
+      this.userClient.emit(
+        'update_user_security_settings',
+        new UpdateUserSecurityEvent({
+          userId: user.id,
+          phone: userSecuritySettings.phone
+        })
+      );
 
-      return this.authService.updateTokens({
-        userId: user.id,
-        email: user.email
-      });
-    } else {
-      return this.authService.updateTokens({
-        userId: user.id,
-        email: user.email
-      });
+      return new ResponseDto('phone-two-fa-required');
+    } else if (userSecuritySettings.phone && payload.code) {
+      const { phoneVerificationCode, verificationCodeCreatedAt } =
+        await this.userSettingsRepository.findOne({
+          where: { userId: user.id }
+        });
+
+      const time = dayjs(verificationCodeCreatedAt);
+      const timeDifferenceInMinutes = dayjs().diff(time, 'minute');
+
+      if (payload.code !== phoneVerificationCode || timeDifferenceInMinutes > 5)
+        throw new PhoneCodeErrorException();
     }
+
+    return this.authService.updateTokens({
+      userId: user.id,
+      email: user.email
+    });
   }
 
   async confirmAccount({ confirmationHash }: { confirmationHash: string }) {

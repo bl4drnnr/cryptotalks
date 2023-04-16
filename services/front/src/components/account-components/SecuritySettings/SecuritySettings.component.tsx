@@ -122,17 +122,15 @@ const SecuritySettings = ({
       const { message } = await setPhone({ token, phone, code });
 
       if (message === 'code-sent') {
-        setPhoneStep(2);
+        return setPhoneStep(2);
       } else {
         showNotificationMessage({
           type: NotificationType.SUCCESS,
           content: 'Phone has been successfully set'
         });
         setPhoneModal(false);
+        setSecuritySettings({ ...securitySettings, phone });
       }
-
-      setPhoneModal(false);
-      setSecuritySettings({ ...securitySettings, phone });
     } catch (e) {
       return exceptionHandler(e);
     }

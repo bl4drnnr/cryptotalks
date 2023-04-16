@@ -31,9 +31,11 @@ const Signin = () => {
   const { signIn, loading } = useSignInService();
   const { handleException } = useHandleException();
   const [rightSideHide, setRightSideHide] = React.useState(false);
-  const { height, width } = useWindowDimensions();
+  const { width } = useWindowDimensions();
 
   const [step, setStep] = React.useState(1);
+  const [mfaType, setMfaType] = React.useState<'two-fa-required' | 'phone-two-fa-required'>();
+  const [code, setCode] = React.useState('');
   const [loginOption, setLoginOption] = React.useState('email');
   const [email, setEmail] = React.useState('');
   const [emailError, setEmailError] = React.useState(false);
@@ -49,12 +51,15 @@ const Signin = () => {
     try {
       if ((e && e.key === 'Enter') || !e) {
         const { _at, message } = await signIn({
-          email, password, twoFaCode
+          email, password, twoFaCode, code
         });
-        if (message && message === 'two-fa-required') {
+
+        if (message) {
+          setMfaType(message);
           setStep(2);
           return;
         }
+
         sessionStorage.setItem('_at', _at);
         await handleRedirect('account');
       }
@@ -147,11 +152,20 @@ const Signin = () => {
             <Box>
               <Title>Sign in</Title>
               <MarginWrapper className={'big'}>
-                <Paragraph>This account has been protected by MFA, in order to continue, please, provide one-time 6-digit verification code.</Paragraph>
-                <TwoFa
-                  title={'Two FA'}
-                  setTwoFaCode={setTwoFaCode}
-                />
+                <Paragraph>
+                  {mfaType === 'two-fa-required' ? 'This account has been protected by MFA, in order to continue, please, provide one-time 6-digit verification code.' : ''}
+                </Paragraph>
+                {mfaType === 'two-fa-required' ? (
+                  <TwoFa
+                    title={'Two-factor authentication'}
+                    setTwoFaCode={setTwoFaCode}
+                  />
+                ) : (
+                  <TwoFa
+                    title={'Mobile one-time authentication code'}
+                    setTwoFaCode={setCode}
+                  />
+                )}
               </MarginWrapper>
               <MarginWrapper>
                 <Button

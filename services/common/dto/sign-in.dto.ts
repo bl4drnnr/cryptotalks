@@ -18,4 +18,10 @@ export class SignInDto {
     nullable: true
   })
   twoFaCode?: string;
+
+  @ApiProperty({
+    type: String,
+    nullable: true
+  })
+  code?: string;
 }
