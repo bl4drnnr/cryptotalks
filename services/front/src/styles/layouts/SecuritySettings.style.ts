@@ -77,3 +77,57 @@ export const ModalButtonWrapper = styled.div`
     margin: 10px 0;
   }
 `;
+
+export const TooltipWrapper = styled.span`
+  display: flex;
+`;
+
+export const Tooltip = styled.span`
+  opacity: .9;
+
+  &.activated[data-tool-tip] {
+    position: relative;
+    &::after {
+      content: attr(data-tool-tip);
+      border: 1px solid rgb(${(props) => props.theme.colors.success});
+      color: rgb(${(props) => props.theme.colors.success});
+      border-radius: 6px;
+      padding: 3px;
+      font-size: 12px;
+    }
+    &.activated--deactivated {
+      &::after {
+        border: 1px solid rgb(${(props) => props.theme.colors.error});
+        color: rgb(${(props) => props.theme.colors.error});
+      }
+    }
+  }
+
+  &.tooltip[data-tool-tip] {
+    position: relative;
+    cursor: pointer;
+    .tooltip-image {
+      margin: 0 5px;
+    }
+    
+    &::after {
+      background: rgba(${(props) => props.theme.colors.darkBackground});
+      font-size: 12px;
+      font-weight: 100;
+      content: attr(data-tool-tip);
+      border: 1px solid rgba(${(props) => props.theme.colors.textColor}, .75);
+      color: rgba(${(props) => props.theme.colors.textColor}, .5);
+      display: block;
+      position: absolute;
+      padding: 4px;
+      bottom: 130%;
+      left: 0;
+      white-space: nowrap;
+      border-radius: 5px;
+      transform: scale(0);
+    }
+    &:hover::after {
+      transform: scale(1);
+    }
+  }
+`;

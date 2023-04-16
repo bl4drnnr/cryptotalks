@@ -28,7 +28,9 @@ import {
   SecuritySectionDescription,
   SecurityTitle,
   SecurityTitleBox,
-  SeparationLine
+  SeparationLine,
+  Tooltip,
+  TooltipWrapper
 } from '@styles/SecuritySettings.style';
 
 const SecuritySettings = ({
@@ -193,7 +195,24 @@ const SecuritySettings = ({
         {!securitySettings?.twoFaToken ? (
           <>
             <SecurityItemWrapper>
-              <ItemTitle>Set 2FA</ItemTitle>
+              <TooltipWrapper>
+                <ItemTitle>
+                  Set 2FA
+                  <Tooltip
+                    className={'tooltip'}
+                    data-tool-tip='You can set up only 2FA or mobile phone as an additional way to secure your account'
+                  >
+                    <Image
+                      src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/info.svg`}
+                      className={'tooltip-image'}
+                      alt={'info'}
+                      width={20}
+                      height={20}
+                    />
+                  </Tooltip>
+                  <Tooltip className={'activated activated--deactivated'} data-tool-tip='Not active'/>
+                </ItemTitle>
+              </TooltipWrapper>
               <ItemDescription>Secure your account with two-factor authentication (2FA).</ItemDescription>
             </SecurityItemWrapper>
             <SecurityItemWrapper className={'button'}>
@@ -230,7 +249,22 @@ const SecuritySettings = ({
         ) : (
           <>
             <SecurityItemWrapper>
-              <ItemTitle>Disable 2FA</ItemTitle>
+              <ItemTitle>
+                Disable 2FA
+                <Tooltip
+                  className={'tooltip'}
+                  data-tool-tip='You can set up only 2FA or mobile phone as an additional way to secure your account'
+                >
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/info.svg`}
+                    className={'tooltip-image'}
+                    alt={'info'}
+                    width={20}
+                    height={20}
+                  />
+                </Tooltip>
+                <Tooltip className={'activated'} data-tool-tip='Active'/>
+              </ItemTitle>
               <ItemDescription>You have set up Two-factor authentication (2FA) for your account.</ItemDescription>
             </SecurityItemWrapper>
             <SecurityItemWrapper className={'button'}>
@@ -271,7 +305,22 @@ const SecuritySettings = ({
         {!securitySettings?.phone ? (
           <>
             <SecurityItemWrapper>
-              <ItemTitle>Set mobile phone</ItemTitle>
+              <ItemTitle>
+                Set mobile phone
+                <Tooltip
+                  className={'tooltip'}
+                  data-tool-tip='You can set up only 2FA or mobile phone as an additional way to secure your account'
+                >
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/info.svg`}
+                    className={'tooltip-image'}
+                    alt={'info'}
+                    width={20}
+                    height={20}
+                  />
+                </Tooltip>
+                <Tooltip className={'activated activated--deactivated'} data-tool-tip='Not active'/>
+              </ItemTitle>
               <ItemDescription>Secure your account with mobile MFA.</ItemDescription>
             </SecurityItemWrapper>
             <SecurityItemWrapper className={'button'}>
@@ -316,7 +365,22 @@ const SecuritySettings = ({
         ) : (
           <>
             <SecurityItemWrapper>
-              <ItemTitle>Disable mobile phone</ItemTitle>
+              <ItemTitle>
+                Disable mobile phone
+                <Tooltip
+                  className={'tooltip'}
+                  data-tool-tip='You can set up only 2FA or mobile phone as an additional way to secure your account'
+                >
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/info.svg`}
+                    className={'tooltip-image'}
+                    alt={'info'}
+                    width={20}
+                    height={20}
+                  />
+                </Tooltip>
+                <Tooltip className={'activated'} data-tool-tip='Active'/>
+              </ItemTitle>
               <ItemDescription>You have set up 2FA for your account with mobile phone.</ItemDescription>
             </SecurityItemWrapper>
             <SecurityItemWrapper className={'button'}>
