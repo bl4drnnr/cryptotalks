@@ -38,6 +38,8 @@ import { UpdateUserSecurityEventDto } from '@event-dto/update-user-security.even
 import { LoggerService } from '@shared/logger.service';
 import { Wrong2faException } from '@exceptions/wrong-2fa.exception';
 import { PhoneCodeErrorException } from '@exceptions/phone-code-error.exception';
+import { ChangeEmailDto } from '@dto/change-email.dto';
+import { ChangePasswordDto } from '@dto/change-password.dto';
 
 @Injectable()
 export class UserService {
@@ -152,13 +154,6 @@ export class UserService {
         throw new Wrong2faException();
     } else if (userSecuritySettings.phone && !payload.code) {
       this.userClient.emit(
-        'update_user_security_settings',
-        new UpdateUserSecurityEvent({
-          userId: user.id,
-          phone: userSecuritySettings.phone
-        })
-      );
-      this.userClient.emit(
         'send_verification_mobile_code',
         new UpdateUserSecurityEvent({
           userId: user.id,
@@ -251,9 +246,15 @@ export class UserService {
     });
   }
 
-  async changeEmail({ userId, email }: { userId: string; email: string }) {
+  async changeEmail({
+    userId,
+    payload
+  }: {
+    userId: string;
+    payload: ChangeEmailDto;
+  }) {
     const existingUser = await this.userRepository.findOne({
-      where: { email }
+      where: { email: payload.email }
     });
     if (existingUser) throw new UserAlreadyExistsException();
 
@@ -262,8 +263,45 @@ export class UserService {
     });
     if (currentUser.emailChanged) throw new EmailChangedException();
 
-    if (!this.validatorService.validateEmail(email))
+    if (!this.validatorService.validateEmail(payload.email))
       throw new ValidationErrorException();
+
+    const securitySettings = await this.userSettingsRepository.findOne({
+      where: { userId }
+    });
+
+    if (securitySettings.twoFaToken && !payload.twoFaCode) {
+      return new ResponseDto('two-fa-required');
+    } else if (securitySettings.twoFaToken && payload.twoFaCode) {
+      const tokenVerification = node2fa.verifyToken(
+        securitySettings.twoFaToken,
+        payload.twoFaCode
+      );
+
+      if (!tokenVerification || tokenVerification.delta !== 0)
+        throw new Wrong2faException();
+    } else if (securitySettings.phone && !payload.code) {
+      this.userClient.emit(
+        'send_verification_mobile_code',
+        new UpdateUserSecurityEvent({
+          userId,
+          phone: securitySettings.phone
+        })
+      );
+
+      return new ResponseDto('phone-two-fa-required');
+    } else if (securitySettings.phone && payload.code) {
+      const { phoneVerificationCode, verificationCodeCreatedAt } =
+        await this.userSettingsRepository.findOne({
+          where: { userId }
+        });
+
+      const time = dayjs(verificationCodeCreatedAt);
+      const timeDifferenceInMinutes = dayjs().diff(time, 'minute');
+
+      if (payload.code !== phoneVerificationCode || timeDifferenceInMinutes > 5)
+        throw new PhoneCodeErrorException();
+    }
 
     // TODO Send email here and confirm it then
 
@@ -271,7 +309,7 @@ export class UserService {
       'update_user_account',
       new UpdateUserEvent({
         userId,
-        email
+        email: payload.email
       })
     );
 
@@ -279,7 +317,7 @@ export class UserService {
       action: 'log_user_action',
       event: 'USER',
       status: 'SUCCESS',
-      payload: { userId, email }
+      payload: { userId, email: payload.email }
     });
 
     return new ResponseDto();
@@ -287,21 +325,15 @@ export class UserService {
 
   async changePassword({
     userId,
-    password,
-    passwordRepeat,
-    code,
-    twoFaCode
+    payload
   }: {
     userId: string;
-    password: string;
-    passwordRepeat: string;
-    code?: string;
-    twoFaCode?: string;
+    payload: ChangePasswordDto;
   }) {
     if (
-      !this.validatorService.validatePassword(password) ||
-      !this.validatorService.validatePassword(passwordRepeat) ||
-      passwordRepeat !== password
+      !this.validatorService.validatePassword(payload.password) ||
+      !this.validatorService.validatePassword(payload.passwordRepeat) ||
+      payload.passwordRepeat !== payload.password
     )
       throw new ValidationErrorException();
 
@@ -309,7 +341,7 @@ export class UserService {
       where: { userId }
     });
 
-    if (userSettings.phone && !code) {
+    if (userSettings.phone && !payload.code) {
       this.userClient.emit(
         'send_verification_mobile_code',
         new UpdateUserSecurityEvent({
@@ -319,7 +351,7 @@ export class UserService {
       );
 
       return new ResponseDto('code-sent');
-    } else if (userSettings.phone && code) {
+    } else if (userSettings.phone && payload.code) {
       const { phoneVerificationCode, verificationCodeCreatedAt } =
         await this.userSettingsRepository.findOne({
           where: { userId }
@@ -328,14 +360,14 @@ export class UserService {
       const time = dayjs(verificationCodeCreatedAt);
       const timeDifferenceInMinutes = dayjs().diff(time, 'minute');
 
-      if (code !== phoneVerificationCode || timeDifferenceInMinutes > 5)
+      if (payload.code !== phoneVerificationCode || timeDifferenceInMinutes > 5)
         throw new PhoneCodeErrorException();
-    } else if (userSettings.twoFaToken && !twoFaCode) {
+    } else if (userSettings.twoFaToken && !payload.twoFaCode) {
       return new ResponseDto('two-fa-required');
-    } else if (userSettings.twoFaToken && twoFaCode) {
+    } else if (userSettings.twoFaToken && payload.twoFaCode) {
       const tokenVerification = node2fa.verifyToken(
         userSettings.twoFaToken,
-        twoFaCode
+        payload.twoFaCode
       );
 
       if (!tokenVerification || tokenVerification.delta !== 0)
@@ -344,7 +376,7 @@ export class UserService {
       throw new BadRequestException();
     }
 
-    const hashedPassword = await bcryptjs.hash(password, 10);
+    const hashedPassword = await bcryptjs.hash(payload.password, 10);
 
     this.userClient.emit(
       'update_user_account',

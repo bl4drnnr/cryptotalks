@@ -13,7 +13,12 @@ import { SecuritySettingsProps } from '@components/SecuritySettings/SecuritySett
 import { TwoFa } from '@components/TwoFa/TwoFa.component';
 import { useHandleException } from '@hooks/useHandleException.hook';
 import { useNotificationMessage } from '@hooks/useShowNotificationMessage.hook';
-import { validatePassword, validatePasswordLength, validatePasswordRules } from '@hooks/useValidators.hook';
+import {
+  validateEmail,
+  validatePassword,
+  validatePasswordLength,
+  validatePasswordRules
+} from '@hooks/useValidators.hook';
 import { useChangeEmailService } from '@services/change-email/change-email.service';
 import { useChangePasswordService } from '@services/change-password/change-password.service';
 import { useRemove2FaService } from '@services/remove-2fa/remove-2fa.service';
@@ -77,6 +82,12 @@ const SecuritySettings = ({
   const [currentPassword, setCurrentPassword] = React.useState('');
   const [changedPassword, setChangedPassword] = React.useState({ password: '', repeatPassword: '' });
 
+  const [email, setEmail] = React.useState('');
+  const [emailError, setEmailError] = React.useState(false);
+  const [changeEmailTwoFa, setChangeEmailTwoFa] = React.useState('');
+  const [changeEmailCode, setChangeEmailCode] = React.useState('');
+  const [changeEmailStep, setChangeEmailStep] = React.useState(1);
+
   const { loading: l0, set2Fa } = useSet2FaService();
   const { loading: l1, remove2Fa } = useRemove2FaService();
   const { loading: l2, changeEmail } = useChangeEmailService();
@@ -91,6 +102,12 @@ const SecuritySettings = ({
     if (currentPassword.length > 0)
       setCurrentPasswordError(!validatePasswordLength(currentPassword));
   }, [currentPassword]);
+
+  React.useEffect(() => {
+    if (!validateEmail(email)) setEmailError(true);
+    else if (validateEmail(email) === 1) setEmailError(false);
+    else setEmailError(false);
+  }, [email]);
 
   React.useEffect(() => {
     if (changedPassword.password === changedPassword.repeatPassword)
@@ -216,7 +233,26 @@ const SecuritySettings = ({
 
   const fetchChangeEmail = async () => {
     try {
+      const token = sessionStorage.getItem('_at');
+      const { message } = await changeEmail({
+        token,
+        email,
+        twoFaCode: changeEmailTwoFa,
+        code: changeEmailCode
+      });
 
+      if (message === 'code-sent') {
+        return setChangeEmailStep(2);
+      } else if (message === 'two-fa-required') {
+        return setChangeEmailStep(3);
+      }
+
+      showNotificationMessage({
+        type: NotificationType.SUCCESS,
+        content: 'Confirm email change'
+      });
+
+      setChangeEmailModal(false);
     } catch (e) {
       return exceptionHandler(e);
     }
@@ -556,7 +592,7 @@ const SecuritySettings = ({
                         </PasswordCheckLine>);
                     })}
                   </PasswordCheckBox>
-                ) : (<></>)}
+                ) : null}
                 {passwordChangeStep === 2 ? (
                   <TwoFa
                     styles={{ justifyCenter: true, onWhite: true }}
@@ -586,8 +622,8 @@ const SecuritySettings = ({
 
       <SecurityItemBlock>
         <SecurityItemWrapper>
-          <ItemTitle>{'Change email'}</ItemTitle>
-          <ItemDescription>{'Be careful! You are able to change email only one time.'}</ItemDescription>
+          <ItemTitle>Change email</ItemTitle>
+          <ItemDescription>Be careful! You are able to change email only one time.</ItemDescription>
         </SecurityItemWrapper>
         <SecurityItemWrapper className={'button'}>
           <Button
@@ -600,7 +636,36 @@ const SecuritySettings = ({
               header={'Change email'}
               description={'Be careful! You are able to change email only one time.'}
             >
-              <></>
+              <>
+                <Input
+                  onWhite={true}
+                  value={email}
+                  onError={emailError}
+                  placeholder={'New email'}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                {changeEmailStep === 2 ? (
+                  <TwoFa
+                    styles={{ justifyCenter: true, onWhite: true }}
+                    title={'Provide MFA authentication code from SMS'}
+                    setTwoFaCode={setChangeEmailCode}
+                  />
+                ) : changeEmailStep === 3 ? (
+                  <TwoFa
+                    styles={{ justifyCenter: true, onWhite: true }}
+                    title={'Provide MFA authentication code'}
+                    setTwoFaCode={setChangeEmailTwoFa}
+                  />
+                ) : null}
+                <ModalButtonWrapper className={'vertical-margin'}>
+                  <Button
+                    disabled={emailError}
+                    onWhite={true}
+                    text={'Change email'}
+                    onClick={() => fetchChangeEmail()}
+                  />
+                </ModalButtonWrapper>
+              </>
             </Modal>
           ) : null}
         </SecurityItemWrapper>

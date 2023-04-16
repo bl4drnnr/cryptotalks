@@ -1,6 +1,8 @@
 export interface ChangeEmailRequest {
-  newEmail: string;
+  email: string;
   token: string | null;
+  twoFaCode?: string;
+  code?: string;
 }
 
 export interface ChangeEmailResponse {
