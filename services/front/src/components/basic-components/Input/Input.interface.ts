@@ -7,7 +7,7 @@ export interface InputProps {
   inputDescription?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   type?: string;
-  onError?: boolean;
+  onError?: boolean | undefined;
   onErrorMessage?: string;
   high?: boolean;
   innerPlaceholder?: string;

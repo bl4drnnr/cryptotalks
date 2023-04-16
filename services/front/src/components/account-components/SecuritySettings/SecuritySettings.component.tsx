@@ -13,7 +13,7 @@ import { SecuritySettingsProps } from '@components/SecuritySettings/SecuritySett
 import { TwoFa } from '@components/TwoFa/TwoFa.component';
 import { useHandleException } from '@hooks/useHandleException.hook';
 import { useNotificationMessage } from '@hooks/useShowNotificationMessage.hook';
-import { validatePassword, validatePasswordRules } from '@hooks/useValidators.hook';
+import { validatePassword, validatePasswordLength, validatePasswordRules } from '@hooks/useValidators.hook';
 import { useChangeEmailService } from '@services/change-email/change-email.service';
 import { useChangePasswordService } from '@services/change-password/change-password.service';
 import { useRemove2FaService } from '@services/remove-2fa/remove-2fa.service';
@@ -57,6 +57,8 @@ const SecuritySettings = ({
   const [phone, setMobilePhone] = React.useState('');
   const [code, setCode] = React.useState('');
 
+  const [passwordChangeTwoFa, setPasswordChangeTwoFa] = React.useState('');
+  const [passwordChangeCode, setPasswordChangeCode] = React.useState('');
   const [passwordChangeStep, setPasswordChangeStep] = React.useState(1);
   const [passwordError, setPasswordError] = React.useState({
     passwordMismatch: false,
@@ -70,6 +72,7 @@ const SecuritySettings = ({
     { error: false, text: 'Password should contain at least one special character' },
     { error: false, text: 'Password should contain at least one digit character' }
   ]);
+  const [currentPasswordError, setCurrentPasswordError] = React.useState(false);
   const [currentPassword, setCurrentPassword] = React.useState('');
   const [changedPassword, setChangedPassword] = React.useState({ password: '', repeatPassword: '' });
 
@@ -82,6 +85,11 @@ const SecuritySettings = ({
 
   const { handleException } = useHandleException();
   const { showNotificationMessage } = useNotificationMessage();
+
+  React.useEffect(() => {
+    if (currentPassword.length > 0)
+      setCurrentPasswordError(!validatePasswordLength(currentPassword));
+  }, [currentPassword]);
 
   React.useEffect(() => {
     if (changedPassword.password === changedPassword.repeatPassword)
@@ -219,11 +227,15 @@ const SecuritySettings = ({
       const { message } = await changePassword({
         password: changedPassword.password,
         passwordRepeat: changedPassword.repeatPassword,
+        code: passwordChangeCode,
+        twoFaCode: passwordChangeTwoFa,
         token
       });
 
-      if (message !== 'success') {
+      if (message === 'code-sent') {
         return setPasswordChangeStep(2);
+      } else if (message === 'two-fa-required') {
+        return setPasswordChangeStep(3);
       }
 
       showNotificationMessage({
@@ -499,46 +511,64 @@ const SecuritySettings = ({
               header={'Change password'}
               description={'Be careful! Some operations won\'t be available for 24h after change.'}
             >
-              <Input
-                type={'password'}
-                onWhite={true}
-                value={currentPassword}
-                placeholder={'Current password'}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-              />
-              <Input
-                type={'password'}
-                onWhite={true}
-                value={changedPassword.password}
-                placeholder={'New password'}
-                onChange={(e) => setChangedPassword({ ...changedPassword, password: e.target.value })}
-              />
-              <Input
-                type={'password'}
-                onWhite={true}
-                value={changedPassword.repeatPassword}
-                placeholder={'Repeat new password'}
-                onChange={(e) => setChangedPassword({ ...changedPassword, repeatPassword: e.target.value })}
-              />
-              {passwordError.passwordRules ? (
-                <PasswordCheckBox className={'no-padding'}>
-                  {passwordRulesList.map(rule => {
-                    return (
-                      <PasswordCheckLine className={'on-white'} key={rule.text}>
-                        <Dot className={classNames({ error: !rule.error })}/>
-                        <p>{rule.text}</p>
-                      </PasswordCheckLine>);
-                  })}
-                </PasswordCheckBox>
-              ) : (<></>)}
-              <ModalButtonWrapper className={'vertical-margin'}>
-                <Button
-                  disabled={!validateFields()}
+              <>
+                <Input
+                  type={'password'}
                   onWhite={true}
-                  text={'Change password'}
-                  onClick={() => fetchChangePassword()}
+                  onError={currentPasswordError}
+                  value={currentPassword}
+                  placeholder={'Current password'}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
                 />
-              </ModalButtonWrapper>
+                <Input
+                  type={'password'}
+                  onWhite={true}
+                  onError={passwordError.passwordMismatch || passwordError.passwordRequirement}
+                  value={changedPassword.password}
+                  placeholder={'New password'}
+                  onChange={(e) => setChangedPassword({ ...changedPassword, password: e.target.value })}
+                />
+                <Input
+                  type={'password'}
+                  onWhite={true}
+                  onError={passwordError.passwordMismatch || passwordError.passwordRequirement}
+                  value={changedPassword.repeatPassword}
+                  placeholder={'Repeat new password'}
+                  onChange={(e) => setChangedPassword({ ...changedPassword, repeatPassword: e.target.value })}
+                />
+                {passwordError.passwordRules ? (
+                  <PasswordCheckBox className={'no-padding'}>
+                    {passwordRulesList.map(rule => {
+                      return (
+                        <PasswordCheckLine className={'on-white'} key={rule.text}>
+                          <Dot className={classNames({ error: !rule.error })}/>
+                          <p>{rule.text}</p>
+                        </PasswordCheckLine>);
+                    })}
+                  </PasswordCheckBox>
+                ) : (<></>)}
+                {passwordChangeStep === 2 ? (
+                  <TwoFa
+                    styles={{ justifyCenter: true, onWhite: true }}
+                    title={'Provide MFA authentication code from SMS'}
+                    setTwoFaCode={setPasswordChangeCode}
+                  />
+                ) : passwordChangeStep === 3 ? (
+                  <TwoFa
+                    styles={{ justifyCenter: true, onWhite: true }}
+                    title={'Provide MFA authentication code'}
+                    setTwoFaCode={setPasswordChangeTwoFa}
+                  />
+                ) : null}
+                <ModalButtonWrapper className={'vertical-margin'}>
+                  <Button
+                    disabled={!validateFields()}
+                    onWhite={true}
+                    text={'Change password'}
+                    onClick={() => fetchChangePassword()}
+                  />
+                </ModalButtonWrapper>
+              </>
             </Modal>
           ) : null}
         </SecurityItemWrapper>
