@@ -13,7 +13,9 @@ export const useChangePasswordService = () => {
       setLoading(true);
       const { data } = await ApiClient.patch<ChangePasswordResponse>('/user/change-password', {
         password: payload.password,
-        passwordRepeat: payload.passwordRepeat
+        passwordRepeat: payload.passwordRepeat,
+        code: payload.code,
+        twoFaCode: payload.twoFaCode
       }, {
         headers: { 'x-access-token': `Bearer ${payload.token}` }
       });

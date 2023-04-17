@@ -37,4 +37,10 @@ export class UpdateUserSecurityEventDto {
     nullable: true
   })
   code?: string;
+
+  @ApiProperty({
+    type: Date,
+    nullable: true
+  })
+  passwordChanged?: Date;
 }

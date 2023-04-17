@@ -12,4 +12,16 @@ export class ChangePasswordDto {
     nullable: false
   })
   passwordRepeat: string;
+
+  @ApiProperty({
+    type: String,
+    nullable: true
+  })
+  code?: string;
+
+  @ApiProperty({
+    type: String,
+    nullable: true
+  })
+  twoFaCode?: string;
 }

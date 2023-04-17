@@ -6,4 +6,16 @@ export class ChangeEmailDto {
     nullable: false
   })
   email: string;
+
+  @ApiProperty({
+    type: String,
+    nullable: true
+  })
+  twoFaCode?: string;
+
+  @ApiProperty({
+    type: String,
+    nullable: true
+  })
+  code?: string;
 }

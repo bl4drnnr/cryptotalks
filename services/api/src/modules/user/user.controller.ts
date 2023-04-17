@@ -121,7 +121,7 @@ export class UserController {
     @UserDecorator() userId: string,
     @Body() payload: ChangeEmailDto
   ) {
-    return this.userService.changeEmail({ userId, ...payload });
+    return this.userService.changeEmail({ userId, payload });
   }
 
   @ApiOperation({ summary: 'Changes user password' })
@@ -135,7 +135,7 @@ export class UserController {
     @UserDecorator() userId: string,
     @Body() payload: ChangePasswordDto
   ) {
-    return this.userService.changePassword({ userId, ...payload });
+    return this.userService.changePassword({ userId, payload });
   }
 
   @ApiExtraModels(CloseAccEvent)

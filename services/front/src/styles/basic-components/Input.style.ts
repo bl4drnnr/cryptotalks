@@ -47,6 +47,7 @@ export const BasicInput = styled.input`
 
   &:disabled {
     cursor: pointer;
+    border: 1px solid rgba(${(props) => props.theme.colors.textColor}, .5);
   }
   
   &.onWhite {

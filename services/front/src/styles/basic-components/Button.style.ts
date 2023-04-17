@@ -42,6 +42,7 @@ export const BasicButton = styled.button`
   &.disabled {
     background-color: rgba(${(props) => props.theme.colors.disableColor}, .20);
     cursor: auto;
+    border: 1px solid rgba(${(props) => props.theme.colors.textColor}, .5);
   }
 
   &.danger {
