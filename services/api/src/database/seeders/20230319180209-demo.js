@@ -73,8 +73,7 @@ module.exports = {
       updated_at: new Date()
     }]);
 
-    await queryInterface.bulkInsert('cryptocurrencies', [
-      {
+    await queryInterface.bulkInsert('cryptocurrencies', [{
         "id": "5c52855f-a1b0-48f0-9e60-428ade91ccbf",
         "uuid": "HIVsRcGKkPFtW",
         "symbol_id": "tether",
@@ -133,6 +132,19 @@ module.exports = {
         "tier": 1,
         "created_at": "2023-04-19 09:29:15.591000 +00:00",
         "updated_at": "2023-04-19 09:29:16.117000 +00:00"
+      }]);
+
+    await queryInterface.bulkInsert('market_stats', [
+      {
+        "id": "3fadabe7-597b-4da9-b9cb-db019c6212c3",
+        "total": 683,
+        "total_coins": 24625,
+        "total_markets": 40089,
+        "total_exchanges": 179,
+        "total_market_cap": "1258893992421",
+        "total_daily_volume": "90917765538",
+        "created_at": "2023-04-19 13:24:56.607000 +00:00",
+        "updated_at": "2023-04-19 13:24:56.607000 +00:00"
       }
     ]);
 

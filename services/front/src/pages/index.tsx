@@ -1,5 +1,6 @@
 import React from 'react';
 
+import dayjs from 'dayjs';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -26,7 +27,7 @@ import {
   HomeLine,
   Lines,
   MainHomeWelcomeContainer, PopularCryptoContainer, PopularCryptoItem, PopularCryptoParagraph, PopularCryptoWrapper,
-  StartButton
+  StartButton, SearchTagsWrapper, SearchTagItem
 } from '@styles/home.style';
 
 const Home = () => {
@@ -162,10 +163,22 @@ const Home = () => {
             <PopularCryptoContainer>
               {posts?.rows.map((item) => (
                 <PopularCryptoItem
+                  className={'block'}
                   key={item.id}
                   onClick={() => handleRedirect(`posts/post/${item.slug}`)}
                 >
-                  <p>{item.title}</p>
+                  <PopularCryptoParagraph>{item.title}</PopularCryptoParagraph>
+                  <PopularCryptoParagraph className={'small'}>
+                    {item.preview}
+                  </PopularCryptoParagraph>
+                  <SearchTagsWrapper>
+                    {item.searchTags.map((tag) => (
+                      <SearchTagItem>{tag}</SearchTagItem>
+                    ))}
+                    <PopularCryptoParagraph className={'small'}>
+                      Created at: {dayjs(item.createdAt).format('YYYY-MM-DD HH:mm:ss')}
+                    </PopularCryptoParagraph>
+                  </SearchTagsWrapper>
                 </PopularCryptoItem>
               ))}
             </PopularCryptoContainer>

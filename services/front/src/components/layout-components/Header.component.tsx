@@ -73,6 +73,7 @@ export const Header = () => {
             <Links>
               <Link onClick={() => handleRedirect('posts')}>Posts</Link>
               <Link onClick={() => handleRedirect('market')}>Market</Link>
+              <Link onClick={() => handleRedirect('about')}>About project</Link>
             </Links>
           </NavigationButtons>
 
