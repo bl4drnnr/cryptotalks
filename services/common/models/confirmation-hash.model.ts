@@ -73,6 +73,7 @@ export class ConfirmationHash extends Model<
     nullable: true,
     description: 'Used for temporary storage of email to change'
   })
+  @Default(null)
   @Column({
     type: DataType.STRING,
     allowNull: true,

@@ -234,6 +234,26 @@ paths:
         "201":
           description: As a response function returns success message
       tags: *a2
+  "/api/user/email-change-confirmation/{confirmationHash}":
+    get:
+      operationId: UserController_confirmEmailChange
+      summary: Confirm email change
+      parameters:
+        - name: confirmationHash
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseDto"
+        "201":
+          description: As a response function returns success message
+      tags: *a2
   /api/user/logout:
     get:
       operationId: UserController_logout

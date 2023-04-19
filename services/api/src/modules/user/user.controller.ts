@@ -90,6 +90,11 @@ export class UserController {
     return this.userService.confirmAccount({ confirmationHash });
   }
 
+  @ApiOperation({ summary: 'Confirm email change' })
+  @ApiResponse({
+    status: 201,
+    description: 'As a response function returns success message'
+  })
   @Get('email-change-confirmation/:confirmationHash')
   confirmEmailChange(@Param('confirmationHash') confirmationHash: string) {
     return this.userService.confirmEmailChange({ confirmationHash });

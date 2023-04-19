@@ -12,7 +12,7 @@ export const useChangeEmailService = () => {
     try {
       setLoading(true);
       const { data } = await ApiClient.patch<ChangeEmailResponse>('/user/change-email', {
-        newEmail: payload.newEmail
+        email: payload.email
       }, {
         headers: { 'x-access-token': `Bearer ${payload.token}` }
       });

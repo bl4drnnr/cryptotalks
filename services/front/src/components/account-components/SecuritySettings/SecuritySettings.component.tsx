@@ -249,7 +249,7 @@ const SecuritySettings = ({
 
       showNotificationMessage({
         type: NotificationType.SUCCESS,
-        content: 'Confirm email change'
+        content: 'Confirmation email changing has been sent'
       });
 
       setChangeEmailModal(false);
