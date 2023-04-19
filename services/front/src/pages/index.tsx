@@ -42,7 +42,7 @@ const Home = () => {
 
   React.useEffect(() => {
     fetchListCoins().then((res) => setCoins(res));
-    // fetchListPosts().then((res) => setPosts(res));
+    fetchListPosts().then((res) => setPosts(res));
   }, []);
 
   const fetchListCoins = async () => {
@@ -80,8 +80,8 @@ const Home = () => {
       return await listPosts({
         page: 0,
         pageSize: 3,
-        order: '',
-        orderBy: ''
+        order: 'DESC',
+        orderBy: 'createdAt'
       });
     } catch (e) {
       await handleException(e);
@@ -151,7 +151,7 @@ const Home = () => {
           </HomeDescriptionSide>
           <HomeDescriptionSide>
             <HomePostsContainer className={'align-center'}>
-              <HomePostsTitle>Latest best posts</HomePostsTitle>
+              <HomePostsTitle>Latest posts</HomePostsTitle>
               <Image
                 src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/fire.png`}
                 alt={'fire'}
@@ -159,6 +159,16 @@ const Home = () => {
                 height={58}
               />
             </HomePostsContainer>
+            <PopularCryptoContainer>
+              {posts?.rows.map((item) => (
+                <PopularCryptoItem
+                  key={item.id}
+                  onClick={() => handleRedirect(`posts/post/${item.slug}`)}
+                >
+                  <p>{item.title}</p>
+                </PopularCryptoItem>
+              ))}
+            </PopularCryptoContainer>
           </HomeDescriptionSide>
         </HomePostsContainer>
 

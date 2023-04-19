@@ -14,11 +14,13 @@ import {
 } from '@events/leave-comment.event';
 import { AlreadyExistingPostException } from '@exceptions/already-existing-post.exception';
 import { PostNotFoundException } from '@exceptions/post-not-found.exception';
+import { PostInfo } from '@models/post-info.model';
 
 @Injectable()
 export class PostsService {
   constructor(
     @InjectModel(Post) private readonly postRepository: typeof Post,
+    @InjectModel(PostInfo) private readonly postInfoRepository: typeof PostInfo,
     @Inject('POSTS_SERVICE') private readonly postsClient: ClientKafka
   ) {}
 
@@ -69,7 +71,7 @@ export class PostsService {
     const limit = pageSize;
     const where = {};
 
-    if (username || username !== 'undefined') {
+    if (username) {
       where['username'] = {
         [Op.iLike]: `%${username}%`
       };
@@ -96,12 +98,6 @@ export class PostsService {
       ];
     }
 
-    if (orderBy === 'likes') {
-      const mostPopularCoins = {};
-
-      const allPosts = await this.postRepository.findAll();
-    }
-
     return await this.postRepository.findAndCountAll({
       where: { ...where },
       order: [[orderBy, order]],
@@ -111,6 +107,7 @@ export class PostsService {
         'id',
         'title',
         'preview',
+        'slug',
         [sequelize.literal('search_tags'), 'searchTags'],
         [sequelize.literal('created_at'), 'createdAt']
       ]
