@@ -21,7 +21,6 @@ import { FavoriteCoins } from '@models/favorites-coins.model';
 import { Cryptocurrency } from '@models/cryptocurrency.model';
 import { PostInfo } from '@models/post-info.model';
 import { MarketStats } from '@models/market-stats.model';
-import { Comment } from '@models/comment.model';
 
 @Module({
   imports: [
@@ -45,8 +44,7 @@ import { Comment } from '@models/comment.model';
         FavoriteCoins,
         Cryptocurrency,
         PostInfo,
-        MarketStats,
-        Comment
+        MarketStats
       ],
       autoLoadModels: true
     }),

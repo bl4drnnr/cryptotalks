@@ -224,68 +224,34 @@ module.exports = {
       updated_at: new Date()
     }]);
 
-    await queryInterface.bulkInsert('comments', [{
+    await queryInterface.bulkInsert('post_info', [{
       id: uuid.v4(),
-      user_id: '8a08eaf1-c7a8-403b-b1ce-1fef8e34d000',
-      post_id: '5a7805c5-3803-45ce-90d9-5ac0c701e7a1',
-      payload: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis dolore nihil quidem! Accusantium aliquam aspernatur at deserunt fuga, harum in nam numquam reiciendis repellat? Ad ex officia reprehenderit sapiente tempore?',
-      rates: JSON.stringify([{
-        userId: '186f0ff4-1444-4637-9be3-8c0abc168ba2',
-        rate: '+'
-      }, {
-        userId: '77c93fdf-8a06-483c-8d89-2f5c71d029ed',
-        rate: '-'
-      }]),
+      post_id: 'b5a12b9c-afb2-4fbc-a35f-c8fee31024a4',
       created_at: new Date(),
       updated_at: new Date()
     }, {
       id: uuid.v4(),
-      user_id: '186f0ff4-1444-4637-9be3-8c0abc168ba2',
-      post_id: '5a7805c5-3803-45ce-90d9-5ac0c701e7a1',
-      payload: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis dolore nihil quidem! Accusantium aliquam aspernatur at deserunt fuga, harum in nam numquam reiciendis repellat? Ad ex officia reprehenderit sapiente tempore?',
-      rates: JSON.stringify([]),
+      post_id: '8c0e572a-166e-466f-a1b5-8abcdca269af',
       created_at: new Date(),
       updated_at: new Date()
     }, {
       id: uuid.v4(),
-      user_id: '77c93fdf-8a06-483c-8d89-2f5c71d029ed',
-      post_id: '5a7805c5-3803-45ce-90d9-5ac0c701e7a1',
-      payload: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis dolore nihil quidem! Accusantium aliquam aspernatur at deserunt fuga, harum in nam numquam reiciendis repellat? Ad ex officia reprehenderit sapiente tempore?',
-      rates: JSON.stringify([{
-        userId: '186f0ff4-1444-4637-9be3-8c0abc168ba2',
-        rate: '+'
-      }, {
-        userId: '8a08eaf1-c7a8-403b-b1ce-1fef8e34d000',
-        rate: '+'
-      }]),
+      post_id: 'bfbb0bf5-c05f-473c-84bb-ff01a9655b90',
       created_at: new Date(),
       updated_at: new Date()
     }, {
       id: uuid.v4(),
-      user_id: '186f0ff4-1444-4637-9be3-8c0abc168ba2',
       post_id: 'aa3098da-64dd-4837-9f84-ec8c56f675ee',
-      payload: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis dolore nihil quidem! Accusantium aliquam aspernatur at deserunt fuga, harum in nam numquam reiciendis repellat? Ad ex officia reprehenderit sapiente tempore?',
-      rates: JSON.stringify([{
-        userId: '8a08eaf1-c7a8-403b-b1ce-1fef8e34d000',
-        rate: '-'
-      }, {
-        userId: '77c93fdf-8a06-483c-8d89-2f5c71d029ed',
-        rate: '-'
-      }]),
       created_at: new Date(),
       updated_at: new Date()
     }, {
       id: uuid.v4(),
-      user_id: '186f0ff4-1444-4637-9be3-8c0abc168ba2',
-      post_id: 'aa3098da-64dd-4837-9f84-ec8c56f675ee',
-      payload: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis dolore nihil quidem! Accusantium aliquam aspernatur at deserunt fuga, harum in nam numquam reiciendis repellat? Ad ex officia reprehenderit sapiente tempore?',
-      rates: JSON.stringify([{
-        userId: '8a08eaf1-c7a8-403b-b1ce-1fef8e34d000',
-        rate: '-'
-      }, {
-        userId: '77c93fdf-8a06-483c-8d89-2f5c71d029ed',
-        rate: '-'
-      }]),
+      post_id: '891d1a79-c4c1-4378-99a2-4920b462c8fd',
+      created_at: new Date(),
+      updated_at: new Date()
+    }, {
+      id: uuid.v4(),
+      post_id: '5a7805c5-3803-45ce-90d9-5ac0c701e7a1',
       created_at: new Date(),
       updated_at: new Date()
     }]);
@@ -294,7 +260,6 @@ module.exports = {
   async down (queryInterface, Sequelize) {
     await queryInterface.bulkDelete('users', null, {});
     await queryInterface.bulkDelete('posts', null, {});
-    await queryInterface.bulkDelete('comments', null, {});
     await queryInterface.bulkDelete('user_settings', null, {});
     await queryInterface.bulkDelete('favorite_coins', null, {});
     await queryInterface.bulkDelete('sessions', null, {});

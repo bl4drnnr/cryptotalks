@@ -97,7 +97,9 @@ export class PostsService {
     }
 
     if (orderBy === 'likes') {
-      return;
+      const mostPopularCoins = {};
+
+      const allPosts = await this.postRepository.findAll();
     }
 
     return await this.postRepository.findAndCountAll({

@@ -26,6 +26,8 @@ export class LeaveCommentEvent {
   constructor(private readonly leaveCommentPayload: LeaveCommentEventDto) {}
 
   toString() {
-    return JSON.stringify({});
+    return JSON.stringify({
+      ...this.leaveCommentPayload
+    });
   }
 }

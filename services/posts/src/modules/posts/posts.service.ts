@@ -22,10 +22,16 @@ export class PostsService {
     private readonly logger: Model<InformationLog>
   ) {}
 
-  postCreated(payload: CreatePostDto) {
-    return this.postRepository.create({
-      ...payload,
-      slug: this.slugService.createSlug(payload.title)
+  async postCreated(payload: CreatePostDto) {
+    const post = await this.postRepository.create(
+      {
+        ...payload,
+        slug: this.slugService.createSlug(payload.title)
+      },
+      { returning: true }
+    );
+    return await this.postInfoRepository.create({
+      postId: post.id
     });
   }
 
@@ -55,9 +61,20 @@ export class PostsService {
     );
   }
 
-  leaveComment(payload: LeaveCommentEventDto) {
-    return this.postInfoRepository.create({
-      ...payload
+  async leaveComment(payload: LeaveCommentEventDto) {
+    const post = await this.postInfoRepository.findOne({
+      where: { postId: payload.postId }
+    });
+    return await post.update({
+      comments: [
+        ...post.comments,
+        {
+          userId: payload.userId,
+          rate: [],
+          payload: payload.comment,
+          createdAt: new Date()
+        }
+      ]
     });
   }
 
