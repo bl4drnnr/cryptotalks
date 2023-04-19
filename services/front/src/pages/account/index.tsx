@@ -58,14 +58,14 @@ const Account = () => {
   React.useEffect(() => {
     if (fetchTokenChecking.current) {
       fetchTokenChecking.current = false;
-      const token = sessionStorage.getItem('_at');
+      const token = localStorage.getItem('_at');
 
       if (!token) {
         handleRedirect('/').then();
       } else {
         fetchCheckUser(token).then((res) => {
           if (res) {
-            sessionStorage.setItem('_at', res._at);
+            localStorage.setItem('_at', res._at);
             setUserData(res.user);
 
             fetchUserPosts(res.user.username).then((posts) => {
@@ -91,7 +91,7 @@ const Account = () => {
 
   const exceptionHandler = async (e: any) => {
     handleException(e);
-    sessionStorage.removeItem('_at');
+    localStorage.removeItem('_at');
     await handleRedirect('');
   };
 

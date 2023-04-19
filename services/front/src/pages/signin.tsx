@@ -60,7 +60,7 @@ const Signin = () => {
           return;
         }
 
-        sessionStorage.setItem('_at', _at);
+        localStorage.setItem('_at', _at);
         await handleRedirect('account');
       }
     } catch (e) {

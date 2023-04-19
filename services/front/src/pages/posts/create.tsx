@@ -78,13 +78,13 @@ const CreatePost = () => {
     if (fetchTokenChecking.current) {
       fetchTokenChecking.current = false;
 
-      const token = sessionStorage.getItem('_at');
+      const token = localStorage.getItem('_at');
 
       if (!token) handleRedirect('').then();
       else {
         fetchCheckUser(token).then((res) => {
           if (res) {
-            sessionStorage.setItem('_at', res._at);
+            localStorage.setItem('_at', res._at);
 
             fetchUserLatestPosts(res.user.username).then((posts) => {
               setUsername(res.user.username);
@@ -139,7 +139,7 @@ const CreatePost = () => {
 
       if (titleErr || previewErr || contentErr || searchTagsErr) return;
 
-      const token = sessionStorage.getItem('_at');
+      const token = localStorage.getItem('_at');
       await createPost({
         token,
         title,
@@ -159,7 +159,7 @@ const CreatePost = () => {
       return await refreshToken({ token });
     } catch (e) {
       handleException(e);
-      sessionStorage.removeItem('_at');
+      localStorage.removeItem('_at');
       await handleRedirect('');
     }
   };

@@ -41,7 +41,6 @@ import { Wrong2faException } from '@exceptions/wrong-2fa.exception';
 import { PhoneCodeErrorException } from '@exceptions/phone-code-error.exception';
 import { ChangeEmailDto } from '@dto/change-email.dto';
 import { ChangePasswordDto } from '@dto/change-password.dto';
-import { ConfirmEmailChangeEvent } from '@events/confirm-email-change.event';
 import { ChangeEmailEvent } from '@events/change-email.event';
 import { EmailChangeConfirmedException } from '@exceptions/email-change-confirmed.exception';
 
@@ -258,6 +257,14 @@ export class UserService {
         hashId: foundHash.id,
         userId: foundHash.userId,
         data: { email: foundHash.changingEmail }
+      })
+    );
+
+    this.userClient.emit(
+      'update_user_security_settings',
+      new UpdateUserSecurityEvent({
+        userId: foundHash.userId,
+        emailChanged: true
       })
     );
 
