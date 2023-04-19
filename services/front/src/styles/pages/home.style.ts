@@ -251,6 +251,9 @@ export const HomePostsContainer = styled.div`
     padding: 20px 0;
     align-items: center;
     justify-content: center;
+    @media only screen and (max-width: 1200px) {
+      display: flex;
+    }
   }
 
   @media only screen and (max-width: 1200px) {
@@ -320,6 +323,10 @@ export const PopularCryptoItem = styled.div`
   &:hover {
     border: 1px solid rgba(${(props) => props.theme.colors.primary}, 1);
   }
+
+  &.block {
+    display: block;
+  }
 `;
 
 export const PopularCryptoParagraph = styled.p`
@@ -327,5 +334,24 @@ export const PopularCryptoParagraph = styled.p`
   
   &.small {
     opacity: .5;
+  }
+`;
+
+export const SearchTagsWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+`;
+
+export const SearchTagItem = styled.div`
+  color: rgba(${(props) => props.theme.colors.textColor}, .5);
+  padding: 3px 5px;
+  margin: 0 3px;
+  border: 1px solid rgba(${(props) => props.theme.colors.primary}, .5);
+  background: rgba(${(props) => props.theme.colors.textColor}, .15);
+  border-radius: 5px;
+  
+  &:first-child {
+    margin-left: 0;
   }
 `;

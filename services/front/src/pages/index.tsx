@@ -1,14 +1,21 @@
 import React from 'react';
 
+import dayjs from 'dayjs';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { Line, LineChart, YAxis } from 'recharts';
+import {
+  Line,
+  LineChart,
+  Tooltip,
+  XAxis,
+  YAxis
+} from 'recharts';
 
 import { Input } from '@components/Input/Input.component';
 import { useHandleException } from '@hooks/useHandleException.hook';
 import DefaultLayout from '@layouts/Default.layout';
-import { ListCryptoResponse } from '@services/list-crypto/list-crypto.interface';
+import { ICoins } from '@services/list-crypto/list-crypto.interface';
 import { useListCryptoService } from '@services/list-crypto/list-crypto.service';
 import { ListPostsResponse } from '@services/posts/list-posts/list-posts.interface';
 import { useListPostsService } from '@services/posts/list-posts/list-posts.service';
@@ -26,7 +33,7 @@ import {
   HomeLine,
   Lines,
   MainHomeWelcomeContainer, PopularCryptoContainer, PopularCryptoItem, PopularCryptoParagraph, PopularCryptoWrapper,
-  StartButton
+  StartButton, SearchTagsWrapper, SearchTagItem
 } from '@styles/home.style';
 
 const Home = () => {
@@ -34,42 +41,56 @@ const Home = () => {
 
   const [email, setEmail] = React.useState('');
   const [posts, setPosts] = React.useState<ListPostsResponse>();
-  const [coins, setCoins] = React.useState<ListCryptoResponse>();
+  const [coins, setCoins] = React.useState<Array<ICoins>>([]);
+  const [bitcoin, setBitcoin] = React.useState<ICoins>();
 
   const { handleException } = useHandleException();
   const { loading: l0, listPosts } = useListPostsService();
   const { loading: l1, listCrypto } = useListCryptoService();
 
   React.useEffect(() => {
-    fetchListCoins().then((res) => setCoins(res));
-    // fetchListPosts().then((res) => setPosts(res));
+    fetchListCoins().then((res: any) => {
+      setCoins(res.rows);
+      setBitcoin(res.bitcoin[0]);
+    });
+    fetchListPosts().then((res) => setPosts(res));
   }, []);
 
   const fetchListCoins = async () => {
     try {
-      const { rows, count } = await listCrypto({
+      const parseCoins = (listOfCoins: Array<ICoins>) => {
+        return listOfCoins.map((item) => {
+          const sparklineLength = item.sparkline.length;
+          const parsedSparklines = item.sparkline.map((item: any, index: number) => ({
+            date: dayjs().subtract(sparklineLength - index, 'days').format('MM.DD'),
+            price: parseFloat(item).toFixed(8)
+          }));
+          return {
+            ...item,
+            sparkline: parsedSparklines,
+            price: parseFloat(item.price).toFixed(2),
+            marketCap: (parseFloat(item.marketCap) / 1000000000).toFixed(2),
+            volume24h: (parseFloat(item.volume24h) / 1000000000).toFixed(2),
+            btcPrice: parseFloat(item.btcPrice).toFixed(8)
+          };
+        });
+      };
+
+      const { rows } = await listCrypto({
         page: 0,
         pageSize: 3,
         order: 'DESC',
         orderBy: 'likes'
       });
-
-      const parsedCoins = rows.map((item) => {
-        const parsedSparklines = item.sparkline.map((item: any, index: number) => ({
-          name: index.toString(),
-          value: parseFloat(item).toFixed(8)
-        }));
-        return {
-          ...item,
-          sparkline: parsedSparklines,
-          price: parseFloat(item.price).toFixed(2),
-          marketCap: (parseFloat(item.marketCap) / 1000000000).toFixed(2),
-          volume24h: (parseFloat(item.volume24h) / 1000000000).toFixed(2),
-          btcPrice: parseFloat(item.btcPrice).toFixed(8)
-        };
+      const bitcoinInfo = await listCrypto({
+        page: 0,
+        pageSize: 1,
+        order: 'DESC',
+        orderBy: 'createdAt',
+        searchQuery: 'Bitcoin'
       });
 
-      return { rows: parsedCoins, count };
+      return { rows: parseCoins(rows), bitcoin: parseCoins(bitcoinInfo.rows) };
     } catch (e) {
       await handleException(e);
     }
@@ -80,8 +101,8 @@ const Home = () => {
       return await listPosts({
         page: 0,
         pageSize: 3,
-        order: '',
-        orderBy: ''
+        order: 'DESC',
+        orderBy: 'createdAt'
       });
     } catch (e) {
       await handleException(e);
@@ -151,7 +172,7 @@ const Home = () => {
           </HomeDescriptionSide>
           <HomeDescriptionSide>
             <HomePostsContainer className={'align-center'}>
-              <HomePostsTitle>Latest best posts</HomePostsTitle>
+              <HomePostsTitle>Latest posts</HomePostsTitle>
               <Image
                 src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/fire.png`}
                 alt={'fire'}
@@ -159,6 +180,28 @@ const Home = () => {
                 height={58}
               />
             </HomePostsContainer>
+            <PopularCryptoContainer>
+              {posts?.rows.map((item) => (
+                <PopularCryptoItem
+                  className={'block'}
+                  key={item.id}
+                  onClick={() => handleRedirect(`posts/post/${item.slug}`)}
+                >
+                  <PopularCryptoParagraph>{item.title}</PopularCryptoParagraph>
+                  <PopularCryptoParagraph className={'small'}>
+                    {item.preview}
+                  </PopularCryptoParagraph>
+                  <SearchTagsWrapper>
+                    {item.searchTags.map((tag) => (
+                      <SearchTagItem key={tag}>{tag}</SearchTagItem>
+                    ))}
+                    <PopularCryptoParagraph className={'small'}>
+                      Created at: {dayjs(item.createdAt).format('YYYY-MM-DD HH:mm:ss')}
+                    </PopularCryptoParagraph>
+                  </SearchTagsWrapper>
+                </PopularCryptoItem>
+              ))}
+            </PopularCryptoContainer>
           </HomeDescriptionSide>
         </HomePostsContainer>
 
@@ -174,7 +217,7 @@ const Home = () => {
               />
             </HomePostsContainer>
             <PopularCryptoContainer>
-              {coins?.rows.map((item) => (
+              {coins.map((item) => (
                 <PopularCryptoItem
                   key={item.id}
                   onClick={() => handleRedirect(`market/${item.uuid}`)}
@@ -214,7 +257,7 @@ const Home = () => {
                         Math.max(...item.sparkline.map((o: any) => o.value))
                       ]} />
                     <Line
-                      dataKey="value"
+                      dataKey="price"
                       stroke={item.change > 0 ? 'rgb(59, 232, 59)': 'rgb(255, 51, 51)'}
                     />
                   </LineChart>
@@ -232,7 +275,7 @@ const Home = () => {
           </HomeDescriptionSide>
           <HomeDescriptionSide>
             <HomePostsContainer className={'align-center'}>
-              <HomePostsTitle>Here is what you can find here</HomePostsTitle>
+              <HomePostsTitle>Bitcoin price</HomePostsTitle>
               <Image
                 src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/fire.png`}
                 alt={'fire'}
@@ -240,6 +283,21 @@ const Home = () => {
                 height={58}
               />
             </HomePostsContainer>
+            <LineChart width={600} height={400} data={bitcoin?.sparkline}>
+              <XAxis dataKey="date" />
+              <YAxis
+                domain={[
+                  Math.min(bitcoin?.sparkline.map((o: any) => o.value)),
+                  Math.max(bitcoin?.sparkline.map((o: any) => o.value))
+                ]}
+              />
+              <Tooltip />
+              <Line
+                type="monotone"
+                dataKey="price"
+                stroke="#8884d8"
+              />
+            </LineChart>
           </HomeDescriptionSide>
         </HomePostsContainer>
 

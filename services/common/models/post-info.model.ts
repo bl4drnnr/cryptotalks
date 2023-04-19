@@ -35,6 +35,38 @@ class IRate {
   rate: '+' | '-';
 }
 
+class IComment {
+  @ApiProperty({
+    type: String,
+    format: 'uuid',
+    nullable: false,
+    default: 'uuidv4',
+    description: 'Unique Id of the user'
+  })
+  userId: string;
+
+  @ApiProperty({
+    type: String,
+    nullable: false,
+    description: 'Rate (either positive or negative)'
+  })
+  rate: Array<IRate>;
+
+  @ApiProperty({
+    type: String,
+    nullable: false,
+    description: 'Comment payload'
+  })
+  payload: string;
+
+  @ApiProperty({
+    type: Date,
+    nullable: false,
+    description: 'Date when comment has been left'
+  })
+  createdAt: Date;
+}
+
 @Table({
   tableName: 'post_info'
 })
@@ -75,8 +107,8 @@ export class PostInfo extends Model<PostInfo, PostInfoCreationAttributes> {
     description: 'List of id of comments'
   })
   @Default([])
-  @Column({ type: DataType.ARRAY(DataType.STRING), allowNull: false })
-  comments: Array<string>;
+  @Column({ type: DataType.JSONB, allowNull: false })
+  comments: Array<IComment>;
 
   @ApiProperty({
     type: Date,

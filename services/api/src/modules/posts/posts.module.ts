@@ -6,10 +6,11 @@ import { JwtModule } from '@nestjs/jwt';
 import { ApiConfigService } from '@shared/config.service';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Post } from '@models/post.model';
+import { PostInfo } from '@models/post-info.model';
 
 @Module({
   imports: [
-    SequelizeModule.forFeature([Post]),
+    SequelizeModule.forFeature([Post, PostInfo]),
     ClientsModule.register([
       {
         name: 'POSTS_SERVICE',
