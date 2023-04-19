@@ -21,6 +21,11 @@ export class UsersController {
     return this.usersService.accountConfirmation(data);
   }
 
+  @EventPattern('confirm_email_change')
+  handleConfirmEmailChange(data: any) {
+    return this.usersService.confirmEmailChange(data);
+  }
+
   @EventPattern('update_user_account')
   handleUpdateUserAccount(data: any) {
     return this.usersService.updateUserAccount(data);

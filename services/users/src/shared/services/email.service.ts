@@ -10,26 +10,56 @@ export class EmailService {
 
   async sendConfirmationEmail({
     target,
-    confirmationHash
+    confirmationHash,
+    emailType
   }: {
     target: string;
     confirmationHash: string;
+    emailType: 'EMAIL_CHANGE' | 'REGISTRATION';
   }) {
-    const confirmationLink = `${this.configService.frontEndUrl}/account-confirmation/${confirmationHash}`;
-
-    const mail = {
+    let mail: {
+      to: string;
+      subject: string;
+      from: string;
+      html: string;
+    } = {
       to: target,
-      subject: 'Cryptotalks registration confirmation',
       from: this.configService.sendGridCredentials.sender_email,
-      html: `
-        <h1>Welcome!</h1>
-        <br>
-        <p>Click <a href="${confirmationLink}">here</a> in order to confirm registration.</p>
-        <br>
-        <p>If link doesn't work, copy this and paste in browser.</p>
-        <p>${confirmationLink}</p>
-      `
+      subject: '',
+      html: ''
     };
+
+    if (emailType === 'REGISTRATION') {
+      const confirmationLink = `${this.configService.frontEndUrl}/account-confirmation/${confirmationHash}`;
+
+      mail = {
+        ...mail,
+        subject: 'Cryptotalks registration confirmation',
+        html: `
+          <h1>Welcome!</h1>
+          <br>
+          <p>Click <a href="${confirmationLink}">here</a> in order to confirm registration.</p>
+          <br>
+          <p>If link doesn't work, copy this and paste in browser.</p>
+          <p>${confirmationLink}</p>
+        `
+      };
+    } else if (emailType === 'EMAIL_CHANGE') {
+      const confirmationLink = `${this.configService.frontEndUrl}/email-change-confirmation/${confirmationHash}`;
+
+      mail = {
+        ...mail,
+        subject: 'Cryptotalks email change confirmation',
+        html: `
+          <h1>Hello, hope you are doing well!</h1>
+          <br>
+          <p>Click <a href="${confirmationLink}">here</a> in order to confirm email change.</p>
+          <br>
+          <p>If link doesn't work, copy this and paste in browser.</p>
+          <p>${confirmationLink}</p>
+        `
+      };
+    }
 
     return await SendGrid.send(mail);
   }

@@ -1,4 +1,12 @@
-import { UpdateCoinEventDto } from '../event-dto/update-coin.event.dto';
+import { ApiProperty } from '@nestjs/swagger';
+
+export class UpdateCoinEventDto {
+  @ApiProperty({
+    type: String,
+    nullable: false
+  })
+  coinId: string;
+}
 
 export class UpdateCoinEvent {
   constructor(private readonly updateCoinEventPayload: UpdateCoinEventDto) {}

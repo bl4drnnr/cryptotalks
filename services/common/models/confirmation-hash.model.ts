@@ -13,6 +13,7 @@ import { ApiProperty } from '@nestjs/swagger';
 interface ConfirmationHashCreationAttributes {
   userId: string;
   confirmationHash: string;
+  confirmationType: 'EMAIL_CHANGE' | 'REGISTRATION';
 }
 
 @Table({
@@ -53,6 +54,18 @@ export class ConfirmationHash extends Model<
   @Default(false)
   @Column({ type: DataType.BOOLEAN, allowNull: false })
   confirmed: boolean;
+
+  @ApiProperty({
+    type: Boolean,
+    nullable: false,
+    description: 'Type of confirmation'
+  })
+  @Column({
+    type: DataType.ENUM('EMAIL_CHANGE', 'REGISTRATION'),
+    allowNull: false,
+    field: 'confirmation_type'
+  })
+  confirmationType: 'EMAIL_CHANGE' | 'REGISTRATION';
 
   @ApiProperty({
     type: String,

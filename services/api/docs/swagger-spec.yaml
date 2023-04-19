@@ -715,6 +715,10 @@ components:
           format: uuid
           nullable: false
       required:
+        - title
+        - content
+        - preview
+        - searchTags
         - postId
     UpdatePostDto:
       type: object
@@ -959,11 +963,17 @@ components:
           type: string
           format: uuid
           nullable: false
+        confirmationType:
+          type: string
+          nullable: true
         email:
           type: string
           nullable: true
       required:
+        - confirmationHash
         - userId
+        - confirmationType
+        - email
     SignUpDto:
       type: object
       properties:
@@ -1077,6 +1087,10 @@ components:
           type: boolean
           nullable: false
           description: If hash has been confirmed
+        confirmationType:
+          type: boolean
+          nullable: false
+          description: Type of confirmation
         userId:
           type: string
           format: uuid
@@ -1096,6 +1110,7 @@ components:
         - id
         - confirmationHash
         - confirmed
+        - confirmationType
         - userId
         - createdAt
         - updatedAt
@@ -1110,9 +1125,13 @@ components:
           type: string
           format: uuid
           nullable: false
+        email:
+          type: string
+          nullable: true
       required:
         - hashId
         - userId
+        - email
     ConfirmAccountEvent:
       type: object
       properties: {}
@@ -1167,6 +1186,16 @@ components:
           nullable: true
       required:
         - userId
+        - email
+        - password
+        - bio
+        - firstName
+        - lastName
+        - linkedIn
+        - personalWebsite
+        - title
+        - twitter
+        - username
     UpdateUserEvent:
       type: object
       properties: {}
@@ -1251,20 +1280,6 @@ components:
         code:
           type: string
           nullable: true
-    RefreshTokenEventDto:
-      type: object
-      properties:
-        userId:
-          type: string
-          format: uuid
-          nullable: false
-        tokenId:
-          type: string
-          format: uuid
-          nullable: false
-      required:
-        - userId
-        - tokenId
     TokenPayloadDto:
       type: object
       properties:

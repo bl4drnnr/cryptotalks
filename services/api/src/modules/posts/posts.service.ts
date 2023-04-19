@@ -3,15 +3,15 @@ import { ClientKafka } from '@nestjs/microservices';
 import { CreatePostDto } from '@dto/create-post.dto';
 import { CreatePostEvent } from '@events/create-post.event';
 import { ResponseDto } from '@dto/response.dto';
-import { DeletePostEvent } from '@events/delete-post.event';
-import { UpdatePostEvent } from '@events/update-post.event';
-import { DeletePostEventDto } from '@event-dto/delete-post.event.dto';
-import { UpdatePostEventDto } from '@event-dto/update-post.event.dto';
+import { DeletePostEvent, DeletePostEventDto } from '@events/delete-post.event';
+import { UpdatePostEvent, UpdatePostEventDto } from '@events/update-post.event';
 import { Post } from '@models/post.model';
 import { InjectModel } from '@nestjs/sequelize';
 import sequelize, { Op } from 'sequelize';
-import { LeaveCommentEvent } from '@events/leave-comment.event';
-import { LeaveCommentEventDto } from '@event-dto/leave-comment.event.dto';
+import {
+  LeaveCommentEvent,
+  LeaveCommentEventDto
+} from '@events/leave-comment.event';
 import { AlreadyExistingPostException } from '@exceptions/already-existing-post.exception';
 import { PostNotFoundException } from '@exceptions/post-not-found.exception';
 

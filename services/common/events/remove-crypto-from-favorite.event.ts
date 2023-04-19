@@ -1,4 +1,20 @@
-import { RemoveCryptoToFavoriteEventDto } from '../event-dto/remove-crypto-from-favorite.event.dto';
+import { ApiProperty } from '@nestjs/swagger';
+
+export class RemoveCryptoToFavoriteEventDto {
+  @ApiProperty({
+    type: String,
+    format: 'uuid',
+    nullable: false
+  })
+  userId: string;
+
+  @ApiProperty({
+    type: String,
+    format: 'uuid',
+    nullable: false
+  })
+  cryptoId: string;
+}
 
 export class RemoveCryptoToFavoriteEvent {
   constructor(

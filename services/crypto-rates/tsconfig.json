@@ -22,7 +22,6 @@
       "@exceptions/*": ["src/exceptions/*", "../common/exceptions/*"],
       "@dto/*": ["src/dto/*", "../common/dto/*"],
       "@events/*": ["src/events/*", "../common/events/*"],
-      "@event-dto/*": ["src/event-dto/*", "../common/event-dto/*"],
       "@mongo-schemas/*": ["src/mongo-schemas/*", "../common/mongo-schemas/*"],
       "@shared/*": ["src/shared/services/*", "src/shared/*"],
       "@webjobs/*": ["src/webjobs/services/*", "src/webjobs/*"]

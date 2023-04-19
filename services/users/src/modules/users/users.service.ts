@@ -1,19 +1,19 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { SignUpEventDto } from '@event-dto/sign-up.event.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { ClientKafka } from '@nestjs/microservices';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
 import { UserSettings } from '@models/user-settings.model';
 import { EmailService } from '@shared/email.service';
 import { User } from '@models/user.model';
-import { ConfirmAccountEventDto } from '@event-dto/confirm-account.event.dto';
 import { InjectModel as InjectModelMongo } from '@nestjs/mongoose';
 import { InformationLog } from '@mongo-schemas/log.schema';
 import { Model } from 'mongoose';
-import { CloseAccEventDto } from '@event-dto/close-acc.event.dto';
-import { UpdateUserEventDto } from '@event-dto/update-user.event.dto';
-import { UpdateUserSecurityEventDto } from '@event-dto/update-user-security.event.dto';
 import { PhoneService } from '@shared/phone.service';
+import { CloseAccEventDto } from '@events/close-acc.event';
+import { ConfirmAccountEventDto } from '@events/confirm-account.event';
+import { SignUpEventDto } from '@events/user-sign-up.event';
+import { UpdateUserSecurityEventDto } from '@events/update-user-security.event';
+import { UpdateUserEventDto } from '@events/update-user.event';
 
 @Injectable()
 export class UsersService {
@@ -30,17 +30,35 @@ export class UsersService {
     private readonly phoneService: PhoneService
   ) {}
 
+  async sendEmail({
+    target,
+    confirmationHash,
+    emailType
+  }: {
+    target: string;
+    confirmationHash: string;
+    emailType: 'EMAIL_CHANGE' | 'REGISTRATION';
+  }) {
+    await this.emailService.sendConfirmationEmail({
+      target,
+      confirmationHash,
+      emailType
+    });
+  }
+
   async signUp(payload: SignUpEventDto) {
     await this.userSettingsRepository.create({
       userId: payload.userId
     });
     await this.confirmHashRepository.create({
       userId: payload.userId,
-      confirmationHash: payload.confirmationHash
+      confirmationHash: payload.confirmationHash,
+      confirmationType: 'REGISTRATION'
     });
-    await this.emailService.sendConfirmationEmail({
+    await this.sendEmail({
       target: payload.email,
-      confirmationHash: payload.confirmationHash
+      confirmationHash: payload.confirmationHash,
+      emailType: 'REGISTRATION'
     });
   }
 
@@ -57,6 +75,24 @@ export class UsersService {
         accountConfirm: true
       },
       { where: { id: payload.userId } }
+    );
+  }
+
+  async confirmEmailChange(payload: ConfirmAccountEventDto) {
+    await this.confirmHashRepository.update(
+      {
+        confirmed: true
+      },
+      { where: { id: payload.hashId } }
+    );
+
+    await this.userRepository.update(
+      {
+        email: payload.email
+      },
+      {
+        where: { id: payload.userId }
+      }
     );
   }
 

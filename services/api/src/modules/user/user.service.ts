@@ -28,18 +28,20 @@ import { HashNotFoundException } from '@exceptions/hash-not-found.exception';
 import { EmailAlreadyConfirmedException } from '@exceptions/email-already-confirmed.exception';
 import { AuthService } from '@modules/auth.service';
 import { CloseAccEvent } from '@events/close-acc.event';
-import { UpdateUserEvent } from '@events/update-user.event';
+import { UpdateUserEvent, UpdateUserEventDto } from '@events/update-user.event';
 import { UserSettings } from '@models/user-settings.model';
 import { EmailChangedException } from '@exceptions/email-changed.exception';
 import sequelize, { Op } from 'sequelize';
-import { UpdateUserEventDto } from '@event-dto/update-user.event.dto';
-import { UpdateUserSecurityEvent } from '@events/update-user-security.event';
-import { UpdateUserSecurityEventDto } from '@event-dto/update-user-security.event.dto';
+import {
+  UpdateUserSecurityEvent,
+  UpdateUserSecurityEventDto
+} from '@events/update-user-security.event';
 import { LoggerService } from '@shared/logger.service';
 import { Wrong2faException } from '@exceptions/wrong-2fa.exception';
 import { PhoneCodeErrorException } from '@exceptions/phone-code-error.exception';
 import { ChangeEmailDto } from '@dto/change-email.dto';
 import { ChangePasswordDto } from '@dto/change-password.dto';
+import { ConfirmEmailChangeEvent } from '@events/confirm-email-change.event';
 
 @Injectable()
 export class UserService {
@@ -102,7 +104,8 @@ export class UserService {
       new UserSignUpEvent({
         email: payload.email,
         userId: createdUser.id,
-        confirmationHash
+        confirmationHash,
+        confirmationType: 'REGISTRATION'
       })
     );
 
@@ -303,7 +306,15 @@ export class UserService {
         throw new PhoneCodeErrorException();
     }
 
-    // TODO Send email here and confirm it then
+    const confirmationHash = crypto.randomBytes(20).toString('hex');
+    // this.userClient.emit(
+    //   'confirm_email_change',
+    //   new ConfirmEmailChangeEvent({
+    //     hashId: '',
+    //     userId: '',
+    //     email: ''
+    //   })
+    // );
 
     this.userClient.emit(
       'update_user_account',

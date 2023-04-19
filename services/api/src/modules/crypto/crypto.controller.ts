@@ -16,14 +16,17 @@ import {
 import { CryptoService } from '@modules/crypto.service';
 import { JwtGuard } from '@guards/jwt.guard';
 import { UserDecorator } from '@decorators/user.decorator';
-import { AddCryptoToFavoriteEvent } from '@events/add-crypto-to-favorite.event';
-import { AddCryptoToFavoriteEventDto } from '@event-dto/add-crypto-to-favorite.event.dto';
-import { RemoveCryptoToFavoriteEvent } from '@events/remove-crypto-from-favorite.event';
-import { RemoveCryptoToFavoriteEventDto } from '@event-dto/remove-crypto-from-favorite.event.dto';
+import {
+  AddCryptoToFavoriteEvent,
+  AddCryptoToFavoriteEventDto
+} from '@events/add-crypto-to-favorite.event';
+import {
+  RemoveCryptoToFavoriteEvent,
+  RemoveCryptoToFavoriteEventDto
+} from '@events/remove-crypto-from-favorite.event';
 import { FavoriteCoins } from '@models/favorites-coins.model';
 import { MarketStats } from '@models/market-stats.model';
-import { UpdateCoinEventDto } from '@event-dto/update-coin.event.dto';
-import { UpdateCoinEvent } from '@events/update-coin.event';
+import { UpdateCoinEvent, UpdateCoinEventDto } from '@events/update-coin.event';
 
 @ApiTags('Crypto')
 @Controller('crypto')
