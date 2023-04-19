@@ -3,6 +3,7 @@ import React from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { Line, LineChart, YAxis } from 'recharts';
 
 import { Input } from '@components/Input/Input.component';
 import { useHandleException } from '@hooks/useHandleException.hook';
@@ -22,9 +23,9 @@ import {
   HomeWelcomeBox,
   HomeWelcomeTitle,
   InputWrapper,
-  Line,
+  HomeLine,
   Lines,
-  MainHomeWelcomeContainer,
+  MainHomeWelcomeContainer, PopularCryptoContainer, PopularCryptoItem, PopularCryptoParagraph, PopularCryptoWrapper,
   StartButton
 } from '@styles/home.style';
 
@@ -46,12 +47,29 @@ const Home = () => {
 
   const fetchListCoins = async () => {
     try {
-      return await listCrypto({
+      const { rows, count } = await listCrypto({
         page: 0,
         pageSize: 3,
         order: 'DESC',
         orderBy: 'likes'
       });
+
+      const parsedCoins = rows.map((item) => {
+        const parsedSparklines = item.sparkline.map((item: any, index: number) => ({
+          name: index.toString(),
+          value: parseFloat(item).toFixed(8)
+        }));
+        return {
+          ...item,
+          sparkline: parsedSparklines,
+          price: parseFloat(item.price).toFixed(2),
+          marketCap: (parseFloat(item.marketCap) / 1000000000).toFixed(2),
+          volume24h: (parseFloat(item.volume24h) / 1000000000).toFixed(2),
+          btcPrice: parseFloat(item.btcPrice).toFixed(8)
+        };
+      });
+
+      return { rows: parsedCoins, count };
     } catch (e) {
       await handleException(e);
     }
@@ -112,7 +130,7 @@ const Home = () => {
 
           <Lines>
             {[...Array(7)].map((x, i) =>
-              <Line key={i}/>
+              <HomeLine key={i}/>
             )}
           </Lines>
         </MainHomeWelcomeContainer>
@@ -155,9 +173,54 @@ const Home = () => {
                 height={58}
               />
             </HomePostsContainer>
-            {/*{coins?.rows.map((item) => (*/}
-            {/*  <p>{JSON.stringify(item)}</p>*/}
-            {/*))}*/}
+            <PopularCryptoContainer>
+              {coins?.rows.map((item) => (
+                <PopularCryptoItem
+                  key={item.id}
+                  onClick={() => handleRedirect(`market/${item.uuid}`)}
+                >
+                  <Image src={item.iconUrl} alt={item.name} width={72} height={72} />
+
+                  <PopularCryptoWrapper>
+                    <PopularCryptoContainer>
+                      <PopularCryptoParagraph>{item.symbol}</PopularCryptoParagraph>
+                      <PopularCryptoParagraph className={'small'}>
+                        {item.name}
+                      </PopularCryptoParagraph>
+                    </PopularCryptoContainer>
+                  </PopularCryptoWrapper>
+
+                  <PopularCryptoWrapper className={'small-text'}>
+                    <PopularCryptoContainer>
+                      <PopularCryptoParagraph>
+                        Price: {parseFloat(item.price).toFixed(2)} $
+                      </PopularCryptoParagraph>
+                      <PopularCryptoParagraph className={'small'}>
+                        Cng: {item.change} %
+                      </PopularCryptoParagraph>
+                    </PopularCryptoContainer>
+                  </PopularCryptoWrapper>
+
+                  <LineChart
+                    width={150}
+                    height={80}
+                    data={item.sparkline}
+                  >
+                    <YAxis
+                      hide={true}
+                      type={'number'}
+                      domain={[
+                        Math.min(...item.sparkline.map((o: any) => o.value)),
+                        Math.max(...item.sparkline.map((o: any) => o.value))
+                      ]} />
+                    <Line
+                      dataKey="value"
+                      stroke={item.change > 0 ? 'rgb(59, 232, 59)': 'rgb(255, 51, 51)'}
+                    />
+                  </LineChart>
+                </PopularCryptoItem>
+              ))}
+            </PopularCryptoContainer>
           </HomeDescriptionSide>
           <HomeDescriptionSide className={'image'}>
             <Image
