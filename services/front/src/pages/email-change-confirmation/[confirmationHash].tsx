@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import { Button } from '@components/Button/Button.component';
 import { useHandleException } from '@hooks/useHandleException.hook';
 import CredentialsLayout from '@layouts/Credentials.layout';
-import { useAccountConfirmationService } from '@services/account-confirmation/account-confirmation.service';
+import { useEmailChangeConfirmationService } from '@services/email-change-confirmation/email-change-confirmation.service';
 import {
   Box,
   HeaderLink,
@@ -18,17 +18,17 @@ import {
   WelcomeTitle
 } from '@styles/login.style';
 
-const AccountConfirmation = () => {
+const EmailChangeConfirmation = () => {
   const router = useRouter();
   const { handleException } = useHandleException();
-  const { loading, confirmAccount } = useAccountConfirmationService();
+  const { loading, confirmEmailChange } = useEmailChangeConfirmationService();
 
   const [confirmationStatus, setConfirmationStatus] = React.useState(1);
 
   React.useEffect(() => {
     const { confirmationHash } = router.query;
     if (confirmationHash) {
-      confirmAccountRegistration(confirmationHash as string)
+      fetchConfirmEmailChange(confirmationHash as string)
         .then(() => setConfirmationStatus(2));
     }
   }, [router.query]);
@@ -37,9 +37,9 @@ const AccountConfirmation = () => {
     await router.push(`${path}`);
   };
 
-  const confirmAccountRegistration = async (hash: string) => {
+  const fetchConfirmEmailChange = async (hash: string) => {
     try {
-      return await confirmAccount({ hash });
+      return await confirmEmailChange({ hash });
     } catch (e) {
       setConfirmationStatus(3);
       handleException(e);
@@ -49,21 +49,27 @@ const AccountConfirmation = () => {
   return (
     <>
       <Head>
-        <title>Cryptotalks | Account confirmation</title>
+        <title>Cryptotalks | Email change confirmation</title>
       </Head>
       <CredentialsLayout
         leftSide={
           <Box>
-            <Title>Account confirmation</Title>
+            <WelcomeTitle>You are about to change email!</WelcomeTitle>
+            <WelcomeText>Changing of your email is nothing separating you and the wonderful world of WEB3!</WelcomeText>
+          </Box>
+        }
+        rightSide={
+          <Box>
+            <Title>Email changing confirmation</Title>
             <>
               {confirmationStatus === 1 ? (
                 <MarginWrapper>
-                  <SubTitle>Please, be patient, we are some magic stuff behind the scene while verifying your account.</SubTitle>
+                  <SubTitle>Please, be patient, we are some magic stuff behind the scene while changing your email.</SubTitle>
                 </MarginWrapper>
               ) : (confirmationStatus === 2 ? (
                 <>
                   <MarginWrapper>
-                    <SubTitle>Success! Welcome here, newbie! It&apos;s nice to see you, hang around here and try to find some fun.</SubTitle>
+                    <SubTitle>Success! Email has been successfully changed, feel free to log in use it now.</SubTitle>
                   </MarginWrapper>
                   <MarginWrapper>
                     <Button
@@ -90,12 +96,7 @@ const AccountConfirmation = () => {
             </>
           </Box>
         }
-        rightSide={
-          <Box>
-            <WelcomeTitle>You are almost there!</WelcomeTitle>
-            <WelcomeText>Verification of your email is the last things separates you and the wonderful world of WEB3!</WelcomeText>
-          </Box>
-        }
+        leftDarkSide={true}
         headerLink={
           <>
             <HeaderLink><Link onClick={() => handleRedirect('/signin')}
@@ -103,10 +104,9 @@ const AccountConfirmation = () => {
           </>
         }
         loading={loading}
-        rightDarkSide={true}
       />
     </>
   );
 };
 
-export default AccountConfirmation;
+  export default EmailChangeConfirmation;

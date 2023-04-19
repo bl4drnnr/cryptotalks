@@ -49,16 +49,16 @@ const AccountSettings = () => {
   const [securitySettings, setSecuritySettings] = React.useState<ISecuritySettings>();
 
   const [section, setSection] = React.useState('personalInformation');
-  const [sections, ] = React.useState([
-    { value: 'personalInformation',
+  const [sections, ] = React.useState([{
+      value: 'personalInformation',
       text: 'Personal information',
       danger: false
     }, {
       value: 'securitySettings',
       text: 'Security settings',
       danger: false
-    }
-  ]);
+    }]
+  );
   const { handleException } = useHandleException();
 
   React.useEffect(() => {

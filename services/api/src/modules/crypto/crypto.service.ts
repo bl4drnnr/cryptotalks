@@ -4,8 +4,10 @@ import { Cryptocurrency } from '@models/cryptocurrency.model';
 import { ClientKafka } from '@nestjs/microservices';
 import { FavoriteCoins } from '@models/favorites-coins.model';
 import { ResponseDto } from '@dto/response.dto';
-import { AddCryptoToFavoriteEventDto } from '@event-dto/add-crypto-to-favorite.event.dto';
-import { AddCryptoToFavoriteEvent } from '@events/add-crypto-to-favorite.event';
+import {
+  AddCryptoToFavoriteEvent,
+  AddCryptoToFavoriteEventDto
+} from '@events/add-crypto-to-favorite.event';
 import { RemoveCryptoToFavoriteEvent } from '@events/remove-crypto-from-favorite.event';
 import sequelize, { Op } from 'sequelize';
 import { NoCryptoException } from '@exceptions/no-crypto.exception';

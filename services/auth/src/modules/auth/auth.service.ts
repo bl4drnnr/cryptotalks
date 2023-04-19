@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Session } from '@models/session.model';
 import { InjectModel } from '@nestjs/sequelize';
-import { RefreshTokenEventDto } from '@event-dto/refresh-token.event.dto';
-import { UserLogoutEventDto } from '@event-dto/user-logout.event.dto';
-import { LogEventDto } from '@event-dto/log.event.dto';
 import { InformationLog } from '@mongo-schemas/log.schema';
 import { Model } from 'mongoose';
 import { InjectModel as InjectModelMongo } from '@nestjs/mongoose';
+import { UserLogoutEventDto } from '@events/user-logout.event';
+import { LogEventDto } from '@events/log.event';
 
 @Injectable()
 export class AuthService {

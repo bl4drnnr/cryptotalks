@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { FavoriteCoins } from '@models/favorites-coins.model';
 import { Cryptocurrency } from '@models/cryptocurrency.model';
-import { SignUpEventDto } from '@event-dto/sign-up.event.dto';
 import { Sequelize } from 'sequelize-typescript';
-import { AddCryptoToFavoriteEventDto } from '@event-dto/add-crypto-to-favorite.event.dto';
-import { RemoveCryptoToFavoriteEventDto } from '@event-dto/remove-crypto-from-favorite.event.dto';
 import { HttpService } from '@shared/http.service';
 import { ApiConfigService } from '@shared/config.service';
-import { UpdateCoinEventDto } from '@event-dto/update-coin.event.dto';
+import { AddCryptoToFavoriteEventDto } from '@events/add-crypto-to-favorite.event';
+import { RemoveCryptoToFavoriteEventDto } from '@events/remove-crypto-from-favorite.event';
+import { UpdateCoinEventDto } from '@events/update-coin.event';
+import { SignUpEventDto } from '@events/user-sign-up.event';
 
 @Injectable()
 export class CryptoService {

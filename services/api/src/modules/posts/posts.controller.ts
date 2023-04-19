@@ -22,15 +22,15 @@ import { JwtGuard } from '@guards/jwt.guard';
 import { UserDecorator } from '@decorators/user.decorator';
 import { UpdatePostDto } from '@dto/update-post.dto';
 import { LeaveCommentDto } from '@dto/leave-comment.dto';
-import { DeletePostEvent } from '@events/delete-post.event';
-import { DeletePostEventDto } from '@event-dto/delete-post.event.dto';
-import { LeaveCommentEvent } from '@events/leave-comment.event';
-import { LeaveCommentEventDto } from '@event-dto/leave-comment.event.dto';
-import { LogEvent } from '@events/log.event';
-import { LogEventDto } from '@event-dto/log.event.dto';
-import { UpdatePostEventDto } from '@event-dto/update-post.event.dto';
+import { DeletePostEvent, DeletePostEventDto } from '@events/delete-post.event';
+import {
+  LeaveCommentEvent,
+  LeaveCommentEventDto
+} from '@events/leave-comment.event';
+import { LogEvent, LogEventDto } from '@events/log.event';
 import { PostInfo } from '@models/post-info.model';
 import { CreatePostEvent } from '@events/create-post.event';
+import { UpdatePostEventDto } from '@events/update-post.event';
 
 @ApiTags('Posts')
 @Controller('posts')

@@ -25,21 +25,20 @@ import { JwtGuard } from '@guards/jwt.guard';
 import { UserDecorator } from '@decorators/user.decorator';
 import { ChangeEmailDto } from '@dto/change-email.dto';
 import { ChangePasswordDto } from '@dto/change-password.dto';
-import { CloseAccEventDto } from '@event-dto/close-acc.event.dto';
-import { CloseAccEvent } from '@events/close-acc.event';
-import { ConfirmAccountEvent } from '@events/confirm-account.event';
-import { ConfirmAccountEventDto } from '@event-dto/confirm-account.event.dto';
-import { UpdateUserEvent } from '@events/update-user.event';
-import { UpdateUserEventDto } from '@event-dto/update-user.event.dto';
-import { UserLogoutEvent } from '@events/user-logout.event';
-import { UserLogoutEventDto } from '@event-dto/user-logout.event.dto';
-import { SignUpEventDto } from '@event-dto/sign-up.event.dto';
+import { CloseAccEvent, CloseAccEventDto } from '@events/close-acc.event';
+import {
+  ConfirmAccountEvent,
+  ConfirmAccountEventDto
+} from '@events/confirm-account.event';
+import { UpdateUserEvent, UpdateUserEventDto } from '@events/update-user.event';
+import { UserLogoutEvent, UserLogoutEventDto } from '@events/user-logout.event';
 import { UserSettings } from '@models/user-settings.model';
 import { Set2faDto } from '@dto/set-2fa.dto';
 import { Remove2faDto } from '@dto/remove-2fa.dto';
 import { ResponseDto } from '@dto/response.dto';
 import { SetPhoneDto } from '@dto/set-phone.dto';
 import { RemovePhoneDto } from '@dto/remove-phone.dto';
+import { SignUpEventDto } from '@events/user-sign-up.event';
 
 @ApiTags('User')
 @Controller('user')
@@ -89,6 +88,16 @@ export class UserController {
   @Get('account-confirmation/:confirmationHash')
   confirmAccount(@Param('confirmationHash') confirmationHash: string) {
     return this.userService.confirmAccount({ confirmationHash });
+  }
+
+  @ApiOperation({ summary: 'Confirm email change' })
+  @ApiResponse({
+    status: 201,
+    description: 'As a response function returns success message'
+  })
+  @Get('email-change-confirmation/:confirmationHash')
+  confirmEmailChange(@Param('confirmationHash') confirmationHash: string) {
+    return this.userService.confirmEmailChange({ confirmationHash });
   }
 
   @ApiExtraModels(UserLogoutEvent)

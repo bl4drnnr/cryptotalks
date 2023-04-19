@@ -2,15 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { CreatePostDto } from '@dto/create-post.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Post } from '@models/post.model';
-import { DeletePostEventDto } from '@event-dto/delete-post.event.dto';
-import { UpdatePostEventDto } from '@event-dto/update-post.event.dto';
 import { SlugService } from '@shared/slug.service';
-import { LogEventDto } from '@event-dto/log.event.dto';
 import { InformationLog } from '@mongo-schemas/log.schema';
 import { Model } from 'mongoose';
 import { InjectModel as InjectModelMongo } from '@nestjs/mongoose';
-import { LeaveCommentEventDto } from '@event-dto/leave-comment.event.dto';
 import { PostInfo } from '@models/post-info.model';
+import { DeletePostEventDto } from '@events/delete-post.event';
+import { UpdatePostEventDto } from '@events/update-post.event';
+import { LeaveCommentEventDto } from '@events/leave-comment.event';
+import { LogEventDto } from '@events/log.event';
 
 @Injectable()
 export class PostsService {

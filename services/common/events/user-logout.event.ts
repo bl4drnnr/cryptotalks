@@ -1,4 +1,13 @@
-import { UserLogoutEventDto } from '../event-dto/user-logout.event.dto';
+import { ApiProperty } from '@nestjs/swagger';
+
+export class UserLogoutEventDto {
+  @ApiProperty({
+    type: String,
+    format: 'uuid',
+    nullable: true
+  })
+  userId: string;
+}
 
 export class UserLogoutEvent {
   constructor(private readonly userLogoutPayload: UserLogoutEventDto) {}

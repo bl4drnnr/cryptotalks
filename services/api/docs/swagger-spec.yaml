@@ -234,6 +234,26 @@ paths:
         "201":
           description: As a response function returns success message
       tags: *a2
+  "/api/user/email-change-confirmation/{confirmationHash}":
+    get:
+      operationId: UserController_confirmEmailChange
+      summary: Confirm email change
+      parameters:
+        - name: confirmationHash
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseDto"
+        "201":
+          description: As a response function returns success message
+      tags: *a2
   /api/user/logout:
     get:
       operationId: UserController_logout
@@ -715,6 +735,10 @@ components:
           format: uuid
           nullable: false
       required:
+        - title
+        - content
+        - preview
+        - searchTags
         - postId
     UpdatePostDto:
       type: object
@@ -959,11 +983,17 @@ components:
           type: string
           format: uuid
           nullable: false
+        confirmationType:
+          type: string
+          nullable: true
         email:
           type: string
           nullable: true
       required:
+        - confirmationHash
         - userId
+        - confirmationType
+        - email
     SignUpDto:
       type: object
       properties:
@@ -1077,6 +1107,14 @@ components:
           type: boolean
           nullable: false
           description: If hash has been confirmed
+        confirmationType:
+          type: boolean
+          nullable: false
+          description: Type of confirmation
+        changingEmail:
+          type: string
+          nullable: true
+          description: Used for temporary storage of email to change
         userId:
           type: string
           format: uuid
@@ -1096,6 +1134,8 @@ components:
         - id
         - confirmationHash
         - confirmed
+        - confirmationType
+        - changingEmail
         - userId
         - createdAt
         - updatedAt
@@ -1110,9 +1150,13 @@ components:
           type: string
           format: uuid
           nullable: false
+        data:
+          type: object
+          nullable: true
       required:
         - hashId
         - userId
+        - data
     ConfirmAccountEvent:
       type: object
       properties: {}
@@ -1167,6 +1211,16 @@ components:
           nullable: true
       required:
         - userId
+        - email
+        - password
+        - bio
+        - firstName
+        - lastName
+        - linkedIn
+        - personalWebsite
+        - title
+        - twitter
+        - username
     UpdateUserEvent:
       type: object
       properties: {}
@@ -1251,20 +1305,6 @@ components:
         code:
           type: string
           nullable: true
-    RefreshTokenEventDto:
-      type: object
-      properties:
-        userId:
-          type: string
-          format: uuid
-          nullable: false
-        tokenId:
-          type: string
-          format: uuid
-          nullable: false
-      required:
-        - userId
-        - tokenId
     TokenPayloadDto:
       type: object
       properties:

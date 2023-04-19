@@ -23,7 +23,6 @@
       "@models/*": ["src/models/*", "../common/models/*"],
       "@dto/*": ["src/dto/*", "../common/dto/*"],
       "@events/*": ["src/events/*", "../common/events/*"],
-      "@event-dto/*": ["src/event-dto/*", "../common/event-dto/*"],
       "@mongo-schemas/*": ["src/mongo-schemas/*", "../common/mongo-schemas/*"],
       "@shared/*": ["src/shared/services/*", "src/shared/*"]
     }

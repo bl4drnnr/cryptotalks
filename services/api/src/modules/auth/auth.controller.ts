@@ -11,7 +11,6 @@ import { CookieRefreshToken } from '@decorators/cookie-refresh-token.decorator';
 import { AccessTokenDto } from '@dto/access-token.dto';
 import { RefreshTokenDto } from '@dto/refresh-token.dto';
 import { TokenPayloadDto } from '@dto/token-payload.dto';
-import { RefreshTokenEventDto } from '@event-dto/refresh-token.event.dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -21,7 +20,6 @@ export class AuthController {
   @ApiExtraModels(AccessTokenDto)
   @ApiExtraModels(RefreshTokenDto)
   @ApiExtraModels(TokenPayloadDto)
-  @ApiExtraModels(RefreshTokenEventDto)
   @ApiOperation({ summary: 'Refreshes tokens' })
   @ApiResponse({
     status: 201,

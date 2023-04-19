@@ -1,19 +1,20 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { SignUpEventDto } from '@event-dto/sign-up.event.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { ClientKafka } from '@nestjs/microservices';
 import { ConfirmationHash } from '@models/confirmation-hash.model';
 import { UserSettings } from '@models/user-settings.model';
 import { EmailService } from '@shared/email.service';
 import { User } from '@models/user.model';
-import { ConfirmAccountEventDto } from '@event-dto/confirm-account.event.dto';
 import { InjectModel as InjectModelMongo } from '@nestjs/mongoose';
 import { InformationLog } from '@mongo-schemas/log.schema';
 import { Model } from 'mongoose';
-import { CloseAccEventDto } from '@event-dto/close-acc.event.dto';
-import { UpdateUserEventDto } from '@event-dto/update-user.event.dto';
-import { UpdateUserSecurityEventDto } from '@event-dto/update-user-security.event.dto';
 import { PhoneService } from '@shared/phone.service';
+import { CloseAccEventDto } from '@events/close-acc.event';
+import { ConfirmAccountEventDto } from '@events/confirm-account.event';
+import { SignUpEventDto } from '@events/user-sign-up.event';
+import { UpdateUserSecurityEventDto } from '@events/update-user-security.event';
+import { UpdateUserEventDto } from '@events/update-user.event';
+import { ChangeEmailEventDto } from '@events/change-email.event';
 
 @Injectable()
 export class UsersService {
@@ -30,17 +31,38 @@ export class UsersService {
     private readonly phoneService: PhoneService
   ) {}
 
+  async sendEmail({
+    target,
+    confirmationHash,
+    confirmationType
+  }: {
+    target: string;
+    confirmationHash: string;
+    confirmationType: 'EMAIL_CHANGE' | 'REGISTRATION';
+  }) {
+    await this.emailService.sendConfirmationEmail({
+      target,
+      confirmationHash,
+      confirmationType
+    });
+  }
+
   async signUp(payload: SignUpEventDto) {
     await this.userSettingsRepository.create({
       userId: payload.userId
     });
+    const emailSettings = {
+      confirmationHash: payload.confirmationHash,
+      confirmationType: 'REGISTRATION' as 'EMAIL_CHANGE' | 'REGISTRATION'
+    };
+
     await this.confirmHashRepository.create({
       userId: payload.userId,
-      confirmationHash: payload.confirmationHash
+      ...emailSettings
     });
-    await this.emailService.sendConfirmationEmail({
+    await this.sendEmail({
       target: payload.email,
-      confirmationHash: payload.confirmationHash
+      ...emailSettings
     });
   }
 
@@ -54,10 +76,27 @@ export class UsersService {
 
     await this.userRepository.update(
       {
-        accountConfirm: true
+        ...payload.data
       },
       { where: { id: payload.userId } }
     );
+  }
+
+  async changeEmail(payload: ChangeEmailEventDto) {
+    const emailSettings = {
+      confirmationHash: payload.confirmationHash,
+      confirmationType: 'EMAIL_CHANGE' as 'EMAIL_CHANGE' | 'REGISTRATION'
+    };
+
+    await this.confirmHashRepository.create({
+      userId: payload.userId,
+      changingEmail: payload.email,
+      ...emailSettings
+    });
+    await this.sendEmail({
+      target: payload.email,
+      ...emailSettings
+    });
   }
 
   async updateUserAccount(payload: UpdateUserEventDto) {

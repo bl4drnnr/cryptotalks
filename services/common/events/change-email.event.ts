@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class SignUpEventDto {
+export class ChangeEmailEventDto {
   @ApiProperty({
     type: String,
     nullable: true
@@ -18,7 +18,7 @@ export class SignUpEventDto {
     type: String,
     nullable: true
   })
-  confirmationType?: 'REGISTRATION';
+  confirmationType?: 'EMAIL_CHANGE';
 
   @ApiProperty({
     type: String,
@@ -27,12 +27,12 @@ export class SignUpEventDto {
   email?: string;
 }
 
-export class UserSignUpEvent {
-  constructor(private readonly createUserPayload: SignUpEventDto) {}
+export class ChangeEmailEvent {
+  constructor(private readonly changeEmailPayload: ChangeEmailEventDto) {}
 
   toString() {
     return JSON.stringify({
-      ...this.createUserPayload
+      ...this.changeEmailPayload
     });
   }
 }

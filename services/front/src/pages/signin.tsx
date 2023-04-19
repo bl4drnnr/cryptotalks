@@ -192,9 +192,9 @@ const Signin = () => {
         </Box>
       } headerLink={
         <HeaderLink>
-           <Link
+          New one here? <Link
           onClick={() => handleRedirect('signup')}
-        ></Link>
+        >Sign up!</Link>
         </HeaderLink>
       } leftDarkSide={true}
         mirroredHeader={true}
