@@ -14,6 +14,7 @@ import { ConfirmAccountEventDto } from '@events/confirm-account.event';
 import { SignUpEventDto } from '@events/user-sign-up.event';
 import { UpdateUserSecurityEventDto } from '@events/update-user-security.event';
 import { UpdateUserEventDto } from '@events/update-user.event';
+import { ChangeEmailEventDto } from '@events/change-email.event';
 
 @Injectable()
 export class UsersService {
@@ -33,16 +34,16 @@ export class UsersService {
   async sendEmail({
     target,
     confirmationHash,
-    emailType
+    confirmationType
   }: {
     target: string;
     confirmationHash: string;
-    emailType: 'EMAIL_CHANGE' | 'REGISTRATION';
+    confirmationType: 'EMAIL_CHANGE' | 'REGISTRATION';
   }) {
     await this.emailService.sendConfirmationEmail({
       target,
       confirmationHash,
-      emailType
+      confirmationType
     });
   }
 
@@ -50,15 +51,18 @@ export class UsersService {
     await this.userSettingsRepository.create({
       userId: payload.userId
     });
+    const emailSettings = {
+      confirmationHash: payload.confirmationHash,
+      confirmationType: 'REGISTRATION' as 'EMAIL_CHANGE' | 'REGISTRATION'
+    };
+
     await this.confirmHashRepository.create({
       userId: payload.userId,
-      confirmationHash: payload.confirmationHash,
-      confirmationType: 'REGISTRATION'
+      ...emailSettings
     });
     await this.sendEmail({
       target: payload.email,
-      confirmationHash: payload.confirmationHash,
-      emailType: 'REGISTRATION'
+      ...emailSettings
     });
   }
 
@@ -72,28 +76,27 @@ export class UsersService {
 
     await this.userRepository.update(
       {
-        accountConfirm: true
+        ...payload.data
       },
       { where: { id: payload.userId } }
     );
   }
 
-  async confirmEmailChange(payload: ConfirmAccountEventDto) {
-    await this.confirmHashRepository.update(
-      {
-        confirmed: true
-      },
-      { where: { id: payload.hashId } }
-    );
+  async changeEmail(payload: ChangeEmailEventDto) {
+    const emailSettings = {
+      confirmationHash: payload.confirmationHash,
+      confirmationType: 'EMAIL_CHANGE' as 'EMAIL_CHANGE' | 'REGISTRATION'
+    };
 
-    await this.userRepository.update(
-      {
-        email: payload.email
-      },
-      {
-        where: { id: payload.userId }
-      }
-    );
+    await this.confirmHashRepository.create({
+      userId: payload.userId,
+      changingEmail: payload.email,
+      ...emailSettings
+    });
+    await this.sendEmail({
+      target: payload.email,
+      ...emailSettings
+    });
   }
 
   async updateUserAccount(payload: UpdateUserEventDto) {

@@ -16,10 +16,10 @@ export class ConfirmAccountEventDto {
   userId: string;
 
   @ApiProperty({
-    type: String,
+    type: Object,
     nullable: true
   })
-  email?: string;
+  data?: any;
 }
 
 export class ConfirmAccountEvent {

@@ -42,6 +42,8 @@ import { PhoneCodeErrorException } from '@exceptions/phone-code-error.exception'
 import { ChangeEmailDto } from '@dto/change-email.dto';
 import { ChangePasswordDto } from '@dto/change-password.dto';
 import { ConfirmEmailChangeEvent } from '@events/confirm-email-change.event';
+import { ChangeEmailEvent } from '@events/change-email.event';
+import { EmailChangeConfirmedException } from '@exceptions/email-change-confirmed.exception';
 
 @Injectable()
 export class UserService {
@@ -219,7 +221,43 @@ export class UserService {
       'confirm_user_account',
       new ConfirmAccountEvent({
         hashId: foundHash.id,
-        userId: foundHash.userId
+        userId: foundHash.userId,
+        data: { accountConfirm: true }
+      })
+    );
+
+    return new ResponseDto();
+  }
+
+  async confirmEmailChange({ confirmationHash }: { confirmationHash: string }) {
+    const foundHash = await this.confirmHashRepository.findOne({
+      where: { confirmationHash }
+    });
+
+    if (!foundHash) throw new HashNotFoundException();
+    if (foundHash.confirmed) {
+      this.loggerService.log({
+        action: 'log_auth_action',
+        event: 'CONFIRMATION',
+        status: 'ERROR',
+        payload: { hashId: foundHash.id }
+      });
+      throw new EmailChangeConfirmedException();
+    }
+
+    this.loggerService.log({
+      action: 'log_auth_action',
+      event: 'CONFIRMATION',
+      status: 'SUCCESS',
+      payload: { hashId: foundHash.id }
+    });
+
+    this.userClient.emit(
+      'confirm_user_account',
+      new ConfirmAccountEvent({
+        hashId: foundHash.id,
+        userId: foundHash.userId,
+        data: { email: foundHash.changingEmail }
       })
     );
 
@@ -307,14 +345,15 @@ export class UserService {
     }
 
     const confirmationHash = crypto.randomBytes(20).toString('hex');
-    // this.userClient.emit(
-    //   'confirm_email_change',
-    //   new ConfirmEmailChangeEvent({
-    //     hashId: '',
-    //     userId: '',
-    //     email: ''
-    //   })
-    // );
+    this.userClient.emit(
+      'change_email',
+      new ChangeEmailEvent({
+        userId,
+        confirmationHash,
+        email: payload.email,
+        confirmationType: 'EMAIL_CHANGE'
+      })
+    );
 
     this.userClient.emit(
       'update_user_account',

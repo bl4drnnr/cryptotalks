@@ -1091,6 +1091,10 @@ components:
           type: boolean
           nullable: false
           description: Type of confirmation
+        changingEmail:
+          type: string
+          nullable: true
+          description: Used for temporary storage of email to change
         userId:
           type: string
           format: uuid
@@ -1111,6 +1115,7 @@ components:
         - confirmationHash
         - confirmed
         - confirmationType
+        - changingEmail
         - userId
         - createdAt
         - updatedAt
@@ -1125,13 +1130,13 @@ components:
           type: string
           format: uuid
           nullable: false
-        email:
-          type: string
+        data:
+          type: object
           nullable: true
       required:
         - hashId
         - userId
-        - email
+        - data
     ConfirmAccountEvent:
       type: object
       properties: {}

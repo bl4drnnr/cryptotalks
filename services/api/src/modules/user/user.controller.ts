@@ -90,6 +90,11 @@ export class UserController {
     return this.userService.confirmAccount({ confirmationHash });
   }
 
+  @Get('email-change-confirmation/:confirmationHash')
+  confirmEmailChange(@Param('confirmationHash') confirmationHash: string) {
+    return this.userService.confirmEmailChange({ confirmationHash });
+  }
+
   @ApiExtraModels(UserLogoutEvent)
   @ApiExtraModels(UserLogoutEventDto)
   @ApiOperation({ summary: 'Logouts user' })

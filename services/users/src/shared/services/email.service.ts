@@ -11,11 +11,11 @@ export class EmailService {
   async sendConfirmationEmail({
     target,
     confirmationHash,
-    emailType
+    confirmationType
   }: {
     target: string;
     confirmationHash: string;
-    emailType: 'EMAIL_CHANGE' | 'REGISTRATION';
+    confirmationType: 'EMAIL_CHANGE' | 'REGISTRATION';
   }) {
     let mail: {
       to: string;
@@ -29,7 +29,7 @@ export class EmailService {
       html: ''
     };
 
-    if (emailType === 'REGISTRATION') {
+    if (confirmationType === 'REGISTRATION') {
       const confirmationLink = `${this.configService.frontEndUrl}/account-confirmation/${confirmationHash}`;
 
       mail = {
@@ -44,7 +44,7 @@ export class EmailService {
           <p>${confirmationLink}</p>
         `
       };
-    } else if (emailType === 'EMAIL_CHANGE') {
+    } else if (confirmationType === 'EMAIL_CHANGE') {
       const confirmationLink = `${this.configService.frontEndUrl}/email-change-confirmation/${confirmationHash}`;
 
       mail = {
