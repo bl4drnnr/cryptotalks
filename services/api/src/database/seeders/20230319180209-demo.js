@@ -73,19 +73,85 @@ module.exports = {
       updated_at: new Date()
     }]);
 
+    await queryInterface.bulkInsert('cryptocurrencies', [
+      {
+        "id": "5c52855f-a1b0-48f0-9e60-428ade91ccbf",
+        "uuid": "HIVsRcGKkPFtW",
+        "symbol_id": "tether",
+        "symbol": "USDT",
+        "name": "Tether USD",
+        "description": null,
+        "icon_url": "https://cdn.coinranking.com/mgHqwlCLj/usdt.svg",
+        "volume_24h": "65634203012",
+        "market_cap": 65887669065,
+        "price": 1.0080319236252182,
+        "btc_price": 0.00003429340997133,
+        "change": 0.03,
+        "coinranking_url": "https://coinranking.com/coin/HIVsRcGKkPFtW+tetherusd-usdt",
+        "sparkline": ["1.0186711401497197", "1.0136387336056352", "1.0146851770268994", "1.012420808828055", "1.0122598045413504", "1.0108832160619576", "1.009896699507308", "1.0109130426754875", "1.0093586908544816", "1.0090492775747832", "1.0084511841827948", "1.0084495646851064"],
+        "rank": 3,
+        "tier": 1,
+        "created_at": "2023-04-19 09:29:15.591000 +00:00",
+        "updated_at": "2023-04-19 09:29:16.115000 +00:00"
+      },
+      {
+        "id": "08bb1f83-5234-4018-9066-12478eef0ef7",
+        "uuid": "PDKcptVnzJTmN",
+        "symbol_id": "okb",
+        "symbol": "OKB",
+        "name": "OKB",
+        "description": null,
+        "icon_url": "https://cdn.coinranking.com/xcZdYtX6E/okx.png",
+        "volume_24h": "49908620",
+        "market_cap": 12872035114,
+        "price": 53.31028656884832,
+        "btc_price": 0.001813624618573415,
+        "change": -1.98,
+        "coinranking_url": "https://coinranking.com/coin/PDKcptVnzJTmN+okb-okb",
+        "sparkline": ["53.95449570896664", "53.75679999815339", "54.41242261704908", "54.07714279534356", "53.73693223814365", "53.55754987935118", "53.53307260941084", "53.64420756142545", "53.48263181365911", "53.31989660528379", "53.33352998816664", "53.389544694571214"],
+        "rank": 8,
+        "tier": 1,
+        "created_at": "2023-04-19 09:29:15.591000 +00:00",
+        "updated_at": "2023-04-19 09:29:16.117000 +00:00"
+      },
+      {
+        "id": "26af8be9-cc49-405a-981f-8dcea2dfda27",
+        "uuid": "uW2tk-ILY0ii",
+        "symbol_id": "matic-network",
+        "symbol": "MATIC",
+        "name": "Polygon",
+        "description": null,
+        "icon_url": "https://cdn.coinranking.com/M-pwilaq-/polygon-matic-logo.svg",
+        "volume_24h": "420890724",
+        "market_cap": 10222199769,
+        "price": 1.1099125160164975,
+        "btc_price": 0.000037759404292652,
+        "change": -0.77,
+        "coinranking_url": "https://coinranking.com/coin/uW2tk-ILY0ii+polygon-matic",
+        "sparkline": ["1.1189102707717822", "1.123553630117907", "1.1246637806736943", "1.1258321923746089", "1.123455183489114", "1.1209564828756597", "1.1191960996427501", "1.1152642304468248", "1.1145787630182988", "1.1158781733355618", "1.1156406632305762", "1.111228211498053"],
+        "rank": 10,
+        "tier": 1,
+        "created_at": "2023-04-19 09:29:15.591000 +00:00",
+        "updated_at": "2023-04-19 09:29:16.117000 +00:00"
+      }
+    ]);
+
     await queryInterface.bulkInsert('favorite_coins', [{
       id: uuid.v4(),
       user_id: '8a08eaf1-c7a8-403b-b1ce-1fef8e34d000',
+      favorite_coins: ['5c52855f-a1b0-48f0-9e60-428ade91ccbf', '08bb1f83-5234-4018-9066-12478eef0ef7', '26af8be9-cc49-405a-981f-8dcea2dfda27'],
       created_at: new Date(),
       updated_at: new Date()
     }, {
       id: uuid.v4(),
       user_id: '186f0ff4-1444-4637-9be3-8c0abc168ba2',
+      favorite_coins: ['5c52855f-a1b0-48f0-9e60-428ade91ccbf', '08bb1f83-5234-4018-9066-12478eef0ef7'],
       created_at: new Date(),
       updated_at: new Date()
     }, {
       id: uuid.v4(),
       user_id: '77c93fdf-8a06-483c-8d89-2f5c71d029ed',
+      favorite_coins: ['5c52855f-a1b0-48f0-9e60-428ade91ccbf'],
       created_at: new Date(),
       updated_at: new Date()
     }]);
@@ -232,5 +298,9 @@ module.exports = {
     await queryInterface.bulkDelete('user_settings', null, {});
     await queryInterface.bulkDelete('favorite_coins', null, {});
     await queryInterface.bulkDelete('sessions', null, {});
+    await queryInterface.bulkDelete('confirmation_hashes', null, {});
+    await queryInterface.bulkDelete('cryptocurrencies', null, {});
+    await queryInterface.bulkDelete('market_stats', null, {});
+    await queryInterface.bulkDelete('post_info', null, {});
   }
 };

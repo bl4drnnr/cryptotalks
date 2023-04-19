@@ -71,6 +71,11 @@ paths:
           in: query
           schema:
             type: string
+        - name: tags
+          required: true
+          in: query
+          schema:
+            type: string
       responses:
         "200":
           description: ""

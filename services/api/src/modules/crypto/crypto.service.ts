@@ -42,6 +42,22 @@ export class CryptoService implements OnModuleInit {
     const offset = page * pageSize;
     const limit = pageSize;
     const where = {};
+    const attributes = [
+      'id',
+      'uuid',
+      'symbol',
+      'name',
+      'iconUrl',
+      'volume24h',
+      'marketCap',
+      'price',
+      'btcPrice',
+      'change',
+      'coinrankingUrl',
+      'sparkline',
+      'rank',
+      'tier'
+    ];
 
     if (searchQuery) {
       where[Op.or] = [
@@ -58,27 +74,40 @@ export class CryptoService implements OnModuleInit {
       ];
     }
 
+    if (orderBy === 'likes') {
+      const mostPopularCoins = {};
+
+      const usersFavoriteCoins = await this.favoriteCoinsRepo.findAll();
+
+      usersFavoriteCoins.forEach((favoriteCoinRecord) => {
+        favoriteCoinRecord.favoriteCoins.forEach((favoriteCoin) => {
+          if (!mostPopularCoins[favoriteCoin])
+            mostPopularCoins[favoriteCoin] = 1;
+          else mostPopularCoins[favoriteCoin] += 1;
+        });
+      });
+
+      const filteredMostPopularCoins = Object.entries(mostPopularCoins)
+        .sort((a, b) => Number(b[1]) - Number(a[1]))
+        .slice(0, pageSize)
+        .map((pair) => pair[0]);
+
+      return await this.cryptoRepository.findAndCountAll({
+        where: {
+          id: {
+            [Op.in]: filteredMostPopularCoins
+          }
+        },
+        attributes
+      });
+    }
+
     return await this.cryptoRepository.findAndCountAll({
       where: { ...where },
       order: [[orderBy, order]],
       limit,
       offset,
-      attributes: [
-        'id',
-        'uuid',
-        'symbol',
-        'name',
-        'iconUrl',
-        'volume24h',
-        'marketCap',
-        'price',
-        'btcPrice',
-        'change',
-        'coinrankingUrl',
-        'sparkline',
-        'rank',
-        'tier'
-      ]
+      attributes
     });
   }
 

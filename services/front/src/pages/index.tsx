@@ -40,7 +40,7 @@ const Home = () => {
   const { loading: l1, listCrypto } = useListCryptoService();
 
   React.useEffect(() => {
-    // fetchListCoins().then((res) => setCoins(res));
+    fetchListCoins().then((res) => setCoins(res));
     // fetchListPosts().then((res) => setPosts(res));
   }, []);
 
@@ -49,8 +49,8 @@ const Home = () => {
       return await listCrypto({
         page: 0,
         pageSize: 3,
-        order: '',
-        orderBy: ''
+        order: 'DESC',
+        orderBy: 'likes'
       });
     } catch (e) {
       await handleException(e);
@@ -79,7 +79,7 @@ const Home = () => {
       <Head>
         <title>Cryptotalks | Home</title>
       </Head>
-      <DefaultLayout>
+      <DefaultLayout loading={l0 || l1}>
         <MainHomeWelcomeContainer>
           <HomeWelcomeBox className={'name'}>
             <HomeWelcomeTitle><Bold>CRYPTOTALKS</Bold></HomeWelcomeTitle>
@@ -87,7 +87,7 @@ const Home = () => {
 
           <HomeWelcomeBox>
             <HomeWelcomeTitle>
-              WHERE WE TALK ABOUT <BoldWeb3 >WEB3</BoldWeb3>
+              WHERE WE TALK ABOUT <BoldWeb3>WEB3</BoldWeb3>
             </HomeWelcomeTitle>
           </HomeWelcomeBox>
 
@@ -155,6 +155,9 @@ const Home = () => {
                 height={58}
               />
             </HomePostsContainer>
+            {/*{coins?.rows.map((item) => (*/}
+            {/*  <p>{JSON.stringify(item)}</p>*/}
+            {/*))}*/}
           </HomeDescriptionSide>
           <HomeDescriptionSide className={'image'}>
             <Image

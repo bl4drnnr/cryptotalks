@@ -54,7 +54,8 @@ export class PostsService {
     order,
     orderBy,
     searchQuery,
-    username
+    username,
+    tags
   }: {
     page: number;
     pageSize: number;
@@ -62,6 +63,7 @@ export class PostsService {
     orderBy: string;
     searchQuery?: string;
     username?: string;
+    tags?: string;
   }) {
     const offset = page * pageSize;
     const limit = pageSize;
@@ -70,6 +72,12 @@ export class PostsService {
     if (username || username !== 'undefined') {
       where['username'] = {
         [Op.iLike]: `%${username}%`
+      };
+    }
+
+    if (tags) {
+      where['tags'] = {
+        [Op.overlap]: tags.split(',')
       };
     }
 
@@ -86,6 +94,10 @@ export class PostsService {
           `%${searchQuery}%`
         )
       ];
+    }
+
+    if (orderBy === 'likes') {
+      return;
     }
 
     return await this.postRepository.findAndCountAll({
