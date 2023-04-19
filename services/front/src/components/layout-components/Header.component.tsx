@@ -43,12 +43,12 @@ export const Header = () => {
 
   const fetchLogout = async () => {
     try {
-      const token = sessionStorage.getItem('_at');
+      const token = localStorage.getItem('_at');
       const response = await logout({ token });
 
       if (response.message === 'success') {
         setTokenPersistence(false);
-        sessionStorage.removeItem('_at');
+        localStorage.removeItem('_at');
         await handleRedirect('');
       }
     } catch (e) {
@@ -60,7 +60,7 @@ export const Header = () => {
     const theme = localStorage.getItem('theme') as 'dark' | 'light';
     if (['dark', 'light'].includes(theme)) setTheme(theme);
 
-    const token = sessionStorage.getItem('_at');
+    const token = localStorage.getItem('_at');
     if (token) setTokenPersistence(true);
   }, []);
 

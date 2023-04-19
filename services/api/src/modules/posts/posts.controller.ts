@@ -73,7 +73,8 @@ export class PostsController {
     @Param('order') order: string,
     @Param('orderBy') orderBy: string,
     @Query('searchQuery') searchQuery: string,
-    @Query('username') username: string
+    @Query('username') username: string,
+    @Query('tags') tags: string
   ) {
     return this.postsService.listPosts({
       page,
@@ -81,7 +82,8 @@ export class PostsController {
       order,
       orderBy,
       searchQuery,
-      username
+      username,
+      tags
     });
   }
 

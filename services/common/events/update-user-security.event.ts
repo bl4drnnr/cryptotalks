@@ -15,6 +15,12 @@ export class UpdateUserSecurityEventDto {
   publicEmail?: boolean;
 
   @ApiProperty({
+    type: Boolean,
+    nullable: true
+  })
+  emailChanged?: boolean;
+
+  @ApiProperty({
     type: String,
     nullable: true
   })

@@ -13,6 +13,7 @@ export interface ListPostsPayload {
   orderBy: string;
   searchQuery?: string;
   username?: string;
+  tags?: string;
 }
 
 export interface ListPostsResponse {

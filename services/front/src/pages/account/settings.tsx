@@ -64,7 +64,7 @@ const AccountSettings = () => {
   React.useEffect(() => {
     if (fetchSettingsRef.current) {
       fetchSettingsRef.current = false;
-      const token = sessionStorage.getItem('_at');
+      const token = localStorage.getItem('_at');
 
       if (!token) handleRedirect('').then();
       else fetchUserSettings(token).then();
@@ -74,7 +74,7 @@ const AccountSettings = () => {
   const exceptionHandler = async (e: any) => {
     handleException(e);
     if (e.message !== 'username-taken') {
-      sessionStorage.removeItem('_at');
+      localStorage.removeItem('_at');
       await handleRedirect('');
     }
   };
@@ -92,7 +92,7 @@ const AccountSettings = () => {
 
   const applyPersonalInformation = async () => {
     try {
-      const token = sessionStorage.getItem('_at');
+      const token = localStorage.getItem('_at');
       await setPersonalSettings({ ...personalInformation, token });
       return handleRedirect('account');
     } catch (e) {
@@ -102,7 +102,7 @@ const AccountSettings = () => {
 
   const applySecuritySettings = async () => {
     try {
-      const token = sessionStorage.getItem('_at');
+      const token = localStorage.getItem('_at');
       // await setSecurityUserSettings({  ...securitySettings, token });
       return handleRedirect('account');
     } catch (e) {
@@ -112,7 +112,7 @@ const AccountSettings = () => {
 
   const fetchCloseUserAccount = async () => {
     try {
-      const token = sessionStorage.getItem('_at');
+      const token = localStorage.getItem('_at');
       const response = await closeAccount({ token });
     } catch (e) {
       return exceptionHandler(e);

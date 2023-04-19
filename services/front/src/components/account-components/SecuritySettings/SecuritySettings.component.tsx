@@ -137,7 +137,7 @@ const SecuritySettings = ({
 
   const exceptionHandler = async (e: any) => {
     handleException(e);
-    sessionStorage.removeItem('_at');
+    localStorage.removeItem('_at');
     await handleRedirect('');
   };
 
@@ -154,7 +154,7 @@ const SecuritySettings = ({
 
   const fetchSetTwoFa = async () => {
     try {
-      const token = sessionStorage.getItem('_at');
+      const token = localStorage.getItem('_at');
       await set2Fa({ token, twoFaToken, twoFaCode });
 
       showNotificationMessage({
@@ -171,7 +171,7 @@ const SecuritySettings = ({
 
   const fetchRemoveTwoFa = async () => {
     try {
-      const token = sessionStorage.getItem('_at');
+      const token = localStorage.getItem('_at');
       await remove2Fa({ token, twoFaCode });
 
       showNotificationMessage({
@@ -188,7 +188,7 @@ const SecuritySettings = ({
 
   const fetchSetPhone = async () => {
     try {
-      const token = sessionStorage.getItem('_at');
+      const token = localStorage.getItem('_at');
       const { message } = await setPhone({ token, phone, code });
 
       if (message === 'code-sent') {
@@ -209,7 +209,7 @@ const SecuritySettings = ({
   const fetchRemovePhone = async () => {
     try {
       setPhoneModal(true);
-      const token = sessionStorage.getItem('_at');
+      const token = localStorage.getItem('_at');
       const { message } = await removePhone({ token, code });
 
       if (message === 'code-sent') {
@@ -233,7 +233,7 @@ const SecuritySettings = ({
 
   const fetchChangeEmail = async () => {
     try {
-      const token = sessionStorage.getItem('_at');
+      const token = localStorage.getItem('_at');
       const { message } = await changeEmail({
         token,
         email,
@@ -260,7 +260,7 @@ const SecuritySettings = ({
 
   const fetchChangePassword = async () => {
     try {
-      const token = sessionStorage.getItem('_at');
+      const token = localStorage.getItem('_at');
       const { message } = await changePassword({
         password: changedPassword.password,
         passwordRepeat: changedPassword.repeatPassword,
@@ -621,54 +621,72 @@ const SecuritySettings = ({
       </SecurityItemBlock>
 
       <SecurityItemBlock>
-        <SecurityItemWrapper>
-          <ItemTitle>Change email</ItemTitle>
-          <ItemDescription>Be careful! You are able to change email only one time.</ItemDescription>
-        </SecurityItemWrapper>
-        <SecurityItemWrapper className={'button'}>
-          <Button
-            text={'Change email'}
-            onClick={() => setChangeEmailModal(true)}
-          />
-          {changeEmailModal ? (
-            <Modal
-              onClose={() => setChangeEmailModal(false)}
-              header={'Change email'}
-              description={'Be careful! You are able to change email only one time.'}
-            >
-              <>
-                <Input
-                  onWhite={true}
-                  value={email}
-                  onError={emailError}
-                  placeholder={'New email'}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-                {changeEmailStep === 2 ? (
-                  <TwoFa
-                    styles={{ justifyCenter: true, onWhite: true }}
-                    title={'Provide MFA authentication code from SMS'}
-                    setTwoFaCode={setChangeEmailCode}
-                  />
-                ) : changeEmailStep === 3 ? (
-                  <TwoFa
-                    styles={{ justifyCenter: true, onWhite: true }}
-                    title={'Provide MFA authentication code'}
-                    setTwoFaCode={setChangeEmailTwoFa}
-                  />
-                ) : null}
-                <ModalButtonWrapper className={'vertical-margin'}>
-                  <Button
-                    disabled={emailError}
-                    onWhite={true}
-                    text={'Change email'}
-                    onClick={() => fetchChangeEmail()}
-                  />
-                </ModalButtonWrapper>
-              </>
-            </Modal>
-          ) : null}
-        </SecurityItemWrapper>
+        {securitySettings?.emailChanged ? (
+          <>
+            <SecurityItemWrapper>
+              <ItemTitle>Change email</ItemTitle>
+              <ItemDescription>You have already changed an email, and you are allowed to do this only one time.</ItemDescription>
+            </SecurityItemWrapper>
+            <SecurityItemWrapper className={'button'}>
+              <Button
+                disabled={true}
+                text={'Change email'}
+                onClick={() => setChangeEmailModal(true)}
+              />
+            </SecurityItemWrapper>
+          </>
+        ) : (
+          <>
+            <SecurityItemWrapper>
+              <ItemTitle>Change email</ItemTitle>
+              <ItemDescription>Be careful! You are able to change email only one time.</ItemDescription>
+            </SecurityItemWrapper>
+            <SecurityItemWrapper className={'button'}>
+              <Button
+                text={'Change email'}
+                onClick={() => setChangeEmailModal(true)}
+              />
+              {changeEmailModal ? (
+                <Modal
+                  onClose={() => setChangeEmailModal(false)}
+                  header={'Change email'}
+                  description={'Be careful! You are able to change email only one time.'}
+                >
+                  <>
+                    <Input
+                      onWhite={true}
+                      value={email}
+                      onError={emailError}
+                      placeholder={'New email'}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                    {changeEmailStep === 2 ? (
+                      <TwoFa
+                        styles={{ justifyCenter: true, onWhite: true }}
+                        title={'Provide MFA authentication code from SMS'}
+                        setTwoFaCode={setChangeEmailCode}
+                      />
+                    ) : changeEmailStep === 3 ? (
+                      <TwoFa
+                        styles={{ justifyCenter: true, onWhite: true }}
+                        title={'Provide MFA authentication code'}
+                        setTwoFaCode={setChangeEmailTwoFa}
+                      />
+                    ) : null}
+                    <ModalButtonWrapper className={'vertical-margin'}>
+                      <Button
+                        disabled={emailError}
+                        onWhite={true}
+                        text={'Change email'}
+                        onClick={() => fetchChangeEmail()}
+                      />
+                    </ModalButtonWrapper>
+                  </>
+                </Modal>
+              ) : null}
+            </SecurityItemWrapper>
+          </>
+        )}
       </SecurityItemBlock>
     </>
   );

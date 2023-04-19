@@ -11,7 +11,6 @@ COPY ../../services/common/models/ /usr/src/cryptotalks-crypto-rates/src/models
 COPY ../../services/common/dto/ /usr/src/cryptotalks-crypto-rates/src/dto
 COPY ../../services/common/events/ /usr/src/cryptotalks-crypto-rates/src/events
 COPY ../../services/common/exceptions/ /usr/src/cryptotalks-crypto-rates/src/exceptions
-COPY ../../services/common/event-dto/ /usr/src/cryptotalks-crypto-rates/src/event-dto
 COPY ../../services/common/mongo-schemas/ /usr/src/cryptotalks-crypto-rates/src/mongo-schemas
 
 RUN npm install
