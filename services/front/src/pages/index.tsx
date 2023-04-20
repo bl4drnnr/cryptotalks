@@ -65,7 +65,7 @@ const Home = () => {
     return listOfCoins.map((item) => {
       const sparklineLength = item.sparkline.length;
       const parsedSparklines = item.sparkline.map((item: any, index: number) => ({
-        date: dayjs().subtract(sparklineLength - index, 'days').format('MM.DD'),
+        date: dayjs().subtract(sparklineLength - index, 'hours').format('hh'),
         price: parseFloat(item).toFixed(8)
       }));
       return {
@@ -328,7 +328,7 @@ const Home = () => {
                 />
               </LineChart>
             ) : (
-              <>nothing found</>
+              <HomeParagraph>No coins found :(</HomeParagraph>
             )}
           </HomeDescriptionSide>
         </HomePostsContainer>
