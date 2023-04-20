@@ -355,3 +355,7 @@ export const SearchTagItem = styled.div`
     margin-left: 0;
   }
 `;
+
+export const CoinInputWrapper = styled.div`
+  margin: 0 20px 20px 20px;
+`;

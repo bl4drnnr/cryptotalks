@@ -33,7 +33,7 @@ import {
   HomeLine,
   Lines,
   MainHomeWelcomeContainer, PopularCryptoContainer, PopularCryptoItem, PopularCryptoParagraph, PopularCryptoWrapper,
-  StartButton, SearchTagsWrapper, SearchTagItem
+  StartButton, SearchTagsWrapper, SearchTagItem, CoinInputWrapper
 } from '@styles/home.style';
 
 const Home = () => {
@@ -42,7 +42,8 @@ const Home = () => {
   const [email, setEmail] = React.useState('');
   const [posts, setPosts] = React.useState<ListPostsResponse>();
   const [coins, setCoins] = React.useState<Array<ICoins>>([]);
-  const [bitcoin, setBitcoin] = React.useState<ICoins>();
+  const [searchedCoin, setSearchedCoin] = React.useState<ICoins>();
+  const [coinSearch, setCoinSearch] = React.useState('');
 
   const { handleException } = useHandleException();
   const { loading: l0, listPosts } = useListPostsService();
@@ -51,31 +52,51 @@ const Home = () => {
   React.useEffect(() => {
     fetchListCoins().then((res: any) => {
       setCoins(res.rows);
-      setBitcoin(res.bitcoin[0]);
+      setSearchedCoin(res.coin[0]);
     });
     fetchListPosts().then((res) => setPosts(res));
   }, []);
 
+  React.useEffect(() => {
+    fetchCoinByName(coinSearch).then((res: any) => setSearchedCoin(res.coin[0]));
+  }, [coinSearch]);
+
+  const parseCoins = (listOfCoins: Array<ICoins>) => {
+    return listOfCoins.map((item) => {
+      const sparklineLength = item.sparkline.length;
+      const parsedSparklines = item.sparkline.map((item: any, index: number) => ({
+        date: dayjs().subtract(sparklineLength - index, 'days').format('MM.DD'),
+        price: parseFloat(item).toFixed(8)
+      }));
+      return {
+        ...item,
+        sparkline: parsedSparklines,
+        price: parseFloat(item.price).toFixed(2),
+        marketCap: (parseFloat(item.marketCap) / 1000000000).toFixed(2),
+        volume24h: (parseFloat(item.volume24h) / 1000000000).toFixed(2),
+        btcPrice: parseFloat(item.btcPrice).toFixed(8)
+      };
+    });
+  };
+
+  const fetchCoinByName = async (name: string) => {
+    try {
+      const { rows } = await listCrypto({
+        page: 0,
+        pageSize: 1,
+        order: 'DESC',
+        orderBy: 'createdAt',
+        searchQuery: name
+      });
+
+      return { coin: parseCoins(rows) };
+    } catch (e) {
+      await handleException(e);
+    }
+  };
+
   const fetchListCoins = async () => {
     try {
-      const parseCoins = (listOfCoins: Array<ICoins>) => {
-        return listOfCoins.map((item) => {
-          const sparklineLength = item.sparkline.length;
-          const parsedSparklines = item.sparkline.map((item: any, index: number) => ({
-            date: dayjs().subtract(sparklineLength - index, 'days').format('MM.DD'),
-            price: parseFloat(item).toFixed(8)
-          }));
-          return {
-            ...item,
-            sparkline: parsedSparklines,
-            price: parseFloat(item.price).toFixed(2),
-            marketCap: (parseFloat(item.marketCap) / 1000000000).toFixed(2),
-            volume24h: (parseFloat(item.volume24h) / 1000000000).toFixed(2),
-            btcPrice: parseFloat(item.btcPrice).toFixed(8)
-          };
-        });
-      };
-
       const { rows } = await listCrypto({
         page: 0,
         pageSize: 3,
@@ -90,7 +111,7 @@ const Home = () => {
         searchQuery: 'Bitcoin'
       });
 
-      return { rows: parseCoins(rows), bitcoin: parseCoins(bitcoinInfo.rows) };
+      return { rows: parseCoins(rows), coin: parseCoins(bitcoinInfo.rows) };
     } catch (e) {
       await handleException(e);
     }
@@ -275,7 +296,7 @@ const Home = () => {
           </HomeDescriptionSide>
           <HomeDescriptionSide>
             <HomePostsContainer className={'align-center'}>
-              <HomePostsTitle>Bitcoin price</HomePostsTitle>
+              <HomePostsTitle>Search for favorite coins</HomePostsTitle>
               <Image
                 src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/fire.png`}
                 alt={'fire'}
@@ -283,21 +304,32 @@ const Home = () => {
                 height={58}
               />
             </HomePostsContainer>
-            <LineChart width={600} height={400} data={bitcoin?.sparkline}>
-              <XAxis dataKey="date" />
-              <YAxis
-                domain={[
-                  Math.min(bitcoin?.sparkline.map((o: any) => o.value)),
-                  Math.max(bitcoin?.sparkline.map((o: any) => o.value))
-                ]}
+            <CoinInputWrapper>
+              <Input
+                value={coinSearch}
+                placeholder={'Search for coins'}
+                onChange={(e) => setCoinSearch(e.target.value)}
               />
-              <Tooltip />
-              <Line
-                type="monotone"
-                dataKey="price"
-                stroke="#8884d8"
-              />
-            </LineChart>
+            </CoinInputWrapper>
+            {searchedCoin ? (
+              <LineChart width={600} height={300} data={searchedCoin?.sparkline}>
+                <XAxis dataKey="date" />
+                <YAxis
+                  domain={[
+                    Math.min(searchedCoin?.sparkline.map((o: any) => o.value)),
+                    Math.max(searchedCoin?.sparkline.map((o: any) => o.value))
+                  ]}
+                />
+                <Tooltip />
+                <Line
+                  type="monotone"
+                  dataKey="price"
+                  stroke="#8884d8"
+                />
+              </LineChart>
+            ) : (
+              <>nothing found</>
+            )}
           </HomeDescriptionSide>
         </HomePostsContainer>
 
