@@ -7,6 +7,9 @@ export interface GetPostBySlugResponse {
   slug: string;
   preview: string;
   content: Array<string>;
+  searchTags: Array<string>;
   userId: string;
   username: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
