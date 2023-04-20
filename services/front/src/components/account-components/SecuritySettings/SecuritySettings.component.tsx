@@ -137,8 +137,10 @@ const SecuritySettings = ({
 
   const exceptionHandler = async (e: any) => {
     handleException(e);
-    localStorage.removeItem('_at');
-    await handleRedirect('');
+    if ([401, 403].includes(e.statusCode)) {
+      localStorage.removeItem('_at');
+      await handleRedirect('');
+    }
   };
 
   const openTwoFaModal = ({ generateToken }: { generateToken: boolean; }) => {

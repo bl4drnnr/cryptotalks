@@ -5,6 +5,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import {
+  Legend,
   Line,
   LineChart,
   Tooltip,
@@ -326,6 +327,12 @@ const Home = () => {
                   dataKey="price"
                   stroke="#8884d8"
                 />
+                <Line
+                  type="monotone"
+                  dataKey={searchedCoin.name}
+                  stroke="#8884d8"
+                />
+                <Legend verticalAlign="top" />
               </LineChart>
             ) : (
               <HomeParagraph>No coins found :(</HomeParagraph>

@@ -1,6 +1,6 @@
-import { NotFoundException } from '@nestjs/common';
+import { ForbiddenException } from '@nestjs/common';
 
-export class WrongCredentialsException extends NotFoundException {
+export class WrongCredentialsException extends ForbiddenException {
   constructor(
     message = 'wrong-credentials',
     description = 'Wrong credentials'
