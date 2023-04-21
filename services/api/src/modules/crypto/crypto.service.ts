@@ -191,9 +191,9 @@ export class CryptoService implements OnModuleInit {
   }
 
   async removeCryptoFromFavorites(payload: AddCryptoToFavoriteEventDto) {
-    const favoriteCrypto = await this.cryptoRepository.findByPk(
-      payload.cryptoId
-    );
+    const favoriteCrypto = await this.cryptoRepository.findOne({
+      where: { uuid: payload.cryptoId }
+    });
     if (!favoriteCrypto) throw new NoCryptoException();
 
     this.cryptoClient.emit(

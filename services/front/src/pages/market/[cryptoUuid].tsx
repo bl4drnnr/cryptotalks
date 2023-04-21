@@ -57,7 +57,7 @@ const Coin = () => {
     if (cryptoUuid) {
       fetchGetCoin(cryptoUuid as string).then((res: any) => {
         setCurrentCrypto(res);
-        setIsFavoriteCoin(res.isFavorite);
+        setIsFavoriteCoin(res?.isFavorite);
         fetchListPosts(res?.name).then((posts) => setRelatedPosts(posts));
       });
     }
@@ -255,10 +255,6 @@ const Coin = () => {
 
               <CoinSubtitle className={'subsubtitle'}>
                 Related posts
-              </CoinSubtitle>
-
-              <CoinSubtitle className={'subsubtitle'}>
-                Discussions
               </CoinSubtitle>
             </>
           ) : (

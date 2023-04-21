@@ -75,7 +75,10 @@ export class UpdateRatesWebjob {
         await this.cryptoRepository.bulkCreate(filteredCoins, {
           updateOnDuplicate: ['uuid']
         });
-        await this.marketStatsRepository.destroy();
+        await this.marketStatsRepository.destroy({
+          where: {},
+          truncate: true
+        });
         await this.marketStatsRepository.create({ ...marketStats });
 
         const coinToCheckId = await this.cryptoRepository.findOne();
