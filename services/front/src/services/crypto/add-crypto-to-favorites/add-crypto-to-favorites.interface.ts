@@ -1,5 +1,5 @@
 export interface AddCryptoToFavoritesPayload {
-  cryptoId: string;
+  cryptoId: string | undefined;
   token: string | null;
 }
 

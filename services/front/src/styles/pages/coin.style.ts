@@ -9,6 +9,11 @@ export const Container = styled.div`
   @media only screen and (max-width: 1000px) {
     width: 90%;
   }
+  
+  a {
+    color: rgb(${(props) => props.theme.colors.primary});
+    text-decoration: underline;
+  }
 `;
 
 export const CoinWrapper = styled.div`
@@ -21,7 +26,9 @@ export const CoinTitleWrapper = styled.div`
   justify-content: space-between;
 `;
 
-export const CoinTitles = styled.div``;
+export const CoinTitles = styled.div`
+  width: 100%;
+`;
 
 export const CoinTitle = styled.h1`
   color: rgb(${(props) => props.theme.colors.textColor});
@@ -44,4 +51,32 @@ export const CoinSubtitle = styled.h3`
 
 export const CoinParagraph = styled.p`
   color: rgb(${(props) => props.theme.colors.textColor});
+`;
+
+export const CoinLink = styled.span`
+  color: rgb(${(props) => props.theme.colors.primary});
+  text-decoration: underline;
+  cursor: pointer;
+`;
+
+export const CoinMarketDataWrapper = styled.div`
+  display: flex;
+`;
+
+export const CoinTable = styled.table`
+  width: 100%;
+  border: 1px solid rgb(${(props) => props.theme.colors.textColor}, .5);
+  border-collapse: collapse;
+`;
+
+export const CoinTableBody = styled.tbody`
+`;
+
+export const CoinTableRow = styled.tr`
+`;
+
+
+export const CoinTableRec = styled.td`
+  border: 1px solid rgb(${(props) => props.theme.colors.textColor}, .5);
+  padding: 10px;
 `;

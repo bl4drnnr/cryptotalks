@@ -1,5 +1,5 @@
 export interface RemoveCryptoFromFavoritesPayload {
-  cryptoId: string;
+  cryptoId: string | undefined;
   token: string | null;
 }
 
