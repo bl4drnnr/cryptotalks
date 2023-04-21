@@ -27,6 +27,7 @@ import {
 import { FavoriteCoins } from '@models/favorites-coins.model';
 import { MarketStats } from '@models/market-stats.model';
 import { UpdateCoinEvent, UpdateCoinEventDto } from '@events/update-coin.event';
+import { SoftJwtGuard } from '@guards/soft-jwt.guard';
 
 @ApiTags('Crypto')
 @Controller('crypto')
@@ -63,9 +64,13 @@ export class CryptoController {
     status: 201,
     description: 'As a response function returns cryptocurrency'
   })
+  @UseGuards(SoftJwtGuard)
   @Get('get/:uuid')
-  getCryptoById(@Param('uuid') uuid: string) {
-    return this.cryptoService.getCryptoById({ uuid });
+  getCryptoById(
+    @Param('uuid') uuid: string,
+    @UserDecorator() userId: string | undefined
+  ) {
+    return this.cryptoService.getCryptoById({ uuid, userId });
   }
 
   @ApiExtraModels(MarketStats)
@@ -87,7 +92,7 @@ export class CryptoController {
     description: 'As a response function returns success message'
   })
   @UseGuards(JwtGuard)
-  @Patch('favorite/:id')
+  @Patch('favorites/:id')
   addCryptoToFavorites(
     @Param('id') cryptoId: string,
     @UserDecorator() userId: string

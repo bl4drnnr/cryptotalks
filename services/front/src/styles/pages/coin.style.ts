@@ -69,11 +69,9 @@ export const CoinTable = styled.table`
   border-collapse: collapse;
 `;
 
-export const CoinTableBody = styled.tbody`
-`;
+export const CoinTableBody = styled.tbody``;
 
-export const CoinTableRow = styled.tr`
-`;
+export const CoinTableRow = styled.tr``;
 
 
 export const CoinTableRec = styled.td`

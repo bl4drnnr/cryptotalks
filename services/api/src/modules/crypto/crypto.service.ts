@@ -111,7 +111,13 @@ export class CryptoService implements OnModuleInit {
     });
   }
 
-  async getCryptoById({ uuid }: { uuid: string }) {
+  async getCryptoById({
+    uuid,
+    userId
+  }: {
+    uuid: string;
+    userId: string | undefined;
+  }) {
     const foundCrypto = await this.cryptoRepository.findOne({
       where: { uuid }
     });
@@ -122,6 +128,36 @@ export class CryptoService implements OnModuleInit {
         .send('update_coin', new UpdateCoinEvent({ coinId: foundCrypto.uuid }))
         .toPromise();
       return updatedCoin[1][0];
+    }
+
+    if (userId) {
+      const { favoriteCoins } = await this.favoriteCoinsRepo.findOne({
+        where: { userId }
+      });
+
+      if (favoriteCoins.includes(foundCrypto.uuid)) {
+        return {
+          id: foundCrypto.id,
+          uuid: foundCrypto.uuid,
+          symbolId: foundCrypto.symbolId,
+          symbol: foundCrypto.symbol,
+          name: foundCrypto.name,
+          description: foundCrypto.description,
+          iconUrl: foundCrypto.iconUrl,
+          volume24h: foundCrypto.volume24h,
+          marketCap: foundCrypto.marketCap,
+          price: foundCrypto.price,
+          btcPrice: foundCrypto.btcPrice,
+          change: foundCrypto.change,
+          coinrankingUrl: foundCrypto.coinrankingUrl,
+          sparkline: foundCrypto.sparkline,
+          rank: foundCrypto.rank,
+          tier: foundCrypto.tier,
+          createdAt: foundCrypto.createdAt,
+          updatedAt: foundCrypto.updatedAt,
+          isFavorite: true
+        };
+      }
     }
 
     return foundCrypto;
@@ -142,9 +178,9 @@ export class CryptoService implements OnModuleInit {
   }
 
   async addCryptoToFavorites(payload: AddCryptoToFavoriteEventDto) {
-    const favoriteCrypto = await this.cryptoRepository.findByPk(
-      payload.cryptoId
-    );
+    const favoriteCrypto = await this.cryptoRepository.findOne({
+      where: { uuid: payload.cryptoId }
+    });
     if (!favoriteCrypto) throw new NoCryptoException();
 
     this.cryptoClient.emit(

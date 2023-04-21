@@ -11,7 +11,11 @@ export const useGetCryptoByIdService = () => {
     : Promise<GetCryptoByIdResponse> => {
     try {
       setLoading(true);
-      const { data } = await ApiClient.get<GetCryptoByIdResponse>(`/crypto/get/${payload.cryptoId}`);
+      const { data } = await ApiClient.get<GetCryptoByIdResponse>(`/crypto/get/${payload.cryptoId}`, {
+        headers: {
+          'x-access-token': `Bearer ${payload.token}`
+        }
+      });
 
       return data;
     } catch (error: any) {

@@ -490,7 +490,7 @@ paths:
         "201":
           description: As a response function returns market stats
       tags: *a3
-  "/api/crypto/favorite/{id}":
+  "/api/crypto/favorites/{id}":
     patch:
       operationId: CryptoController_addCryptoToFavorites
       summary: Adds a crypto to user's favorites
@@ -510,6 +510,7 @@ paths:
         "201":
           description: As a response function returns success message
       tags: *a3
+  "/api/crypto/favorite/{id}":
     delete:
       operationId: CryptoController_removeCryptoFromFavorites
       summary: Removes a crypto to user's favorites
