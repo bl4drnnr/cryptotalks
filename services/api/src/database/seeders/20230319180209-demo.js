@@ -151,19 +151,19 @@ module.exports = {
     await queryInterface.bulkInsert('favorite_coins', [{
       id: uuid.v4(),
       user_id: '8a08eaf1-c7a8-403b-b1ce-1fef8e34d000',
-      favorite_coins: ['5c52855f-a1b0-48f0-9e60-428ade91ccbf', '08bb1f83-5234-4018-9066-12478eef0ef7', '26af8be9-cc49-405a-981f-8dcea2dfda27'],
+      favorite_coins: ['HIVsRcGKkPFtW', 'PDKcptVnzJTmN', 'uW2tk-ILY0ii'],
       created_at: new Date(),
       updated_at: new Date()
     }, {
       id: uuid.v4(),
       user_id: '186f0ff4-1444-4637-9be3-8c0abc168ba2',
-      favorite_coins: ['5c52855f-a1b0-48f0-9e60-428ade91ccbf', '08bb1f83-5234-4018-9066-12478eef0ef7'],
+      favorite_coins: ['HIVsRcGKkPFtW', 'PDKcptVnzJTmN'],
       created_at: new Date(),
       updated_at: new Date()
     }, {
       id: uuid.v4(),
       user_id: '77c93fdf-8a06-483c-8d89-2f5c71d029ed',
-      favorite_coins: ['5c52855f-a1b0-48f0-9e60-428ade91ccbf'],
+      favorite_coins: ['HIVsRcGKkPFtW'],
       created_at: new Date(),
       updated_at: new Date()
     }]);
@@ -176,7 +176,7 @@ module.exports = {
       slug: 'cryptocurrencies-understanding-the-basics',
       preview: 'Cryptocurrencies have gained significant attention in recent years, with their popularity increasing rapidly. But what are cryptocurrencies, and how do they work?',
       content: ['Cryptocurrencies have gained significant attention in recent years, with their popularity increasing rapidly. But what are cryptocurrencies, and how do they work?', 'In simple terms, cryptocurrencies are digital or virtual currencies that use cryptography to secure and verify transactions. Unlike traditional currencies, which are controlled by central authorities such as banks and governments, cryptocurrencies operate on a decentralized network, which means that no single entity has control over them.', 'Bitcoin, the first and most well-known cryptocurrency, was created in 2009 by an anonymous person or group using the pseudonym Satoshi Nakamoto. Since then, thousands of other cryptocurrencies have been created, with different features and use cases.', 'Cryptocurrencies are often bought and sold on online exchanges, and their value is determined by supply and demand in the market. They can also be used to purchase goods and services, and some companies have started accepting them as payment.', 'While cryptocurrencies offer many benefits, such as faster and cheaper transactions, they also come with risks, such as price volatility and the potential for fraud and hacking.', 'In summary, cryptocurrencies are digital or virtual currencies that operate on a decentralized network and use cryptography to secure transactions. They offer many benefits, but also come with risks that should be carefully considered before investing in them.'],
-      search_tags: ['crypto', 'btc'],
+      search_tags: ['crypto', 'btc', 'usdt'],
       created_at: new Date('2022-01-01'),
       updated_at: new Date()
     }, {

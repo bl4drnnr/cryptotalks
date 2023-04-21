@@ -1,5 +1,6 @@
 export interface GetCryptoByIdPayload {
   cryptoId: string;
+  token: string | null;
 }
 
 export interface GetCryptoByIdResponse {
@@ -21,4 +22,5 @@ export interface GetCryptoByIdResponse {
   tier: number;
   createdAt: Date;
   updatedAt: Date;
+  isFavorite: boolean | undefined;
 }

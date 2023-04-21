@@ -8,7 +8,9 @@ export default async (
   res: NextApiResponse
 ) => {
   try {
-    const { data } = await Api.get(`/crypto/get/${req.query.cryptoId}`);
+    const { data } = await Api.get(`/crypto/get/${req.query.cryptoId}`, {
+      headers: { 'x-access-token': req.headers['x-access-token'] }
+    });
 
     return res.json(data);
   } catch (error: any) {
