@@ -8,7 +8,7 @@ export default async (
   res: NextApiResponse
 ) => {
   try {
-    const { data } = await Api.get(`/user/get/${req.query.userId}`);
+    const { data } = await Api.get(`/user/get/${req.query.username}`);
 
     return res.json(data);
   } catch (error: any) {

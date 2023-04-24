@@ -47,7 +47,26 @@ export class PostsService {
 
     if (!post) throw new PostNotFoundException();
 
-    return post;
+    const postInfo = await this.postInfoRepository.findOne({
+      where: { postId: post.id }
+    });
+
+    return {
+      id: post.id,
+      userId: post.userId,
+      username: post.username,
+      title: post.title,
+      slug: post.slug,
+      content: post.content,
+      preview: post.preview,
+      searchTags: post.searchTags,
+      createdAt: post.createdAt,
+      updatedAt: post.updatedAt,
+      postInfo: {
+        rates: postInfo.rates,
+        comments: postInfo.comments
+      }
+    };
   }
 
   async listPosts({

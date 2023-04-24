@@ -236,6 +236,7 @@ module.exports = {
       updated_at: new Date()
     }]);
 
+    // TODO Fill with content
     await queryInterface.bulkInsert('post_info', [{
       id: uuid.v4(),
       post_id: 'b5a12b9c-afb2-4fbc-a35f-c8fee31024a4',

@@ -29,10 +29,6 @@ paths:
       responses:
         "200":
           description: ""
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Post"
         "201":
           description: As a response function returns post
       tags: *a1

@@ -66,3 +66,12 @@ export const OpacitySpan = styled.span`
     padding-left: 0;
   }
 `;
+
+export const LinkWrapper = styled.span`
+  color: rgb(${(props) => props.theme.colors.primary});
+  cursor: pointer;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+`;

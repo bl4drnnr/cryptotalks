@@ -1,6 +1,6 @@
 import React from 'react';
 
-const UserId = () => {
+const Username = () => {
   return (
     <div>
 
@@ -8,4 +8,4 @@ const UserId = () => {
   );
 };
 
-export default UserId;
+export default Username;
