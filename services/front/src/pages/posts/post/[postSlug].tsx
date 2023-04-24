@@ -8,7 +8,15 @@ import { useHandleException } from '@hooks/useHandleException.hook';
 import DefaultLayout from '@layouts/Default.layout';
 import { GetPostBySlugResponse } from '@services/posts/get-post-by-slug/get-post-by-slug.interface';
 import { useGetPostBySlug } from '@services/posts/get-post-by-slug/get-post-by-slug.service';
-import { Container, OpacitySpan, Paragraph, PostInfoBlog, PostTitle, Tag } from '@styles/post.style';
+import {
+  Container,
+  LinkWrapper,
+  OpacitySpan,
+  Paragraph,
+  PostInfoBlog,
+  PostTitle,
+  Tag
+} from '@styles/post.style';
 
 const PostSlug = () => {
   const router = useRouter();
@@ -63,7 +71,9 @@ const PostSlug = () => {
               <PostTitle className={'subtitle'}>{post?.preview}</PostTitle>
 
               <PostInfoBlog>
-                <OpacitySpan>Written by: </OpacitySpan> {post?.username} | <OpacitySpan>Written at: </OpacitySpan> {dayjs(post?.createdAt).format('YYYY-MM-DD HH:mm:ss')} | <OpacitySpan>Updated at: </OpacitySpan> {dayjs(post?.updatedAt).format('YYYY-MM-DD HH:mm:ss')}
+                <OpacitySpan>Written by: </OpacitySpan> <LinkWrapper
+                onClick={() => handleRedirect(`/account/user/${post?.username}`)}
+              >{post?.username}</LinkWrapper>&nbsp;| <OpacitySpan>Written at: </OpacitySpan> {dayjs(post?.createdAt).format('YYYY-MM-DD')} | <OpacitySpan>Updated at: </OpacitySpan> {dayjs(post?.updatedAt).format('YYYY-MM-DD')}
               </PostInfoBlog>
               <PostInfoBlog>
                 <OpacitySpan>Search tags: </OpacitySpan>
@@ -75,6 +85,10 @@ const PostSlug = () => {
               {post?.content.map((item, index) => (
                 <Paragraph key={index}>{item}</Paragraph>
               ))}
+
+              <PostTitle className={'subtitle'}>
+                Discussions
+              </PostTitle>
             </>
           )}
         </Container>

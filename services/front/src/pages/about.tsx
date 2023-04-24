@@ -16,7 +16,8 @@ import {
   TextContainer,
   TextContainerContent,
   TextContainerSubtitle,
-  TextContainerTitle, Web3,
+  TextContainerTitle,
+  Web3,
   Wrapper
 } from '@styles/about.style';
 import { ButtonText, InputWrapper, StartButton } from '@styles/home.style';

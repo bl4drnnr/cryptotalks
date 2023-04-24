@@ -94,7 +94,7 @@ export class CryptoService implements OnModuleInit {
 
       return await this.cryptoRepository.findAndCountAll({
         where: {
-          id: {
+          uuid: {
             [Op.in]: filteredMostPopularCoins
           }
         },
