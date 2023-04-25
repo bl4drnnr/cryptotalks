@@ -69,6 +69,7 @@ export class PostsService {
       comments: [
         ...post.comments,
         {
+          userId: payload.userId,
           username: payload.username,
           commentRates: [],
           payload: payload.comment,

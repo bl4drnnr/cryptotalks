@@ -20,9 +20,15 @@ interface PostInfoCreationAttributes {
 class IRate {
   @ApiProperty({
     type: String,
+    nullable: false,
+    description: 'Username'
+  })
+  username: string;
+
+  @ApiProperty({
+    type: String,
     format: 'uuid',
     nullable: false,
-    default: 'uuidv4',
     description: 'Unique Id of the user'
   })
   userId: string;
@@ -42,6 +48,14 @@ class IComment {
     description: 'Username'
   })
   username: string;
+
+  @ApiProperty({
+    type: String,
+    format: 'uuid',
+    nullable: false,
+    description: 'Unique Id of the user'
+  })
+  userId: string;
 
   @ApiProperty({
     type: String,

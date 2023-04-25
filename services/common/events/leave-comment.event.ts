@@ -16,6 +16,13 @@ export class LeaveCommentEventDto {
 
   @ApiProperty({
     type: String,
+    format: 'uuid',
+    nullable: false
+  })
+  userId: string;
+
+  @ApiProperty({
+    type: String,
     nullable: false
   })
   username: string;

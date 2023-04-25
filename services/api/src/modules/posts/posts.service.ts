@@ -160,6 +160,7 @@ export class PostsService {
       new LeaveCommentEvent({
         comment,
         postId,
+        userId,
         username
       })
     );

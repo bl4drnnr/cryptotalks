@@ -541,17 +541,21 @@ components:
     IRate:
       type: object
       properties:
+        username:
+          type: string
+          nullable: false
+          description: Username
         userId:
           type: string
           format: uuid
           nullable: false
-          default: uuidv4
           description: Unique Id of the user
         rate:
           type: string
           nullable: false
           description: Rate (either positive or negative)
       required:
+        - username
         - userId
         - rate
     IComment:
@@ -561,6 +565,11 @@ components:
           type: string
           nullable: false
           description: Username
+        userId:
+          type: string
+          format: uuid
+          nullable: false
+          description: Unique Id of the user
         commentRates:
           type: string
           nullable: false
@@ -576,6 +585,7 @@ components:
           description: Date when comment has been left
       required:
         - username
+        - userId
         - commentRates
         - payload
         - createdAt
@@ -796,12 +806,17 @@ components:
           type: string
           format: uuid
           nullable: false
+        userId:
+          type: string
+          format: uuid
+          nullable: false
         username:
           type: string
           nullable: false
       required:
         - comment
         - postId
+        - userId
         - username
     LeaveCommentEvent:
       type: object
