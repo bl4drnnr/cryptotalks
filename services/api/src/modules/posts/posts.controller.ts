@@ -129,7 +129,11 @@ export class PostsController {
     @UserDecorator() userId: string,
     @Body() payload: LeaveCommentDto
   ) {
-    return this.postsService.leaveComment({ ...payload, userId, postId });
+    return this.postsService.leaveComment({
+      comment: payload.comment,
+      userId,
+      postId
+    });
   }
 
   @UseGuards(JwtGuard)

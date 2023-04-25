@@ -26,6 +26,12 @@ const PostSlug = () => {
 
   const [post, setPost] = React.useState<GetPostBySlugResponse>();
   const [postNotFound, setPostNotFound] = React.useState<boolean>(false);
+  const [tokenPresent, setTokenPresent] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    const token = localStorage.getItem('_at');
+    setTokenPresent(!!token);
+  }, []);
 
   React.useEffect(() => {
     const { postSlug } = router.query;
@@ -89,6 +95,16 @@ const PostSlug = () => {
               <PostTitle className={'subtitle'}>
                 Discussions
               </PostTitle>
+
+              {post?.postInfo.comments.map((comment) => (
+                <p>{JSON.stringify(comment)}</p>
+              ))}
+
+              {tokenPresent ? (
+                <></>
+              ) : (
+                <></>
+              )}
             </>
           )}
         </Container>

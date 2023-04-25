@@ -557,12 +557,10 @@ components:
     IComment:
       type: object
       properties:
-        userId:
+        username:
           type: string
-          format: uuid
           nullable: false
-          default: uuidv4
-          description: Unique Id of the user
+          description: Username
         commentRates:
           type: string
           nullable: false
@@ -577,7 +575,7 @@ components:
           nullable: false
           description: Date when comment has been left
       required:
-        - userId
+        - username
         - commentRates
         - payload
         - createdAt
@@ -798,14 +796,13 @@ components:
           type: string
           format: uuid
           nullable: false
-        userId:
+        username:
           type: string
-          format: uuid
           nullable: false
       required:
         - comment
         - postId
-        - userId
+        - username
     LeaveCommentEvent:
       type: object
       properties: {}

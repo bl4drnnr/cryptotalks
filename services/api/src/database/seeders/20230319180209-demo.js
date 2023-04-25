@@ -246,7 +246,7 @@ module.exports = {
           userId: '186f0ff4-1444-4637-9be3-8c0abc168ba2', rate: '-'
         }]),
         comments: JSON.stringify([{
-          userId: '8a08eaf1-c7a8-403b-b1ce-1fef8e34d000',
+          username: 'JohnDoe',
           commentRates: [],
           payload: 'Comment from the author',
           createdAt: new Date()
@@ -260,7 +260,7 @@ module.exports = {
           userId: '186f0ff4-1444-4637-9be3-8c0abc168ba2', rate: '-'
         }]),
         comments: JSON.stringify([{
-          userId: '186f0ff4-1444-4637-9be3-8c0abc168ba2',
+          username: 'MilyKotek',
           commentRates: [{ userId: '8a08eaf1-c7a8-403b-b1ce-1fef8e34d000', rate: '+' }],
           payload: 'It suuuucks!',
           createdAt: new Date()
@@ -274,7 +274,7 @@ module.exports = {
           userId: '186f0ff4-1444-4637-9be3-8c0abc168ba2', rate: '-'
         }]),
         comments: JSON.stringify([{
-          userId: '186f0ff4-1444-4637-9be3-8c0abc168ba2',
+          username: 'MilyKotek',
           commentRates: [{ userId: '8a08eaf1-c7a8-403b-b1ce-1fef8e34d000', rate: '+' }],
           payload: 'It suuuucks!',
           createdAt: new Date()
@@ -288,7 +288,7 @@ module.exports = {
           userId: '186f0ff4-1444-4637-9be3-8c0abc168ba2', rate: '-'
         }]),
         comments: JSON.stringify([{
-          userId: '186f0ff4-1444-4637-9be3-8c0abc168ba2',
+          username: 'MilyKotek',
           commentRates: [{ userId: '8a08eaf1-c7a8-403b-b1ce-1fef8e34d000', rate: '+' }],
           payload: 'It suuuucks!',
           createdAt: new Date()
@@ -302,7 +302,7 @@ module.exports = {
           userId: '186f0ff4-1444-4637-9be3-8c0abc168ba2', rate: '-'
         }]),
         comments: JSON.stringify([{
-          userId: '186f0ff4-1444-4637-9be3-8c0abc168ba2',
+          username: 'MilyKotek',
           commentRates: [{ userId: '8a08eaf1-c7a8-403b-b1ce-1fef8e34d000', rate: '+' }],
           payload: 'It suuuucks!',
           createdAt: new Date()
@@ -316,7 +316,7 @@ module.exports = {
           userId: '186f0ff4-1444-4637-9be3-8c0abc168ba2', rate: '-'
         }]),
         comments: JSON.stringify([{
-          userId: '186f0ff4-1444-4637-9be3-8c0abc168ba2',
+          username: 'MilyKotek',
           commentRates: [{ userId: '8a08eaf1-c7a8-403b-b1ce-1fef8e34d000', rate: '+' }],
           payload: 'It suuuucks!',
           createdAt: new Date()

@@ -8,7 +8,7 @@ interface IRate {
 }
 
 interface IComment {
-  userId: string;
+  username: string;
   rate: Array<IRate>;
   payload: string;
   createdAt: Date;
