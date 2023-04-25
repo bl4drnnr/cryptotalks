@@ -21,7 +21,6 @@ export const BasicTextarea = styled.textarea`
   line-height: 24px;
   transition: .3s;
   font-weight: 100;
-  font-family: "Inter", sans-serif;
 
   padding: 15px;
   font-size: 14px;

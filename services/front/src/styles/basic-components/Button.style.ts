@@ -9,7 +9,6 @@ export const ButtonContent = styled.p`
   margin: 0;
   font-size: 14px;
   font-weight: 500;
-  font-family: "Inter", sans-serif;
   color: rgb(${(props) => props.theme.colors.textColor});
   padding: 0 5px;
 `;

@@ -24,7 +24,6 @@ export const PostTitle = styled.h1`
   font-size: 64px;
   
   &.subtitle {
-    font-family: "Lato", sans-serif;
     font-weight: 100;
     font-size: 32px;
   }
@@ -43,6 +42,7 @@ export const PostInfoBlog = styled.div`
   display: flex;
   margin: 15px 0;
   align-items: center;
+  font-family: 'Montserrat', sans-serif;
 `;
 
 export const Tag = styled.p`

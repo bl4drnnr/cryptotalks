@@ -132,6 +132,11 @@ export const TypeOfSortItem = styled.div`
   cursor: pointer;
   transition: .2s;
   color: rgb(${(props) => props.theme.colors.textColor});
+  
+  &:hover {
+    border: 1px solid rgb(${(props) => props.theme.colors.primary});
+    font-family: 'Montserrat', sans-serif;
+  }
 
   @media only screen and (max-width: 1000px) {
     margin: 10px 0;

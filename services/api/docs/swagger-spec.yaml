@@ -554,6 +554,33 @@ components:
       required:
         - userId
         - rate
+    IComment:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+          nullable: false
+          default: uuidv4
+          description: Unique Id of the user
+        commentRates:
+          type: string
+          nullable: false
+          description: Rate (either positive or negative)
+        payload:
+          type: string
+          nullable: false
+          description: Comment payload
+        createdAt:
+          format: date-time
+          type: string
+          nullable: false
+          description: Date when comment has been left
+      required:
+        - userId
+        - commentRates
+        - payload
+        - createdAt
     PostInfo:
       type: object
       properties:
@@ -579,7 +606,7 @@ components:
           description: List of id of comments
           type: array
           items:
-            type: string
+            $ref: "#/components/schemas/IComment"
         createdAt:
           format: date-time
           type: string

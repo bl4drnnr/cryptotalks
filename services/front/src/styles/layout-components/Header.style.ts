@@ -47,7 +47,6 @@ export const Link = styled.h3`
   cursor: pointer;
   transition: .2s;
   font-weight: 300;
-  font-family: "Lato", sans-serif;
   color: rgb(${(props) => props.theme.colors.textColor});
 
   &:hover {
@@ -61,6 +60,7 @@ export const Button = styled.div`
       margin-left: auto;
     }
   }
+  font-family: 'Montserrat', sans-serif;
   width: 90px;
   height: 100%;
   border-radius: 5px;

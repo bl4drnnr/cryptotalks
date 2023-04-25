@@ -19,7 +19,6 @@ export const CreatePostTitle = styled.h1`
   &.subtitle {
     font-size: 32px;
     font-weight: 100;
-    font-family: "Lato", sans-serif;
     text-align: start;
     margin-top: 20px;
     

@@ -40,7 +40,6 @@ export const CoinSubtitle = styled.h3`
   color: rgb(${(props) => props.theme.colors.textColor});
   font-size: 48px;
   font-weight: 100;
-  font-family: "Lato", sans-serif;
   margin-left: 40px;
   
   &.subsubtitle {
