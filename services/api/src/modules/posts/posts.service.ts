@@ -15,12 +15,14 @@ import {
 import { AlreadyExistingPostException } from '@exceptions/already-existing-post.exception';
 import { PostNotFoundException } from '@exceptions/post-not-found.exception';
 import { PostInfo } from '@models/post-info.model';
+import { User } from '@models/user.model';
 
 @Injectable()
 export class PostsService {
   constructor(
     @InjectModel(Post) private readonly postRepository: typeof Post,
     @InjectModel(PostInfo) private readonly postInfoRepository: typeof PostInfo,
+    @InjectModel(User) private readonly userRepository: typeof User,
     @Inject('POSTS_SERVICE') private readonly postsClient: ClientKafka
   ) {}
 
@@ -143,10 +145,24 @@ export class PostsService {
     return new ResponseDto();
   }
 
-  leaveComment(payload: LeaveCommentEventDto) {
+  async leaveComment({
+    comment,
+    userId,
+    postId
+  }: {
+    comment: string;
+    userId: string;
+    postId: string;
+  }) {
+    const { username } = await this.userRepository.findByPk(userId);
     this.postsClient.emit(
       'leave_comment',
-      new LeaveCommentEvent({ ...payload })
+      new LeaveCommentEvent({
+        comment,
+        postId,
+        userId,
+        username
+      })
     );
     return new ResponseDto();
   }

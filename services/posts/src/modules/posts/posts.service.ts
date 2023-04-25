@@ -70,7 +70,8 @@ export class PostsService {
         ...post.comments,
         {
           userId: payload.userId,
-          rate: [],
+          username: payload.username,
+          commentRates: [],
           payload: payload.comment,
           createdAt: new Date()
         }

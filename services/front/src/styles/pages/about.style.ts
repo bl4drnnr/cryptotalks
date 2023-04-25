@@ -23,7 +23,6 @@ export const Wrapper = styled.div``;
 export const Headers = styled.h1`
   font-size: 72px;
   font-weight: 100;
-  font-family: "Lato", sans-serif;
   @media only screen and (max-width: 1300px) {
     font-size: 40px;
   }
@@ -32,7 +31,6 @@ export const Headers = styled.h1`
 export const Header = styled.span`
   font-size: 144px;
   font-weight: 700;
-  font-family: "Lato", sans-serif;
   animation: text-appearing 2s;
   animation-delay: 4s;
   animation-fill-mode: forwards;
@@ -60,7 +58,6 @@ export const Header = styled.span`
 export const Web3 = styled.h1`
   font-size: 144px;
   font-weight: 700;
-  font-family: "Lato", sans-serif;
   @media only screen and (max-width: 1300px) {
     font-size: 64px;
   }
@@ -125,7 +122,6 @@ export const TextContainerSubtitle = styled.h3`
   font-size: 42px;
   opacity: .75;
   font-weight: 100;
-  font-family: "Lato", sans-serif;
   @media only screen and (max-width: 1300px) {
     font-size: 28px;
     margin-bottom: 20px;

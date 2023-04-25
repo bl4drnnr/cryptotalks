@@ -30,7 +30,6 @@ export const BasicInput = styled.input`
   transition: .3s;
   color: rgb(${(props) => props.theme.colors.textColor});
   font-weight: 100;
-  font-family: "Inter", sans-serif;
 
   &.high {
     height: 48px;

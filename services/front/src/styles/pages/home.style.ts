@@ -49,7 +49,6 @@ export const InputWrapper = styled.div`
 export const HomeWelcomeTitle = styled.span`
   font-size: 72px;
   font-weight: 100;
-  font-family: "Lato", sans-serif;
   position: relative;
   display: block;
   animation: text-appearing 2s;
@@ -265,7 +264,6 @@ export const HomePostsTitle = styled.h1`
   color: rgb(${(props) => props.theme.colors.textColor});
   font-size: 42px;
   font-weight: 100;
-  font-family: "Lato", sans-serif;
   
   &.subtitle {
     text-align: center;
@@ -350,6 +348,7 @@ export const SearchTagItem = styled.div`
   border: 1px solid rgba(${(props) => props.theme.colors.primary}, .5);
   background: rgba(${(props) => props.theme.colors.textColor}, .15);
   border-radius: 5px;
+  font-family: 'Montserrat', sans-serif;
   
   &:first-child {
     margin-left: 0;

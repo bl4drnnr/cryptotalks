@@ -7,10 +7,11 @@ import { ApiConfigService } from '@shared/config.service';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Post } from '@models/post.model';
 import { PostInfo } from '@models/post-info.model';
+import { User } from '@models/user.model';
 
 @Module({
   imports: [
-    SequelizeModule.forFeature([Post, PostInfo]),
+    SequelizeModule.forFeature([Post, PostInfo, User]),
     ClientsModule.register([
       {
         name: 'POSTS_SERVICE',

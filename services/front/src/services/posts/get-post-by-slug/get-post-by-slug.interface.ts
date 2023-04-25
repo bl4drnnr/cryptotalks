@@ -3,12 +3,14 @@ export interface GetPostBySlugPayload {
 }
 
 interface IRate {
+  username: string;
   userId: string;
   rate: '+' | '-';
 }
 
 interface IComment {
   userId: string;
+  username: string;
   rate: Array<IRate>;
   payload: string;
   createdAt: Date;

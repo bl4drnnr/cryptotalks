@@ -12,13 +12,11 @@ export const Container = styled.div`
 export const Title = styled.div`
   font-size: 48px;
   font-weight: 900;
-  font-family: "Lato", sans-serif;
 `;
 
 export const Content = styled.h3`
   font-size: 32px;
   font-weight: 100;
-  font-family: "Lato", sans-serif;
   margin: 15px 0;
 `;
 

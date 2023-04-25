@@ -42,7 +42,6 @@ export const Container = styled.div`
 export const Content = styled.p`
   font-size: 16px;
   font-weight: 300;
-  font-family: "Lato", sans-serif;
   margin: 10px 0;
   color: rgb(${(props) => props.theme.colors.textColor});
 `;

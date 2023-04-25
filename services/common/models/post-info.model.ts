@@ -20,9 +20,15 @@ interface PostInfoCreationAttributes {
 class IRate {
   @ApiProperty({
     type: String,
+    nullable: false,
+    description: 'Username'
+  })
+  username: string;
+
+  @ApiProperty({
+    type: String,
     format: 'uuid',
     nullable: false,
-    default: 'uuidv4',
     description: 'Unique Id of the user'
   })
   userId: string;
@@ -38,9 +44,15 @@ class IRate {
 class IComment {
   @ApiProperty({
     type: String,
+    nullable: false,
+    description: 'Username'
+  })
+  username: string;
+
+  @ApiProperty({
+    type: String,
     format: 'uuid',
     nullable: false,
-    default: 'uuidv4',
     description: 'Unique Id of the user'
   })
   userId: string;
@@ -50,7 +62,7 @@ class IComment {
     nullable: false,
     description: 'Rate (either positive or negative)'
   })
-  rate: Array<IRate>;
+  commentRates: Array<IRate>;
 
   @ApiProperty({
     type: String,
@@ -102,7 +114,7 @@ export class PostInfo extends Model<PostInfo, PostInfoCreationAttributes> {
   rates: Array<IRate>;
 
   @ApiProperty({
-    type: [String],
+    type: [IComment],
     nullable: false,
     description: 'List of id of comments'
   })

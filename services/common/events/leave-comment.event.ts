@@ -20,6 +20,12 @@ export class LeaveCommentEventDto {
     nullable: false
   })
   userId: string;
+
+  @ApiProperty({
+    type: String,
+    nullable: false
+  })
+  username: string;
 }
 
 export class LeaveCommentEvent {

@@ -4,7 +4,6 @@ export const InputTwoFa = styled.input`
   margin: 4px;
   height: 4rem;
   width: 4rem;
-  font-family: "Lato", sans-serif;
   box-sizing: border-box;
   line-height: 24px;
   transition: .3s;

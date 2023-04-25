@@ -541,19 +541,54 @@ components:
     IRate:
       type: object
       properties:
+        username:
+          type: string
+          nullable: false
+          description: Username
         userId:
           type: string
           format: uuid
           nullable: false
-          default: uuidv4
           description: Unique Id of the user
         rate:
           type: string
           nullable: false
           description: Rate (either positive or negative)
       required:
+        - username
         - userId
         - rate
+    IComment:
+      type: object
+      properties:
+        username:
+          type: string
+          nullable: false
+          description: Username
+        userId:
+          type: string
+          format: uuid
+          nullable: false
+          description: Unique Id of the user
+        commentRates:
+          type: string
+          nullable: false
+          description: Rate (either positive or negative)
+        payload:
+          type: string
+          nullable: false
+          description: Comment payload
+        createdAt:
+          format: date-time
+          type: string
+          nullable: false
+          description: Date when comment has been left
+      required:
+        - username
+        - userId
+        - commentRates
+        - payload
+        - createdAt
     PostInfo:
       type: object
       properties:
@@ -579,7 +614,7 @@ components:
           description: List of id of comments
           type: array
           items:
-            type: string
+            $ref: "#/components/schemas/IComment"
         createdAt:
           format: date-time
           type: string
@@ -775,10 +810,14 @@ components:
           type: string
           format: uuid
           nullable: false
+        username:
+          type: string
+          nullable: false
       required:
         - comment
         - postId
         - userId
+        - username
     LeaveCommentEvent:
       type: object
       properties: {}
