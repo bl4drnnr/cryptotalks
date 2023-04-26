@@ -25,13 +25,10 @@ import { JwtGuard } from '@guards/jwt.guard';
 import { UserDecorator } from '@decorators/user.decorator';
 import { ChangeEmailDto } from '@dto/change-email.dto';
 import { ChangePasswordDto } from '@dto/change-password.dto';
-import { CloseAccEvent, CloseAccEventDto } from '@events/close-acc.event';
-import {
-  ConfirmAccountEvent,
-  ConfirmAccountEventDto
-} from '@events/confirm-account.event';
-import { UpdateUserEvent, UpdateUserEventDto } from '@events/update-user.event';
-import { UserLogoutEvent, UserLogoutEventDto } from '@events/user-logout.event';
+import { CloseAccEventDto } from '@events/close-acc.event';
+import { ConfirmAccountEventDto } from '@events/confirm-account.event';
+import { UpdateUserEventDto } from '@events/update-user.event';
+import { UserLogoutEventDto } from '@events/user-logout.event';
 import { UserSettings } from '@models/user-settings.model';
 import { Set2faDto } from '@dto/set-2fa.dto';
 import { Remove2faDto } from '@dto/remove-2fa.dto';
@@ -77,7 +74,6 @@ export class UserController {
     }
   }
 
-  @ApiExtraModels(ConfirmAccountEvent)
   @ApiExtraModels(ConfirmAccountEventDto)
   @ApiExtraModels(ConfirmationHash)
   @ApiOperation({ summary: 'Confirm user registration' })
@@ -100,7 +96,6 @@ export class UserController {
     return this.userService.confirmEmailChange({ confirmationHash });
   }
 
-  @ApiExtraModels(UserLogoutEvent)
   @ApiExtraModels(UserLogoutEventDto)
   @ApiOperation({ summary: 'Logouts user' })
   @ApiResponse({
@@ -117,7 +112,6 @@ export class UserController {
     return res.status(HttpStatus.OK).json(response);
   }
 
-  @ApiExtraModels(UpdateUserEvent)
   @ApiExtraModels(UpdateUserEventDto)
   @ApiOperation({ summary: 'Changes user email address' })
   @ApiResponse({
@@ -147,7 +141,6 @@ export class UserController {
     return this.userService.changePassword({ userId, payload });
   }
 
-  @ApiExtraModels(CloseAccEvent)
   @ApiExtraModels(CloseAccEventDto)
   @ApiOperation({ summary: 'Closes are removes an account of an user' })
   @ApiResponse({

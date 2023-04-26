@@ -76,7 +76,7 @@ const PostSlug = () => {
         postId: post?.id,
         token,
         rate
-      })
+      });
     } catch (e) {
       await handleException(e);
     }

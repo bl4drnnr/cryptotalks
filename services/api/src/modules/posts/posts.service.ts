@@ -48,7 +48,13 @@ export class PostsService {
     return new ResponseDto();
   }
 
-  async getPostBySlug({ slug }: { slug: string }) {
+  async getPostBySlug({
+    slug,
+    userId
+  }: {
+    slug: string;
+    userId: string | undefined;
+  }) {
     const post = await this.postRepository.findOne({
       where: { slug }
     });
@@ -57,6 +63,16 @@ export class PostsService {
 
     const postInfo = await this.postInfoRepository.findOne({
       where: { postId: post.id }
+    });
+
+    const postComments = [];
+    // postInfo.comments.forEach((commentItem) => {
+    //   commentItem.commentRates.forEach((commentRate) => {
+    //     postComments.push({ ...commentItem, rated: commentRate.userId === userId });
+    //   });
+    // });
+    const postRates = postInfo.rates.map((rate) => {
+      return { ...rate, rated: rate.userId === userId };
     });
 
     return {
@@ -71,8 +87,8 @@ export class PostsService {
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
       postInfo: {
-        rates: postInfo.rates,
-        comments: postInfo.comments
+        rates: postRates,
+        comments: postComments
       }
     };
   }

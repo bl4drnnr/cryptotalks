@@ -153,6 +153,7 @@ paths:
   "/api/posts/rate/post/{id}":
     patch:
       operationId: PostsController_ratePost
+      summary: Allows user to rate a post
       parameters:
         - name: id
           required: true
@@ -172,10 +173,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ResponseDto"
+        "201":
+          description: As a response returns success message
       tags: *a1
   "/api/posts/rate/comment/{postId}/{commentId}":
     patch:
       operationId: PostsController_rateComment
+      summary: Allows user to rate a comment
       parameters:
         - name: commentId
           required: true
@@ -200,6 +204,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ResponseDto"
+        "201":
+          description: As a response returns success message
       tags: *a1
   /api/user/sign-up:
     post:
@@ -552,9 +558,6 @@ tags: []
 servers: []
 components:
   schemas:
-    CreatePostEvent:
-      type: object
-      properties: {}
     IRate:
       type: object
       properties:
@@ -761,9 +764,6 @@ components:
           nullable: false
       required:
         - id
-    DeletePostEvent:
-      type: object
-      properties: {}
     ResponseDto:
       type: object
       properties:
@@ -842,9 +842,6 @@ components:
         - postId
         - userId
         - username
-    LeaveCommentEvent:
-      type: object
-      properties: {}
     LogEventDto:
       type: object
       properties:
@@ -876,9 +873,6 @@ components:
         - event
         - status
         - timestamp
-    LogEvent:
-      type: object
-      properties: {}
     LeaveCommentDto:
       type: object
       properties:
@@ -887,6 +881,33 @@ components:
           nullable: false
       required:
         - comment
+    UpdatePostInfoEventDto:
+      type: object
+      properties:
+        rate:
+          type: string
+          nullable: false
+        userId:
+          type: string
+          format: uuid
+          nullable: false
+        username:
+          type: string
+          nullable: false
+        postId:
+          type: string
+          format: uuid
+          nullable: true
+        commentId:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+        - rate
+        - userId
+        - username
+        - postId
+        - commentId
     UpdatePostInfoDto:
       type: object
       properties:
@@ -1230,9 +1251,6 @@ components:
         - hashId
         - userId
         - data
-    ConfirmAccountEvent:
-      type: object
-      properties: {}
     UserLogoutEventDto:
       type: object
       properties:
@@ -1242,9 +1260,6 @@ components:
           nullable: true
       required:
         - userId
-    UserLogoutEvent:
-      type: object
-      properties: {}
     UpdateUserEventDto:
       type: object
       properties:
@@ -1294,9 +1309,6 @@ components:
         - title
         - twitter
         - username
-    UpdateUserEvent:
-      type: object
-      properties: {}
     ChangeEmailDto:
       type: object
       properties:
@@ -1338,9 +1350,6 @@ components:
           nullable: false
       required:
         - userId
-    CloseAccEvent:
-      type: object
-      properties: {}
     Set2faDto:
       type: object
       properties:
@@ -1426,9 +1435,6 @@ components:
           nullable: false
       required:
         - coinId
-    UpdateCoinEvent:
-      type: object
-      properties: {}
     FavoriteCoins:
       type: object
       properties:
@@ -1532,9 +1538,6 @@ components:
       required:
         - userId
         - cryptoId
-    AddCryptoToFavoriteEvent:
-      type: object
-      properties: {}
     RemoveCryptoToFavoriteEventDto:
       type: object
       properties:
@@ -1549,6 +1552,3 @@ components:
       required:
         - userId
         - cryptoId
-    RemoveCryptoToFavoriteEvent:
-      type: object
-      properties: {}

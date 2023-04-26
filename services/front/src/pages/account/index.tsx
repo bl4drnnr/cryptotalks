@@ -228,6 +228,7 @@ const Account = () => {
                       <PostsTitle>User latest posts</PostsTitle>
                       {userPosts?.rows.map((post, key) => (
                         <PostPreview
+                          slug={post.slug}
                           title={post.title}
                           preview={post.preview}
                           searchTags={post.searchTags}
