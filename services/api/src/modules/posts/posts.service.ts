@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { CreatePostDto } from '@dto/create-post.dto';
 import { CreatePostEvent } from '@events/create-post.event';
@@ -32,6 +32,11 @@ export class PostsService {
     });
 
     if (existingPost) throw new AlreadyExistingPostException();
+
+    payload.searchTags.forEach((tag) => {
+      if (tag.length === 0 || tag.length > 20)
+        throw new BadRequestException('tag-length', 'Tag length error');
+    });
 
     this.postsClient.emit(
       'post_created',

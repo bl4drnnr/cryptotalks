@@ -98,6 +98,9 @@ const CreatePost = () => {
 
   React.useEffect(() => {
     setSearchTagsError(searchTags.length === 6);
+    searchTags.forEach((tag) => {
+      setSearchTagsError(tag.length === 0 || tag.length > 20)
+    })
   }, [searchTags.length]);
 
   React.useEffect(() => {
@@ -146,7 +149,7 @@ const CreatePost = () => {
         content,
         preview,
         username,
-        searchTags
+        searchTags: searchTags.filter((tag) => tag.length !== 0 && tag.length <= 20)
       });
       return await handleRedirect(`posts/post/${getPostSlug(title)}`);
     } catch (e) {
@@ -210,7 +213,7 @@ const CreatePost = () => {
           >
             <Input
               onError={searchTagsError}
-              onErrorMessage={'Max quantity of search tags is 5. Min quantity of search tags is 1.'}
+              onErrorMessage={'Max quantity of search tags is 5. Min quantity of search tags is 1. Max length of tag is 20. Min length of tag is 1'}
               value={searchTagsString}
               placeholder={'Search tags'}
               onChange={(e) => setPostSearchTags(e.target.value)}

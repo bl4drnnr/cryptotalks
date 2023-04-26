@@ -49,6 +49,7 @@ export const SearchTagItem = styled.div`
   border-radius: 5px;
   transition: .2s;
   cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
 
   &:first-child {
     margin: 0 3px 0 0;

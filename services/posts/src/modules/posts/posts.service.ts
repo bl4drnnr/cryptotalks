@@ -11,6 +11,7 @@ import { DeletePostEventDto } from '@events/delete-post.event';
 import { UpdatePostEventDto } from '@events/update-post.event';
 import { LeaveCommentEventDto } from '@events/leave-comment.event';
 import { LogEventDto } from '@events/log.event';
+import * as uuid from 'uuid';
 
 @Injectable()
 export class PostsService {
@@ -48,7 +49,7 @@ export class PostsService {
     preview,
     searchTags
   }: UpdatePostEventDto) {
-    let updatedFields = { content, preview, searchTags };
+    const updatedFields = { content, preview, searchTags };
 
     if (title) {
       updatedFields['title'] = title;
@@ -69,6 +70,7 @@ export class PostsService {
       comments: [
         ...post.comments,
         {
+          id: uuid.v4(),
           userId: payload.userId,
           username: payload.username,
           commentRates: [],

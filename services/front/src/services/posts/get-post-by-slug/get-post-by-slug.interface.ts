@@ -9,6 +9,7 @@ interface IRate {
 }
 
 interface IComment {
+  id: string;
   userId: string;
   username: string;
   rate: Array<IRate>;

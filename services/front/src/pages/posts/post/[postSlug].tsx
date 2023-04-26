@@ -137,12 +137,11 @@ const PostSlug = () => {
                 <Paragraph key={index}>{item}</Paragraph>
               ))}
 
-              <PostTitle className={'subtitle'}>
-                Discussions
-              </PostTitle>
-
               {post?.postInfo.comments.length ? (
                 <>
+                  <PostTitle className={'subtitle'}>
+                    Discussions
+                  </PostTitle>
                   {post.postInfo.comments.map((comment, index) => (
                     <CommentContainer key={index}>
                       <CommentHeader>
@@ -157,9 +156,17 @@ const PostSlug = () => {
                       <VoteButtonsWrapper>
                         <VoteButton
                           className={'up'}
+                          onClick={() => fetchRateComment({
+                            rate: '+',
+                            commentId: comment.id
+                          })}
                         >+</VoteButton>
                         <VoteButton
                           className={'down'}
+                          onClick={() => fetchRateComment({
+                            rate: '-',
+                            commentId: comment.id
+                          })}
                         >-</VoteButton>
                       </VoteButtonsWrapper>
                     </CommentContainer>

@@ -561,6 +561,12 @@ components:
     IComment:
       type: object
       properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          default: uuidv4
+          description: Unique Id of the record
         username:
           type: string
           nullable: false
@@ -584,6 +590,7 @@ components:
           nullable: false
           description: Date when comment has been left
       required:
+        - id
         - username
         - userId
         - commentRates

@@ -92,6 +92,10 @@ export const CommentContainer = styled.div`
   border-radius: 8px;
   border: 1px solid rgba(${(props) => props.theme.colors.primary}, .5);
   margin: 10px 0;
+
+  @media only screen and (max-width: 1000px) {
+    width: 100%;
+  }
 `;
 
 export const CommentHeader = styled.div`
