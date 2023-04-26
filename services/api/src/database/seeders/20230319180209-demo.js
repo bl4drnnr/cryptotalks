@@ -263,7 +263,9 @@ module.exports = {
         id: uuid.v4(),
         post_id: '8c0e572a-166e-466f-a1b5-8abcdca269af',
         rates: JSON.stringify([{
-          userId: '186f0ff4-1444-4637-9be3-8c0abc168ba2', rate: '-'
+          username: 'MilyKotek',
+          userId: '186f0ff4-1444-4637-9be3-8c0abc168ba2',
+          rate: '-'
         }]),
         comments: JSON.stringify([{
           id: uuid.v4(),
@@ -283,7 +285,9 @@ module.exports = {
         id: uuid.v4(),
         post_id: 'bfbb0bf5-c05f-473c-84bb-ff01a9655b90',
         rates: JSON.stringify([{
-          userId: '186f0ff4-1444-4637-9be3-8c0abc168ba2', rate: '-'
+          username: 'MilyKotek',
+          userId: '186f0ff4-1444-4637-9be3-8c0abc168ba2',
+          rate: '-'
         }]),
         comments: JSON.stringify([{
           id: uuid.v4(),
@@ -303,7 +307,9 @@ module.exports = {
         id: uuid.v4(),
         post_id: 'aa3098da-64dd-4837-9f84-ec8c56f675ee',
         rates: JSON.stringify([{
-          userId: '186f0ff4-1444-4637-9be3-8c0abc168ba2', rate: '-'
+          username: 'MilyKotek',
+          userId: '186f0ff4-1444-4637-9be3-8c0abc168ba2',
+          rate: '-'
         }]),
         comments: JSON.stringify([{
           id: uuid.v4(),
@@ -323,7 +329,9 @@ module.exports = {
         id: uuid.v4(),
         post_id: '891d1a79-c4c1-4378-99a2-4920b462c8fd',
         rates: JSON.stringify([{
-          userId: '186f0ff4-1444-4637-9be3-8c0abc168ba2', rate: '-'
+          username: 'MilyKotek',
+          userId: '186f0ff4-1444-4637-9be3-8c0abc168ba2',
+          rate: '-'
         }]),
         comments: JSON.stringify([{
           id: uuid.v4(),
@@ -343,7 +351,9 @@ module.exports = {
         id: uuid.v4(),
         post_id: '5a7805c5-3803-45ce-90d9-5ac0c701e7a1',
         rates: JSON.stringify([{
-          userId: '186f0ff4-1444-4637-9be3-8c0abc168ba2', rate: '-'
+          username: 'MilyKotek',
+          userId: '186f0ff4-1444-4637-9be3-8c0abc168ba2',
+          rate: '-'
         }]),
         comments: JSON.stringify([{
           id: uuid.v4(),

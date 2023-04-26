@@ -147,3 +147,38 @@ export const VoteButton = styled.div`
     margin-right: 10px;
   }
 `;
+
+export const PostVoteButtonsWrapper = styled.div`
+  width: 50%;
+  height: 50px;
+  display: flex;
+  margin: 0 auto;
+`;
+
+export const PostVoteButton = styled.div`
+  width: 100%;
+  display: flex;
+  margin: 10px;
+  align-items: center;
+  justify-content: center;
+  color: rgb(${(props) => props.theme.colors.textColor});
+  cursor: pointer;
+  transition: .2s;
+  border-radius: 6px;
+  font-family: 'Montserrat', sans-serif;
+  
+  
+  &.up {
+    border: 1px solid rgba(${(props) => props.theme.colors.success});
+    &:hover {
+      background: rgba(${(props) => props.theme.colors.success}, .5);
+    }
+  }
+
+  &.down {
+    border: 1px solid rgba(${(props) => props.theme.colors.error});
+    &:hover {
+      background: rgba(${(props) => props.theme.colors.error}, .5);
+    }
+  }
+`;

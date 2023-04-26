@@ -84,12 +84,12 @@ export class PostsService {
   }
 
   async updatePostInfo(payload: UpdatePostInfoEventDto) {
-    const post = await this.postInfoRepository.findOne({
+    const postInfo = await this.postInfoRepository.findOne({
       where: { postId: payload.postId }
     });
 
     if (payload.postId && payload.commentId) {
-      const postComments = post.comments;
+      const postComments = postInfo.comments;
       const commentToRate = postComments.find(
         (comment) => comment.id === payload.commentId
       );
@@ -123,10 +123,40 @@ export class PostsService {
         {
           comments: [...postComments]
         },
-        { where: { id: post.id } }
+        { where: { id: postInfo.id } }
       );
     } else if (payload.postId && !payload.commentId) {
-      //
+      const postRates = postInfo.rates;
+      let userPostRate;
+
+      postRates.forEach((postRate) => {
+        userPostRate = postRate.userId === payload.userId ? postRate : null;
+      });
+
+      if (userPostRate) {
+        userPostRate.rate = payload.rate;
+        postRates[postRates.findIndex((el) => el.userId === payload.userId)] =
+          userPostRate;
+
+        return await this.postInfoRepository.update(
+          { rates: [...postRates] },
+          { where: { id: postInfo.id } }
+        );
+      } else {
+        return await this.postInfoRepository.update(
+          {
+            rates: [
+              ...postRates,
+              {
+                username: payload.username,
+                userId: payload.userId,
+                rate: payload.rate
+              }
+            ]
+          },
+          { where: { id: postInfo.id } }
+        );
+      }
     }
   }
 

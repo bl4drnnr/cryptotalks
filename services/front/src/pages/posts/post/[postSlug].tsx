@@ -25,7 +25,7 @@ import {
   Paragraph,
   PostButtonWrapper,
   PostInfoBlog,
-  PostTitle,
+  PostTitle, PostVoteButton, PostVoteButtonsWrapper,
   Tag,
   VoteButton,
   VoteButtonsWrapper
@@ -69,9 +69,14 @@ const PostSlug = () => {
     }
   };
 
-  const fetchRatePost = async () => {
+  const fetchRatePost = async ({ rate }: { rate: '+' | '-' }) => {
     try {
       const token = localStorage.getItem('_at');
+      await ratePost({
+        postId: post?.id,
+        token,
+        rate
+      })
     } catch (e) {
       await handleException(e);
     }
@@ -141,6 +146,35 @@ const PostSlug = () => {
               {post?.content.map((item, index) => (
                 <Paragraph key={index}>{item}</Paragraph>
               ))}
+
+              {tokenPresent ? (
+                <>
+                  <PostVoteButtonsWrapper>
+                    <PostVoteButton
+                      className={'up'}
+                      onClick={() => fetchRatePost({ rate: '+' })}
+                    >Cool!</PostVoteButton>
+                    <PostVoteButton
+                      className={'down'}
+                      onClick={() => fetchRatePost({ rate: '-' })}
+                    >Nah...</PostVoteButton>
+                  </PostVoteButtonsWrapper>
+                </>
+              ) : (
+                <>
+                  <JoinDiscussionTextWrapper>
+                    <PostTitle className={'subtitle'}>
+                      Like and wanna give the author now?
+                    </PostTitle>
+                    <PostTitle
+                      className={'subtitle link'}
+                      onClick={() => handleRedirect('/signup')}
+                    >
+                      Welcome on board!
+                    </PostTitle>
+                  </JoinDiscussionTextWrapper>
+                </>
+              )}
 
               {post?.postInfo.comments.length ? (
                 <>
