@@ -17,6 +17,7 @@ interface IComment {
 }
 
 export interface GetPostBySlugResponse {
+  id: string;
   title: string;
   slug: string;
   preview: string;

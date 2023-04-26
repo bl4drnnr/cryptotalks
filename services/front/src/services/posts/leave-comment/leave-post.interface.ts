@@ -1,5 +1,5 @@
 export interface LeaveCommentPayload {
-  postId: string;
+  postId: string | undefined;
   comment: string;
   token: string | null;
 }

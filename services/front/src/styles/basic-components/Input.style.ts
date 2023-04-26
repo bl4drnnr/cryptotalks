@@ -29,7 +29,6 @@ export const BasicInput = styled.input`
   line-height: 24px;
   transition: .3s;
   color: rgb(${(props) => props.theme.colors.textColor});
-  font-weight: 100;
 
   &.high {
     height: 48px;
