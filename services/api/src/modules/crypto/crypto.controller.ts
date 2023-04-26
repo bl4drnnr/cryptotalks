@@ -16,17 +16,11 @@ import {
 import { CryptoService } from '@modules/crypto.service';
 import { JwtGuard } from '@guards/jwt.guard';
 import { UserDecorator } from '@decorators/user.decorator';
-import {
-  AddCryptoToFavoriteEvent,
-  AddCryptoToFavoriteEventDto
-} from '@events/add-crypto-to-favorite.event';
-import {
-  RemoveCryptoToFavoriteEvent,
-  RemoveCryptoToFavoriteEventDto
-} from '@events/remove-crypto-from-favorite.event';
+import { AddCryptoToFavoriteEventDto } from '@events/add-crypto-to-favorite.event';
+import { RemoveCryptoToFavoriteEventDto } from '@events/remove-crypto-from-favorite.event';
 import { FavoriteCoins } from '@models/favorites-coins.model';
 import { MarketStats } from '@models/market-stats.model';
-import { UpdateCoinEvent, UpdateCoinEventDto } from '@events/update-coin.event';
+import { UpdateCoinEventDto } from '@events/update-coin.event';
 import { SoftJwtGuard } from '@guards/soft-jwt.guard';
 
 @ApiTags('Crypto')
@@ -57,7 +51,6 @@ export class CryptoController {
   }
 
   @ApiExtraModels(FavoriteCoins)
-  @ApiExtraModels(UpdateCoinEvent)
   @ApiExtraModels(UpdateCoinEventDto)
   @ApiOperation({ summary: 'Gets crypto by its id' })
   @ApiResponse({
@@ -84,7 +77,6 @@ export class CryptoController {
     return this.cryptoService.getMarketStats();
   }
 
-  @ApiExtraModels(AddCryptoToFavoriteEvent)
   @ApiExtraModels(AddCryptoToFavoriteEventDto)
   @ApiOperation({ summary: "Adds a crypto to user's favorites" })
   @ApiResponse({
@@ -100,7 +92,6 @@ export class CryptoController {
     return this.cryptoService.addCryptoToFavorites({ cryptoId, userId });
   }
 
-  @ApiExtraModels(RemoveCryptoToFavoriteEvent)
   @ApiExtraModels(RemoveCryptoToFavoriteEventDto)
   @ApiOperation({ summary: "Removes a crypto to user's favorites" })
   @ApiResponse({

@@ -18,6 +18,7 @@ export const PaginationButton = styled.div`
   padding: 10px;
   cursor: pointer;
   transition: .2s;
+  font-family: 'Montserrat', sans-serif;
   
   &:first-child {
     border-radius: 8px 0 0 8px;

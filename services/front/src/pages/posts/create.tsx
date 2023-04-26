@@ -99,8 +99,8 @@ const CreatePost = () => {
   React.useEffect(() => {
     setSearchTagsError(searchTags.length === 6);
     searchTags.forEach((tag) => {
-      setSearchTagsError(tag.length === 0 || tag.length > 20)
-    })
+      setSearchTagsError(tag.length === 0 || tag.length > 20);
+    });
   }, [searchTags.length]);
 
   React.useEffect(() => {
@@ -249,6 +249,7 @@ const CreatePost = () => {
               </CreatePostTitle>
               {userLatestPosts.rows.map((post, key) => (
                 <PostPreview
+                  slug={post.slug}
                   title={post.title}
                   preview={post.preview}
                   searchTags={post.searchTags}

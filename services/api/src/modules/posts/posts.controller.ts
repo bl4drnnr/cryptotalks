@@ -22,16 +22,14 @@ import { JwtGuard } from '@guards/jwt.guard';
 import { UserDecorator } from '@decorators/user.decorator';
 import { UpdatePostDto } from '@dto/update-post.dto';
 import { LeaveCommentDto } from '@dto/leave-comment.dto';
-import { DeletePostEvent, DeletePostEventDto } from '@events/delete-post.event';
-import {
-  LeaveCommentEvent,
-  LeaveCommentEventDto
-} from '@events/leave-comment.event';
-import { LogEvent, LogEventDto } from '@events/log.event';
+import { DeletePostEventDto } from '@events/delete-post.event';
+import { LeaveCommentEventDto } from '@events/leave-comment.event';
+import { LogEventDto } from '@events/log.event';
 import { PostInfo } from '@models/post-info.model';
-import { CreatePostEvent } from '@events/create-post.event';
 import { UpdatePostEventDto } from '@events/update-post.event';
 import { UpdatePostInfoDto } from '@dto/update-post-info.dto';
+import { UpdatePostInfoEventDto } from '@events/update-post-info.event';
+import { SoftJwtGuard } from '@guards/soft-jwt.guard';
 
 @ApiTags('Posts')
 @Controller('posts')
@@ -40,7 +38,6 @@ export class PostsController {
 
   @ApiExtraModels(PostModel)
   @ApiExtraModels(PostInfo)
-  @ApiExtraModels(CreatePostEvent)
   @ApiOperation({ summary: 'Responsible for post creation' })
   @ApiResponse({
     status: 201,
@@ -57,9 +54,10 @@ export class PostsController {
     status: 201,
     description: 'As a response function returns post'
   })
+  @UseGuards(SoftJwtGuard)
   @Get('get/:slug')
-  getPostBySlug(@Param('slug') slug: string) {
-    return this.postsService.getPostBySlug({ slug });
+  getPostBySlug(@UserDecorator() userId: string, @Param('slug') slug: string) {
+    return this.postsService.getPostBySlug({ slug, userId });
   }
 
   @ApiOperation({ summary: 'List posts' })
@@ -88,7 +86,6 @@ export class PostsController {
     });
   }
 
-  @ApiExtraModels(DeletePostEvent)
   @ApiExtraModels(DeletePostEventDto)
   @ApiOperation({ summary: 'Responsible for post deletion' })
   @ApiResponse({
@@ -114,9 +111,7 @@ export class PostsController {
     return this.postsService.updatePost({ postId, ...payload });
   }
 
-  @ApiExtraModels(LogEvent)
   @ApiExtraModels(LogEventDto)
-  @ApiExtraModels(LeaveCommentEvent)
   @ApiExtraModels(LeaveCommentEventDto)
   @ApiOperation({ summary: 'Allows users to leave comments' })
   @ApiResponse({
@@ -133,6 +128,13 @@ export class PostsController {
     return this.postsService.leaveComment({ ...payload, userId, postId });
   }
 
+  @ApiExtraModels(UpdatePostInfoDto)
+  @ApiExtraModels(UpdatePostInfoEventDto)
+  @ApiOperation({ summary: 'Allows user to rate a post' })
+  @ApiResponse({
+    status: 201,
+    description: 'As a response returns success message'
+  })
   @UseGuards(JwtGuard)
   @Patch('rate/post/:id')
   ratePost(
@@ -143,6 +145,11 @@ export class PostsController {
     return this.postsService.ratePost({ ...payload, userId, postId });
   }
 
+  @ApiOperation({ summary: 'Allows user to rate a comment' })
+  @ApiResponse({
+    status: 201,
+    description: 'As a response returns success message'
+  })
   @UseGuards(JwtGuard)
   @Patch('rate/comment/:postId/:commentId')
   rateComment(

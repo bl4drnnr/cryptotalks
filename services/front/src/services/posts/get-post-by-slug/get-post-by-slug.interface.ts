@@ -1,11 +1,12 @@
 export interface GetPostBySlugPayload {
   slug: string;
+  token: string | null;
 }
 
 interface IRate {
   username: string;
-  userId: string;
   rate: '+' | '-';
+  rated: boolean;
 }
 
 interface IComment {

@@ -8,7 +8,9 @@ export default async (
   res: NextApiResponse
 ) => {
   try {
-    const { data } = await Api.get(`/posts/get/${req.query.postSlug}`);
+    const { data } = await Api.get(`/posts/get/${req.query.postSlug}`, {
+      headers: { 'x-access-token': req.headers['x-access-token'] }
+    });
 
     return res.json(data);
   } catch (error: any) {

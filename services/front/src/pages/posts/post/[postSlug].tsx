@@ -24,8 +24,10 @@ import {
   OpacitySpan,
   Paragraph,
   PostButtonWrapper,
-  PostInfoBlog,
-  PostTitle, PostVoteButton, PostVoteButtonsWrapper,
+  PostInfoBlog, PostRate,
+  PostTitle,
+  PostVoteButton,
+  PostVoteButtonsWrapper,
   Tag,
   VoteButton,
   VoteButtonsWrapper
@@ -43,6 +45,8 @@ const PostSlug = () => {
   const [post, setPost] = React.useState<GetPostBySlugResponse>();
   const [postNotFound, setPostNotFound] = React.useState<boolean>(false);
   const [tokenPresent, setTokenPresent] = React.useState<boolean>(false);
+  const [postRated, setPostRated] = React.useState<'+' | '-' | null>(null);
+  const [postRating, setPostRating] = React.useState<number>(0);
   const [comment, setComment] = React.useState<string>('');
 
   React.useEffect(() => {
@@ -52,7 +56,19 @@ const PostSlug = () => {
 
   React.useEffect(() => {
     const { postSlug } = router.query;
-    if (postSlug) fetchGetPost(postSlug as string).then((res) => setPost(res));
+    if (postSlug) {
+      fetchGetPost(postSlug as string).then((res) => {
+        let postRate = 0;
+        res?.postInfo.rates.forEach((rate) => {
+          if (rate.rated) setPostRated(rate.rate);
+
+          if (rate.rate === '+') postRate++;
+          if (rate.rate === '-') postRate--;
+          setPostRating(postRate);
+        });
+        setPost(res);
+      });
+    }
   }, [router.query]);
 
   const fetchRateComment = async ({ rate, commentId }: { rate: '+' | '-'; commentId: string }) => {
@@ -76,7 +92,12 @@ const PostSlug = () => {
         postId: post?.id,
         token,
         rate
-      })
+      });
+      setPostRated(postRated === rate ? null : rate);
+
+      let postRatingToUpdate = postRating;
+      const updatedRating = rate === '+' ? postRatingToUpdate++ : postRatingToUpdate--;
+      setPostRating(updatedRating);
     } catch (e) {
       await handleException(e);
     }
@@ -95,7 +116,8 @@ const PostSlug = () => {
 
   const fetchGetPost = async (slug: string) => {
     try {
-      return await getPostBySlug({ slug });
+      const token = localStorage.getItem('_at');
+      return await getPostBySlug({ slug, token });
     } catch (e) {
       await handleException(e);
       setPostNotFound(true);
@@ -136,11 +158,18 @@ const PostSlug = () => {
                 onClick={() => handleRedirect(`/account/user/${post?.username}`)}
               >{post?.username}</LinkWrapper>&nbsp;| <OpacitySpan>Written at: </OpacitySpan> {dayjs(post?.createdAt).format('YYYY-MM-DD')} | <OpacitySpan>Updated at: </OpacitySpan> {dayjs(post?.updatedAt).format('YYYY-MM-DD')}
               </PostInfoBlog>
-              <PostInfoBlog>
-                <OpacitySpan>Search tags: </OpacitySpan>
-                {post?.searchTags.map((tag, index) => (
-                  <Tag key={index}>{tag}</Tag>
-                ))}
+              <PostInfoBlog className={'space-between'}>
+                <PostInfoBlog>
+                  <OpacitySpan>Search tags: </OpacitySpan>
+                  {post?.searchTags.map((tag, index) => (
+                    <Tag key={index}>{tag}</Tag>
+                  ))}
+                </PostInfoBlog>
+                <PostInfoBlog>
+                  <PostRate
+                    className={postRating > 0 ? 'positive' : 'negative'}
+                  >Post rating: {postRating}</PostRate>
+                </PostInfoBlog>
               </PostInfoBlog>
 
               {post?.content.map((item, index) => (
@@ -151,11 +180,11 @@ const PostSlug = () => {
                 <>
                   <PostVoteButtonsWrapper>
                     <PostVoteButton
-                      className={'up'}
+                      className={`up ${postRated === '+' ? 'active' : ''}`}
                       onClick={() => fetchRatePost({ rate: '+' })}
                     >Cool!</PostVoteButton>
                     <PostVoteButton
-                      className={'down'}
+                      className={`down ${postRated === '-' ? 'active' : ''}`}
                       onClick={() => fetchRatePost({ rate: '-' })}
                     >Nah...</PostVoteButton>
                   </PostVoteButtonsWrapper>

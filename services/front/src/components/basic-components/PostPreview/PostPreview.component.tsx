@@ -1,6 +1,7 @@
 import React from 'react';
 
 import dayjs from 'dayjs';
+import { useRouter } from 'next/router';
 
 import { PostProps } from '@components/PostPreview/PostPreview';
 import {
@@ -13,10 +14,18 @@ import {
 } from '@styles/PostPreview.style';
 
 const PostPreview = (
-  { title, preview, searchTags, createdAt }: PostProps
+  { slug, title, preview, searchTags, createdAt }: PostProps
 ) => {
+  const router = useRouter();
+
+  const handleRedirect = async (path: string) => {
+    await router.push(path);
+  };
+
   return (
-    <PostContainer>
+    <PostContainer
+      onClick={() => handleRedirect(`/posts/post/${slug}`)}
+    >
       <PostTitle>{title}</PostTitle>
       <PostTextPreview>{preview}</PostTextPreview>
       <PostSearchTags>

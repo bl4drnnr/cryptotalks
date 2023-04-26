@@ -43,6 +43,22 @@ export const PostInfoBlog = styled.div`
   margin: 15px 0;
   align-items: center;
   font-family: 'Montserrat', sans-serif;
+
+  &.space-between {
+    justify-content: space-between;
+  }
+`;
+
+export const PostRate = styled.h1`
+  color: rgba(${(props) => props.theme.colors.textColor});
+  font-weight: 900;
+  
+  &.positive {
+    color: rgb(${(props) => props.theme.colors.success});
+  }
+  &.negative {
+    color: rgb(${(props) => props.theme.colors.error});
+  }
 `;
 
 export const Tag = styled.p`
@@ -167,9 +183,11 @@ export const PostVoteButton = styled.div`
   border-radius: 6px;
   font-family: 'Montserrat', sans-serif;
   
-  
   &.up {
     border: 1px solid rgba(${(props) => props.theme.colors.success});
+    &.active {
+      background: rgba(${(props) => props.theme.colors.success}, .5);
+    }
     &:hover {
       background: rgba(${(props) => props.theme.colors.success}, .5);
     }
@@ -177,6 +195,9 @@ export const PostVoteButton = styled.div`
 
   &.down {
     border: 1px solid rgba(${(props) => props.theme.colors.error});
+    &.active {
+      background: rgba(${(props) => props.theme.colors.error}, .5);
+    }
     &:hover {
       background: rgba(${(props) => props.theme.colors.error}, .5);
     }
