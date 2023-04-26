@@ -43,6 +43,7 @@ const PostSlug = () => {
   const [post, setPost] = React.useState<GetPostBySlugResponse>();
   const [postNotFound, setPostNotFound] = React.useState<boolean>(false);
   const [tokenPresent, setTokenPresent] = React.useState<boolean>(false);
+  const [postRate, setPostRate] = React.useState<'+' | '-' | null>(null);
   const [comment, setComment] = React.useState<string>('');
 
   React.useEffect(() => {
@@ -52,7 +53,14 @@ const PostSlug = () => {
 
   React.useEffect(() => {
     const { postSlug } = router.query;
-    if (postSlug) fetchGetPost(postSlug as string).then((res) => setPost(res));
+    if (postSlug) {
+      fetchGetPost(postSlug as string).then((res) => {
+        res?.postInfo.rates.forEach((rate) => {
+          if (rate.rated) setPostRate(rate.rate);
+        })
+        setPost(res)
+      });
+    }
   }, [router.query]);
 
   const fetchRateComment = async ({ rate, commentId }: { rate: '+' | '-'; commentId: string }) => {
@@ -77,6 +85,7 @@ const PostSlug = () => {
         token,
         rate
       });
+      setPostRate(postRate === rate ? null : rate);
     } catch (e) {
       await handleException(e);
     }
@@ -95,7 +104,8 @@ const PostSlug = () => {
 
   const fetchGetPost = async (slug: string) => {
     try {
-      return await getPostBySlug({ slug });
+      const token = localStorage.getItem('_at');
+      return await getPostBySlug({ slug, token });
     } catch (e) {
       await handleException(e);
       setPostNotFound(true);
@@ -151,11 +161,11 @@ const PostSlug = () => {
                 <>
                   <PostVoteButtonsWrapper>
                     <PostVoteButton
-                      className={'up'}
+                      className={`up ${postRate === '+' ? 'active' : ''}`}
                       onClick={() => fetchRatePost({ rate: '+' })}
                     >Cool!</PostVoteButton>
                     <PostVoteButton
-                      className={'down'}
+                      className={`down ${postRate === '-' ? 'active' : ''}`}
                       onClick={() => fetchRatePost({ rate: '-' })}
                     >Nah...</PostVoteButton>
                   </PostVoteButtonsWrapper>

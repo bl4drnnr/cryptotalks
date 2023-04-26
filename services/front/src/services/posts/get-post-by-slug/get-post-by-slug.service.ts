@@ -11,7 +11,11 @@ export const useGetPostBySlug = () => {
     : Promise<GetPostBySlugResponse> => {
     try {
       setLoading(true);
-      const { data } = await ApiClient.get<GetPostBySlugResponse>(`/post/get/${payload.slug}`);
+      const { data } = await ApiClient.get<GetPostBySlugResponse>(`/post/get/${payload.slug}`, {
+        headers: {
+          'x-access-token': `Bearer ${payload.token}`
+        }
+      });
 
       return data;
     } catch (error: any) {

@@ -134,14 +134,26 @@ export class PostsService {
       });
 
       if (userPostRate) {
-        userPostRate.rate = payload.rate;
-        postRates[postRates.findIndex((el) => el.userId === payload.userId)] =
-          userPostRate;
+        if (userPostRate.rate !== payload.rate) {
+          userPostRate.rate = payload.rate;
+          postRates[postRates.findIndex((el) => el.userId === payload.userId)] =
+            userPostRate;
 
-        return await this.postInfoRepository.update(
-          { rates: [...postRates] },
-          { where: { id: postInfo.id } }
-        );
+          return await this.postInfoRepository.update(
+            { rates: [...postRates] },
+            { where: { id: postInfo.id } }
+          );
+        } else {
+          const updatePostRates = postRates.filter((item) => {
+            return item.userId !== payload.userId;
+          });
+          return await this.postInfoRepository.update(
+            {
+              rates: [...updatePostRates]
+            },
+            { where: { id: postInfo.id } }
+          );
+        }
       } else {
         return await this.postInfoRepository.update(
           {

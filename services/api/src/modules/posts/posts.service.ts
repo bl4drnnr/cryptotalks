@@ -66,13 +66,18 @@ export class PostsService {
     });
 
     const postComments = [];
-    // postInfo.comments.forEach((commentItem) => {
-    //   commentItem.commentRates.forEach((commentRate) => {
-    //     postComments.push({ ...commentItem, rated: commentRate.userId === userId });
-    //   });
-    // });
+    postInfo.comments.forEach((commentItem) => {
+      const commentRates = commentItem.commentRates.map((item) => {
+        return { ...item, rated: item.userId === userId };
+      });
+      postComments.push({ ...commentItem, commentRates });
+    });
     const postRates = postInfo.rates.map((rate) => {
-      return { ...rate, rated: rate.userId === userId };
+      return {
+        rate: rate.rate,
+        username: rate.username,
+        rated: rate.userId === userId
+      };
     });
 
     return {

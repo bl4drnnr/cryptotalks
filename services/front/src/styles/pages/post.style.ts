@@ -167,9 +167,11 @@ export const PostVoteButton = styled.div`
   border-radius: 6px;
   font-family: 'Montserrat', sans-serif;
   
-  
   &.up {
     border: 1px solid rgba(${(props) => props.theme.colors.success});
+    &.active {
+      background: rgba(${(props) => props.theme.colors.success}, .5);
+    }
     &:hover {
       background: rgba(${(props) => props.theme.colors.success}, .5);
     }
@@ -177,6 +179,9 @@ export const PostVoteButton = styled.div`
 
   &.down {
     border: 1px solid rgba(${(props) => props.theme.colors.error});
+    &.active {
+      background: rgba(${(props) => props.theme.colors.error}, .5);
+    }
     &:hover {
       background: rgba(${(props) => props.theme.colors.error}, .5);
     }
