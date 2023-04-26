@@ -31,6 +31,7 @@ import { LogEvent, LogEventDto } from '@events/log.event';
 import { PostInfo } from '@models/post-info.model';
 import { CreatePostEvent } from '@events/create-post.event';
 import { UpdatePostEventDto } from '@events/update-post.event';
+import { UpdatePostInfoDto } from '@dto/update-post-info.dto';
 
 @ApiTags('Posts')
 @Controller('posts')
@@ -129,11 +130,7 @@ export class PostsController {
     @UserDecorator() userId: string,
     @Body() payload: LeaveCommentDto
   ) {
-    return this.postsService.leaveComment({
-      comment: payload.comment,
-      userId,
-      postId
-    });
+    return this.postsService.leaveComment({ ...payload, userId, postId });
   }
 
   @UseGuards(JwtGuard)
@@ -141,18 +138,24 @@ export class PostsController {
   ratePost(
     @Param('id') postId: string,
     @UserDecorator() userId: string,
-    @Body() payload
+    @Body() payload: UpdatePostInfoDto
   ) {
     return this.postsService.ratePost({ ...payload, userId, postId });
   }
 
   @UseGuards(JwtGuard)
-  @Patch('rate/comment/:id')
+  @Patch('rate/comment/:postId/:id')
   rateComment(
     @Param('id') commentId: string,
+    @Param('postId') postId: string,
     @UserDecorator() userId: string,
-    @Body() payload
+    @Body() payload: UpdatePostInfoDto
   ) {
-    return this.postsService.rateComment({ ...payload, userId, commentId });
+    return this.postsService.rateComment({
+      ...payload,
+      userId,
+      postId,
+      commentId
+    });
   }
 }

@@ -12,6 +12,7 @@ import { UpdatePostEventDto } from '@events/update-post.event';
 import { LeaveCommentEventDto } from '@events/leave-comment.event';
 import { LogEventDto } from '@events/log.event';
 import * as uuid from 'uuid';
+import { UpdatePostInfoEventDto } from '@events/update-post-info.event';
 
 @Injectable()
 export class PostsService {
@@ -81,12 +82,16 @@ export class PostsService {
     });
   }
 
-  ratePost(payload: any) {
-    //
-  }
+  async updatePostInfo(payload: UpdatePostInfoEventDto) {
+    const post = await this.postInfoRepository.findOne({
+      where: { postId: payload.postId }
+    });
 
-  rateComment(payload: any) {
-    //
+    if (payload.postId && payload.commentId) {
+      //
+    } else if (payload.postId && !payload.commentId) {
+      //
+    }
   }
 
   async logPostAction(payload: LogEventDto) {

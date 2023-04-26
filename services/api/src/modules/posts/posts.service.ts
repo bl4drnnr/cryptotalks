@@ -16,6 +16,7 @@ import { AlreadyExistingPostException } from '@exceptions/already-existing-post.
 import { PostNotFoundException } from '@exceptions/post-not-found.exception';
 import { PostInfo } from '@models/post-info.model';
 import { User } from '@models/user.model';
+import { UpdatePostInfoEvent } from '@events/update-post-info.event';
 
 @Injectable()
 export class PostsService {
@@ -172,13 +173,76 @@ export class PostsService {
     return new ResponseDto();
   }
 
-  ratePost(payload: any) {
-    this.postsClient.emit('rate_post', {});
+  async ratePost({
+    rate,
+    userId,
+    postId
+  }: {
+    rate: '+' | '-';
+    userId: string;
+    postId: string;
+  }) {
+    if (!['+', '-'].includes(rate))
+      throw new BadRequestException('wrong-rate', 'Wrong rate value');
+
+    const post = await this.postRepository.findByPk(postId);
+
+    if (!post) throw new PostNotFoundException();
+
+    this.postsClient.emit(
+      'update_post_info',
+      new UpdatePostInfoEvent({
+        rate,
+        userId,
+        postId
+      })
+    );
     return new ResponseDto();
   }
 
-  rateComment(payload: any) {
-    this.postsClient.emit('rate_comment', {});
+  async rateComment({
+    rate,
+    userId,
+    postId,
+    commentId
+  }: {
+    rate: '+' | '-';
+    userId: string;
+    postId: string;
+    commentId: string;
+  }) {
+    if (!['+', '-'].includes(rate))
+      throw new BadRequestException('wrong-rate', 'Wrong rate value');
+
+    const post = await this.postRepository.findByPk(postId);
+
+    if (!post) throw new PostNotFoundException();
+
+    const postInfo = await this.postInfoRepository.findOne({
+      where: { postId }
+    });
+
+    let commentExists: boolean = false;
+
+    postInfo.comments.forEach((comment) => {
+      commentExists = comment.id === commentId;
+    });
+
+    if (!commentExists)
+      throw new BadRequestException(
+        'comment-doesnt-exist',
+        'Comment does not exist'
+      );
+
+    this.postsClient.emit(
+      'update_post_info',
+      new UpdatePostInfoEvent({
+        rate,
+        userId,
+        postId,
+        commentId
+      })
+    );
     return new ResponseDto();
   }
 }
