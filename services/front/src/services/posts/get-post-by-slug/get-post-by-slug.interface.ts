@@ -9,6 +9,7 @@ interface IRate {
 }
 
 interface IComment {
+  id: string;
   userId: string;
   username: string;
   rate: Array<IRate>;
@@ -17,6 +18,7 @@ interface IComment {
 }
 
 export interface GetPostBySlugResponse {
+  id: string;
   title: string;
   slug: string;
   preview: string;

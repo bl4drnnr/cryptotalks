@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { CreatePostDto } from '@dto/create-post.dto';
 import { CreatePostEvent } from '@events/create-post.event';
@@ -16,6 +16,7 @@ import { AlreadyExistingPostException } from '@exceptions/already-existing-post.
 import { PostNotFoundException } from '@exceptions/post-not-found.exception';
 import { PostInfo } from '@models/post-info.model';
 import { User } from '@models/user.model';
+import { UpdatePostInfoEvent } from '@events/update-post-info.event';
 
 @Injectable()
 export class PostsService {
@@ -32,6 +33,11 @@ export class PostsService {
     });
 
     if (existingPost) throw new AlreadyExistingPostException();
+
+    payload.searchTags.forEach((tag) => {
+      if (tag.length === 0 || tag.length > 20)
+        throw new BadRequestException('tag-length', 'Tag length error');
+    });
 
     this.postsClient.emit(
       'post_created',
@@ -167,13 +173,82 @@ export class PostsService {
     return new ResponseDto();
   }
 
-  ratePost(payload: any) {
-    this.postsClient.emit('rate_post', {});
+  async ratePost({
+    rate,
+    userId,
+    postId
+  }: {
+    rate: '+' | '-';
+    userId: string;
+    postId: string;
+  }) {
+    if (!['+', '-'].includes(rate))
+      throw new BadRequestException('wrong-rate', 'Wrong rate value');
+
+    const post = await this.postRepository.findByPk(postId);
+
+    if (!post) throw new PostNotFoundException();
+
+    const { username } = await this.userRepository.findByPk(userId);
+
+    this.postsClient.emit(
+      'update_post_info',
+      new UpdatePostInfoEvent({
+        rate,
+        userId,
+        postId,
+        username
+      })
+    );
     return new ResponseDto();
   }
 
-  rateComment(payload: any) {
-    this.postsClient.emit('rate_comment', {});
+  async rateComment({
+    rate,
+    userId,
+    postId,
+    commentId
+  }: {
+    rate: '+' | '-';
+    userId: string;
+    postId: string;
+    commentId: string;
+  }) {
+    if (!['+', '-'].includes(rate))
+      throw new BadRequestException('wrong-rate', 'Wrong rate value');
+
+    const post = await this.postRepository.findByPk(postId);
+
+    if (!post) throw new PostNotFoundException();
+
+    const postInfo = await this.postInfoRepository.findOne({
+      where: { postId }
+    });
+
+    let commentExists: boolean = false;
+
+    postInfo.comments.forEach((comment) => {
+      commentExists = comment.id === commentId;
+    });
+
+    if (!commentExists)
+      throw new BadRequestException(
+        'comment-doesnt-exist',
+        'Comment does not exist'
+      );
+
+    const { username } = await this.userRepository.findByPk(userId);
+
+    this.postsClient.emit(
+      'update_post_info',
+      new UpdatePostInfoEvent({
+        rate,
+        userId,
+        postId,
+        commentId,
+        username
+      })
+    );
     return new ResponseDto();
   }
 }

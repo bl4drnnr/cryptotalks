@@ -31,13 +31,8 @@ export class PostsController {
     return this.postsService.leaveComment(data);
   }
 
-  @EventPattern('rate_post')
-  handleRatePost(data: any) {
-    return this.postsService.ratePost(data);
-  }
-
-  @EventPattern('rate_comment')
-  handleRateComment(data: any) {
-    return this.postsService.rateComment(data);
+  @EventPattern('update_post_info')
+  handleUpdatePostInfo(data: any) {
+    return this.postsService.updatePostInfo(data);
   }
 }

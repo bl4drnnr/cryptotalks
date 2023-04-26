@@ -11,6 +11,8 @@ import { DeletePostEventDto } from '@events/delete-post.event';
 import { UpdatePostEventDto } from '@events/update-post.event';
 import { LeaveCommentEventDto } from '@events/leave-comment.event';
 import { LogEventDto } from '@events/log.event';
+import * as uuid from 'uuid';
+import { UpdatePostInfoEventDto } from '@events/update-post-info.event';
 
 @Injectable()
 export class PostsService {
@@ -48,7 +50,7 @@ export class PostsService {
     preview,
     searchTags
   }: UpdatePostEventDto) {
-    let updatedFields = { content, preview, searchTags };
+    const updatedFields = { content, preview, searchTags };
 
     if (title) {
       updatedFields['title'] = title;
@@ -65,10 +67,12 @@ export class PostsService {
     const post = await this.postInfoRepository.findOne({
       where: { postId: payload.postId }
     });
+
     return await post.update({
       comments: [
         ...post.comments,
         {
+          id: uuid.v4(),
           userId: payload.userId,
           username: payload.username,
           commentRates: [],
@@ -79,12 +83,81 @@ export class PostsService {
     });
   }
 
-  ratePost(payload: any) {
-    //
-  }
+  async updatePostInfo(payload: UpdatePostInfoEventDto) {
+    const postInfo = await this.postInfoRepository.findOne({
+      where: { postId: payload.postId }
+    });
 
-  rateComment(payload: any) {
-    //
+    if (payload.postId && payload.commentId) {
+      const postComments = postInfo.comments;
+      const commentToRate = postComments.find(
+        (comment) => comment.id === payload.commentId
+      );
+      let updatingCommentRate;
+
+      commentToRate.commentRates.forEach((commentRate) => {
+        updatingCommentRate =
+          commentRate.userId === payload.userId ? commentRate : null;
+      });
+
+      if (updatingCommentRate) {
+        updatingCommentRate.rate = payload.rate;
+        commentToRate.commentRates[
+          commentToRate.commentRates.findIndex(
+            (el) => el.userId === updatingCommentRate.userId
+          )
+        ] = updatingCommentRate;
+      } else {
+        commentToRate.commentRates.push({
+          rate: payload.rate,
+          userId: payload.userId,
+          username: payload.username
+        });
+
+        postComments[
+          postComments.findIndex((el) => el.id === commentToRate.id)
+        ] = commentToRate;
+      }
+
+      return await this.postInfoRepository.update(
+        {
+          comments: [...postComments]
+        },
+        { where: { id: postInfo.id } }
+      );
+    } else if (payload.postId && !payload.commentId) {
+      const postRates = postInfo.rates;
+      let userPostRate;
+
+      postRates.forEach((postRate) => {
+        userPostRate = postRate.userId === payload.userId ? postRate : null;
+      });
+
+      if (userPostRate) {
+        userPostRate.rate = payload.rate;
+        postRates[postRates.findIndex((el) => el.userId === payload.userId)] =
+          userPostRate;
+
+        return await this.postInfoRepository.update(
+          { rates: [...postRates] },
+          { where: { id: postInfo.id } }
+        );
+      } else {
+        return await this.postInfoRepository.update(
+          {
+            rates: [
+              ...postRates,
+              {
+                username: payload.username,
+                userId: payload.userId,
+                rate: payload.rate
+              }
+            ]
+          },
+          { where: { id: postInfo.id } }
+        );
+      }
+    }
   }
 
   async logPostAction(payload: LogEventDto) {

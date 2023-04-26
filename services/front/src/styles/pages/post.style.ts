@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Container = styled.div`
   height: 100%;
   width: 65%;
-  margin: 0 auto;
+  margin: 0 auto 30px auto;
   padding-top: 150px;
 
   @media only screen and (max-width: 1000px) {
@@ -70,8 +70,115 @@ export const OpacitySpan = styled.span`
 export const LinkWrapper = styled.span`
   color: rgb(${(props) => props.theme.colors.primary});
   cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
   
   &:hover {
     text-decoration: underline;
+  }
+`;
+
+export const PostButtonWrapper = styled.div`
+  width: 50%;
+  margin: 30px auto 0 auto;
+`;
+
+export const JoinDiscussionTextWrapper = styled.div`
+  text-align: center;
+`;
+
+export const CommentContainer = styled.div`
+  width: 60%;
+  min-height: 100px;
+  border-radius: 8px;
+  border: 1px solid rgba(${(props) => props.theme.colors.primary}, .5);
+  margin: 10px 0;
+
+  @media only screen and (max-width: 1000px) {
+    width: 100%;
+  }
+`;
+
+export const CommentHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+`;
+
+export const CommentPayload = styled.p`
+  color: rgb(${(props) => props.theme.colors.textColor});
+  
+  &.body {
+    padding: 0 10px
+  }
+`;
+
+export const CommentOpacityPayload = styled.span`
+  color: rgb(${(props) => props.theme.colors.textColor});
+  opacity: .5;
+`;
+
+export const VoteButtonsWrapper = styled.div`
+  display: flex;
+  margin: 10px;
+`;
+
+export const VoteButton = styled.div`
+  padding: 3px 8px;
+  border-radius: 50%;
+  color: rgb(${(props) => props.theme.colors.textColor});
+  cursor: pointer;
+  transition: .2s;
+  
+  &.up {
+    border: 1px solid rgba(${(props) => props.theme.colors.success});
+    &:hover {
+      background: rgba(${(props) => props.theme.colors.success}, .5);
+    }
+  }
+  
+  &.down {
+    border: 1px solid rgba(${(props) => props.theme.colors.error});
+    &:hover {
+      background: rgba(${(props) => props.theme.colors.error}, .5);
+    }
+  }
+  
+  &:first-child {
+    margin-right: 10px;
+  }
+`;
+
+export const PostVoteButtonsWrapper = styled.div`
+  width: 50%;
+  height: 50px;
+  display: flex;
+  margin: 0 auto;
+`;
+
+export const PostVoteButton = styled.div`
+  width: 100%;
+  display: flex;
+  margin: 10px;
+  align-items: center;
+  justify-content: center;
+  color: rgb(${(props) => props.theme.colors.textColor});
+  cursor: pointer;
+  transition: .2s;
+  border-radius: 6px;
+  font-family: 'Montserrat', sans-serif;
+  
+  
+  &.up {
+    border: 1px solid rgba(${(props) => props.theme.colors.success});
+    &:hover {
+      background: rgba(${(props) => props.theme.colors.success}, .5);
+    }
+  }
+
+  &.down {
+    border: 1px solid rgba(${(props) => props.theme.colors.error});
+    &:hover {
+      background: rgba(${(props) => props.theme.colors.error}, .5);
+    }
   }
 `;

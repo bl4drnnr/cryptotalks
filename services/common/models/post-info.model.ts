@@ -44,6 +44,15 @@ class IRate {
 class IComment {
   @ApiProperty({
     type: String,
+    format: 'uuid',
+    nullable: false,
+    default: 'uuidv4',
+    description: 'Unique Id of the record'
+  })
+  id: string;
+
+  @ApiProperty({
+    type: String,
     nullable: false,
     description: 'Username'
   })

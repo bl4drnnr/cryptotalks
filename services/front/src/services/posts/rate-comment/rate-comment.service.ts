@@ -12,7 +12,7 @@ export const useRateCommentService = () => {
     try {
       setLoading(true);
       const { data } = await ApiClient.patch<RateCommentResponse>(
-        `/post/rate/comment/${payload.commentId}`, { rate: payload.rate },
+        `/post/rate/comment/${payload.postId}/${payload.commentId}`, { rate: payload.rate },
         { headers: { 'x-access-token': `Bearer ${payload.token}` } }
       );
 

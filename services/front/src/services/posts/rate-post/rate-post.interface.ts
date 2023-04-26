@@ -1,6 +1,6 @@
 export interface RatePostPayload {
   token: string | null;
-  postId: string;
+  postId: string | undefined;
   rate: '+' | '-';
 }
 

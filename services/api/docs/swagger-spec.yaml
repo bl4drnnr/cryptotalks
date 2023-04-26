@@ -159,6 +159,12 @@ paths:
           in: path
           schema:
             type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdatePostInfoDto"
       responses:
         "200":
           description: ""
@@ -167,15 +173,26 @@ paths:
               schema:
                 $ref: "#/components/schemas/ResponseDto"
       tags: *a1
-  "/api/posts/rate/comment/{id}":
+  "/api/posts/rate/comment/{postId}/{commentId}":
     patch:
       operationId: PostsController_rateComment
       parameters:
-        - name: id
+        - name: commentId
           required: true
           in: path
           schema:
             type: string
+        - name: postId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdatePostInfoDto"
       responses:
         "200":
           description: ""
@@ -561,6 +578,12 @@ components:
     IComment:
       type: object
       properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+          default: uuidv4
+          description: Unique Id of the record
         username:
           type: string
           nullable: false
@@ -584,6 +607,7 @@ components:
           nullable: false
           description: Date when comment has been left
       required:
+        - id
         - username
         - userId
         - commentRates
@@ -863,6 +887,14 @@ components:
           nullable: false
       required:
         - comment
+    UpdatePostInfoDto:
+      type: object
+      properties:
+        rate:
+          type: string
+          nullable: false
+      required:
+        - rate
     UserSettings:
       type: object
       properties:
