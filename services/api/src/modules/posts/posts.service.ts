@@ -189,12 +189,15 @@ export class PostsService {
 
     if (!post) throw new PostNotFoundException();
 
+    const { username } = await this.userRepository.findByPk(userId);
+
     this.postsClient.emit(
       'update_post_info',
       new UpdatePostInfoEvent({
         rate,
         userId,
-        postId
+        postId,
+        username
       })
     );
     return new ResponseDto();
@@ -234,13 +237,16 @@ export class PostsService {
         'Comment does not exist'
       );
 
+    const { username } = await this.userRepository.findByPk(userId);
+
     this.postsClient.emit(
       'update_post_info',
       new UpdatePostInfoEvent({
         rate,
         userId,
         postId,
-        commentId
+        commentId,
+        username
       })
     );
     return new ResponseDto();

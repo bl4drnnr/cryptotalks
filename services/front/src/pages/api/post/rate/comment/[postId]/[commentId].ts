@@ -8,8 +8,9 @@ export default async (
   res: NextApiResponse
 ) => {
   try {
+    const { postId, commentId } = req.query;
     const { data } = await Api.patch(
-      `/posts/rate/comment/${req.query.commentId}`,
+      `/posts/rate/comment/${postId}/${commentId}`,
       req.body,
       { headers: { 'x-access-token': req.headers['x-access-token'] } }
     );

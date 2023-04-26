@@ -58,7 +58,12 @@ const PostSlug = () => {
   const fetchRateComment = async ({ rate, commentId }: { rate: '+' | '-'; commentId: string }) => {
     try {
       const token = localStorage.getItem('_at');
-      await rateComment({ token, rate, commentId });
+      await rateComment({
+        postId: post?.id,
+        token,
+        rate,
+        commentId
+      });
     } catch (e) {
       await handleException(e);
     }

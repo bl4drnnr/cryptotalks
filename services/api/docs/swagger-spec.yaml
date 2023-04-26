@@ -173,11 +173,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/ResponseDto"
       tags: *a1
-  "/api/posts/rate/comment/{postId}/{id}":
+  "/api/posts/rate/comment/{postId}/{commentId}":
     patch:
       operationId: PostsController_rateComment
       parameters:
-        - name: id
+        - name: commentId
           required: true
           in: path
           schema:

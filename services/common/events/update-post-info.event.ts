@@ -16,6 +16,12 @@ export class UpdatePostInfoEventDto {
 
   @ApiProperty({
     type: String,
+    nullable: false
+  })
+  username: string;
+
+  @ApiProperty({
+    type: String,
     format: 'uuid',
     nullable: true
   })

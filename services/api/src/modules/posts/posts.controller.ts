@@ -144,9 +144,9 @@ export class PostsController {
   }
 
   @UseGuards(JwtGuard)
-  @Patch('rate/comment/:postId/:id')
+  @Patch('rate/comment/:postId/:commentId')
   rateComment(
-    @Param('id') commentId: string,
+    @Param('commentId') commentId: string,
     @Param('postId') postId: string,
     @UserDecorator() userId: string,
     @Body() payload: UpdatePostInfoDto

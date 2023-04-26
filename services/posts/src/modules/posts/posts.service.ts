@@ -67,6 +67,7 @@ export class PostsService {
     const post = await this.postInfoRepository.findOne({
       where: { postId: payload.postId }
     });
+
     return await post.update({
       comments: [
         ...post.comments,
@@ -88,7 +89,42 @@ export class PostsService {
     });
 
     if (payload.postId && payload.commentId) {
-      //
+      const postComments = post.comments;
+      const commentToRate = postComments.find(
+        (comment) => comment.id === payload.commentId
+      );
+      let updatingCommentRate;
+
+      commentToRate.commentRates.forEach((commentRate) => {
+        updatingCommentRate =
+          commentRate.userId === payload.userId ? commentRate : null;
+      });
+
+      if (updatingCommentRate) {
+        updatingCommentRate.rate = payload.rate;
+        commentToRate.commentRates[
+          commentToRate.commentRates.findIndex(
+            (el) => el.userId === updatingCommentRate.userId
+          )
+        ] = updatingCommentRate;
+      } else {
+        commentToRate.commentRates.push({
+          rate: payload.rate,
+          userId: payload.userId,
+          username: payload.username
+        });
+
+        postComments[
+          postComments.findIndex((el) => el.id === commentToRate.id)
+        ] = commentToRate;
+      }
+
+      return await this.postInfoRepository.update(
+        {
+          comments: [...postComments]
+        },
+        { where: { id: post.id } }
+      );
     } else if (payload.postId && !payload.commentId) {
       //
     }

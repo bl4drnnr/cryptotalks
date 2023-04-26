@@ -1,6 +1,7 @@
 export interface RateCommentPayload {
   token: string | null;
   commentId: string;
+  postId: string | undefined;
   rate: '+' | '-';
 }
 
