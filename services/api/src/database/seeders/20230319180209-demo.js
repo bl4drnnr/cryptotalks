@@ -253,7 +253,15 @@ module.exports = {
           id: uuid.v4(),
           userId: '8a08eaf1-c7a8-403b-b1ce-1fef8e34d000',
           username: 'JohnDoe',
-          commentRates: [],
+          commentRates: [{
+            username: 'JohnDoe',
+            userId: '8a08eaf1-c7a8-403b-b1ce-1fef8e34d000',
+            rate: '+'
+          }, {
+            username: 'MilyKotek',
+            userId: '186f0ff4-1444-4637-9be3-8c0abc168ba2',
+            rate: '-'
+          }],
           payload: 'Comment from the author',
           createdAt: new Date()
         }]),

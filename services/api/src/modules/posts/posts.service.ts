@@ -68,14 +68,18 @@ export class PostsService {
     const postComments = [];
     postInfo.comments.forEach((commentItem) => {
       const commentRates = commentItem.commentRates.map((item) => {
-        return { ...item, rated: item.userId === userId };
+        return {
+          username: item.username,
+          rate: item.rate,
+          rated: item.userId === userId
+        };
       });
       postComments.push({ ...commentItem, commentRates });
     });
     const postRates = postInfo.rates.map((rate) => {
       return {
-        rate: rate.rate,
         username: rate.username,
+        rate: rate.rate,
         rated: rate.userId === userId
       };
     });

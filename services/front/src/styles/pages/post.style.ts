@@ -50,7 +50,6 @@ export const PostInfoBlog = styled.div`
 `;
 
 export const PostRate = styled.h1`
-  color: rgba(${(props) => props.theme.colors.textColor});
   font-weight: 900;
   
   &.positive {
@@ -58,6 +57,13 @@ export const PostRate = styled.h1`
   }
   &.negative {
     color: rgb(${(props) => props.theme.colors.error});
+  }
+  &.neutral {
+    color: rgba(${(props) => props.theme.colors.textColor});
+  }
+  &.comment { 
+    font-size: 18px;
+    font-weight: 500;
   }
 `;
 
@@ -136,24 +142,51 @@ export const CommentOpacityPayload = styled.span`
 export const VoteButtonsWrapper = styled.div`
   display: flex;
   margin: 10px;
+  align-items: center;
+
+  &.space-between {
+    justify-content: space-between;
+    margin: 0
+  }
+  &.button-content {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 24px;
+    font-weight: 900;
+  }
 `;
 
 export const VoteButton = styled.div`
-  padding: 3px 8px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   color: rgb(${(props) => props.theme.colors.textColor});
   cursor: pointer;
   transition: .2s;
   
   &.up {
+    justify-content: center;
+    display: flex;
     border: 1px solid rgba(${(props) => props.theme.colors.success});
+    
+    &.active {
+      background: rgba(${(props) => props.theme.colors.success}, .5);
+    }
+    
     &:hover {
       background: rgba(${(props) => props.theme.colors.success}, .5);
     }
   }
   
   &.down {
+    justify-content: center;
+    display: flex;
     border: 1px solid rgba(${(props) => props.theme.colors.error});
+    
+    &.active {
+      background: rgba(${(props) => props.theme.colors.error}, .5);
+    }
+    
     &:hover {
       background: rgba(${(props) => props.theme.colors.error}, .5);
     }
