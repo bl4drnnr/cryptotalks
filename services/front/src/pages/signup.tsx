@@ -344,7 +344,7 @@ const Signup = () => {
                   <SubTitle>Please, check you email inbox in order to confirm registration by clicking the link you will find inside the message.</SubTitle>
                 </MarginWrapper>
                 <MarginWrapper>
-                  <Button fillButton={true} text={'Sign in'} onClick={() => handleRedirect('signin')}/>
+                  <Button fillButton={true} text={'Sign in'} onClick={() => handleRedirect('/signin')}/>
                 </MarginWrapper>
               </Box>
             )

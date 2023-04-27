@@ -11,7 +11,7 @@ export const useForgotPasswordService = () => {
     : Promise<ForgotPasswordResponse> => {
     try {
       setLoading(true);
-      const { data } = await ApiClient.post<ForgotPasswordResponse>('');
+      const { data } = await ApiClient.post<ForgotPasswordResponse>('/user/forgot-password', payload);
 
       return data;
     } catch (error: any) {

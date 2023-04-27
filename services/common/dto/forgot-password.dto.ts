@@ -17,5 +17,11 @@ export class ForgotPasswordDto {
     type: String,
     nullable: true
   })
-  verificationString: string;
+  verificationString?: string;
+
+  @ApiProperty({
+    type: String,
+    nullable: true
+  })
+  password?: string;
 }

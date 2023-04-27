@@ -1376,8 +1376,9 @@ components:
         verificationString:
           type: string
           nullable: true
-      required:
-        - verificationString
+        password:
+          type: string
+          nullable: true
     CloseAccEventDto:
       type: object
       properties:

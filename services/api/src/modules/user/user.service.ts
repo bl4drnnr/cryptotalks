@@ -457,8 +457,7 @@ export class UserService {
 
   async forgotPassword(payload: ForgotPasswordDto) {
     if (
-      !payload.email ||
-      !payload.phone ||
+      (!payload.email && !payload.phone) ||
       !this.validatorService.validateEmail(payload.email)
     )
       throw new BadRequestException('bad-request', 'Bad request');
@@ -489,8 +488,20 @@ export class UserService {
         }
       });
 
-      if (!userConfirmationHash)
+      if (
+        !userConfirmationHash ||
+        userConfirmationHash.confirmationHash !== payload.verificationString ||
+        userConfirmationHash.confirmationType !== 'FORGOT_PASSWORD'
+      )
         throw new BadRequestException('wrong-hash', 'Wrong hash');
+
+      const hashedPassword = await bcryptjs.hash(payload.password, 10);
+      await this.userRepository.update(
+        {
+          password: hashedPassword
+        },
+        { where: { email: userConfirmationHash.changingEmail } }
+      );
     } else if (payload.phone && !payload.verificationString) {
       const userSettings = await this.userSettingsRepository.findOne({
         where: { phone: payload.phone }
@@ -512,6 +523,7 @@ export class UserService {
         where: { phone: payload.phone }
       });
 
+      // TODO Finish with phone way of password reminding
       if (
         !userSettings ||
         userSettings.phoneVerificationCode !== payload.verificationString
