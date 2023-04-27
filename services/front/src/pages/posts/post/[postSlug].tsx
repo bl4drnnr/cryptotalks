@@ -68,6 +68,7 @@ const PostSlug = () => {
         rate,
         commentId
       });
+      fetchSetPost(post?.slug);
     } catch (e) {
       await handleException(e);
     }
@@ -94,7 +95,8 @@ const PostSlug = () => {
       await leaveComment({
         token, postId: post?.id, comment
       });
-      await fetchSetPost(post?.slug);
+      fetchSetPost(post?.slug);
+      setComment('');
     } catch (e) {
       await handleException(e);
     }
@@ -246,34 +248,42 @@ const PostSlug = () => {
 
                       <CommentPayload className={'body'}>{comment.payload}</CommentPayload>
 
-                      <VoteButtonsWrapper className={'space-between'}>
-                        <VoteButtonsWrapper>
-                          <VoteButton
-                            className={`up ${findCommentRate(comment.commentRates) === '+' ? 'active' : ''}`}
-                            onClick={() => fetchRateComment({
-                              rate: '+',
-                              commentId: comment.id
-                            })}
-                          >
-                            <VoteButtonsWrapper className={'button-content'}>+</VoteButtonsWrapper>
-                          </VoteButton>
-                          <VoteButton
-                            className={`down ${findCommentRate(comment.commentRates) === '-' ? 'active' : ''}`}
-                            onClick={() => fetchRateComment({
-                              rate: '-',
-                              commentId: comment.id
-                            })}
-                          >
-                            <VoteButtonsWrapper className={'button-content'}>-</VoteButtonsWrapper>
-                          </VoteButton>
+                      {tokenPresent ? (
+                        <VoteButtonsWrapper className={'space-between'}>
+                          <VoteButtonsWrapper>
+                            <VoteButton
+                              className={`up ${findCommentRate(comment.commentRates) === '+' ? 'active' : ''}`}
+                              onClick={() => fetchRateComment({
+                                rate: '+',
+                                commentId: comment.id
+                              })}
+                            >
+                              <VoteButtonsWrapper className={'button-content'}>+</VoteButtonsWrapper>
+                            </VoteButton>
+                            <VoteButton
+                              className={`down ${findCommentRate(comment.commentRates) === '-' ? 'active' : ''}`}
+                              onClick={() => fetchRateComment({
+                                rate: '-',
+                                commentId: comment.id
+                              })}
+                            >
+                              <VoteButtonsWrapper className={'button-content'}>-</VoteButtonsWrapper>
+                            </VoteButton>
+                          </VoteButtonsWrapper>
+                          <VoteButtonsWrapper>
+                            <PostRate
+                              className={`comment ${countRating(comment.commentRates, 'comment') as number > 0 ? 'positive' : (countRating(comment.commentRates, 'comment') as number) < 0 ? 'negative' : 'neutral'}`}
+                            >Comment rating: {countRating(comment.commentRates, 'comment')}
+                            </PostRate>
+                          </VoteButtonsWrapper>
                         </VoteButtonsWrapper>
+                      ): (
                         <VoteButtonsWrapper>
-                          <PostRate
-                            className={`comment ${postRating > 0 ? 'positive' : postRating < 0 ? 'negative' : 'neutral'}`}
-                          >Comment rating: {countRating(comment.commentRates, 'comment')}
-                          </PostRate>
+                          <LinkWrapper
+                            onClick={() => handleRedirect('/signup')}
+                          >Wanna rate a comment?</LinkWrapper>
                         </VoteButtonsWrapper>
-                      </VoteButtonsWrapper>
+                      )}
                     </CommentContainer>
                   ))}
                 </>

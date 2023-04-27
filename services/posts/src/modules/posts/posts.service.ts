@@ -95,10 +95,12 @@ export class PostsService {
       );
       let updatingCommentRate;
 
-      commentToRate.commentRates.forEach((commentRate) => {
-        updatingCommentRate =
-          commentRate.userId === payload.userId ? commentRate : null;
-      });
+      for (const commentRate of commentToRate.commentRates) {
+        if (commentRate.userId === payload.userId) {
+          updatingCommentRate = commentRate;
+          break;
+        }
+      }
 
       if (updatingCommentRate) {
         if (updatingCommentRate.rate !== payload.rate) {
