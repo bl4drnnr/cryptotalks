@@ -7,7 +7,10 @@ import { Button } from '@components/Button/Button.component';
 import { Input } from '@components/Input/Input.component';
 import { InputButton } from '@components/InputButton/InputButton.component';
 import { useWindowDimensions } from '@hooks/useGetWindowDimensions.hook';
+import { useHandleException } from '@hooks/useHandleException.hook';
+import { validateEmail } from '@hooks/useValidators.hook';
 import CredentialsLayout from '@layouts/Credentials.layout';
+import { useForgotPasswordService } from '@services/forgot-password/forgot-password.service';
 import {
   Box,
   Link,
@@ -22,17 +25,39 @@ import {
 
 const ForgotPassword = () => {
   const router = useRouter();
-  const [hideLeftSide, setHideLeftSide] = React.useState(false);
-  const { width } = useWindowDimensions();
 
+  const { width } = useWindowDimensions();
+  const { handleException } = useHandleException();
+  const { loading: l0, forgotPassword } = useForgotPasswordService();
+
+  const [hideLeftSide, setHideLeftSide] = React.useState(false);
   const [passwordRecoveryMethod, setPasswordRecoveryMethod] = React.useState('email');
   const [email, setEmail] = React.useState('');
   const [phone, setPhone] = React.useState('');
-  const [verificationCode, setVerificationCode] = React.useState('');
+  const [emailError, setEmailError] = React.useState(false);
+  const [verificationString, setVerificationString] = React.useState('');
+  const [resetMessageSent, setResetMessageSent] = React.useState(false);
+
+  const fetchSendVerificationCode = async () => {
+    try {
+      const { message } = await forgotPassword({
+        email, phone, verificationString
+      });
+      setResetMessageSent(message === 'sent');
+    } catch (e) {
+      handleException(e);
+    }
+  };
 
   const handleRedirect = async (path: string) => {
-    await router.push(`/${path}`);
+    await router.push(path);
   };
+
+  React.useEffect(() => {
+    if (!validateEmail(email)) setEmailError(true);
+    else if (validateEmail(email) === 1) setEmailError(false);
+    else setEmailError(false);
+  }, [email]);
 
   React.useEffect(() => {
     if (width) setHideLeftSide(width <= 1050);
@@ -65,11 +90,10 @@ const ForgotPassword = () => {
           {passwordRecoveryMethod === 'email' ? (
             <MarginWrapper>
               <InputButton
+                onError={emailError}
                 buttonTitle={'Send code'}
-                onChange={() => {
-                }}
-                onClick={() => {
-                }}
+                onChange={(e) => setEmail(e.target.value)}
+                onClick={() => fetchSendVerificationCode()}
                 placeholder={'Email'}
                 value={email}
               />
@@ -78,37 +102,43 @@ const ForgotPassword = () => {
             <MarginWrapper>
               <InputButton
                 buttonTitle={'Send code'}
-                onChange={() => {
-                }}
-                onClick={() => {
-                }}
+                onChange={(e) => setPhone(e.target.value)}
+                onClick={() => fetchSendVerificationCode()}
                 placeholder={'Phone'}
                 value={phone}
               />
             </MarginWrapper>
           )}
 
-          <MarginWrapper>
-            <Input
-              high={true}
-              value={verificationCode}
-              onChange={(e) => setVerificationCode(e.target.value)}
-              placeholder={'Verification code'}
-            />
-          </MarginWrapper>
-
-          <MarginWrapper>
-            <Button highHeight={true} text={'Submit'}/>
-          </MarginWrapper>
+          {resetMessageSent ? (
+            <>
+              <MarginWrapper>
+                <Input
+                  high={true}
+                  value={verificationString}
+                  onChange={(e) => setVerificationString(e.target.value)}
+                  placeholder={'Verification code'}
+                />
+              </MarginWrapper>
+              <MarginWrapper>
+                <Button
+                  onClick={() => fetchSendVerificationCode()}
+                  highHeight={true}
+                  text={'Submit'}
+                />
+              </MarginWrapper>
+            </>
+          ) : (<></>)}
         </Box>
       } headerLink={
         <HeaderLink>
           Do not have an account yet? <Link
-          onClick={() => handleRedirect('signup')}
+          onClick={() => handleRedirect('/signup')}
         >Sign up now!</Link>
         </HeaderLink>
       } rightDarkSide={true}
         leftSideHide={hideLeftSide}
+        loading={l0}
       />
     </>
   );

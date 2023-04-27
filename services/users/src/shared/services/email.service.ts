@@ -15,7 +15,7 @@ export class EmailService {
   }: {
     target: string;
     confirmationHash: string;
-    confirmationType: 'EMAIL_CHANGE' | 'REGISTRATION';
+    confirmationType: 'EMAIL_CHANGE' | 'REGISTRATION' | 'FORGOT_PASSWORD';
   }) {
     let mail: {
       to: string;
@@ -59,6 +59,8 @@ export class EmailService {
           <p>${confirmationLink}</p>
         `
       };
+    } else if (confirmationType === 'FORGOT_PASSWORD') {
+      // TODO Continue here
     }
 
     return await SendGrid.send(mail);
