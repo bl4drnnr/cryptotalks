@@ -13,7 +13,7 @@ interface IComment {
   id: string;
   userId: string;
   username: string;
-  rate: Array<IRate>;
+  commentRates: Array<IRate>;
   payload: string;
   createdAt: Date;
 }

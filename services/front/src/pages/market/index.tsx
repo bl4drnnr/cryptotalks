@@ -76,10 +76,6 @@ const Market = () => {
   const { loading: l0, getStats } = useGetStatsService();
   const { loading: l1, listCrypto } = useListCryptoService();
 
-  const handleRedirect = async (path: string) => {
-    await router.push(`/${path}`);
-  };
-
   React.useEffect(() => {
     setOrderBy(currentSort.name);
   }, [currentSort]);
@@ -106,6 +102,10 @@ const Market = () => {
     } catch (e) {
       handleException(e);
     }
+  };
+
+  const handleRedirect = async (path: string) => {
+    await router.push(`/${path}`);
   };
 
   const fetchListCrypto = async () => {

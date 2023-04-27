@@ -5,7 +5,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 import { Button } from '@components/Button/Button.component';
-import { Input } from '@components/Input/Input.component';
+import { Textarea } from '@components/Textarea/Textarea.component';
 import { useHandleException } from '@hooks/useHandleException.hook';
 import DefaultLayout from '@layouts/Default.layout';
 import { GetPostBySlugResponse } from '@services/posts/get-post-by-slug/get-post-by-slug.interface';
@@ -56,19 +56,7 @@ const PostSlug = () => {
 
   React.useEffect(() => {
     const { postSlug } = router.query;
-    if (postSlug) {
-      fetchGetPost(postSlug as string).then((res) => {
-        let postRate = 0;
-        res?.postInfo.rates.forEach((rate) => {
-          if (rate.rated) setPostRated(rate.rate);
-
-          if (rate.rate === '+') postRate++;
-          if (rate.rate === '-') postRate--;
-          setPostRating(postRate);
-        });
-        setPost(res);
-      });
-    }
+    if (postSlug) fetchSetPost(postSlug);
   }, [router.query]);
 
   const fetchRateComment = async ({ rate, commentId }: { rate: '+' | '-'; commentId: string }) => {
@@ -80,6 +68,7 @@ const PostSlug = () => {
         rate,
         commentId
       });
+      fetchSetPost(post?.slug);
     } catch (e) {
       await handleException(e);
     }
@@ -94,10 +83,7 @@ const PostSlug = () => {
         rate
       });
       setPostRated(postRated === rate ? null : rate);
-
-      let postRatingToUpdate = postRating;
-      const updatedRating = rate === '+' ? postRatingToUpdate++ : postRatingToUpdate--;
-      setPostRating(updatedRating);
+      fetchSetPost(post?.slug);
     } catch (e) {
       await handleException(e);
     }
@@ -106,12 +92,24 @@ const PostSlug = () => {
   const fetchLeaveComment = async () => {
     try {
       const token = localStorage.getItem('_at');
-      return await leaveComment({
+      await leaveComment({
         token, postId: post?.id, comment
       });
+      fetchSetPost(post?.slug);
+      setComment('');
     } catch (e) {
       await handleException(e);
     }
+  };
+
+  const fetchSetPost = (postSlug: string | Array<string> | undefined) => {
+    fetchGetPost(postSlug as string).then((res) => {
+      res?.postInfo.rates.forEach((rate) => {
+        if (rate.rated) setPostRated(rate.rate);
+      });
+      countRating(res?.postInfo.rates, 'post');
+      setPost(res);
+    });
   };
 
   const fetchGetPost = async (slug: string) => {
@@ -122,6 +120,35 @@ const PostSlug = () => {
       await handleException(e);
       setPostNotFound(true);
     }
+  };
+
+  const countRating = (
+    payload: Array<{
+    username: string;
+    rate: '+' | '-';
+    rated: boolean;
+  }> | undefined,
+    entity: 'comment' | 'post'
+  ) => {
+    let rate = 0;
+    payload?.forEach((item) => {
+      if (item.rate === '+') rate++;
+      else rate--;
+    });
+    if (entity === 'post') setPostRating(rate);
+    else return rate;
+  };
+
+  const findCommentRate = (commentRates: Array<{
+    username: string;
+    rate: '+' | '-';
+    rated: boolean;
+  }>) => {
+    let foundRatedComment;
+    commentRates.forEach((item) => {
+      if (item.rated) foundRatedComment = item.rate;
+    });
+    return foundRatedComment;
   };
 
   const handleRedirect = async (path: string) => {
@@ -167,7 +194,7 @@ const PostSlug = () => {
                 </PostInfoBlog>
                 <PostInfoBlog>
                   <PostRate
-                    className={postRating > 0 ? 'positive' : 'negative'}
+                    className={postRating > 0 ? 'positive' : postRating < 0 ? 'negative' : 'neutral'}
                   >Post rating: {postRating}</PostRate>
                 </PostInfoBlog>
               </PostInfoBlog>
@@ -221,22 +248,42 @@ const PostSlug = () => {
 
                       <CommentPayload className={'body'}>{comment.payload}</CommentPayload>
 
-                      <VoteButtonsWrapper>
-                        <VoteButton
-                          className={'up'}
-                          onClick={() => fetchRateComment({
-                            rate: '+',
-                            commentId: comment.id
-                          })}
-                        >+</VoteButton>
-                        <VoteButton
-                          className={'down'}
-                          onClick={() => fetchRateComment({
-                            rate: '-',
-                            commentId: comment.id
-                          })}
-                        >-</VoteButton>
-                      </VoteButtonsWrapper>
+                      {tokenPresent ? (
+                        <VoteButtonsWrapper className={'space-between'}>
+                          <VoteButtonsWrapper>
+                            <VoteButton
+                              className={`up ${findCommentRate(comment.commentRates) === '+' ? 'active' : ''}`}
+                              onClick={() => fetchRateComment({
+                                rate: '+',
+                                commentId: comment.id
+                              })}
+                            >
+                              <VoteButtonsWrapper className={'button-content'}>+</VoteButtonsWrapper>
+                            </VoteButton>
+                            <VoteButton
+                              className={`down ${findCommentRate(comment.commentRates) === '-' ? 'active' : ''}`}
+                              onClick={() => fetchRateComment({
+                                rate: '-',
+                                commentId: comment.id
+                              })}
+                            >
+                              <VoteButtonsWrapper className={'button-content'}>-</VoteButtonsWrapper>
+                            </VoteButton>
+                          </VoteButtonsWrapper>
+                          <VoteButtonsWrapper>
+                            <PostRate
+                              className={`comment ${countRating(comment.commentRates, 'comment') as number > 0 ? 'positive' : (countRating(comment.commentRates, 'comment') as number) < 0 ? 'negative' : 'neutral'}`}
+                            >Comment rating: {countRating(comment.commentRates, 'comment')}
+                            </PostRate>
+                          </VoteButtonsWrapper>
+                        </VoteButtonsWrapper>
+                      ): (
+                        <VoteButtonsWrapper>
+                          <LinkWrapper
+                            onClick={() => handleRedirect('/signup')}
+                          >Wanna rate a comment?</LinkWrapper>
+                        </VoteButtonsWrapper>
+                      )}
                     </CommentContainer>
                   ))}
                 </>
@@ -252,7 +299,7 @@ const PostSlug = () => {
 
               {tokenPresent ? (
                 <>
-                  <Input
+                  <Textarea
                     value={comment}
                     placeholder={'Join the discussion'}
                     onChange={(e) => setComment(e.target.value)}

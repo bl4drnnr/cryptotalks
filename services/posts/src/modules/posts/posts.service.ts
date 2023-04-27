@@ -95,18 +95,34 @@ export class PostsService {
       );
       let updatingCommentRate;
 
-      commentToRate.commentRates.forEach((commentRate) => {
-        updatingCommentRate =
-          commentRate.userId === payload.userId ? commentRate : null;
-      });
+      for (const commentRate of commentToRate.commentRates) {
+        if (commentRate.userId === payload.userId) {
+          updatingCommentRate = commentRate;
+          break;
+        }
+      }
 
       if (updatingCommentRate) {
-        updatingCommentRate.rate = payload.rate;
-        commentToRate.commentRates[
-          commentToRate.commentRates.findIndex(
-            (el) => el.userId === updatingCommentRate.userId
-          )
-        ] = updatingCommentRate;
+        if (updatingCommentRate.rate !== payload.rate) {
+          updatingCommentRate.rate = payload.rate;
+          commentToRate.commentRates[
+            commentToRate.commentRates.findIndex(
+              (el) => el.userId === updatingCommentRate.userId
+            )
+          ] = updatingCommentRate;
+        } else {
+          const updatedCommentRate = commentToRate.commentRates.filter(
+            (item) => {
+              return item.userId !== payload.userId;
+            }
+          );
+
+          postComments.forEach((commentItem) => {
+            if (commentItem.id === payload.commentId) {
+              commentItem.commentRates = updatedCommentRate;
+            }
+          });
+        }
       } else {
         commentToRate.commentRates.push({
           rate: payload.rate,

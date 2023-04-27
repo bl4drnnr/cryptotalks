@@ -7,7 +7,7 @@ import Pagination from '@components/Pagination/Pagination.component';
 import PostPreview from '@components/PostPreview/PostPreview.component';
 import { useHandleException } from '@hooks/useHandleException.hook';
 import DefaultLayout from '@layouts/Default.layout';
-import { ListPostsResponse } from '@services/posts/list-posts/list-posts.interface';
+import { IPosts } from '@services/posts/list-posts/list-posts.interface';
 import { useListPostsService } from '@services/posts/list-posts/list-posts.service';
 import {
   Container, PostIndexParagraph, PostIndexTitle,
@@ -24,6 +24,7 @@ const Posts = () => {
   const [totalPages, setTotalPages] = React.useState<number>(0);
   const [order, setOrder] = React.useState('ASC');
   const [orderBy, setOrderBy] = React.useState('createdAt');
+  const [posts, setPosts] = React.useState<Array<IPosts>>();
   const [searchQuery, setSearchQuery] = React.useState('');
   const [currentSort, setCurrentSort] = React.useState({
     name: 'createdAt',
@@ -40,20 +41,30 @@ const Posts = () => {
     value: 'Sort by title'
   }]);
 
-  const [posts, setPosts] = React.useState<ListPostsResponse>();
 
   const { handleException } = useHandleException();
   const { loading: l0, listPosts } = useListPostsService();
 
   React.useEffect(() => {
-    fetchListPosts().then((res) => setPosts(res));
+    setOrderBy(currentSort.name);
+  }, [currentSort]);
+
+  React.useEffect(() => {
+    fetchListPosts().then();
   }, []);
+
+  React.useEffect(() => {
+    fetchListPosts().then();
+  }, [page, pageSize, order, orderBy, searchQuery]);
 
   const fetchListPosts = async () => {
     try {
-      return await listPosts({
+      const { rows, count } = await listPosts({
         page, pageSize, order, orderBy, searchQuery
       });
+
+      setPosts(rows);
+      setTotalPages(count);
     } catch (e) {
       await handleException(e);
     }
@@ -104,7 +115,7 @@ const Posts = () => {
             </TypeOfSortItem>
           </SortWrapper>
 
-          {posts?.rows.map((post) => (
+          {posts?.map((post) => (
             <PostPreview
               slug={post.slug}
               key={post.id}
