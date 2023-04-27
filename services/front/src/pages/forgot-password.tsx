@@ -139,7 +139,7 @@ const ForgotPassword = () => {
             <LoginOptions>
               <LoginOption onClick={() => setPasswordRecoveryMethod('email')}>With email</LoginOption>
               <VerticalLine/>
-              <LoginOption onClick={() => setPasswordRecoveryMethod('phone')}>With password</LoginOption>
+              <LoginOption onClick={() => setPasswordRecoveryMethod('phone')}>With phone</LoginOption>
             </LoginOptions>
           ) : (<></>)}
 
@@ -217,7 +217,7 @@ const ForgotPassword = () => {
                 </PasswordCheckBox>
               ) : (<></>)}
 
-              <Paragraph>We have sent an email, if this account exists.</Paragraph>
+              <Paragraph>We have sent a message, if this account exists.</Paragraph>
               <MarginWrapper>
                 <Button
                   disabled={!verificationString || !validateFields()}
