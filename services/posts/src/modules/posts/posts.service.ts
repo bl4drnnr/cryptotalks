@@ -101,12 +101,26 @@ export class PostsService {
       });
 
       if (updatingCommentRate) {
-        updatingCommentRate.rate = payload.rate;
-        commentToRate.commentRates[
-          commentToRate.commentRates.findIndex(
-            (el) => el.userId === updatingCommentRate.userId
-          )
-        ] = updatingCommentRate;
+        if (updatingCommentRate.rate !== payload.rate) {
+          updatingCommentRate.rate = payload.rate;
+          commentToRate.commentRates[
+            commentToRate.commentRates.findIndex(
+              (el) => el.userId === updatingCommentRate.userId
+            )
+          ] = updatingCommentRate;
+        } else {
+          const updatedCommentRate = commentToRate.commentRates.filter(
+            (item) => {
+              return item.userId !== payload.userId;
+            }
+          );
+
+          postComments.forEach((commentItem) => {
+            if (commentItem.id === payload.commentId) {
+              commentItem.commentRates = updatedCommentRate;
+            }
+          });
+        }
       } else {
         commentToRate.commentRates.push({
           rate: payload.rate,
