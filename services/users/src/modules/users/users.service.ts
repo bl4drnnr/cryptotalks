@@ -50,6 +50,8 @@ export class UsersService {
 
   async sendVerificationEmail(payload: SendVerificationEmailEventDto) {
     const emailSettings = {
+      changingEmail:
+        payload.confirmationType === 'EMAIL_CHANGE' ? payload.email : null,
       confirmationHash: payload.confirmationHash,
       confirmationType: payload.confirmationType as
         | 'EMAIL_CHANGE'

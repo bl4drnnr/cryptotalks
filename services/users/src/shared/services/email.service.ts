@@ -34,7 +34,7 @@ export class EmailService {
 
       mail = {
         ...mail,
-        subject: 'Cryptotalks registration confirmation',
+        subject: 'Cryptotalks - Registration confirmation',
         html: `
           <h1>Welcome!</h1>
           <br>
@@ -49,7 +49,7 @@ export class EmailService {
 
       mail = {
         ...mail,
-        subject: 'Cryptotalks email change confirmation',
+        subject: 'Cryptotalks - Email change confirmation',
         html: `
           <h1>Hello, hope you are doing well!</h1>
           <br>
@@ -60,7 +60,16 @@ export class EmailService {
         `
       };
     } else if (confirmationType === 'FORGOT_PASSWORD') {
-      // TODO Continue here
+      mail = {
+        ...mail,
+        subject: 'Cryptotalks - Password reset',
+        html: `
+          <h1>Hello, hope you are doing well!</h1>
+          <br>
+          <p>Copy and paste this verification hash in order to change your password</p>
+          <p>Confirmation string: <b>${confirmationHash}</b></p>
+        `
+      };
     }
 
     return await SendGrid.send(mail);

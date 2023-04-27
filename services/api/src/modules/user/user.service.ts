@@ -364,14 +364,6 @@ export class UserService {
       })
     );
 
-    this.userClient.emit(
-      'update_user_account',
-      new UpdateUserEvent({
-        userId,
-        email: payload.email
-      })
-    );
-
     this.loggerService.log({
       action: 'log_user_action',
       event: 'USER',
@@ -490,7 +482,15 @@ export class UserService {
 
       return new ResponseDto('sent');
     } else if (payload.email && payload.verificationString) {
-      // verify email
+      const userConfirmationHash = await this.confirmHashRepository.findOne({
+        where: {
+          confirmationHash: payload.verificationString,
+          confirmationType: 'FORGOT_PASSWORD'
+        }
+      });
+
+      if (!userConfirmationHash)
+        throw new BadRequestException('wrong-hash', 'Wrong hash');
     } else if (payload.phone && !payload.verificationString) {
       const userSettings = await this.userSettingsRepository.findOne({
         where: { phone: payload.phone }
