@@ -45,4 +45,9 @@ export class UsersController {
   handleSendVerificationMobileCode(data: any) {
     return this.usersService.sendVerificationMobileCode(data);
   }
+
+  @EventPattern('send_verification_email')
+  handleSendVerificationEmail(data: any) {
+    return this.usersService.sendVerificationEmail(data);
+  }
 }

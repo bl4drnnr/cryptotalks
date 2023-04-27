@@ -36,6 +36,8 @@ import { ResponseDto } from '@dto/response.dto';
 import { SetPhoneDto } from '@dto/set-phone.dto';
 import { RemovePhoneDto } from '@dto/remove-phone.dto';
 import { SignUpEventDto } from '@events/user-sign-up.event';
+import { ForgotPasswordDto } from '@dto/forgot-password.dto';
+import { SendVerificationEmailEventDto } from '@events/send-verification-email.event';
 
 @ApiTags('User')
 @Controller('user')
@@ -139,6 +141,17 @@ export class UserController {
     @Body() payload: ChangePasswordDto
   ) {
     return this.userService.changePassword({ userId, payload });
+  }
+
+  @ApiExtraModels(SendVerificationEmailEventDto)
+  @ApiOperation({ summary: 'Initiates password reset' })
+  @ApiResponse({
+    status: 201,
+    description: 'As a response function returns success message'
+  })
+  @Post('forgot-password')
+  forgotPassword(@Body() payload: ForgotPasswordDto) {
+    return this.userService.forgotPassword({ ...payload });
   }
 
   @ApiExtraModels(CloseAccEventDto)

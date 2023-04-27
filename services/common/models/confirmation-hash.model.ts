@@ -13,7 +13,7 @@ import { ApiProperty } from '@nestjs/swagger';
 interface ConfirmationHashCreationAttributes {
   userId: string;
   confirmationHash: string;
-  confirmationType: 'EMAIL_CHANGE' | 'REGISTRATION';
+  confirmationType: 'EMAIL_CHANGE' | 'REGISTRATION' | 'FORGOT_PASSWORD';
   changingEmail?: string;
 }
 
@@ -62,11 +62,11 @@ export class ConfirmationHash extends Model<
     description: 'Type of confirmation'
   })
   @Column({
-    type: DataType.ENUM('EMAIL_CHANGE', 'REGISTRATION'),
+    type: DataType.ENUM('EMAIL_CHANGE', 'REGISTRATION', 'FORGOT_PASSWORD'),
     allowNull: false,
     field: 'confirmation_type'
   })
-  confirmationType: 'EMAIL_CHANGE' | 'REGISTRATION';
+  confirmationType: 'EMAIL_CHANGE' | 'REGISTRATION' | 'FORGOT_PASSWORD';
 
   @ApiProperty({
     type: String,

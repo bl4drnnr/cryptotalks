@@ -43,6 +43,8 @@ import { ChangeEmailDto } from '@dto/change-email.dto';
 import { ChangePasswordDto } from '@dto/change-password.dto';
 import { ChangeEmailEvent } from '@events/change-email.event';
 import { EmailChangeConfirmedException } from '@exceptions/email-change-confirmed.exception';
+import { ForgotPasswordDto } from '@dto/forgot-password.dto';
+import { SendVerificationEmailEvent } from '@events/send-verification-email.event';
 
 @Injectable()
 export class UserService {
@@ -362,14 +364,6 @@ export class UserService {
       })
     );
 
-    this.userClient.emit(
-      'update_user_account',
-      new UpdateUserEvent({
-        userId,
-        email: payload.email
-      })
-    );
-
     this.loggerService.log({
       action: 'log_user_action',
       event: 'USER',
@@ -457,6 +451,85 @@ export class UserService {
       status: 'SUCCESS',
       payload: { userId }
     });
+
+    return new ResponseDto();
+  }
+
+  async forgotPassword(payload: ForgotPasswordDto) {
+    if (
+      (!payload.email && !payload.phone) ||
+      !this.validatorService.validateEmail(payload.email)
+    )
+      throw new BadRequestException('bad-request', 'Bad request');
+
+    if (payload.email && !payload.verificationString) {
+      const user = await this.userRepository.findOne({
+        where: { email: payload.email }
+      });
+
+      if (!user) return new ResponseDto('sent');
+
+      this.userClient.emit(
+        'send_verification_email',
+        new SendVerificationEmailEvent({
+          email: user.email,
+          confirmationType: 'FORGOT_PASSWORD',
+          userId: user.id,
+          confirmationHash: crypto.randomBytes(20).toString('hex')
+        })
+      );
+
+      return new ResponseDto('sent');
+    } else if (payload.email && payload.verificationString) {
+      const userConfirmationHash = await this.confirmHashRepository.findOne({
+        where: {
+          confirmationHash: payload.verificationString,
+          confirmationType: 'FORGOT_PASSWORD'
+        }
+      });
+
+      if (
+        !userConfirmationHash ||
+        userConfirmationHash.confirmationHash !== payload.verificationString ||
+        userConfirmationHash.confirmationType !== 'FORGOT_PASSWORD'
+      )
+        throw new BadRequestException('wrong-hash', 'Wrong hash');
+
+      const hashedPassword = await bcryptjs.hash(payload.password, 10);
+      await this.userRepository.update(
+        {
+          password: hashedPassword
+        },
+        { where: { email: userConfirmationHash.changingEmail } }
+      );
+    } else if (payload.phone && !payload.verificationString) {
+      const userSettings = await this.userSettingsRepository.findOne({
+        where: { phone: payload.phone }
+      });
+
+      if (!userSettings) return new ResponseDto('sent');
+
+      this.userClient.emit(
+        'send_verification_mobile_code',
+        new UpdateUserSecurityEvent({
+          userId: userSettings.id,
+          phone: userSettings.phone
+        })
+      );
+
+      return new ResponseDto('sent');
+    } else if (payload.phone && payload.verificationString) {
+      const userSettings = await this.userSettingsRepository.findOne({
+        where: { phone: payload.phone }
+      });
+
+      // TODO Finish with phone way of password reminding
+      if (
+        !userSettings ||
+        userSettings.phoneVerificationCode !== payload.verificationString
+      )
+        return new PhoneCodeErrorException();
+    }
 
     return new ResponseDto();
   }

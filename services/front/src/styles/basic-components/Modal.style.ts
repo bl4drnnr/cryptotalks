@@ -12,6 +12,7 @@ export const Container = styled.div`
   display: flex;
   background: rgba(0, 0, 0, .5) 0 0 no-repeat padding-box;
   z-index: 998;
+  font-family: 'Montserrat', sans-serif;
 `;
 
 export const Wrapper = styled.div`
