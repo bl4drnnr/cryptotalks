@@ -56,19 +56,7 @@ const PostSlug = () => {
 
   React.useEffect(() => {
     const { postSlug } = router.query;
-    if (postSlug) {
-      fetchGetPost(postSlug as string).then((res) => {
-        let postRate = 0;
-        res?.postInfo.rates.forEach((rate) => {
-          if (rate.rated) setPostRated(rate.rate);
-
-          if (rate.rate === '+') postRate++;
-          if (rate.rate === '-') postRate--;
-          setPostRating(postRate);
-        });
-        setPost(res);
-      });
-    }
+    if (postSlug) fetchSetPost(postSlug);
   }, [router.query]);
 
   const fetchRateComment = async ({ rate, commentId }: { rate: '+' | '-'; commentId: string }) => {
@@ -94,10 +82,7 @@ const PostSlug = () => {
         rate
       });
       setPostRated(postRated === rate ? null : rate);
-
-      let postRatingToUpdate = postRating;
-      const updatedRating = rate === '+' ? postRatingToUpdate++ : postRatingToUpdate--;
-      setPostRating(updatedRating);
+      fetchSetPost(post?.slug);
     } catch (e) {
       await handleException(e);
     }
@@ -114,6 +99,16 @@ const PostSlug = () => {
     }
   };
 
+  const fetchSetPost = (postSlug: string | Array<string> | undefined) => {
+    fetchGetPost(postSlug as string).then((res) => {
+      res?.postInfo.rates.forEach((rate) => {
+        if (rate.rated) setPostRated(rate.rate);
+      });
+      countPostRating(res?.postInfo.rates);
+      setPost(res);
+    });
+  };
+
   const fetchGetPost = async (slug: string) => {
     try {
       const token = localStorage.getItem('_at');
@@ -122,6 +117,19 @@ const PostSlug = () => {
       await handleException(e);
       setPostNotFound(true);
     }
+  };
+
+  const countPostRating = (payload: Array<{
+    username: string;
+    rate: '+' | '-';
+    rated: boolean;
+  }> | undefined) => {
+    let postRate = 0;
+    payload?.forEach((item) => {
+      if (item.rate === '+') postRate++;
+      else postRate--;
+    });
+    setPostRating(postRate);
   };
 
   const handleRedirect = async (path: string) => {
