@@ -47,8 +47,8 @@ const Market = () => {
   const [page, setPage] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(5);
   const [totalPages, setTotalPages] = React.useState<number>(0);
-  const [order, setOrder] = React.useState('ASC');
-  const [orderBy, setOrderBy] = React.useState('rank');
+  const [order, setOrder] = React.useState('rank');
+  const [orderBy, setOrderBy] = React.useState('ASC');
   const [searchQuery, setSearchQuery] = React.useState('');
   const [listOfCrypto, setListOfCrypto] = React.useState<Array<ICoins>>();
   const [marketStats, setMarketStats] = React.useState<GetStatsResponse>();
@@ -77,7 +77,7 @@ const Market = () => {
   const { loading: l1, listCrypto } = useListCryptoService();
 
   React.useEffect(() => {
-    setOrderBy(currentSort.name);
+    setOrder(currentSort.name);
   }, [currentSort]);
 
   React.useEffect(() => {
@@ -183,7 +183,7 @@ const Market = () => {
               ))}
             </SortBar>
             <TypeOfSortItem
-              onClick={() => setOrder(order === 'ASC' ? 'DESC' : 'ASC')}
+              onClick={() => setOrderBy(order === 'ASC' ? 'DESC' : 'ASC')}
             >
               {order}
             </TypeOfSortItem>

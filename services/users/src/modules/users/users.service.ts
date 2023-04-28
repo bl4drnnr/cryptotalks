@@ -93,12 +93,13 @@ export class UsersService {
       { where: { id: payload.hashId } }
     );
 
-    await this.userRepository.update(
-      {
-        ...payload.data
-      },
-      { where: { id: payload.userId } }
-    );
+    if (payload.data)
+      await this.userRepository.update(
+        {
+          ...payload.data
+        },
+        { where: { id: payload.userId } }
+      );
   }
 
   async changeEmail(payload: ChangeEmailEventDto) {

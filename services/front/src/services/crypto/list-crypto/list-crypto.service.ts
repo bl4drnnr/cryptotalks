@@ -13,19 +13,19 @@ export const useListCryptoService = () => {
       setLoading(true);
 
       const queryParams = [];
-      let listCryptoPath = `/crypto/list/${page}/${pageSize}/${order}/${orderBy}?`;
+      let listCryptoUrl = `/crypto/list/${page}/${pageSize}/${order}/${orderBy}?`;
 
       if (searchQuery) queryParams.push({ searchQuery });
 
       if (queryParams.length) {
         queryParams.forEach((item) => {
           Object.entries(item).forEach(([key, value]) => {
-            listCryptoPath += `${key}=${value}&`;
+            listCryptoUrl += `${key}=${value}&`;
           });
         });
       }
 
-      const { data } = await ApiClient.get<ListCryptoResponse>(listCryptoPath);
+      const { data } = await ApiClient.get<ListCryptoResponse>(listCryptoUrl);
 
       return data;
     } catch (error: any) {

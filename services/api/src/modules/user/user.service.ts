@@ -458,7 +458,7 @@ export class UserService {
   async forgotPassword(payload: ForgotPasswordDto) {
     if (
       (!payload.email && !payload.phone) ||
-      !this.validatorService.validateEmail(payload.email)
+      (payload.email && !this.validatorService.validateEmail(payload.email))
     )
       throw new BadRequestException('bad-request', 'Bad request');
 
@@ -495,12 +495,43 @@ export class UserService {
       )
         throw new BadRequestException('wrong-hash', 'Wrong hash');
 
+      const currentUser = await this.userRepository.findByPk(
+        userConfirmationHash.userId
+      );
+
       const hashedPassword = await bcryptjs.hash(payload.password, 10);
+
+      const passwordEquality = await bcryptjs.compare(
+        payload.password,
+        currentUser.password
+      );
+      if (passwordEquality)
+        throw new BadRequestException(
+          'same-password',
+          'Same password as previous one'
+        );
+
       await this.userRepository.update(
         {
           password: hashedPassword
         },
         { where: { email: userConfirmationHash.changingEmail } }
+      );
+
+      this.userClient.emit(
+        'confirm_user_account',
+        new ConfirmAccountEvent({
+          hashId: userConfirmationHash.id,
+          userId: userConfirmationHash.userId
+        })
+      );
+
+      this.userClient.emit(
+        'update_user_security_settings',
+        new UpdateUserSecurityEvent({
+          userId: userConfirmationHash.userId,
+          passwordChanged: new Date()
+        })
       );
     } else if (payload.phone && !payload.verificationString) {
       const userSettings = await this.userSettingsRepository.findOne({
@@ -512,7 +543,7 @@ export class UserService {
       this.userClient.emit(
         'send_verification_mobile_code',
         new UpdateUserSecurityEvent({
-          userId: userSettings.id,
+          userId: userSettings.userId,
           phone: userSettings.phone
         })
       );
@@ -520,15 +551,47 @@ export class UserService {
       return new ResponseDto('sent');
     } else if (payload.phone && payload.verificationString) {
       const userSettings = await this.userSettingsRepository.findOne({
-        where: { phone: payload.phone }
+        where: {
+          phone: payload.phone,
+          phoneVerificationCode: payload.verificationString
+        }
       });
 
-      // TODO Finish with phone way of password reminding
+      const time = dayjs(userSettings.verificationCodeCreatedAt);
+      const timeDifferenceInMinutes = dayjs().diff(time, 'minute');
+
       if (
-        !userSettings ||
-        userSettings.phoneVerificationCode !== payload.verificationString
+        payload.verificationString !== userSettings.phoneVerificationCode ||
+        timeDifferenceInMinutes > 5
       )
-        return new PhoneCodeErrorException();
+        throw new PhoneCodeErrorException();
+
+      if (!userSettings) return new PhoneCodeErrorException();
+
+      const hashedPassword = await bcryptjs.hash(payload.password, 10);
+
+      await this.userRepository.update(
+        {
+          password: hashedPassword
+        },
+        { where: { id: userSettings.userId } }
+      );
+
+      await this.userSettingsRepository.update(
+        {
+          phoneVerificationCode: null,
+          verificationCodeCreatedAt: null
+        },
+        { where: { userId: userSettings.userId } }
+      );
+
+      this.userClient.emit(
+        'update_user_security_settings',
+        new UpdateUserSecurityEvent({
+          userId: userSettings.userId,
+          passwordChanged: new Date()
+        })
+      );
     }
 
     return new ResponseDto();

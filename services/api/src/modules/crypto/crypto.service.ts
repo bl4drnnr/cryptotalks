@@ -13,6 +13,7 @@ import sequelize, { Op } from 'sequelize';
 import { NoCryptoException } from '@exceptions/no-crypto.exception';
 import { UpdateCoinEvent } from '@events/update-coin.event';
 import { MarketStats } from '@models/market-stats.model';
+import { UserNotFoundException } from '@exceptions/user-not-found.exception';
 
 @Injectable()
 export class CryptoService implements OnModuleInit {
@@ -201,6 +202,61 @@ export class CryptoService implements OnModuleInit {
       new RemoveCryptoToFavoriteEvent({ ...payload })
     );
     return new ResponseDto();
+  }
+
+  async listFavoriteCrypto({
+    page,
+    pageSize,
+    order,
+    orderBy,
+    userId,
+    requestUserId
+  }: {
+    page: number;
+    pageSize: number;
+    order: string;
+    orderBy: string;
+    userId: string;
+    requestUserId: string;
+  }) {
+    const offset = page * pageSize;
+    const limit = pageSize;
+    const where = {};
+    const attributes = [
+      'id',
+      'uuid',
+      'symbol',
+      'name',
+      'iconUrl',
+      'volume24h',
+      'marketCap',
+      'price',
+      'btcPrice',
+      'change',
+      'coinrankingUrl',
+      'sparkline',
+      'rank',
+      'tier'
+    ];
+
+    where['userId'] = requestUserId ? requestUserId : userId;
+
+    const userFavoriteCrypto = await this.favoriteCoinsRepo.findOne({
+      where: { ...where }
+    });
+
+    if (!userFavoriteCrypto) throw new UserNotFoundException();
+
+    return await this.cryptoRepository.findAndCountAll({
+      where: {
+        uuid: {
+          [Op.in]: userFavoriteCrypto.favoriteCoins
+        }
+      },
+      offset,
+      limit,
+      attributes
+    });
   }
 
   onModuleInit(): any {

@@ -455,7 +455,7 @@ paths:
   "/api/crypto/list/{page}/{pageSize}/{order}/{orderBy}":
     get:
       operationId: CryptoController_getAllCryptos
-      summary: List cryptos
+      summary: List crypto
       parameters:
         - name: page
           required: true
@@ -563,6 +563,42 @@ paths:
                 $ref: "#/components/schemas/ResponseDto"
         "201":
           description: As a response function returns success message
+      tags: *a3
+  "/api/crypto/list-favorites/{page}/{pageSize}/{order}/{orderBy}":
+    get:
+      operationId: CryptoController_listFavoriteCrypto
+      summary: Lists favorite cryptocurrencies of user
+      parameters:
+        - name: page
+          required: true
+          in: path
+          schema:
+            type: number
+        - name: pageSize
+          required: true
+          in: path
+          schema:
+            type: number
+        - name: order
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: orderBy
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: userId
+          required: true
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+        "201":
+          description: As a response returns list of cryptocurrenices
       tags: *a3
 info:
   title: Cryptotalks - API Gateway

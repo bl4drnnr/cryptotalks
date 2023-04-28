@@ -3,7 +3,7 @@ import React from 'react';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 
-import { PostProps } from '@components/PostPreview/PostPreview';
+import { PostProps } from '@components/PostPreview/PostPreview.interface';
 import {
   PostContainer,
   PostTextPreview,
