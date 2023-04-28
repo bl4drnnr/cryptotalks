@@ -582,7 +582,7 @@ export class UserService {
           phoneVerificationCode: null,
           verificationCodeCreatedAt: null
         },
-        { where: { id: userSettings.userId } }
+        { where: { userId: userSettings.userId } }
       );
 
       this.userClient.emit(
