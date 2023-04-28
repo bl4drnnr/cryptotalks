@@ -564,7 +564,7 @@ paths:
         "201":
           description: As a response function returns success message
       tags: *a3
-  "/api/crypto/list-favorites/{page}/{pageSize}/{order}/{orderBy}/{userId}":
+  "/api/crypto/list-favorites/{page}/{pageSize}/{order}/{orderBy}":
     get:
       operationId: CryptoController_listFavoriteCrypto
       summary: Lists favorite cryptocurrencies of user
@@ -591,7 +591,7 @@ paths:
             type: string
         - name: userId
           required: true
-          in: path
+          in: query
           schema:
             type: string
       responses:

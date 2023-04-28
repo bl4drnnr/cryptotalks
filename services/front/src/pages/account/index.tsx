@@ -12,6 +12,8 @@ import { useHandleException } from '@hooks/useHandleException.hook';
 import { useNotificationMessage } from '@hooks/useShowNotificationMessage.hook';
 import DefaultLayout from '@layouts/Default.layout';
 import { IPersonalInformation } from '@services/get-user-settings/get-user-settings.interface';
+import { ListFavoritesResponse } from '@services/list-favorites/list-favorites.interface';
+import { useListFavoritesService } from '@services/list-favorites/list-favorites.service';
 import { ListPostsResponse } from '@services/posts/list-posts/list-posts.interface';
 import { useListPostsService } from '@services/posts/list-posts/list-posts.service';
 import { useRefreshTokenService } from '@services/refresh-tokens/refresh-tokens.service';
@@ -48,11 +50,13 @@ const Account = () => {
   const fetchTokenChecking = React.useRef(true);
   const { loading: l1, refreshToken } = useRefreshTokenService();
   const { loading: l2, listPosts } = useListPostsService();
+  const { loading: l3, listFavorites } = useListFavoritesService();
   const { handleException } = useHandleException();
   const { showNotificationMessage } = useNotificationMessage();
 
   const [userData, setUserData] = React.useState<IPersonalInformation>();
   const [userPosts, setUserPosts] = React.useState<ListPostsResponse>();
+  const [favoriteCrypto, setFavoriteCrypto] = React.useState<ListFavoritesResponse>();
 
   React.useEffect(() => {
     if (fetchTokenChecking.current) {
@@ -69,6 +73,10 @@ const Account = () => {
 
             fetchUserPosts(res.user.username).then((posts) => {
               setUserPosts(posts);
+            });
+
+            fetchUserCryptocurrencies().then((crypto) => {
+              setFavoriteCrypto(crypto);
             });
           }
         });
@@ -116,12 +124,27 @@ const Account = () => {
     }
   };
 
+  const fetchUserCryptocurrencies = async () => {
+    try {
+      const token = localStorage.getItem('_at');
+      return await listFavorites({
+        page: 0,
+        pageSize: 3,
+        order: 'DESC',
+        orderBy: 'createdAt',
+        token
+      });
+    } catch (e) {
+      await exceptionHandler(e);
+    }
+  };
+
   return (
     <>
       <Head>
         <title>Cryptotalks | My account</title>
       </Head>
-      <DefaultLayout loading={l1 || l2}>
+      <DefaultLayout loading={l1 || l2 || l3}>
         <Container>
           <Wrapper>
             <AccountContainer>

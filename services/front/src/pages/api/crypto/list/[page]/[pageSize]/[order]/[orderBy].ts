@@ -12,7 +12,7 @@ export default async (
 
     let listCryptoUrl = `/crypto/list/${page}/${pageSize}/${order}/${orderBy}`;
 
-    if (searchQuery) listCryptoUrl += `?searchQuery=${searchQuery || ''}`;
+    if (searchQuery) listCryptoUrl += `?searchQuery=${searchQuery}`;
 
     const { data } = await Api.get(listCryptoUrl);
 

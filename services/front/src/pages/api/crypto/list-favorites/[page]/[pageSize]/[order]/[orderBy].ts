@@ -9,7 +9,12 @@ export default async (
 ) => {
   try {
     const { page, pageSize, order, orderBy, userId } = req.query;
-    const { data } = await Api.get(`/crypto/list-favorites/${page}/${pageSize}/${order}/${orderBy}/${userId}`, {
+
+    let listFavoritesUrl = `/crypto/list-favorites/${page}/${pageSize}/${order}/${orderBy}`;
+
+    if (userId) listFavoritesUrl += `?userId=${userId}`;
+
+    const { data } = await Api.get(listFavoritesUrl, {
       headers: { 'x-access-token': req.headers['x-access-token'] }
     });
 

@@ -18,8 +18,21 @@ export const useListFavoritesService = () => {
     : Promise<ListFavoritesResponse> => {
     try {
       setLoading(true);
-      const requestUrl = `/crypto/list-favorites/${page}/${pageSize}/${order}/${orderBy}/${userId}`;
-      const { data } = await ApiClient.get(requestUrl, {
+
+      const queryParams = [];
+      let listFavoritesUrl = `/crypto/list-favorites/${page}/${pageSize}/${order}/${orderBy}?`;
+
+      if (userId) queryParams.push({ userId });
+
+      if (queryParams.length) {
+        queryParams.forEach((item) => {
+          Object.entries(item).forEach(([key, value]) => {
+            listFavoritesUrl += `${key}=${value}&`;
+          });
+        });
+      }
+
+      const { data } = await ApiClient.get(listFavoritesUrl, {
         headers: {
           'x-access-token': `Bearer ${token}`
         }

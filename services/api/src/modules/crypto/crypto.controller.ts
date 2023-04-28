@@ -113,14 +113,14 @@ export class CryptoController {
     description: 'As a response returns list of cryptocurrenices'
   })
   @UseGuards(SoftJwtGuard)
-  @Get('list-favorites/:page/:pageSize/:order/:orderBy/:userId')
+  @Get('list-favorites/:page/:pageSize/:order/:orderBy')
   listFavoriteCrypto(
     @UserDecorator() requestUserId: string,
     @Param('page') page: number,
     @Param('pageSize') pageSize: number,
     @Param('order') order: string,
     @Param('orderBy') orderBy: string,
-    @Param('userId') userId: string
+    @Query('userId') userId: string
   ) {
     return this.cryptoService.listFavoriteCrypto({
       page,

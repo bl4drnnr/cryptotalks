@@ -13,6 +13,7 @@ import sequelize, { Op } from 'sequelize';
 import { NoCryptoException } from '@exceptions/no-crypto.exception';
 import { UpdateCoinEvent } from '@events/update-coin.event';
 import { MarketStats } from '@models/market-stats.model';
+import { UserNotFoundException } from '@exceptions/user-not-found.exception';
 
 @Injectable()
 export class CryptoService implements OnModuleInit {
@@ -238,11 +239,22 @@ export class CryptoService implements OnModuleInit {
       'tier'
     ];
 
+    where['userId'] = requestUserId ? requestUserId : userId;
+
+    const userFavoriteCrypto = await this.favoriteCoinsRepo.findOne({
+      where: { ...where }
+    });
+
+    if (!userFavoriteCrypto) throw new UserNotFoundException();
+
     return await this.cryptoRepository.findAndCountAll({
-      where: { ...where },
-      order: [[orderBy, order]],
-      limit,
+      where: {
+        uuid: {
+          [Op.in]: userFavoriteCrypto.favoriteCoins
+        }
+      },
       offset,
+      limit,
       attributes
     });
   }
