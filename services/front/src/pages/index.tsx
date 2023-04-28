@@ -13,6 +13,7 @@ import {
   YAxis
 } from 'recharts';
 
+import CoinPreview from '@components/CoinPreview/CoinPreview.component';
 import { Input } from '@components/Input/Input.component';
 import { useHandleException } from '@hooks/useHandleException.hook';
 import DefaultLayout from '@layouts/Default.layout';
@@ -20,6 +21,11 @@ import { ICoins } from '@services/list-crypto/list-crypto.interface';
 import { useListCryptoService } from '@services/list-crypto/list-crypto.service';
 import { ListPostsResponse } from '@services/posts/list-posts/list-posts.interface';
 import { useListPostsService } from '@services/posts/list-posts/list-posts.service';
+import {
+  PopularCryptoContainer,
+  PopularCryptoItem,
+  PopularCryptoParagraph
+} from '@styles/CoinPreview.style';
 import {
   Bold,
   BoldWeb3,
@@ -33,8 +39,11 @@ import {
   InputWrapper,
   HomeLine,
   Lines,
-  MainHomeWelcomeContainer, PopularCryptoContainer, PopularCryptoItem, PopularCryptoParagraph, PopularCryptoWrapper,
-  StartButton, SearchTagsWrapper, SearchTagItem, CoinInputWrapper
+  MainHomeWelcomeContainer,
+  StartButton,
+  SearchTagsWrapper,
+  SearchTagItem,
+  CoinInputWrapper
 } from '@styles/home.style';
 
 const Home = () => {
@@ -239,51 +248,19 @@ const Home = () => {
               />
             </HomePostsContainer>
             <PopularCryptoContainer>
-              {coins.map((item) => (
-                <PopularCryptoItem
-                  key={item.id}
-                  onClick={() => handleRedirect(`market/${item.uuid}`)}
-                >
-                  <Image src={item.iconUrl} alt={item.name} width={72} height={72} />
-
-                  <PopularCryptoWrapper>
-                    <PopularCryptoContainer>
-                      <PopularCryptoParagraph>{item.symbol}</PopularCryptoParagraph>
-                      <PopularCryptoParagraph className={'small'}>
-                        {item.name}
-                      </PopularCryptoParagraph>
-                    </PopularCryptoContainer>
-                  </PopularCryptoWrapper>
-
-                  <PopularCryptoWrapper className={'small-text'}>
-                    <PopularCryptoContainer>
-                      <PopularCryptoParagraph>
-                        Price: {parseFloat(item.price).toFixed(2)} $
-                      </PopularCryptoParagraph>
-                      <PopularCryptoParagraph className={'small'}>
-                        Cng: {item.change} %
-                      </PopularCryptoParagraph>
-                    </PopularCryptoContainer>
-                  </PopularCryptoWrapper>
-
-                  <LineChart
-                    width={150}
-                    height={80}
-                    data={item.sparkline}
-                  >
-                    <YAxis
-                      hide={true}
-                      type={'number'}
-                      domain={[
-                        Math.min(...item.sparkline.map((o: any) => o.value)),
-                        Math.max(...item.sparkline.map((o: any) => o.value))
-                      ]} />
-                    <Line
-                      dataKey="price"
-                      stroke={item.change > 0 ? 'rgb(59, 232, 59)': 'rgb(255, 51, 51)'}
-                    />
-                  </LineChart>
-                </PopularCryptoItem>
+              {coins.map((item, index) => (
+                <CoinPreview
+                  uuid={item.uuid}
+                  iconUrl={item.iconUrl}
+                  name={item.name}
+                  symbol={item.symbol}
+                  price={item.price}
+                  change={item.change}
+                  sparkline={item.sparkline}
+                  width={150}
+                  height={80}
+                  key={index}
+                />
               ))}
             </PopularCryptoContainer>
           </HomeDescriptionSide>
