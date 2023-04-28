@@ -203,6 +203,50 @@ export class CryptoService implements OnModuleInit {
     return new ResponseDto();
   }
 
+  async listFavoriteCrypto({
+    page,
+    pageSize,
+    order,
+    orderBy,
+    userId,
+    requestUserId
+  }: {
+    page: number;
+    pageSize: number;
+    order: string;
+    orderBy: string;
+    userId: string;
+    requestUserId: string;
+  }) {
+    const offset = page * pageSize;
+    const limit = pageSize;
+    const where = {};
+    const attributes = [
+      'id',
+      'uuid',
+      'symbol',
+      'name',
+      'iconUrl',
+      'volume24h',
+      'marketCap',
+      'price',
+      'btcPrice',
+      'change',
+      'coinrankingUrl',
+      'sparkline',
+      'rank',
+      'tier'
+    ];
+
+    return await this.cryptoRepository.findAndCountAll({
+      where: { ...where },
+      order: [[orderBy, order]],
+      limit,
+      offset,
+      attributes
+    });
+  }
+
   onModuleInit(): any {
     this.cryptoClient.subscribeToResponseOf('update_coin');
   }

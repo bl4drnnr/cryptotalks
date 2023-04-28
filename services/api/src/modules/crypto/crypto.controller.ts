@@ -28,7 +28,7 @@ import { SoftJwtGuard } from '@guards/soft-jwt.guard';
 export class CryptoController {
   constructor(private readonly cryptoService: CryptoService) {}
 
-  @ApiOperation({ summary: 'List cryptos' })
+  @ApiOperation({ summary: 'List crypto' })
   @ApiResponse({
     status: 201,
     description: 'As a response function returns list of posts'
@@ -105,5 +105,30 @@ export class CryptoController {
     @UserDecorator() userId: string
   ) {
     return this.cryptoService.removeCryptoFromFavorites({ cryptoId, userId });
+  }
+
+  @ApiOperation({ summary: 'Lists favorite cryptocurrencies of user' })
+  @ApiResponse({
+    status: 201,
+    description: 'As a response returns list of cryptocurrenices'
+  })
+  @UseGuards(SoftJwtGuard)
+  @Get('list-favorites/:page/:pageSize/:order/:orderBy/:userId')
+  listFavoriteCrypto(
+    @UserDecorator() requestUserId: string,
+    @Param('page') page: number,
+    @Param('pageSize') pageSize: number,
+    @Param('order') order: string,
+    @Param('orderBy') orderBy: string,
+    @Param('userId') userId: string
+  ) {
+    return this.cryptoService.listFavoriteCrypto({
+      page,
+      pageSize,
+      order,
+      orderBy,
+      userId,
+      requestUserId
+    });
   }
 }

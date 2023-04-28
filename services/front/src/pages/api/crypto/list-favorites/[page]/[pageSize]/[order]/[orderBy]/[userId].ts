@@ -8,13 +8,10 @@ export default async (
   res: NextApiResponse
 ) => {
   try {
-    const { page, pageSize, order, orderBy, searchQuery } = req.query;
-
-    let listCryptoUrl = `/crypto/list/${page}/${pageSize}/${order}/${orderBy}`;
-
-    if (searchQuery) listCryptoUrl += `?searchQuery=${searchQuery || ''}`;
-
-    const { data } = await Api.get(listCryptoUrl);
+    const { page, pageSize, order, orderBy, userId } = req.query;
+    const { data } = await Api.get(`/crypto/list-favorites/${page}/${pageSize}/${order}/${orderBy}/${userId}`, {
+      headers: { 'x-access-token': req.headers['x-access-token'] }
+    });
 
     return res.json(data);
   } catch (error: any) {

@@ -7,7 +7,6 @@ import { useRouter } from 'next/router';
 
 import { Button } from '@components/Button/Button.component';
 import { Input } from '@components/Input/Input.component';
-import PostPreviewComponent from '@components/PostPreview/PostPreview.component';
 import PostPreview from '@components/PostPreview/PostPreview.component';
 import { useHandleException } from '@hooks/useHandleException.hook';
 import { useNotificationMessage } from '@hooks/useShowNotificationMessage.hook';
@@ -225,7 +224,7 @@ const Account = () => {
                 <LatestPostsContainer>
                   {userPosts?.rows.length ? (
                     <>
-                      <PostsTitle>User latest posts</PostsTitle>
+                      <PostsTitle>Your latest posts</PostsTitle>
                       {userPosts?.rows.map((post, key) => (
                         <PostPreview
                           slug={post.slug}
