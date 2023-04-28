@@ -495,7 +495,21 @@ export class UserService {
       )
         throw new BadRequestException('wrong-hash', 'Wrong hash');
 
+      const currentUser = await this.userRepository.findByPk(
+        userConfirmationHash.userId
+      );
+
       const hashedPassword = await bcryptjs.hash(payload.password, 10);
+
+      const passwordEquality = await bcryptjs.compare(
+        payload.password,
+        currentUser.password
+      );
+      if (passwordEquality)
+        throw new BadRequestException(
+          'same-password',
+          'Same password as previous one'
+        );
 
       await this.userRepository.update(
         {
@@ -509,6 +523,14 @@ export class UserService {
         new ConfirmAccountEvent({
           hashId: userConfirmationHash.id,
           userId: userConfirmationHash.userId
+        })
+      );
+
+      this.userClient.emit(
+        'update_user_security_settings',
+        new UpdateUserSecurityEvent({
+          userId: userConfirmationHash.userId,
+          passwordChanged: new Date()
         })
       );
     } else if (payload.phone && !payload.verificationString) {
@@ -535,6 +557,15 @@ export class UserService {
         }
       });
 
+      const time = dayjs(userSettings.verificationCodeCreatedAt);
+      const timeDifferenceInMinutes = dayjs().diff(time, 'minute');
+
+      if (
+        payload.verificationString !== userSettings.phoneVerificationCode ||
+        timeDifferenceInMinutes > 5
+      )
+        throw new PhoneCodeErrorException();
+
       if (!userSettings) return new PhoneCodeErrorException();
 
       const hashedPassword = await bcryptjs.hash(payload.password, 10);
@@ -552,6 +583,14 @@ export class UserService {
           verificationCodeCreatedAt: null
         },
         { where: { id: userSettings.userId } }
+      );
+
+      this.userClient.emit(
+        'update_user_security_settings',
+        new UpdateUserSecurityEvent({
+          userId: userSettings.userId,
+          passwordChanged: new Date()
+        })
       );
     }
 
