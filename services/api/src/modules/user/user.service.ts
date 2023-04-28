@@ -597,15 +597,73 @@ export class UserService {
     return new ResponseDto();
   }
 
-  closeAccount({ userId }: { userId: string }) {
+  async closeAccount({
+    userId,
+    password,
+    code
+  }: {
+    userId: string;
+    password: string;
+    code?: string;
+  }) {
+    const user = await this.userRepository.findByPk(userId);
+
+    const passwordEquality = await bcryptjs.compare(password, user.password);
+    if (!passwordEquality) throw new WrongCredentialsException();
+
+    const userSecuritySettings = await this.userSettingsRepository.findOne({
+      where: { userId: user.id }
+    });
+
+    if (userSecuritySettings.twoFaToken && !code) {
+      return new ResponseDto('two-fa-required');
+    } else if (userSecuritySettings.twoFaToken && code) {
+      const tokenVerification = node2fa.verifyToken(
+        userSecuritySettings.twoFaToken,
+        code
+      );
+
+      if (!tokenVerification || tokenVerification.delta !== 0)
+        throw new Wrong2faException();
+    } else if (userSecuritySettings.phone && !code) {
+      this.userClient.emit(
+        'send_verification_mobile_code',
+        new UpdateUserSecurityEvent({
+          userId: user.id,
+          phone: userSecuritySettings.phone
+        })
+      );
+
+      return new ResponseDto('code-sent');
+    } else if (userSecuritySettings.phone && code) {
+      const { phoneVerificationCode, verificationCodeCreatedAt } =
+        await this.userSettingsRepository.findOne({
+          where: { userId: user.id }
+        });
+
+      const time = dayjs(verificationCodeCreatedAt);
+      const timeDifferenceInMinutes = dayjs().diff(time, 'minute');
+
+      if (code !== phoneVerificationCode || timeDifferenceInMinutes > 5)
+        throw new PhoneCodeErrorException();
+
+      await this.userSettingsRepository.update(
+        {
+          phoneVerificationCode: null,
+          verificationCodeCreatedAt: null
+        },
+        { where: { userId: user.id } }
+      );
+    }
+
+    this.userClient.emit('close_user_account', new CloseAccEvent({ userId }));
+
     this.loggerService.log({
       action: 'log_user_action',
       event: 'CLOSE_ACC',
       status: 'SUCCESS',
       payload: { userId }
     });
-
-    this.userClient.emit('close_user_account', new CloseAccEvent({ userId }));
 
     return new ResponseDto();
   }
@@ -681,6 +739,7 @@ export class UserService {
           phone: payload.phone
         })
       );
+
       return new ResponseDto('code-sent');
     } else if (payload.code) {
       const { phoneVerificationCode, verificationCodeCreatedAt } =
@@ -728,6 +787,7 @@ export class UserService {
           phone
         })
       );
+
       return new ResponseDto('code-sent');
     } else if (payload.code) {
       const { phoneVerificationCode, verificationCodeCreatedAt } =

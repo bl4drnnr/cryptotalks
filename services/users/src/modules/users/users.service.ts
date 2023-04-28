@@ -137,6 +137,12 @@ export class UsersService {
     await this.userRepository.destroy({
       where: { id: userId }
     });
+    await this.userSettingsRepository.destroy({
+      where: { userId }
+    });
+    await this.confirmHashRepository.destroy({
+      where: { userId }
+    });
   }
 
   async sendVerificationMobileCode({

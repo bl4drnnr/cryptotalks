@@ -8,6 +8,11 @@ export const useHandleException = () => {
   const { showNotificationMessage } = useNotificationMessage();
 
   const handleException = (error: any) => {
+
+    if (error.message === 'token-expired') {
+      localStorage.removeItem('_at');
+    }
+
     if (error instanceof ApiException) {
       showNotificationMessage({
         type: NotificationType.ERROR,

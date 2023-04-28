@@ -343,6 +343,12 @@ paths:
       operationId: UserController_closeAccount
       summary: Closes are removes an account of an user
       parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CloseAccountDto"
       responses:
         "201":
           description: As a response function returns success message
@@ -1424,6 +1430,17 @@ components:
           nullable: false
       required:
         - userId
+    CloseAccountDto:
+      type: object
+      properties:
+        password:
+          type: string
+          nullable: false
+        code:
+          type: string
+          nullable: true
+      required:
+        - password
     Set2faDto:
       type: object
       properties:

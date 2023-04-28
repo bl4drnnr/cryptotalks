@@ -38,6 +38,7 @@ import { RemovePhoneDto } from '@dto/remove-phone.dto';
 import { SignUpEventDto } from '@events/user-sign-up.event';
 import { ForgotPasswordDto } from '@dto/forgot-password.dto';
 import { SendVerificationEmailEventDto } from '@events/send-verification-email.event';
+import { CloseAccountDto } from '@dto/close-account.dto';
 
 @ApiTags('User')
 @Controller('user')
@@ -162,8 +163,11 @@ export class UserController {
   })
   @UseGuards(JwtGuard)
   @Post('close-account')
-  closeAccount(@UserDecorator() userId: string) {
-    return this.userService.closeAccount({ userId });
+  closeAccount(
+    @UserDecorator() userId: string,
+    @Body() payload: CloseAccountDto
+  ) {
+    return this.userService.closeAccount({ userId, ...payload });
   }
 
   @ApiOperation({ summary: 'Sets multi-factor authentication for user' })
