@@ -52,6 +52,7 @@ export class UserService {
     @Inject('USERS_SERVICE') private readonly userClient: ClientKafka,
     @Inject('AUTH_SERVICE') private readonly authClient: ClientKafka,
     @Inject('CRYPTO_SERVICE') private readonly cryptoClient: ClientKafka,
+    @Inject('POSTS_SERVICE') private readonly postsService: ClientKafka,
     @InjectModel(User) private readonly userRepository: typeof User,
     @InjectModel(UserSettings)
     private readonly userSettingsRepository: typeof UserSettings,
@@ -657,6 +658,15 @@ export class UserService {
     }
 
     this.userClient.emit('close_user_account', new CloseAccEvent({ userId }));
+    this.authClient.emit('user_logout', new UserLogoutEvent({ userId }));
+    this.cryptoClient.emit(
+      'close_account_coins',
+      new CloseAccEvent({ userId })
+    );
+    this.postsService.emit(
+      'close_account_delete_posts',
+      new CloseAccEvent({ userId })
+    );
 
     this.loggerService.log({
       action: 'log_user_action',

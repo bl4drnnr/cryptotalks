@@ -55,6 +55,19 @@ import { UserSettings } from '@models/user-settings.model';
             groupId: 'crypto-consumer'
           }
         }
+      },
+      {
+        name: 'POSTS_SERVICE',
+        transport: Transport.KAFKA,
+        options: {
+          client: {
+            clientId: 'posts',
+            brokers: ['kafka:9092']
+          },
+          consumer: {
+            groupId: 'posts-consumer'
+          }
+        }
       }
     ]),
     JwtModule.registerAsync({
