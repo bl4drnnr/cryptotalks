@@ -7,7 +7,15 @@ import { ListPostsPayload, ListPostsResponse } from '@services/posts/list-posts/
 export const useListPostsService = () => {
   const [loading, setLoading] = React.useState(false);
 
-  const listPosts = async ({ page, pageSize, order, orderBy, searchQuery, username }: ListPostsPayload)
+  const listPosts = async ({
+   page,
+   pageSize,
+   order,
+   orderBy,
+   searchQuery,
+   username,
+   token
+  }: ListPostsPayload)
     : Promise<ListPostsResponse> => {
     try {
       setLoading(true);
@@ -26,7 +34,11 @@ export const useListPostsService = () => {
         });
       }
 
-      const { data } = await ApiClient.get<ListPostsResponse>(listPostsPath);
+      const { data } = await ApiClient.get<ListPostsResponse>(listPostsPath, {
+        headers: {
+          'x-access-token': `Bearer ${token}`
+        }
+      });
 
       return data;
     } catch (error: any) {

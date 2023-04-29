@@ -23,7 +23,9 @@ export default async (
       });
     }
 
-    const { data } = await Api.get(listPostsPath);
+    const { data } = await Api.get(listPostsPath, {
+      headers: { 'x-access-token': req.headers['x-access-token'] }
+    });
 
     return res.json(data);
   } catch (error: any) {

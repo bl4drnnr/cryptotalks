@@ -15,6 +15,7 @@ export interface ListPostsPayload {
   searchQuery?: string;
   username?: string;
   tags?: string;
+  token?: string | null;
 }
 
 export interface ListPostsResponse {

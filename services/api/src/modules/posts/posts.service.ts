@@ -103,6 +103,7 @@ export class PostsService {
   }
 
   async listPosts({
+    userId,
     page,
     pageSize,
     order,
@@ -111,6 +112,7 @@ export class PostsService {
     username,
     tags
   }: {
+    userId?: string;
     page: number;
     pageSize: number;
     order: string;
@@ -127,6 +129,10 @@ export class PostsService {
       where['username'] = {
         [Op.iLike]: `%${username}%`
       };
+    }
+
+    if (userId) {
+      where['userId'] = userId;
     }
 
     if (tags) {
