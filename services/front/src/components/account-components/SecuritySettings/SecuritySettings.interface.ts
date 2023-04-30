@@ -13,5 +13,4 @@ export interface SecuritySettingsProps {
   securitySettings: ISecuritySettings | undefined;
   setSecuritySettings: React.Dispatch<React.SetStateAction<any>>;
   setInternalLoader: React.Dispatch<React.SetStateAction<any>>;
-  applySecuritySettings: any;
 }

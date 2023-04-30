@@ -65,8 +65,10 @@ export class PostsController {
     status: 201,
     description: 'As a response function returns list of posts'
   })
+  @UseGuards(SoftJwtGuard)
   @Get('list/:page/:pageSize/:order/:orderBy')
   async getAllPosts(
+    @UserDecorator() userId: string,
     @Param('page') page: number,
     @Param('pageSize') pageSize: number,
     @Param('order') order: string,
@@ -76,6 +78,7 @@ export class PostsController {
     @Query('tags') tags: string
   ) {
     return this.postsService.listPosts({
+      userId,
       page,
       pageSize,
       order,

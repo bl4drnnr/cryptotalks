@@ -25,4 +25,9 @@ export class CryptoController {
   handleUpdateCoin(data: any) {
     return this.cryptoService.handleUpdateCoin(data);
   }
+
+  @MessagePattern('close_account_coins')
+  handleCloseAccount(data: any) {
+    return this.cryptoService.closeAccount(data);
+  }
 }

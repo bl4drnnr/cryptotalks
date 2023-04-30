@@ -15,9 +15,8 @@ import { useNotificationMessage } from '@hooks/useShowNotificationMessage.hook';
 import DefaultLayout from '@layouts/Default.layout';
 import { IPersonalInformation } from '@services/get-user-settings/get-user-settings.interface';
 import { ICoins } from '@services/list-crypto/list-crypto.interface';
-import { ListFavoritesResponse } from '@services/list-favorites/list-favorites.interface';
 import { useListFavoritesService } from '@services/list-favorites/list-favorites.service';
-import { ListPostsResponse } from '@services/posts/list-posts/list-posts.interface';
+import { IPosts } from '@services/posts/list-posts/list-posts.interface';
 import { useListPostsService } from '@services/posts/list-posts/list-posts.service';
 import { useRefreshTokenService } from '@services/refresh-tokens/refresh-tokens.service';
 import { NotificationType } from '@store/global/global.state';
@@ -58,11 +57,16 @@ const Account = () => {
   const { showNotificationMessage } = useNotificationMessage();
 
   const [userData, setUserData] = React.useState<IPersonalInformation>();
-  const [userPosts, setUserPosts] = React.useState<ListPostsResponse>();
+  const [userPosts, setUserPosts] = React.useState<Array<IPosts>>([]);
   const [favoriteCrypto, setFavoriteCrypto] = React.useState<Array<ICoins>>([]);
-  const [page, setPage] = React.useState(0);
-  const [pageSize, setPageSize] = React.useState(5);
-  const [totalPages, setTotalPages] = React.useState<number>(0);
+
+  const [cryptoPage, setCryptoPage] = React.useState(0);
+  const [cryptoPageSize, setCryptoPageSize] = React.useState(5);
+  const [cryptoTotalPages, setCryptoTotalPages] = React.useState<number>(0);
+
+  const [postsPage, setPostsPage] = React.useState(0);
+  const [postsPageSize, setPostsPageSize] = React.useState(5);
+  const [postsTotalPages, setPostsTotalPages] = React.useState<number>(0);
 
   React.useEffect(() => {
     if (fetchTokenChecking.current) {
@@ -77,7 +81,7 @@ const Account = () => {
             localStorage.setItem('_at', res._at);
             setUserData(res.user);
 
-            fetchUserPosts(res.user.username).then();
+            fetchUserPosts().then();
             fetchUserCryptocurrencies().then();
           }
         });
@@ -87,7 +91,11 @@ const Account = () => {
 
   React.useEffect(() => {
     fetchUserCryptocurrencies().then();
-  }, [page, pageSize]);
+  }, [cryptoPage, cryptoPageSize]);
+
+  React.useEffect(() => {
+    fetchUserPosts().then();
+  }, [postsPage, postsPageSize]);
 
   const parseCoins = (listOfCoins: Array<ICoins>) => {
     return listOfCoins.map((item) => {
@@ -132,16 +140,20 @@ const Account = () => {
     }
   };
 
-  const fetchUserPosts = async (username: string) => {
+  const fetchUserPosts = async () => {
     try {
-      const posts = await listPosts({
-        page: 0,
-        pageSize: 3,
+      const token = localStorage.getItem('_at');
+
+      const { rows, count } = await listPosts({
+        page: postsPage,
+        pageSize: postsPageSize,
         order: 'DESC',
         orderBy: 'createdAt',
-        username
+        token
       });
-      setUserPosts(posts);
+
+      setUserPosts(rows);
+      setPostsTotalPages(count);
     } catch (e) {
       await exceptionHandler(e);
     }
@@ -150,16 +162,17 @@ const Account = () => {
   const fetchUserCryptocurrencies = async () => {
     try {
       const token = localStorage.getItem('_at');
+
       const { rows, count } = await listFavorites({
-        page,
-        pageSize,
+        page: cryptoPage,
+        pageSize: cryptoPageSize,
         order: 'DESC',
         orderBy: 'createdAt',
         token
       });
 
       setFavoriteCrypto(parseCoins(rows));
-      setTotalPages(count);
+      setCryptoTotalPages(count);
     } catch (e) {
       await exceptionHandler(e);
     }
@@ -272,10 +285,10 @@ const Account = () => {
                 </UserSideBar>
                 <div>
                   <LatestPostsContainer>
-                    {userPosts?.rows.length ? (
+                    {userPosts?.length ? (
                       <>
-                        <PostsTitle>Your latest posts</PostsTitle>
-                        {userPosts?.rows.map((post, key) => (
+                        <PostsTitle>Your posts</PostsTitle>
+                        {userPosts?.map((post, key) => (
                           <PostPreview
                             slug={post.slug}
                             title={post.title}
@@ -285,6 +298,13 @@ const Account = () => {
                             key={key}
                           />
                         ))}
+                        <Pagination
+                          currentPage={postsPage + 1}
+                          pageSize={postsPageSize}
+                          onPageChange={setPostsPage}
+                          onPageSizeChange={setPostsPageSize}
+                          totalPages={Math.ceil(postsTotalPages / postsPageSize)}
+                        />
                       </>
                     ) : (
                       <NoPostsTitle>
@@ -311,11 +331,11 @@ const Account = () => {
                           />
                         ))}
                         <Pagination
-                          currentPage={page + 1}
-                          pageSize={pageSize}
-                          onPageChange={setPage}
-                          onPageSizeChange={setPageSize}
-                          totalPages={Math.ceil(totalPages / pageSize)}
+                          currentPage={cryptoPage + 1}
+                          pageSize={cryptoPageSize}
+                          onPageChange={setCryptoPage}
+                          onPageSizeChange={setCryptoPageSize}
+                          totalPages={Math.ceil(cryptoTotalPages / cryptoPageSize)}
                         />
                       </>
                     ): (

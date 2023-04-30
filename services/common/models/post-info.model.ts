@@ -1,6 +1,5 @@
 import {
   Column,
-  Comment,
   CreatedAt,
   DataType,
   Default,

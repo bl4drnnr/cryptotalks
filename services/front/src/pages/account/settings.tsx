@@ -6,17 +6,20 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 
 import { Button } from '@components/Button/Button.component';
+import { Input } from '@components/Input/Input.component';
+import { Modal } from '@components/Modal/Modal.component';
 import PersonalInformation from '@components/PersonalInformation/PersonalInformation.component';
 import SecuritySettings from '@components/SecuritySettings/SecuritySettings.component';
+import { TwoFa } from '@components/TwoFa/TwoFa.component';
 import { useHandleException } from '@hooks/useHandleException.hook';
+import { useNotificationMessage } from '@hooks/useShowNotificationMessage.hook';
 import DefaultLayout from '@layouts/Default.layout';
 import { useCloseAccountService } from '@services/close-account/close-account.service';
-import {
-  IPersonalInformation,
-  ISecuritySettings
-} from '@services/get-user-settings/get-user-settings.interface';
+import { IPersonalInformation, ISecuritySettings } from '@services/get-user-settings/get-user-settings.interface';
 import { useGetUserSettingsService } from '@services/get-user-settings/get-user-settings.service';
 import { useSetPersonalSettingsService } from '@services/set-personal-settings/set-personal-settings.service';
+import { NotificationType } from '@store/global/global.state';
+import { ModalButtonWrapper } from '@styles/SecuritySettings.style';
 import {
   ButtonWrapper,
   Container,
@@ -41,12 +44,19 @@ const AccountSettings = () => {
   const { loading: l0, getUserSettings } = useGetUserSettingsService();
   const { loading: l1, closeAccount } = useCloseAccountService();
   const { loading: l2, setPersonalSettings } = useSetPersonalSettingsService();
+  const { showNotificationMessage } = useNotificationMessage();
 
   const fetchSettingsRef = React.useRef(true);
 
   const [internalLoader, setInternalLoader] = React.useState<boolean>(false);
   const [personalInformation, setPersonalInformation] = React.useState<IPersonalInformation>();
   const [securitySettings, setSecuritySettings] = React.useState<ISecuritySettings>();
+
+  const [closeAccountStep, setCloseAccountStep] = React.useState(1);
+  const [closeAccountModal, setCloseAccountModal] = React.useState<boolean>();
+  const [closePassword, setClosePassword] = React.useState<string>('');
+  const [twoFaCode, setTwoFaCode] = React.useState('');
+  const [code, setCode] = React.useState('');
 
   const [section, setSection] = React.useState('personalInformation');
   const [sections, ] = React.useState([{
@@ -66,7 +76,7 @@ const AccountSettings = () => {
       fetchSettingsRef.current = false;
       const token = localStorage.getItem('_at');
 
-      if (!token) handleRedirect('').then();
+      if (!token) handleRedirect('/').then();
       else fetchUserSettings(token).then();
     }
   }, []);
@@ -75,7 +85,7 @@ const AccountSettings = () => {
     handleException(e);
     if (e.message !== 'username-taken') {
       localStorage.removeItem('_at');
-      await handleRedirect('');
+      await handleRedirect('/');
     }
   };
 
@@ -86,7 +96,9 @@ const AccountSettings = () => {
       setPersonalInformation(personalSettings);
       setSecuritySettings(securitySettings);
     } catch (e) {
-      return exceptionHandler(e);
+      handleException(e);
+      localStorage.removeItem('_at');
+      await handleRedirect('/');
     }
   };
 
@@ -94,17 +106,7 @@ const AccountSettings = () => {
     try {
       const token = localStorage.getItem('_at');
       await setPersonalSettings({ ...personalInformation, token });
-      return handleRedirect('account');
-    } catch (e) {
-      return exceptionHandler(e);
-    }
-  };
-
-  const applySecuritySettings = async () => {
-    try {
-      const token = localStorage.getItem('_at');
-      // await setSecurityUserSettings({  ...securitySettings, token });
-      return handleRedirect('account');
+      return handleRedirect('/account');
     } catch (e) {
       return exceptionHandler(e);
     }
@@ -113,14 +115,29 @@ const AccountSettings = () => {
   const fetchCloseUserAccount = async () => {
     try {
       const token = localStorage.getItem('_at');
-      const response = await closeAccount({ token });
+      const { message } = await closeAccount({
+        token, password: closePassword, code: twoFaCode || code
+      });
+
+      if (message === 'code-sent')
+        return setCloseAccountStep(2);
+      else if (message === 'two-fa-required')
+        return setCloseAccountStep(3);
+
+      showNotificationMessage({
+        type: NotificationType.SUCCESS,
+        content: 'Account has been successfully closed'
+      });
+
+      localStorage.removeItem('_at');
+      await handleRedirect('/');
     } catch (e) {
-      return exceptionHandler(e);
+      return handleException(e);
     }
   };
 
   const handleRedirect = async (path: string) => {
-    await router.push(`/${path}`);
+    await router.push(path);
   };
 
   return (
@@ -134,7 +151,7 @@ const AccountSettings = () => {
 
             <SettingsPageHeader>
               <SettingsPageHeaderSide
-                onClick={() => handleRedirect('account')}
+                onClick={() => handleRedirect('/account')}
               >
                 <UserProfilePicture>
                   <Image className={'ava'} src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/testava.jpg`} alt={'ava'} width={128} height={128}/>
@@ -170,9 +187,70 @@ const AccountSettings = () => {
                 <ButtonWrapper>
                   <Button
                     text={'Close account'}
-                    onClick={() => fetchCloseUserAccount()}
+                    onClick={() => setCloseAccountModal(true)}
                     fillDanger={true}
                   />
+                  {closeAccountModal ? (
+                    <Modal
+                      onClose={() => setCloseAccountModal(false)}
+                      header={'Close account'}
+                      description={'Be careful! You are about to close your account! This action will remove all your data, but most importantly, we are gonna miss you :( In order to continue, provide your password.'}
+                    >
+                      <>
+                        {closeAccountStep === 1 ? (
+                          <>
+                            <Input
+                              onWhite={true}
+                              type={'password'}
+                              value={closePassword}
+                              placeholder={'Password'}
+                              onChange={(e) => setClosePassword(e.target.value)}
+                            />
+                            <ModalButtonWrapper className={'vertical-margin'}>
+                              <Button
+                                disabled={closePassword.length < 8}
+                                onWhite={true}
+                                onClick={() => fetchCloseUserAccount()}
+                                text={'Close account'}
+                              />
+                            </ModalButtonWrapper>
+                          </>
+                        ) : (closeAccountStep === 2 ? (
+                          <>
+                            <TwoFa
+                              styles={{ justifyCenter: true, onWhite: true }}
+                              title={'Mobile 2FA code'}
+                              setTwoFaCode={setCode}
+                            />
+                            <ModalButtonWrapper>
+                              <Button
+                                disabled={code.length !== 6}
+                                onWhite={true}
+                                onClick={() => fetchCloseUserAccount()}
+                                text={'Submit'}
+                              />
+                            </ModalButtonWrapper>
+                          </>
+                        ) : (
+                          <>
+                            <TwoFa
+                              styles={{ justifyCenter: true, onWhite: true }}
+                              title={'Two factor authentication code'}
+                              setTwoFaCode={setTwoFaCode}
+                            />
+                            <ModalButtonWrapper>
+                              <Button
+                                disabled={twoFaCode.length !== 6}
+                                onWhite={true}
+                                onClick={() => fetchCloseUserAccount()}
+                                text={'Submit'}
+                              />
+                            </ModalButtonWrapper>
+                          </>
+                        ))}
+                      </>
+                    </Modal>
+                  ) : null}
                 </ButtonWrapper>
               </SidebarContainer>
               <SettingsContent>
@@ -187,7 +265,6 @@ const AccountSettings = () => {
                     securitySettings={securitySettings}
                     setSecuritySettings={setSecuritySettings}
                     setInternalLoader={setInternalLoader}
-                    applySecuritySettings={applySecuritySettings}
                   />
                 ) : (<></>))}
               </SettingsContent>

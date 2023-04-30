@@ -9,6 +9,7 @@ import { AddCryptoToFavoriteEventDto } from '@events/add-crypto-to-favorite.even
 import { RemoveCryptoToFavoriteEventDto } from '@events/remove-crypto-from-favorite.event';
 import { UpdateCoinEventDto } from '@events/update-coin.event';
 import { SignUpEventDto } from '@events/user-sign-up.event';
+import { CloseAccEventDto } from '@events/close-acc.event';
 
 @Injectable()
 export class CryptoService {
@@ -74,5 +75,11 @@ export class CryptoService {
       { description: coinInformation.description.en },
       { where: { id: coin.id }, returning: true }
     );
+  }
+
+  async closeAccount({ userId }: CloseAccEventDto) {
+    return await this.favoriteCoinsRepository.destroy({
+      where: { userId }
+    });
   }
 }

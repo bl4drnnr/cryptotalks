@@ -13,6 +13,8 @@ import { LeaveCommentEventDto } from '@events/leave-comment.event';
 import { LogEventDto } from '@events/log.event';
 import * as uuid from 'uuid';
 import { UpdatePostInfoEventDto } from '@events/update-post-info.event';
+import { CloseAccEventDto } from '@events/close-acc.event';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class PostsService {
@@ -186,6 +188,23 @@ export class PostsService {
         );
       }
     }
+  }
+
+  async closeAccount({ userId }: CloseAccEventDto) {
+    const allUserPosts = await this.postRepository.findAll({
+      where: { userId }
+    });
+    const userPostsIds = allUserPosts.map((post) => post.id);
+    await this.postInfoRepository.destroy({
+      where: {
+        postId: {
+          [Op.in]: userPostsIds
+        }
+      }
+    });
+    return await this.postRepository.destroy({
+      where: { userId }
+    });
   }
 
   async logPostAction(payload: LogEventDto) {

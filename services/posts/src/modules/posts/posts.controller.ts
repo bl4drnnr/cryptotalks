@@ -35,4 +35,9 @@ export class PostsController {
   handleUpdatePostInfo(data: any) {
     return this.postsService.updatePostInfo(data);
   }
+
+  @EventPattern('close_account_delete_posts')
+  handleCloseAccount(data: any) {
+    return this.postsService.closeAccount(data);
+  }
 }

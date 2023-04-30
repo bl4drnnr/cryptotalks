@@ -33,7 +33,7 @@ import {
   VoteButtonsWrapper
 } from '@styles/post.style';
 
-const PostSlug = () => {
+const Post = () => {
   const router = useRouter();
 
   const { handleException } = useHandleException();
@@ -334,4 +334,4 @@ const PostSlug = () => {
   );
 };
 
-export default PostSlug;
+export default Post;
