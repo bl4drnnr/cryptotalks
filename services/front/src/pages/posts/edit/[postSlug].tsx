@@ -26,6 +26,7 @@ const EditPost = () => {
   const { loading: l0, getPostBySlug } = useGetPostBySlug();
   const { loading: l1, updatePost } = useUpdatePostService();
 
+  const [postId, setPostId] = React.useState<string>('');
   const [postNotFound, setPostNotFound] = React.useState<boolean>(false);
   const [title, setTitle] = React.useState<string>('');
   const [titleError, setTitleError] = React.useState<boolean>(false);
@@ -37,7 +38,6 @@ const EditPost = () => {
   const [searchTags, setSearchTags] = React.useState<Array<string>>(['']);
   const [searchTagsString, setSearchTagsString] = React.useState<string>('');
   const [searchTagsError, setSearchTagsError] = React.useState<boolean>(false);
-  const [tokenPresent, setTokenPresent] = React.useState();
 
   React.useEffect(() => {
     const { postSlug } = router.query;
@@ -94,6 +94,9 @@ const EditPost = () => {
   const fetchGetPost = async (slug: string) => {
     try {
       const token = localStorage.getItem('_at');
+
+      if (!token) await handleRedirect('/');
+
       return await getPostBySlug({ slug, token });
     } catch (e) {
       await handleException(e);
@@ -110,13 +113,27 @@ const EditPost = () => {
       // @ts-ignore
       setContent(res.content);
       // @ts-ignore
+      setContentString(res.content.join('\n'));
+      // @ts-ignore
       setSearchTags(res.searchTags);
+      // @ts-ignore
+      setPostId(res.id);
     });
   };
 
   const fetchUpdatePost = async () => {
     try {
-      //
+      const token = localStorage.getItem('_at');
+      await updatePost({
+        token,
+        postId,
+        title,
+        content,
+        preview,
+        searchTags: searchTags.filter((tag) => tag.length !== 0 && tag.length <= 20)
+      });
+
+      return await handleRedirect('/account');
     } catch (e) {
       await handleException(e);
     }
@@ -129,65 +146,71 @@ const EditPost = () => {
   return (
     <>
       <Head>
-        <title>Cryptotalks</title>
+        <title>Cryptotalks | {title}</title>
       </Head>
       <DefaultLayout loading={l0 || l1}>
         <Container>
-          <CreatePostTitle>Update post</CreatePostTitle>
-          <Input
-            onError={titleError}
-            onErrorMessage={'Title is required. Min length is 2 symbols.'}
-            value={title}
-            placeholder={'Title of a post'}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-          <Textarea
-            onError={previewError}
-            onErrorMessage={'Preview is required. Min length is 2 symbols.'}
-            value={preview}
-            placeholder={'Preview of a post'}
-            onChange={(e) => setPreview(e.target.value)}
-          />
-          <Textarea
-            onError={contentError}
-            onErrorMessage={'Content is required.'}
-            value={contentString}
-            placeholder={'Content'}
-            onChange={(e) => setPostContent(e.target.value)}
-          />
-          <InputKeyWrapper
-            onKeyDown={(e) => clearPostSearchTags(e)}
-          >
-            <Input
-              onError={searchTagsError}
-              onErrorMessage={'Max quantity of search tags is 5. Min quantity of search tags is 1. Max length of tag is 20. Min length of tag is 1'}
-              value={searchTagsString}
-              placeholder={'Search tags'}
-              onChange={(e) => setPostSearchTags(e.target.value)}
-            />
-          </InputKeyWrapper>
+          {postNotFound ? (
+            <></>
+          ) : (
+            <>
+              <CreatePostTitle>Update post</CreatePostTitle>
+              <Input
+                onError={titleError}
+                onErrorMessage={'Title is required. Min length is 2 symbols.'}
+                value={title}
+                placeholder={'Title of a post'}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+              <Textarea
+                onError={previewError}
+                onErrorMessage={'Preview is required. Min length is 2 symbols.'}
+                value={preview}
+                placeholder={'Preview of a post'}
+                onChange={(e) => setPreview(e.target.value)}
+              />
+              <Textarea
+                onError={contentError}
+                onErrorMessage={'Content is required.'}
+                value={contentString}
+                placeholder={'Content'}
+                onChange={(e) => setPostContent(e.target.value)}
+              />
+              <InputKeyWrapper
+                onKeyDown={(e) => clearPostSearchTags(e)}
+              >
+                <Input
+                  onError={searchTagsError}
+                  onErrorMessage={'Max quantity of search tags is 5. Min quantity of search tags is 1. Max length of tag is 20. Min length of tag is 1'}
+                  value={searchTagsString}
+                  placeholder={'Search tags'}
+                  onChange={(e) => setPostSearchTags(e.target.value)}
+                />
+              </InputKeyWrapper>
 
-          {searchTags.length > 1 ? (
-            <SearchTagsWrapper>
-              {searchTags.map((tag, key) => (
-                <div key={key}>
-                  {tag !== '' ? (
-                    <SearchTagItem
-                      onClick={() => removeSearchTag(tag)}
-                    >{tag}</SearchTagItem>
-                  ) : (<></>)}
-                </div>
-              ))}
-            </SearchTagsWrapper>
-          ): (<></>)}
+              {searchTags.length > 1 ? (
+                <SearchTagsWrapper>
+                  {searchTags.map((tag, key) => (
+                    <div key={key}>
+                      {tag !== '' ? (
+                        <SearchTagItem
+                          onClick={() => removeSearchTag(tag)}
+                        >{tag}</SearchTagItem>
+                      ) : (<></>)}
+                    </div>
+                  ))}
+                </SearchTagsWrapper>
+              ): (<></>)}
 
-          <ButtonWrapper>
-            <Button
-              text={'Update post'}
-              onClick={() => fetchUpdatePost()}
-              disabled={titleError || previewError || contentError || searchTagsError}
-            />
-          </ButtonWrapper>
+              <ButtonWrapper>
+                <Button
+                  text={'Update post'}
+                  onClick={() => fetchUpdatePost()}
+                  disabled={titleError || previewError || contentError || searchTagsError}
+                />
+              </ButtonWrapper>
+            </>
+          )}
         </Container>
       </DefaultLayout>
     </>

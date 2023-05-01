@@ -114,8 +114,16 @@ export class PostsController {
   })
   @UseGuards(JwtGuard)
   @Patch('update/:id')
-  updatePost(@Param('id') postId: string, @Body() payload: UpdatePostDto) {
-    return this.postsService.updatePost({ postId, ...payload });
+  updatePost(
+    @UserDecorator() userId: string,
+    @Param('id') postId: string,
+    @Body() payload: UpdatePostDto
+  ) {
+    return this.postsService.updatePost({
+      userId,
+      postId,
+      payload
+    });
   }
 
   @ApiExtraModels(LogEventDto)

@@ -4,19 +4,17 @@ import { CreatePostDto } from '@dto/create-post.dto';
 import { CreatePostEvent } from '@events/create-post.event';
 import { ResponseDto } from '@dto/response.dto';
 import { DeletePostEvent, DeletePostEventDto } from '@events/delete-post.event';
-import { UpdatePostEvent, UpdatePostEventDto } from '@events/update-post.event';
+import { UpdatePostEvent } from '@events/update-post.event';
 import { Post } from '@models/post.model';
 import { InjectModel } from '@nestjs/sequelize';
 import sequelize, { Op } from 'sequelize';
-import {
-  LeaveCommentEvent,
-  LeaveCommentEventDto
-} from '@events/leave-comment.event';
+import { LeaveCommentEvent } from '@events/leave-comment.event';
 import { AlreadyExistingPostException } from '@exceptions/already-existing-post.exception';
 import { PostNotFoundException } from '@exceptions/post-not-found.exception';
 import { PostInfo } from '@models/post-info.model';
 import { User } from '@models/user.model';
 import { UpdatePostInfoEvent } from '@events/update-post-info.event';
+import { UpdatePostDto } from '@dto/update-post.dto';
 
 @Injectable()
 export class PostsService {
@@ -182,8 +180,27 @@ export class PostsService {
     return new ResponseDto();
   }
 
-  updatePost(payload: UpdatePostEventDto) {
-    this.postsClient.emit('update_post', new UpdatePostEvent({ ...payload }));
+  async updatePost({
+    payload,
+    userId,
+    postId
+  }: {
+    payload: UpdatePostDto;
+    userId: string;
+    postId: string;
+  }) {
+    const post = await this.postRepository.findByPk(postId);
+
+    if (!post) throw new PostNotFoundException();
+
+    if (userId !== post.userId)
+      throw new BadRequestException('wrong-user', 'Wrong user');
+
+    this.postsClient.emit(
+      'update_post',
+      new UpdatePostEvent({ ...payload, postId })
+    );
+
     return new ResponseDto();
   }
 

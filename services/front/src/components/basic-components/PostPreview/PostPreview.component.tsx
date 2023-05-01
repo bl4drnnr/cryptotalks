@@ -32,7 +32,7 @@ const PostPreview = (
 
   return (
     <PostContainer
-      onClick={() => handleRedirect(`/posts/post/${slug}`)}
+      onClick={() => handleRedirect(`/posts/edit/${slug}`)}
     >
       <PostTitle>{title}</PostTitle>
       <PostTextPreview>{preview}</PostTextPreview>
