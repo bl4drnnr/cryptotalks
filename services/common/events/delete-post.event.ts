@@ -7,6 +7,18 @@ export class DeletePostEventDto {
     nullable: false
   })
   id: string;
+
+  @ApiProperty({
+    type: String,
+    nullable: true
+  })
+  twoFaCode?: string;
+
+  @ApiProperty({
+    type: String,
+    nullable: true
+  })
+  code?: string;
 }
 
 export class DeletePostEvent {

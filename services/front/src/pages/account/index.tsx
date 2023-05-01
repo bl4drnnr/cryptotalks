@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import { Button } from '@components/Button/Button.component';
 import CoinPreview from '@components/CoinPreview/CoinPreview.component';
 import { Input } from '@components/Input/Input.component';
+import { Modal } from '@components/Modal/Modal.component';
 import Pagination from '@components/Pagination/Pagination.component';
 import PostPreview from '@components/PostPreview/PostPreview.component';
 import { useHandleException } from '@hooks/useHandleException.hook';
@@ -24,27 +25,27 @@ import { NotificationType } from '@store/global/global.state';
 import {
   AccountContainer,
   AccountContentContainer,
+  AccountCreatedAtContainer,
   AccountInfo,
   AccountInfoContainer,
-  Container,
-  CreatedAtParagraph,
-  FullName,
-  Nickname,
-  UserBio,
-  UserInfoContainer,
-  UserProfilePicture,
-  UserSideBar,
-  CreatedAtDate,
-  Wrapper,
-  AccountCreatedAtContainer,
-  UserTitle,
-  UserProfilePictureWrapper,
   ContactField,
   ContactIcon,
   ContactInformationWrapper,
+  Container,
+  CreatedAtDate,
+  CreatedAtParagraph,
+  FullName,
   LatestPostsContainer,
+  Nickname,
   NoPostsTitle,
   PostsTitle,
+  UserBio,
+  UserInfoContainer,
+  UserProfilePicture,
+  UserProfilePictureWrapper,
+  UserSideBar,
+  UserTitle,
+  Wrapper,
 } from '@styles/account.style';
 
 const Account = () => {
@@ -69,6 +70,9 @@ const Account = () => {
   const [postsPage, setPostsPage] = React.useState(0);
   const [postsPageSize, setPostsPageSize] = React.useState(5);
   const [postsTotalPages, setPostsTotalPages] = React.useState<number>(0);
+
+  const [deletePostModal, setDeletePostModal] = React.useState<boolean>(false);
+  const [deletePostStep, setDeletePostStep] = React.useState<number>(1);
 
   React.useEffect(() => {
     if (fetchTokenChecking.current) {
@@ -180,9 +184,26 @@ const Account = () => {
     }
   };
 
-  const fetchDeletePost = async () => {
+  const fetchDeletePost = async (postId: string) => {
     try {
       const token = localStorage.getItem('_at');
+      const { message } = await deletePost({
+        token,
+        postId
+      });
+
+      if (message === 'two-fa-required') {
+        return setDeletePostStep(2);
+      } else if (message === 'phone-two-fa-required') {
+        return setDeletePostStep(3);
+      }
+
+      showNotificationMessage({
+        type: NotificationType.SUCCESS,
+        content: 'Post has been successfully deleted'
+      });
+
+      await fetchUserPosts();
     } catch (e) {
       await exceptionHandler(e);
     }
@@ -299,15 +320,31 @@ const Account = () => {
                       <>
                         <PostsTitle>Your posts</PostsTitle>
                         {userPosts?.map((post, key) => (
-                          <PostPreview
-                            slug={post.slug}
-                            title={post.title}
-                            preview={post.preview}
-                            searchTags={post.searchTags}
-                            createdAt={post.createdAt}
-                            key={key}
-                            isAdmin={true}
-                          />
+                          <>
+                            <PostPreview
+                              slug={post.slug}
+                              title={post.title}
+                              preview={post.preview}
+                              searchTags={post.searchTags}
+                              createdAt={post.createdAt}
+                              key={key}
+                              isAdmin={true}
+                              onDeleteClick={() => setDeletePostModal(true)}
+                            />
+                            {deletePostModal ? (
+                              <Modal
+                                key={post.id}
+                                onClose={() => setDeletePostModal(false)}
+                                header={'Delete post?'}
+                                description={'Be careful! This action cannot be proceed back. It means you will not be able to restore post, comments and rates. Are you sure you want to continue?'}
+                              >
+                                <Button
+                                  onClick={() => fetchDeletePost(post.id)}
+                                  text={'Continue'}
+                                />
+                              </Modal>
+                            ) : null}
+                          </>
                         ))}
                         <Pagination
                           currentPage={postsPage + 1}

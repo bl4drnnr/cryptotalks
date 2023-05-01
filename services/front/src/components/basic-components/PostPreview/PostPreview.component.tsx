@@ -11,7 +11,9 @@ import {
   PostSearchTags,
   PostTag,
   PostTitle,
-  PostCreatedAt, EditButtonsWrapper, EditButtonWrapper
+  PostCreatedAt,
+  EditButtonsWrapper,
+  EditButtonWrapper
 } from '@styles/PostPreview.style';
 
 const PostPreview = (
@@ -21,7 +23,8 @@ const PostPreview = (
     preview,
     searchTags,
     createdAt,
-    isAdmin
+    isAdmin,
+    onDeleteClick
   }: PostProps
 ) => {
   const router = useRouter();
@@ -55,7 +58,11 @@ const PostPreview = (
             />
           </EditButtonWrapper>
           <EditButtonWrapper className={'second'}>
-            <Button text={'Delete'} danger={true} />
+            <Button
+              text={'Delete'}
+              onClick={onDeleteClick}
+              danger={true}
+            />
           </EditButtonWrapper>
         </EditButtonsWrapper>
       ) : (<></>)}
