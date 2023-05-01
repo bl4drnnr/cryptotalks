@@ -26,6 +26,11 @@ paths:
           in: path
           schema:
             type: string
+        - name: toEdit
+          required: true
+          in: query
+          schema:
+            type: string
       responses:
         "200":
           description: ""

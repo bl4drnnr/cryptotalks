@@ -11,6 +11,7 @@ export const Container = styled.div`
 
 export const Title = styled.div`
   font-size: 48px;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 900;
 `;
 

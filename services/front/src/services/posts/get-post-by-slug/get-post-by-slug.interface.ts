@@ -1,6 +1,7 @@
 export interface GetPostBySlugPayload {
   slug: string;
   token: string | null;
+  toEdit?: boolean;
 }
 
 interface IRate {

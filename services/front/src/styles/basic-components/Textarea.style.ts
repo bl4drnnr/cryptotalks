@@ -20,7 +20,6 @@ export const BasicTextarea = styled.textarea`
   box-sizing: border-box;
   line-height: 24px;
   transition: .3s;
-  font-weight: 100;
 
   padding: 15px;
   font-size: 14px;

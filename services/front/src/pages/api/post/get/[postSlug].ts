@@ -8,7 +8,8 @@ export default async (
   res: NextApiResponse
 ) => {
   try {
-    const { data } = await Api.get(`/posts/get/${req.query.postSlug}`, {
+    const { toEdit } = req.query;
+    const { data } = await Api.get(`/posts/get/${req.query.postSlug}${toEdit ? '&toEdit=yes' : ''}`, {
       headers: { 'x-access-token': req.headers['x-access-token'] }
     });
 

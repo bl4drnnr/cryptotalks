@@ -50,16 +50,21 @@ export class PostsService {
 
   async getPostBySlug({
     slug,
-    userId
+    userId,
+    toEdit
   }: {
     slug: string;
     userId: string | undefined;
+    toEdit?: string | undefined;
   }) {
     const post = await this.postRepository.findOne({
       where: { slug }
     });
 
     if (!post) throw new PostNotFoundException();
+
+    if (toEdit === 'yes' && userId !== post.userId)
+      throw new BadRequestException('wrong-user', 'Wrong user');
 
     const postInfo = await this.postInfoRepository.findOne({
       where: { postId: post.id }

@@ -16,6 +16,7 @@ import DefaultLayout from '@layouts/Default.layout';
 import { IPersonalInformation } from '@services/get-user-settings/get-user-settings.interface';
 import { ICoins } from '@services/list-crypto/list-crypto.interface';
 import { useListFavoritesService } from '@services/list-favorites/list-favorites.service';
+import { useDeletePostService } from '@services/posts/delete-post/delete-post.service';
 import { IPosts } from '@services/posts/list-posts/list-posts.interface';
 import { useListPostsService } from '@services/posts/list-posts/list-posts.service';
 import { useRefreshTokenService } from '@services/refresh-tokens/refresh-tokens.service';
@@ -53,6 +54,7 @@ const Account = () => {
   const { loading: l1, refreshToken } = useRefreshTokenService();
   const { loading: l2, listPosts } = useListPostsService();
   const { loading: l3, listFavorites } = useListFavoritesService();
+  const { loading: l4, deletePost } = useDeletePostService();
   const { handleException } = useHandleException();
   const { showNotificationMessage } = useNotificationMessage();
 
@@ -178,6 +180,14 @@ const Account = () => {
     }
   };
 
+  const fetchDeletePost = async () => {
+    try {
+      const token = localStorage.getItem('_at');
+    } catch (e) {
+      await exceptionHandler(e);
+    }
+  };
+
   return (
     <>
       <Head>
@@ -296,6 +306,7 @@ const Account = () => {
                             searchTags={post.searchTags}
                             createdAt={post.createdAt}
                             key={key}
+                            isAdmin={true}
                           />
                         ))}
                         <Pagination

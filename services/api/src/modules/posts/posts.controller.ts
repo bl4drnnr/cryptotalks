@@ -56,8 +56,12 @@ export class PostsController {
   })
   @UseGuards(SoftJwtGuard)
   @Get('get/:slug')
-  getPostBySlug(@UserDecorator() userId: string, @Param('slug') slug: string) {
-    return this.postsService.getPostBySlug({ slug, userId });
+  getPostBySlug(
+    @UserDecorator() userId: string,
+    @Param('slug') slug: string,
+    @Query('toEdit') toEdit?: string
+  ) {
+    return this.postsService.getPostBySlug({ slug, userId, toEdit });
   }
 
   @ApiOperation({ summary: 'List posts' })
