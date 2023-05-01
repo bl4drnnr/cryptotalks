@@ -51,7 +51,7 @@ const PostPreview = (
           <EditButtonWrapper className={'first'}>
             <Button
               text={'Edit'}
-              onClick={() => handleRedirect(`/posts/post/edit/${slug}`)}
+              onClick={() => handleRedirect(`/posts/edit/${slug}`)}
             />
           </EditButtonWrapper>
           <EditButtonWrapper className={'second'}>

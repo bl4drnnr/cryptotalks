@@ -175,8 +175,22 @@ export class PostsService {
     });
   }
 
-  deletePost(payload: DeletePostEventDto) {
+  async deletePost({
+    userId,
+    payload
+  }: {
+    userId: string;
+    payload: DeletePostEventDto;
+  }) {
+    const post = await this.postRepository.findByPk(payload.id);
+
+    if (!post) throw new PostNotFoundException();
+
+    if (userId !== post.userId)
+      throw new BadRequestException('wrong-user', 'Wrong user');
+
     this.postsClient.emit('delete_post', new DeletePostEvent({ ...payload }));
+
     return new ResponseDto();
   }
 
