@@ -3,6 +3,7 @@ import React from 'react';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 
+import { Button } from '@components/Button/Button.component';
 import { PostProps } from '@components/PostPreview/PostPreview.interface';
 import {
   PostContainer,
@@ -10,11 +11,21 @@ import {
   PostSearchTags,
   PostTag,
   PostTitle,
-  PostCreatedAt
+  PostCreatedAt,
+  EditButtonsWrapper,
+  EditButtonWrapper
 } from '@styles/PostPreview.style';
 
 const PostPreview = (
-  { slug, title, preview, searchTags, createdAt }: PostProps
+  {
+    slug,
+    title,
+    preview,
+    searchTags,
+    createdAt,
+    isAdmin,
+    onDeleteClick
+  }: PostProps
 ) => {
   const router = useRouter();
 
@@ -24,7 +35,7 @@ const PostPreview = (
 
   return (
     <PostContainer
-      onClick={() => handleRedirect(`/posts/post/${slug}`)}
+      onClick={() => handleRedirect(`/posts/edit/${slug}`)}
     >
       <PostTitle>{title}</PostTitle>
       <PostTextPreview>{preview}</PostTextPreview>
@@ -38,6 +49,23 @@ const PostPreview = (
           Post created at: {dayjs(createdAt).format('YYYY-MM-DD HH:mm:ss')}
         </PostCreatedAt>
       )}
+      {isAdmin ? (
+        <EditButtonsWrapper>
+          <EditButtonWrapper className={'first'}>
+            <Button
+              text={'Edit'}
+              onClick={() => handleRedirect(`/posts/edit/${slug}`)}
+            />
+          </EditButtonWrapper>
+          <EditButtonWrapper className={'second'}>
+            <Button
+              text={'Delete'}
+              onClick={onDeleteClick}
+              danger={true}
+            />
+          </EditButtonWrapper>
+        </EditButtonsWrapper>
+      ) : (<></>)}
     </PostContainer>
   );
 };

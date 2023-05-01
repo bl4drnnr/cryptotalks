@@ -11,7 +11,7 @@ export const useGetPostBySlug = () => {
     : Promise<GetPostBySlugResponse> => {
     try {
       setLoading(true);
-      const { data } = await ApiClient.get<GetPostBySlugResponse>(`/post/get/${payload.slug}`, {
+      const { data } = await ApiClient.get<GetPostBySlugResponse>(`/post/get/${payload.slug}${payload.toEdit ? '&toEdit=yes' : ''}`, {
         headers: {
           'x-access-token': `Bearer ${payload.token}`
         }

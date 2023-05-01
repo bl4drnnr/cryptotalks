@@ -236,7 +236,7 @@ const CreatePost = () => {
 
           <ButtonWrapper>
             <Button
-              text={'Create posts'}
+              text={'Create post'}
               onClick={() => fetchCreatePost()}
               disabled={titleError || previewError || contentError || searchTagsError}
             />

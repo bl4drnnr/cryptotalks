@@ -12,7 +12,10 @@ export const useUpdatePostService = () => {
     try {
       setLoading(true);
       const { data } = await ApiClient.patch<UpdatePostResponse>(`/post/update/${payload.postId}`, {
-        title: payload.title, content: payload.content
+        title: payload.title,
+        content: payload.content,
+        preview: payload.preview,
+        searchTags: payload.searchTags
       }, {
         headers: { 'x-access-token': `Bearer ${payload.token}` }
       });

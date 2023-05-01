@@ -8,10 +8,11 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { Post } from '@models/post.model';
 import { PostInfo } from '@models/post-info.model';
 import { User } from '@models/user.model';
+import { UserSettings } from '@models/user-settings.model';
 
 @Module({
   imports: [
-    SequelizeModule.forFeature([Post, PostInfo, User]),
+    SequelizeModule.forFeature([Post, PostInfo, User, UserSettings]),
     ClientsModule.register([
       {
         name: 'POSTS_SERVICE',
@@ -23,6 +24,19 @@ import { User } from '@models/user.model';
           },
           consumer: {
             groupId: 'posts-consumer'
+          }
+        }
+      },
+      {
+        name: 'USERS_SERVICE',
+        transport: Transport.KAFKA,
+        options: {
+          client: {
+            clientId: 'users',
+            brokers: ['kafka:9092']
+          },
+          consumer: {
+            groupId: 'users-consumer'
           }
         }
       }

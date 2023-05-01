@@ -44,3 +44,17 @@ export const PostCreatedAt = styled.p`
   margin-top: 10px;
 `;
 
+export const EditButtonsWrapper = styled.div`
+  display: flex;
+  margin-top: 10px;
+`;
+
+export const EditButtonWrapper = styled.div`
+  width: 100%;
+  &.first {
+    margin-right: 5px;
+  }
+  &.second {
+    margin-left: 5px;
+  }
+`;

@@ -1,22 +1,26 @@
+import * as node2fa from 'node-2fa';
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { CreatePostDto } from '@dto/create-post.dto';
 import { CreatePostEvent } from '@events/create-post.event';
 import { ResponseDto } from '@dto/response.dto';
 import { DeletePostEvent, DeletePostEventDto } from '@events/delete-post.event';
-import { UpdatePostEvent, UpdatePostEventDto } from '@events/update-post.event';
+import { UpdatePostEvent } from '@events/update-post.event';
 import { Post } from '@models/post.model';
 import { InjectModel } from '@nestjs/sequelize';
 import sequelize, { Op } from 'sequelize';
-import {
-  LeaveCommentEvent,
-  LeaveCommentEventDto
-} from '@events/leave-comment.event';
+import { LeaveCommentEvent } from '@events/leave-comment.event';
 import { AlreadyExistingPostException } from '@exceptions/already-existing-post.exception';
 import { PostNotFoundException } from '@exceptions/post-not-found.exception';
 import { PostInfo } from '@models/post-info.model';
 import { User } from '@models/user.model';
 import { UpdatePostInfoEvent } from '@events/update-post-info.event';
+import { UpdatePostDto } from '@dto/update-post.dto';
+import { UserSettings } from '@models/user-settings.model';
+import { Wrong2faException } from '@exceptions/wrong-2fa.exception';
+import { UpdateUserSecurityEvent } from '@events/update-user-security.event';
+import * as dayjs from 'dayjs';
+import { PhoneCodeErrorException } from '@exceptions/phone-code-error.exception';
 
 @Injectable()
 export class PostsService {
@@ -24,7 +28,10 @@ export class PostsService {
     @InjectModel(Post) private readonly postRepository: typeof Post,
     @InjectModel(PostInfo) private readonly postInfoRepository: typeof PostInfo,
     @InjectModel(User) private readonly userRepository: typeof User,
-    @Inject('POSTS_SERVICE') private readonly postsClient: ClientKafka
+    @InjectModel(UserSettings)
+    private readonly userSettingsRepository: typeof UserSettings,
+    @Inject('POSTS_SERVICE') private readonly postsClient: ClientKafka,
+    @Inject('USERS_SERVICE') private readonly userClient: ClientKafka
   ) {}
 
   async createPost(payload: CreatePostDto) {
@@ -50,16 +57,21 @@ export class PostsService {
 
   async getPostBySlug({
     slug,
-    userId
+    userId,
+    toEdit
   }: {
     slug: string;
     userId: string | undefined;
+    toEdit?: string | undefined;
   }) {
     const post = await this.postRepository.findOne({
       where: { slug }
     });
 
     if (!post) throw new PostNotFoundException();
+
+    if (toEdit === 'yes' && userId !== post.userId)
+      throw new BadRequestException('wrong-user', 'Wrong user');
 
     const postInfo = await this.postInfoRepository.findOne({
       where: { postId: post.id }
@@ -172,13 +184,91 @@ export class PostsService {
     });
   }
 
-  deletePost(payload: DeletePostEventDto) {
+  async deletePost({
+    userId,
+    payload
+  }: {
+    userId: string;
+    payload: DeletePostEventDto;
+  }) {
+    const post = await this.postRepository.findByPk(payload.id);
+
+    if (!post) throw new PostNotFoundException();
+
+    if (userId !== post.userId)
+      throw new BadRequestException('wrong-user', 'Wrong user');
+
+    const userSecuritySettings = await this.userSettingsRepository.findOne({
+      where: { userId }
+    });
+
+    if (userSecuritySettings.twoFaToken && !payload.twoFaCode) {
+      return new ResponseDto('two-fa-required');
+    } else if (userSecuritySettings.twoFaToken && payload.twoFaCode) {
+      const codeVerification = node2fa.verifyToken(
+        userSecuritySettings.twoFaToken,
+        payload.twoFaCode
+      );
+
+      if (!codeVerification || codeVerification.delta !== 0)
+        throw new Wrong2faException();
+    } else if (userSecuritySettings.phone && !payload.code) {
+      this.userClient.emit(
+        'send_verification_mobile_code',
+        new UpdateUserSecurityEvent({
+          userId,
+          phone: userSecuritySettings.phone
+        })
+      );
+
+      return new ResponseDto('phone-two-fa-required');
+    } else if (userSecuritySettings.phone && payload.code) {
+      const { phoneVerificationCode, verificationCodeCreatedAt } =
+        await this.userSettingsRepository.findOne({
+          where: { userId }
+        });
+
+      const time = dayjs(verificationCodeCreatedAt);
+      const timeDifferenceInMinutes = dayjs().diff(time, 'minute');
+
+      if (payload.code !== phoneVerificationCode || timeDifferenceInMinutes > 5)
+        throw new PhoneCodeErrorException();
+
+      await this.userSettingsRepository.update(
+        {
+          phoneVerificationCode: null,
+          verificationCodeCreatedAt: null
+        },
+        { where: { userId } }
+      );
+    }
+
     this.postsClient.emit('delete_post', new DeletePostEvent({ ...payload }));
+
     return new ResponseDto();
   }
 
-  updatePost(payload: UpdatePostEventDto) {
-    this.postsClient.emit('update_post', new UpdatePostEvent({ ...payload }));
+  async updatePost({
+    payload,
+    userId,
+    postId
+  }: {
+    payload: UpdatePostDto;
+    userId: string;
+    postId: string;
+  }) {
+    const post = await this.postRepository.findByPk(postId);
+
+    if (!post) throw new PostNotFoundException();
+
+    if (userId !== post.userId)
+      throw new BadRequestException('wrong-user', 'Wrong user');
+
+    this.postsClient.emit(
+      'update_post',
+      new UpdatePostEvent({ ...payload, postId })
+    );
+
     return new ResponseDto();
   }
 

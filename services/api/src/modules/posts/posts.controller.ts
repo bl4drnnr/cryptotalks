@@ -56,8 +56,12 @@ export class PostsController {
   })
   @UseGuards(SoftJwtGuard)
   @Get('get/:slug')
-  getPostBySlug(@UserDecorator() userId: string, @Param('slug') slug: string) {
-    return this.postsService.getPostBySlug({ slug, userId });
+  getPostBySlug(
+    @UserDecorator() userId: string,
+    @Param('slug') slug: string,
+    @Query('toEdit') toEdit?: string
+  ) {
+    return this.postsService.getPostBySlug({ slug, userId, toEdit });
   }
 
   @ApiOperation({ summary: 'List posts' })
@@ -97,8 +101,11 @@ export class PostsController {
   })
   @UseGuards(JwtGuard)
   @Delete('delete/:id')
-  deletePost(@Param('id') id: string) {
-    return this.postsService.deletePost({ id });
+  deletePost(@UserDecorator() userId: string, @Param('id') id: string) {
+    return this.postsService.deletePost({
+      payload: { id },
+      userId
+    });
   }
 
   @ApiExtraModels(UpdatePostDto)
@@ -110,8 +117,16 @@ export class PostsController {
   })
   @UseGuards(JwtGuard)
   @Patch('update/:id')
-  updatePost(@Param('id') postId: string, @Body() payload: UpdatePostDto) {
-    return this.postsService.updatePost({ postId, ...payload });
+  updatePost(
+    @UserDecorator() userId: string,
+    @Param('id') postId: string,
+    @Body() payload: UpdatePostDto
+  ) {
+    return this.postsService.updatePost({
+      userId,
+      postId,
+      payload
+    });
   }
 
   @ApiExtraModels(LogEventDto)

@@ -4,4 +4,6 @@ export interface PostProps {
   preview: string;
   searchTags: Array<string>;
   createdAt?: string;
+  isAdmin?: boolean;
+  onDeleteClick?: () => void | never;
 }

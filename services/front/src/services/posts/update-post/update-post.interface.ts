@@ -1,7 +1,9 @@
 export interface UpdatePostPayload {
   postId: string;
-  title: string | null;
-  content: Array<string> | null;
+  title?: string;
+  content?: Array<string>;
+  preview?: string;
+  searchTags?: Array<string>;
   token: string | null;
 }
 

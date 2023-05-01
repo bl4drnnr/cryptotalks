@@ -26,6 +26,11 @@ paths:
           in: path
           schema:
             type: string
+        - name: toEdit
+          required: true
+          in: query
+          schema:
+            type: string
       responses:
         "200":
           description: ""
@@ -819,8 +824,16 @@ components:
           type: string
           format: uuid
           nullable: false
+        twoFaCode:
+          type: string
+          nullable: true
+        code:
+          type: string
+          nullable: true
       required:
         - id
+        - twoFaCode
+        - code
     ResponseDto:
       type: object
       properties:
