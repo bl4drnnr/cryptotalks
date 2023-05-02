@@ -39,3 +39,8 @@ export const PopularCryptoParagraph = styled.p`
     opacity: .5;
   }
 `;
+
+export const RemoveCoinButtonWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;

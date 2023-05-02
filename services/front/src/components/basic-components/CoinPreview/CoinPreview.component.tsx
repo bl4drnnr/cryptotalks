@@ -4,12 +4,13 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { Line, LineChart, YAxis } from 'recharts';
 
+import { Button } from '@components/Button/Button.component';
 import { CoinPreviewProps } from '@components/CoinPreview/CoinPreview.interface';
 import {
   PopularCryptoContainer,
   PopularCryptoItem,
   PopularCryptoParagraph,
-  PopularCryptoWrapper
+  PopularCryptoWrapper, RemoveCoinButtonWrapper
 } from '@styles/CoinPreview.style';
 
 const CoinPreview = ({
@@ -21,17 +22,27 @@ const CoinPreview = ({
   change,
   sparkline,
   width,
-  height
+  height,
+  isAdmin,
+  onDeleteClick
 }: CoinPreviewProps) => {
   const router = useRouter();
 
-  const handleRedirect = async (path: string) => {
+  const handleRemoveCoinFromFavorites = (e: any) => {
+    e.stopPropagation();
+    if (onDeleteClick) {
+      onDeleteClick();
+    }
+  };
+
+  const handleRedirect = async (e: any, path: string) => {
+    e.stopPropagation();
     return await router.push(path);
   };
 
   return (
     <PopularCryptoItem
-      onClick={() => handleRedirect(`market/${uuid}`)}
+      onClick={(e) => handleRedirect(e, `market/${uuid}`)}
     >
       <Image src={iconUrl} alt={name} width={72} height={72} />
 
@@ -72,6 +83,15 @@ const CoinPreview = ({
           stroke={change > 0 ? 'rgb(59, 232, 59)': 'rgb(255, 51, 51)'}
         />
       </LineChart>
+
+      {isAdmin ? (
+        <RemoveCoinButtonWrapper>
+          <Button
+            text={'Remove from favorites'}
+            onClick={(e: any) => handleRemoveCoinFromFavorites(e)}
+          />
+        </RemoveCoinButtonWrapper>
+      ) : (<></>)}
     </PopularCryptoItem>
   );
 };

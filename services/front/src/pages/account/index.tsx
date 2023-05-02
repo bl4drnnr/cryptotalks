@@ -22,6 +22,9 @@ import { useDeletePostService } from '@services/posts/delete-post/delete-post.se
 import { IPosts } from '@services/posts/list-posts/list-posts.interface';
 import { useListPostsService } from '@services/posts/list-posts/list-posts.service';
 import { useRefreshTokenService } from '@services/refresh-tokens/refresh-tokens.service';
+import {
+  useRemoveCryptoFromFavoritesService
+} from '@services/remove-crypto-from-favorites/remove-crypto-from-favorites.service';
 import { NotificationType } from '@store/global/global.state';
 import {
   AccountContainer,
@@ -58,6 +61,7 @@ const Account = () => {
   const { loading: l2, listPosts } = useListPostsService();
   const { loading: l3, listFavorites } = useListFavoritesService();
   const { loading: l4, deletePost } = useDeletePostService();
+  const { loading: l5, removeCryptoFromFavorites } = useRemoveCryptoFromFavoritesService();
   const { handleException } = useHandleException();
   const { showNotificationMessage } = useNotificationMessage();
 
@@ -133,13 +137,13 @@ const Account = () => {
   };
 
   const handleRedirect = async (path: string) => {
-    await router.push(`/${path}`);
+    await router.push(path);
   };
 
   const exceptionHandler = async (e: any) => {
     handleException(e);
     localStorage.removeItem('_at');
-    await handleRedirect('');
+    await handleRedirect('/');
   };
 
   const fetchCheckUser = async (token: string) => {
@@ -164,6 +168,8 @@ const Account = () => {
 
       setUserPosts(rows);
       setPostsTotalPages(count);
+
+      return;
     } catch (e) {
       await exceptionHandler(e);
     }
@@ -183,6 +189,7 @@ const Account = () => {
 
       setFavoriteCrypto(parseCoins(rows));
       setCryptoTotalPages(count);
+      return;
     } catch (e) {
       await exceptionHandler(e);
     }
@@ -204,13 +211,34 @@ const Account = () => {
         return setDeletePostStep(3);
       }
 
+      await fetchUserPosts();
+      setDeletePostModal(false);
+
       showNotificationMessage({
         type: NotificationType.SUCCESS,
         content: 'Post has been successfully deleted'
       });
 
-      await fetchUserPosts();
-      setDeletePostModal(false);
+      return;
+    } catch (e) {
+      await exceptionHandler(e);
+    }
+  };
+
+  const fetchRemoveCoinFromFavorites = async (cryptoId: string | undefined) => {
+    try {
+      const token = localStorage.getItem('_at');
+
+      await removeCryptoFromFavorites({ token, cryptoId });
+
+      await fetchUserCryptocurrencies();
+
+      showNotificationMessage({
+        type: NotificationType.SUCCESS,
+        content: 'Coin has been successfully removed'
+      });
+
+      return;
     } catch (e) {
       await exceptionHandler(e);
     }
@@ -221,7 +249,7 @@ const Account = () => {
       <Head>
         <title>Cryptotalks | My account</title>
       </Head>
-      <DefaultLayout loading={l1 || l2 || l3 || l4}>
+      <DefaultLayout loading={l1 || l2 || l3 || l4 || l5}>
         <Container>
           <Wrapper>
             <AccountContainer>
@@ -318,7 +346,7 @@ const Account = () => {
                 <UserSideBar>
                   <Button
                     text={'Edit my profile'}
-                    onClick={() => handleRedirect('account/settings')}
+                    onClick={() => handleRedirect('/account/settings')}
                   />
                 </UserSideBar>
                 <div>
@@ -419,6 +447,8 @@ const Account = () => {
                             width={150}
                             height={80}
                             key={index}
+                            isAdmin={true}
+                            onDeleteClick={() => fetchRemoveCoinFromFavorites(item.uuid)}
                           />
                         ))}
                         <Pagination

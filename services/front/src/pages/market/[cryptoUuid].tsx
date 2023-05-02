@@ -90,11 +90,14 @@ const Coin = () => {
   const fetchRemoveCryptoFromFavorites = async (cryptoId: string | undefined) => {
     try {
       const token = localStorage.getItem('_at');
+
       await removeCryptoFromFavorites({ token, cryptoId });
+
       showNotificationMessage({
         type: NotificationType.SUCCESS,
         content: 'Coin has been successfully removed from favorite'
       });
+
       setIsFavoriteCoin(false);
     } catch (e) {
       handleException(e);

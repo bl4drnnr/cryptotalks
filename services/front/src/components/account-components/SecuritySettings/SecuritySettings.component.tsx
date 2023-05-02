@@ -166,6 +166,7 @@ const SecuritySettings = ({
 
       setTwoFaModal(false);
       setSecuritySettings({ ...securitySettings, twoFaToken: true });
+      return;
     } catch (e) {
       return exceptionHandler(e);
     }
@@ -183,6 +184,7 @@ const SecuritySettings = ({
 
       setTwoFaModal(false);
       setSecuritySettings({ ...securitySettings, twoFaToken: false });
+      return;
     } catch (e) {
       return exceptionHandler(e);
     }
@@ -203,6 +205,8 @@ const SecuritySettings = ({
         setPhoneModal(false);
         setSecuritySettings({ ...securitySettings, phone });
       }
+
+      return;
     } catch (e) {
       return exceptionHandler(e);
     }
