@@ -15,4 +15,5 @@ export interface PersonalInformationProps {
   personalInformation: IPersonalInformation | undefined;
   setPersonalInformation: React.Dispatch<React.SetStateAction<any>>;
   applyPersonalInformation: any;
+  setSelectedFile: React.Dispatch<React.SetStateAction<any>>;
 }

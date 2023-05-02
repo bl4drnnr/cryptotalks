@@ -1,3 +1,5 @@
+import React from 'react';
+
 import Image from 'next/image';
 
 import { Button } from '@components/Button/Button.component';
@@ -23,8 +25,20 @@ import {
 export const PersonalInformation = ({
   personalInformation,
   setPersonalInformation,
-  applyPersonalInformation
+  applyPersonalInformation,
+  setSelectedFile
 }: PersonalInformationProps) => {
+
+  const handleFileSelect = (event: any) => {
+    event.preventDefault();
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function () {
+      setSelectedFile(reader.result);
+    };
+  };
+
   return (
     <>
       <PublicInfoTitleBox>
@@ -106,9 +120,17 @@ export const PersonalInformation = ({
               height={225}
             />
             <ChangeAvatar>
+              <input
+                type={'file'}
+                id="fileInput"
+                hidden={true}
+                onChange={handleFileSelect}
+              />
               <Button
                 text={'Change avatar'}
                 fillButton={true}
+                // @ts-ignore
+                onClick={() => document.getElementById('fileInput').click()}
               />
             </ChangeAvatar>
           </AvaWrapper>

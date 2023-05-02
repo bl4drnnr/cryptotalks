@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   background-color: rgb(${(props) => props.theme.colors.darkBackground});
+  padding-bottom: 30px;
 `;
 
 export const Wrapper = styled.div`

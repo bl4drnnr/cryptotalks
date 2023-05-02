@@ -36,7 +36,6 @@ const Signin = () => {
   const [step, setStep] = React.useState(1);
   const [mfaType, setMfaType] = React.useState<'two-fa-required' | 'phone-two-fa-required'>();
   const [code, setCode] = React.useState('');
-  const [loginOption, setLoginOption] = React.useState('email');
   const [email, setEmail] = React.useState('');
   const [emailError, setEmailError] = React.useState(false);
   const [password, setPassword] = React.useState('');
@@ -94,29 +93,14 @@ const Signin = () => {
             <Box>
               <Title>Sign in</Title>
 
-              <LoginOptions>
-                <LoginOption onClick={() => setLoginOption('email')}>With email</LoginOption>
-                <VerticalLine/>
-                <LoginOption onClick={() => setLoginOption('phone')}>With phone</LoginOption>
-              </LoginOptions>
-
               <MarginWrapper>
-                {loginOption === 'email' ? (
-                  <Input
-                    high={true}
-                    onError={emailError}
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder={'Email'}
-                  />
-                ) : (
-                  <Input
-                    high={true}
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder={'Phone'}
-                  />
-                )}
+                <Input
+                  high={true}
+                  onError={emailError}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder={'Email'}
+                />
               </MarginWrapper>
 
               <MarginWrapper

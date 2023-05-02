@@ -8,14 +8,7 @@ export default async (
   res: NextApiResponse
 ) => {
   try {
-    const { code, twoFaCode, postId } = req.query;
-
-    let deletePostUrl = `/posts/delete/${postId}`;
-
-    if (code) deletePostUrl += `?code=${code}`;
-    else if (twoFaCode) deletePostUrl += `?twoFaCode=${twoFaCode}`;
-
-    const { data } = await Api.delete(deletePostUrl, {
+    const { data } = await Api.post('/user/upload-photo', req.body, {
       headers: { 'x-access-token': req.headers['x-access-token'] }
     });
 

@@ -11,6 +11,7 @@ import { Input } from '@components/Input/Input.component';
 import { Modal } from '@components/Modal/Modal.component';
 import Pagination from '@components/Pagination/Pagination.component';
 import PostPreview from '@components/PostPreview/PostPreview.component';
+import { TwoFa } from '@components/TwoFa/TwoFa.component';
 import { useHandleException } from '@hooks/useHandleException.hook';
 import { useNotificationMessage } from '@hooks/useShowNotificationMessage.hook';
 import DefaultLayout from '@layouts/Default.layout';
@@ -21,6 +22,9 @@ import { useDeletePostService } from '@services/posts/delete-post/delete-post.se
 import { IPosts } from '@services/posts/list-posts/list-posts.interface';
 import { useListPostsService } from '@services/posts/list-posts/list-posts.service';
 import { useRefreshTokenService } from '@services/refresh-tokens/refresh-tokens.service';
+import {
+  useRemoveCryptoFromFavoritesService
+} from '@services/remove-crypto-from-favorites/remove-crypto-from-favorites.service';
 import { NotificationType } from '@store/global/global.state';
 import {
   AccountContainer,
@@ -47,6 +51,7 @@ import {
   UserTitle,
   Wrapper,
 } from '@styles/account.style';
+import { ModalButtonWrapper } from '@styles/SecuritySettings.style';
 
 const Account = () => {
   const router = useRouter();
@@ -56,6 +61,7 @@ const Account = () => {
   const { loading: l2, listPosts } = useListPostsService();
   const { loading: l3, listFavorites } = useListFavoritesService();
   const { loading: l4, deletePost } = useDeletePostService();
+  const { loading: l5, removeCryptoFromFavorites } = useRemoveCryptoFromFavoritesService();
   const { handleException } = useHandleException();
   const { showNotificationMessage } = useNotificationMessage();
 
@@ -73,6 +79,8 @@ const Account = () => {
 
   const [deletePostModal, setDeletePostModal] = React.useState<boolean>(false);
   const [deletePostStep, setDeletePostStep] = React.useState<number>(1);
+  const [deletePostTwoFa, setDeletePostTwoFa] = React.useState('');
+  const [deletePostCode, setDeletePostCode] = React.useState('');
 
   React.useEffect(() => {
     if (fetchTokenChecking.current) {
@@ -129,13 +137,13 @@ const Account = () => {
   };
 
   const handleRedirect = async (path: string) => {
-    await router.push(`/${path}`);
+    await router.push(path);
   };
 
   const exceptionHandler = async (e: any) => {
     handleException(e);
     localStorage.removeItem('_at');
-    await handleRedirect('');
+    await handleRedirect('/');
   };
 
   const fetchCheckUser = async (token: string) => {
@@ -160,6 +168,8 @@ const Account = () => {
 
       setUserPosts(rows);
       setPostsTotalPages(count);
+
+      return;
     } catch (e) {
       await exceptionHandler(e);
     }
@@ -179,6 +189,7 @@ const Account = () => {
 
       setFavoriteCrypto(parseCoins(rows));
       setCryptoTotalPages(count);
+      return;
     } catch (e) {
       await exceptionHandler(e);
     }
@@ -189,7 +200,9 @@ const Account = () => {
       const token = localStorage.getItem('_at');
       const { message } = await deletePost({
         token,
-        postId
+        postId,
+        twoFaCode: deletePostTwoFa,
+        code: deletePostCode
       });
 
       if (message === 'two-fa-required') {
@@ -198,12 +211,34 @@ const Account = () => {
         return setDeletePostStep(3);
       }
 
+      await fetchUserPosts();
+      setDeletePostModal(false);
+
       showNotificationMessage({
         type: NotificationType.SUCCESS,
         content: 'Post has been successfully deleted'
       });
 
-      await fetchUserPosts();
+      return;
+    } catch (e) {
+      await exceptionHandler(e);
+    }
+  };
+
+  const fetchRemoveCoinFromFavorites = async (cryptoId: string | undefined) => {
+    try {
+      const token = localStorage.getItem('_at');
+
+      await removeCryptoFromFavorites({ token, cryptoId });
+
+      await fetchUserCryptocurrencies();
+
+      showNotificationMessage({
+        type: NotificationType.SUCCESS,
+        content: 'Coin has been successfully removed'
+      });
+
+      return;
     } catch (e) {
       await exceptionHandler(e);
     }
@@ -214,7 +249,7 @@ const Account = () => {
       <Head>
         <title>Cryptotalks | My account</title>
       </Head>
-      <DefaultLayout loading={l1 || l2 || l3}>
+      <DefaultLayout loading={l1 || l2 || l3 || l4 || l5}>
         <Container>
           <Wrapper>
             <AccountContainer>
@@ -222,7 +257,13 @@ const Account = () => {
                 {userData && (
                   <UserProfilePicture>
                     <UserProfilePictureWrapper>
-                      <Image className={'ava'} src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/testava.jpg`} alt={'ava'} width={225} height={225}/>
+                      <Image
+                        className={'ava'}
+                        src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/testava.jpg`}
+                        alt={'ava'}
+                        width={225}
+                        height={225}
+                      />
                       <UserTitle>
                         {userData.title}
                       </UserTitle>
@@ -311,7 +352,7 @@ const Account = () => {
                 <UserSideBar>
                   <Button
                     text={'Edit my profile'}
-                    onClick={() => handleRedirect('account/settings')}
+                    onClick={() => handleRedirect('/account/settings')}
                   />
                 </UserSideBar>
                 <div>
@@ -338,10 +379,46 @@ const Account = () => {
                                 header={'Delete post?'}
                                 description={'Be careful! This action cannot be proceed back. It means you will not be able to restore post, comments and rates. Are you sure you want to continue?'}
                               >
-                                <Button
-                                  onClick={() => fetchDeletePost(post.id)}
-                                  text={'Continue'}
-                                />
+                                {deletePostStep === 1 ? (
+                                  <Button
+                                    onWhite={true}
+                                    onClick={() => fetchDeletePost(post.id)}
+                                    text={'Continue'}
+                                  />
+                                ) : (<></>)}
+                                {deletePostStep === 2 ? (
+                                  <>
+                                    <TwoFa
+                                      styles={{ justifyCenter: true, onWhite: true }}
+                                      title={'Provide 2FA code from authenticator application'}
+                                      setTwoFaCode={setDeletePostTwoFa}
+                                    />
+                                    <ModalButtonWrapper>
+                                      <Button
+                                        onWhite={true}
+                                        disabled={deletePostTwoFa.length !== 6}
+                                        onClick={() => fetchDeletePost(post.id)}
+                                        text={'Submit'}
+                                      />
+                                    </ModalButtonWrapper>
+                                  </>
+                                ) : (deletePostStep === 3 ? (
+                                  <>
+                                    <TwoFa
+                                      styles={{ justifyCenter: true, onWhite: true }}
+                                      title={'Provide 2FA code from SMS'}
+                                      setTwoFaCode={setDeletePostCode}
+                                    />
+                                    <ModalButtonWrapper>
+                                      <Button
+                                        onWhite={true}
+                                        disabled={deletePostCode.length !== 6}
+                                        onClick={() => fetchDeletePost(post.id)}
+                                        text={'Submit'}
+                                      />
+                                    </ModalButtonWrapper>
+                                  </>
+                                ) : (<></>))}
                               </Modal>
                             ) : null}
                           </>
@@ -376,6 +453,8 @@ const Account = () => {
                             width={150}
                             height={80}
                             key={index}
+                            isAdmin={true}
+                            onDeleteClick={() => fetchRemoveCoinFromFavorites(item.uuid)}
                           />
                         ))}
                         <Pagination

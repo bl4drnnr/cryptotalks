@@ -93,6 +93,16 @@ paths:
           in: path
           schema:
             type: string
+        - name: code
+          required: true
+          in: query
+          schema:
+            type: string
+        - name: twoFaCode
+          required: true
+          in: query
+          schema:
+            type: string
       responses:
         "200":
           description: ""
@@ -448,6 +458,21 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ResponseDto"
+        "201":
+          description: As a response function returns success message
+      tags: *a2
+  /api/user/upload-photo:
+    post:
+      operationId: UserController_uploadPhoto
+      summary: Uploads user avatar image
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UploadPhotoDto"
+      responses:
         "201":
           description: As a response function returns success message
       tags: *a2
@@ -1491,6 +1516,15 @@ components:
         code:
           type: string
           nullable: true
+    UploadPhotoDto:
+      type: object
+      properties:
+        photo:
+          type: string
+          nullable: false
+          description: Base64 string describing photo
+      required:
+        - photo
     TokenPayloadDto:
       type: object
       properties:

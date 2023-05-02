@@ -21,7 +21,7 @@ export interface ISecuritySettings {
 }
 
 export interface GetUserSettingsPayload {
-  token: string;
+  token: string | null;
 }
 
 export interface GetUserSettingsResponse {

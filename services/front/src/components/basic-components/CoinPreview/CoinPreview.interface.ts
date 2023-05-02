@@ -8,4 +8,6 @@ export interface CoinPreviewProps {
   sparkline: any;
   width: number;
   height: number;
+  isAdmin?: boolean;
+  onDeleteClick?: () => void | never;
 }
