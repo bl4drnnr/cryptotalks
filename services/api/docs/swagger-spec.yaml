@@ -461,6 +461,21 @@ paths:
         "201":
           description: As a response function returns success message
       tags: *a2
+  /api/user/upload-photo:
+    post:
+      operationId: UserController_uploadPhoto
+      summary: Uploads user avatar image
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UploadPhotoDto"
+      responses:
+        "201":
+          description: As a response function returns success message
+      tags: *a2
   /api/auth/refresh:
     get:
       operationId: AuthController_refreshTokens
@@ -1501,6 +1516,15 @@ components:
         code:
           type: string
           nullable: true
+    UploadPhotoDto:
+      type: object
+      properties:
+        photo:
+          type: string
+          nullable: false
+          description: Base64 string describing photo
+      required:
+        - photo
     TokenPayloadDto:
       type: object
       properties:

@@ -18,6 +18,7 @@ import { useCloseAccountService } from '@services/close-account/close-account.se
 import { IPersonalInformation, ISecuritySettings } from '@services/get-user-settings/get-user-settings.interface';
 import { useGetUserSettingsService } from '@services/get-user-settings/get-user-settings.service';
 import { useSetPersonalSettingsService } from '@services/set-personal-settings/set-personal-settings.service';
+import { useUploadPhotoService } from '@services/upload-photo/upload-photo.service';
 import { NotificationType } from '@store/global/global.state';
 import { ModalButtonWrapper } from '@styles/SecuritySettings.style';
 import {
@@ -44,6 +45,7 @@ const AccountSettings = () => {
   const { loading: l0, getUserSettings } = useGetUserSettingsService();
   const { loading: l1, closeAccount } = useCloseAccountService();
   const { loading: l2, setPersonalSettings } = useSetPersonalSettingsService();
+  const { loading: l3, uploadPhoto } = useUploadPhotoService();
   const { showNotificationMessage } = useNotificationMessage();
 
   const fetchSettingsRef = React.useRef(true);
@@ -89,12 +91,13 @@ const AccountSettings = () => {
     }
   };
 
-  const fetchUserSettings = async (token: string) => {
+  const fetchUserSettings = async (token: string | null) => {
     try {
       const { personalSettings, securitySettings } = await getUserSettings({ token });
 
       setPersonalInformation(personalSettings);
       setSecuritySettings(securitySettings);
+      return;
     } catch (e) {
       handleException(e);
       localStorage.removeItem('_at');
@@ -107,6 +110,24 @@ const AccountSettings = () => {
       const token = localStorage.getItem('_at');
       await setPersonalSettings({ ...personalInformation, token });
       return handleRedirect('/account');
+    } catch (e) {
+      return exceptionHandler(e);
+    }
+  };
+
+  const fetchPhotoUpload = async (file: any) => {
+    try {
+      const token = localStorage.getItem('_at');
+
+      await uploadPhoto({ photo: file, token });
+      await fetchUserSettings(token);
+
+      showNotificationMessage({
+        type: NotificationType.SUCCESS,
+        content: 'Photo has been successfully uploaded'
+      });
+
+      return;
     } catch (e) {
       return exceptionHandler(e);
     }
@@ -154,7 +175,13 @@ const AccountSettings = () => {
                 onClick={() => handleRedirect('/account')}
               >
                 <UserProfilePicture>
-                  <Image className={'ava'} src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/testava.jpg`} alt={'ava'} width={128} height={128}/>
+                  <Image
+                    className={'ava'}
+                    src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/testava.jpg`}
+                    alt={'ava'}
+                    width={128}
+                    height={128}
+                  />
                 </UserProfilePicture>
 
                 <SettingsHeaderItemsWrapper>
@@ -259,6 +286,7 @@ const AccountSettings = () => {
                     personalInformation={personalInformation}
                     setPersonalInformation={setPersonalInformation}
                     applyPersonalInformation={applyPersonalInformation}
+                    setSelectedFile={fetchPhotoUpload}
                   />
                 ) : (section === 'securitySettings' ? (
                   <SecuritySettings

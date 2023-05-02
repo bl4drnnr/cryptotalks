@@ -39,6 +39,7 @@ import { SignUpEventDto } from '@events/user-sign-up.event';
 import { ForgotPasswordDto } from '@dto/forgot-password.dto';
 import { SendVerificationEmailEventDto } from '@events/send-verification-email.event';
 import { CloseAccountDto } from '@dto/close-account.dto';
+import { UploadPhotoDto } from '@dto/upload-photo.dto';
 
 @ApiTags('User')
 @Controller('user')
@@ -245,5 +246,19 @@ export class UserController {
     @Body() payload: UpdateUserEventDto
   ) {
     return this.userService.setPersonalSettings({ userId, ...payload });
+  }
+
+  @ApiOperation({ summary: 'Uploads user avatar image' })
+  @ApiResponse({
+    status: 201,
+    description: 'As a response function returns success message'
+  })
+  @UseGuards(JwtGuard)
+  @Post('upload-photo')
+  uploadPhoto(
+    @UserDecorator() userId: string,
+    @Body() payload: UploadPhotoDto
+  ) {
+    return this.userService.uploadPhoto({ userId, photo: payload.photo });
   }
 }

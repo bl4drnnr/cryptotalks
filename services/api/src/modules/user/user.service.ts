@@ -2,6 +2,7 @@ import * as bcryptjs from 'bcryptjs';
 import * as crypto from 'crypto';
 import * as node2fa from 'node-2fa';
 import * as dayjs from 'dayjs';
+import { S3 } from 'aws-sdk';
 import {
   BadRequestException,
   forwardRef,
@@ -45,6 +46,7 @@ import { ChangeEmailEvent } from '@events/change-email.event';
 import { EmailChangeConfirmedException } from '@exceptions/email-change-confirmed.exception';
 import { ForgotPasswordDto } from '@dto/forgot-password.dto';
 import { SendVerificationEmailEvent } from '@events/send-verification-email.event';
+import { ApiConfigService } from '@shared/config.service';
 
 @Injectable()
 export class UserService {
@@ -61,7 +63,8 @@ export class UserService {
     private readonly validatorService: ValidatorService,
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
-    private readonly loggerService: LoggerService
+    private readonly loggerService: LoggerService,
+    private readonly configService: ApiConfigService
   ) {}
 
   async signUp(payload: SignUpDto) {
@@ -886,6 +889,32 @@ export class UserService {
       'update_user_account',
       new UpdateUserEvent({ ...payload })
     );
+
+    return new ResponseDto();
+  }
+
+  async uploadPhoto({ userId, photo }: { userId: string; photo: string }) {
+    const { accessKeyId, secretAccessKey, bucketName } =
+      this.configService.awsSdkCredentials;
+
+    const s3 = new S3({ accessKeyId, secretAccessKey });
+
+    const base64Data = Buffer.from(
+      photo.replace(/^data:image\/\w+;base64,/, ''),
+      'base64'
+    );
+
+    const type = photo.split(';')[0].split('/')[1];
+
+    const params = {
+      Bucket: bucketName,
+      Key: `${userId}.${type}`,
+      Body: base64Data,
+      ContentEncoding: 'base64',
+      ContentType: `image/${type}`
+    };
+
+    await s3.upload(params).promise();
 
     return new ResponseDto();
   }
