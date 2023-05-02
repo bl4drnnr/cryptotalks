@@ -24,6 +24,7 @@ import {
 
 export const PersonalInformation = ({
   personalInformation,
+  isProfilePicturePresent,
   setPersonalInformation,
   applyPersonalInformation,
   setSelectedFile
@@ -112,13 +113,23 @@ export const PersonalInformation = ({
 
         <PersonalInfoItemsWrapper className={'end'}>
           <AvaWrapper>
-            <Image
-              className={'ava'}
-              src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/testava.jpg`}
-              alt={'ava'}
-              width={225}
-              height={225}
-            />
+            {isProfilePicturePresent ? (
+              <Image
+                className={'ava'}
+                src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/users-profile-pictures/${personalInformation?.id}.png`}
+                alt={'ava'}
+                width={225}
+                height={225}
+              />
+            ) : (
+              <Image
+                className={'ava'}
+                src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/testava.jpg`}
+                alt={'ava'}
+                width={225}
+                height={225}
+              />
+            )}
             <ChangeAvatar>
               <input
                 type={'file'}

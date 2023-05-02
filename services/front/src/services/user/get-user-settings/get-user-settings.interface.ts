@@ -9,6 +9,7 @@ export interface IPersonalInformation {
   bio: string;
   username: string;
   createdAt: string;
+  isProfilePicPresent: boolean;
 }
 
 export interface ISecuritySettings {
@@ -27,4 +28,5 @@ export interface GetUserSettingsPayload {
 export interface GetUserSettingsResponse {
   personalSettings: IPersonalInformation;
   securitySettings: ISecuritySettings;
+  isProfilePicPresent: boolean;
 }

@@ -1,3 +1,4 @@
+import { S3 } from 'aws-sdk';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { ClientKafka } from '@nestjs/microservices';
@@ -16,6 +17,7 @@ import { UpdateUserSecurityEventDto } from '@events/update-user-security.event';
 import { UpdateUserEventDto } from '@events/update-user.event';
 import { ChangeEmailEventDto } from '@events/change-email.event';
 import { SendVerificationEmailEventDto } from '@events/send-verification-email.event';
+import { ApiConfigService } from '@shared/config.service';
 
 @Injectable()
 export class UsersService {
@@ -29,7 +31,8 @@ export class UsersService {
     @InjectModelMongo(InformationLog.name)
     private readonly logger: Model<InformationLog>,
     private readonly emailService: EmailService,
-    private readonly phoneService: PhoneService
+    private readonly phoneService: PhoneService,
+    private readonly configService: ApiConfigService
   ) {}
 
   private async sendEmail({
@@ -115,12 +118,36 @@ export class UsersService {
     const userId = payload.userId;
     delete payload.userId;
 
-    await this.userRepository.update(
-      { ...payload },
-      {
-        where: { id: userId }
-      }
-    );
+    if (payload.photo) {
+      const { accessKeyId, secretAccessKey, bucketName } =
+        this.configService.awsSdkCredentials;
+
+      const s3 = new S3({ accessKeyId, secretAccessKey });
+
+      const base64Data = Buffer.from(
+        payload.photo.replace(/^data:image\/\w+;base64,/, ''),
+        'base64'
+      );
+
+      const type = payload.photo.split(';')[0].split('/')[1];
+
+      const params = {
+        Bucket: bucketName,
+        Key: `users-profile-pictures/${userId}.${type}`,
+        Body: base64Data,
+        ContentEncoding: 'base64',
+        ContentType: `image/${type}`
+      };
+
+      return await s3.upload(params).promise();
+    } else {
+      return await this.userRepository.update(
+        { ...payload },
+        {
+          where: { id: userId }
+        }
+      );
+    }
   }
 
   async updateUserSecuritySettings(payload: UpdateUserSecurityEventDto) {

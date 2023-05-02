@@ -54,6 +54,7 @@ const AccountSettings = () => {
   const [personalInformation, setPersonalInformation] = React.useState<IPersonalInformation>();
   const [securitySettings, setSecuritySettings] = React.useState<ISecuritySettings>();
 
+  const [isProfilePicturePresent, setIsProfilePicturePresent] = React.useState<boolean>(false);
   const [closeAccountStep, setCloseAccountStep] = React.useState(1);
   const [closeAccountModal, setCloseAccountModal] = React.useState<boolean>();
   const [closePassword, setClosePassword] = React.useState<string>('');
@@ -93,10 +94,15 @@ const AccountSettings = () => {
 
   const fetchUserSettings = async (token: string | null) => {
     try {
-      const { personalSettings, securitySettings } = await getUserSettings({ token });
+      const {
+        personalSettings,
+        securitySettings,
+        isProfilePicPresent
+      } = await getUserSettings({ token });
 
       setPersonalInformation(personalSettings);
       setSecuritySettings(securitySettings);
+      setIsProfilePicturePresent(isProfilePicPresent);
       return;
     } catch (e) {
       handleException(e);
@@ -166,7 +172,7 @@ const AccountSettings = () => {
       <Head>
         <title>Cryptotalks | Settings</title>
       </Head>
-      <DefaultLayout loading={l0 || l1 || l2 || internalLoader}>
+      <DefaultLayout loading={l0 || l1 || l2 || l3 || internalLoader}>
         <Container>
           <Wrapper>
 
@@ -175,13 +181,23 @@ const AccountSettings = () => {
                 onClick={() => handleRedirect('/account')}
               >
                 <UserProfilePicture>
-                  <Image
-                    className={'ava'}
-                    src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/testava.jpg`}
-                    alt={'ava'}
-                    width={128}
-                    height={128}
-                  />
+                  {isProfilePicturePresent ? (
+                    <Image
+                      className={'ava'}
+                      src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/users-profile-pictures/${personalInformation?.id}.png`}
+                      alt={'ava'}
+                      width={128}
+                      height={128}
+                    />
+                  ) : (
+                    <Image
+                      className={'ava'}
+                      src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/testava.jpg`}
+                      alt={'ava'}
+                      width={128}
+                      height={128}
+                    />
+                  )}
                 </UserProfilePicture>
 
                 <SettingsHeaderItemsWrapper>
@@ -283,6 +299,7 @@ const AccountSettings = () => {
               <SettingsContent>
                 {section === 'personalInformation' ? (
                   <PersonalInformation
+                    isProfilePicturePresent={isProfilePicturePresent}
                     personalInformation={personalInformation}
                     setPersonalInformation={setPersonalInformation}
                     applyPersonalInformation={applyPersonalInformation}

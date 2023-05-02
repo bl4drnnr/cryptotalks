@@ -115,7 +115,7 @@ export class AuthService {
     if (!token) throw new InvalidTokenException();
 
     const user = await this.userService.getUserPersonalInformation({
-      id: token.userId
+      userId: token.userId
     });
 
     const { _at, _rt } = await this.updateTokens({
