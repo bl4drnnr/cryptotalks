@@ -29,6 +29,7 @@
     "@nestjs/sequelize": "^9.0.0",
     "@nestjs/swagger": "^6.2.1",
     "@sendgrid/mail": "^7.7.0",
+    "aws-sdk": "^2.1369.0",
     "bcryptjs": "^2.4.3",
     "kafkajs": "^2.2.4",
     "nestjs-twilio": "^4.1.1",

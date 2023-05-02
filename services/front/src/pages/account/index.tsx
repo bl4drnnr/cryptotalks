@@ -257,13 +257,24 @@ const Account = () => {
                 {userData && (
                   <UserProfilePicture>
                     <UserProfilePictureWrapper>
-                      <Image
-                        className={'ava'}
-                        src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/testava.jpg`}
-                        alt={'ava'}
-                        width={225}
-                        height={225}
-                      />
+                      {userData.isProfilePicPresent ? (
+                        <Image
+                          className={'ava'}
+                          src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/users-profile-pictures/${userData?.id}.png`}
+                          alt={'ava'}
+                          width={225}
+                          height={225}
+                        />
+                      ) : (
+                        <Image
+                          className={'ava'}
+                          src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/testava.jpg`}
+                          alt={'ava'}
+                          width={225}
+                          height={225}
+                        />
+                      )}
+
                       <UserTitle>
                         {userData.title}
                       </UserTitle>

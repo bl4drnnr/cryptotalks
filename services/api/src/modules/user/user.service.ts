@@ -1,8 +1,8 @@
+import { S3 } from 'aws-sdk';
 import * as bcryptjs from 'bcryptjs';
 import * as crypto from 'crypto';
 import * as node2fa from 'node-2fa';
 import * as dayjs from 'dayjs';
-import { S3 } from 'aws-sdk';
 import {
   BadRequestException,
   forwardRef,
@@ -282,8 +282,37 @@ export class UserService {
     return new ResponseDto();
   }
 
-  getUserPersonalInformation({ id }: { id: string }) {
-    return this.userRepository.findByPk(id, {
+  async getUserPersonalInformation({ userId }: { userId: string }) {
+    const { accessKeyId, secretAccessKey, bucketName } =
+      this.configService.awsSdkCredentials;
+
+    const s3 = new S3({ accessKeyId, secretAccessKey });
+
+    let isProfilePicPresent = true;
+    try {
+      await s3
+        .headObject({
+          Bucket: bucketName,
+          Key: `users-profile-pictures/${userId}.png`
+        })
+        .promise();
+    } catch (e) {
+      isProfilePicPresent = false;
+    }
+
+    const {
+      id,
+      email,
+      firstName,
+      lastName,
+      twitter,
+      linkedIn,
+      personalWebsite,
+      title,
+      bio,
+      username,
+      createdAt
+    } = await this.userRepository.findByPk(userId, {
       attributes: [
         'id',
         'email',
@@ -298,6 +327,21 @@ export class UserService {
         'created_at'
       ]
     });
+
+    return {
+      id,
+      email,
+      firstName,
+      lastName,
+      twitter,
+      linkedIn,
+      personalWebsite,
+      title,
+      bio,
+      username,
+      createdAt,
+      isProfilePicPresent
+    };
   }
 
   async changeEmail({
@@ -853,6 +897,23 @@ export class UserService {
       ]
     });
 
+    const { accessKeyId, secretAccessKey, bucketName } =
+      this.configService.awsSdkCredentials;
+
+    const s3 = new S3({ accessKeyId, secretAccessKey });
+
+    let isProfilePicPresent = true;
+    try {
+      await s3
+        .headObject({
+          Bucket: bucketName,
+          Key: `users-profile-pictures/${userId}.png`
+        })
+        .promise();
+    } catch (e) {
+      isProfilePicPresent = false;
+    }
+
     const securitySettings = {
       publicEmail: userSecuritySettings.publicEmail,
       emailChanged: userSecuritySettings.emailChanged,
@@ -863,7 +924,11 @@ export class UserService {
     };
     delete userPersonalSettings.email;
 
-    return { securitySettings, personalSettings: userPersonalSettings };
+    return {
+      isProfilePicPresent,
+      securitySettings,
+      personalSettings: userPersonalSettings
+    };
   }
 
   async setPersonalSettings(payload: UpdateUserEventDto) {
@@ -893,28 +958,11 @@ export class UserService {
     return new ResponseDto();
   }
 
-  async uploadPhoto({ userId, photo }: { userId: string; photo: string }) {
-    const { accessKeyId, secretAccessKey, bucketName } =
-      this.configService.awsSdkCredentials;
-
-    const s3 = new S3({ accessKeyId, secretAccessKey });
-
-    const base64Data = Buffer.from(
-      photo.replace(/^data:image\/\w+;base64,/, ''),
-      'base64'
+  async uploadPhoto(payload: { userId: string; photo: string }) {
+    this.userClient.emit(
+      'update_user_account',
+      new UpdateUserEvent({ ...payload })
     );
-
-    const type = photo.split(';')[0].split('/')[1];
-
-    const params = {
-      Bucket: bucketName,
-      Key: `${userId}.${type}`,
-      Body: base64Data,
-      ContentEncoding: 'base64',
-      ContentType: `image/${type}`
-    };
-
-    await s3.upload(params).promise();
 
     return new ResponseDto();
   }

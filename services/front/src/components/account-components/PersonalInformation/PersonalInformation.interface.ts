@@ -1,19 +1,11 @@
 import React from 'react';
 
-interface IPersonalInformation {
-  firstName: string;
-  lastName: string;
-  twitter: string;
-  linkedIn: string;
-  personalWebsite: string;
-  title: string;
-  bio: string;
-  username: string;
-}
+import { IPersonalInformation } from '@services/get-user-settings/get-user-settings.interface';
 
 export interface PersonalInformationProps {
   personalInformation: IPersonalInformation | undefined;
   setPersonalInformation: React.Dispatch<React.SetStateAction<any>>;
   applyPersonalInformation: any;
   setSelectedFile: React.Dispatch<React.SetStateAction<any>>;
+  isProfilePicturePresent: boolean;
 }

@@ -67,6 +67,13 @@ export class UpdateUserEventDto {
     nullable: true
   })
   username?: string;
+
+  @ApiProperty({
+    type: String,
+    nullable: true,
+    description: 'Base64 string describing photo'
+  })
+  photo?: string;
 }
 
 export class UpdateUserEvent {
