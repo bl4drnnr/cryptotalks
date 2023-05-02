@@ -101,9 +101,14 @@ export class PostsController {
   })
   @UseGuards(JwtGuard)
   @Delete('delete/:id')
-  deletePost(@UserDecorator() userId: string, @Param('id') id: string) {
+  deletePost(
+    @UserDecorator() userId: string,
+    @Param('id') id: string,
+    @Query('code') code: string,
+    @Query('twoFaCode') twoFaCode: string
+  ) {
     return this.postsService.deletePost({
-      payload: { id },
+      payload: { id, code, twoFaCode },
       userId
     });
   }

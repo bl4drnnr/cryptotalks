@@ -11,6 +11,7 @@ import { Input } from '@components/Input/Input.component';
 import { Modal } from '@components/Modal/Modal.component';
 import Pagination from '@components/Pagination/Pagination.component';
 import PostPreview from '@components/PostPreview/PostPreview.component';
+import { TwoFa } from '@components/TwoFa/TwoFa.component';
 import { useHandleException } from '@hooks/useHandleException.hook';
 import { useNotificationMessage } from '@hooks/useShowNotificationMessage.hook';
 import DefaultLayout from '@layouts/Default.layout';
@@ -47,6 +48,7 @@ import {
   UserTitle,
   Wrapper,
 } from '@styles/account.style';
+import { ModalButtonWrapper } from '@styles/SecuritySettings.style';
 
 const Account = () => {
   const router = useRouter();
@@ -73,6 +75,8 @@ const Account = () => {
 
   const [deletePostModal, setDeletePostModal] = React.useState<boolean>(false);
   const [deletePostStep, setDeletePostStep] = React.useState<number>(1);
+  const [deletePostTwoFa, setDeletePostTwoFa] = React.useState('');
+  const [deletePostCode, setDeletePostCode] = React.useState('');
 
   React.useEffect(() => {
     if (fetchTokenChecking.current) {
@@ -189,7 +193,9 @@ const Account = () => {
       const token = localStorage.getItem('_at');
       const { message } = await deletePost({
         token,
-        postId
+        postId,
+        twoFaCode: deletePostTwoFa,
+        code: deletePostCode
       });
 
       if (message === 'two-fa-required') {
@@ -204,6 +210,7 @@ const Account = () => {
       });
 
       await fetchUserPosts();
+      setDeletePostModal(false);
     } catch (e) {
       await exceptionHandler(e);
     }
@@ -214,7 +221,7 @@ const Account = () => {
       <Head>
         <title>Cryptotalks | My account</title>
       </Head>
-      <DefaultLayout loading={l1 || l2 || l3}>
+      <DefaultLayout loading={l1 || l2 || l3 || l4}>
         <Container>
           <Wrapper>
             <AccountContainer>
@@ -338,10 +345,46 @@ const Account = () => {
                                 header={'Delete post?'}
                                 description={'Be careful! This action cannot be proceed back. It means you will not be able to restore post, comments and rates. Are you sure you want to continue?'}
                               >
-                                <Button
-                                  onClick={() => fetchDeletePost(post.id)}
-                                  text={'Continue'}
-                                />
+                                {deletePostStep === 1 ? (
+                                  <Button
+                                    onWhite={true}
+                                    onClick={() => fetchDeletePost(post.id)}
+                                    text={'Continue'}
+                                  />
+                                ) : (<></>)}
+                                {deletePostStep === 2 ? (
+                                  <>
+                                    <TwoFa
+                                      styles={{ justifyCenter: true, onWhite: true }}
+                                      title={'Provide 2FA code from authenticator application'}
+                                      setTwoFaCode={setDeletePostTwoFa}
+                                    />
+                                    <ModalButtonWrapper>
+                                      <Button
+                                        onWhite={true}
+                                        disabled={deletePostTwoFa.length !== 6}
+                                        onClick={() => fetchDeletePost(post.id)}
+                                        text={'Submit'}
+                                      />
+                                    </ModalButtonWrapper>
+                                  </>
+                                ) : (deletePostStep === 3 ? (
+                                  <>
+                                    <TwoFa
+                                      styles={{ justifyCenter: true, onWhite: true }}
+                                      title={'Provide 2FA code from SMS'}
+                                      setTwoFaCode={setDeletePostCode}
+                                    />
+                                    <ModalButtonWrapper>
+                                      <Button
+                                        onWhite={true}
+                                        disabled={deletePostCode.length !== 6}
+                                        onClick={() => fetchDeletePost(post.id)}
+                                        text={'Submit'}
+                                      />
+                                    </ModalButtonWrapper>
+                                  </>
+                                ) : (<></>))}
                               </Modal>
                             ) : null}
                           </>

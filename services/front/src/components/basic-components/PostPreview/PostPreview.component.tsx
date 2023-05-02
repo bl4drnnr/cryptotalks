@@ -29,13 +29,21 @@ const PostPreview = (
 ) => {
   const router = useRouter();
 
-  const handleRedirect = async (path: string) => {
+  const handlePostDeletion = (e: any) => {
+    e.stopPropagation();
+    if (onDeleteClick) {
+      onDeleteClick();
+    }
+  };
+
+  const handleRedirect = async (e: any, path: string) => {
+    e.stopPropagation();
     await router.push(path);
   };
 
   return (
     <PostContainer
-      onClick={() => handleRedirect(`/posts/edit/${slug}`)}
+      onClick={(e) => handleRedirect(e, `/posts/post/${slug}`)}
     >
       <PostTitle>{title}</PostTitle>
       <PostTextPreview>{preview}</PostTextPreview>
@@ -54,13 +62,13 @@ const PostPreview = (
           <EditButtonWrapper className={'first'}>
             <Button
               text={'Edit'}
-              onClick={() => handleRedirect(`/posts/edit/${slug}`)}
+              onClick={(e: any) => handleRedirect(e, `/posts/edit/${slug}`)}
             />
           </EditButtonWrapper>
           <EditButtonWrapper className={'second'}>
             <Button
               text={'Delete'}
-              onClick={onDeleteClick}
+              onClick={(e: any) => handlePostDeletion(e)}
               danger={true}
             />
           </EditButtonWrapper>

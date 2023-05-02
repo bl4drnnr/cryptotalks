@@ -11,7 +11,14 @@ export const useDeletePostService = () => {
     : Promise<DeletePostResponse> => {
     try {
       setLoading(true);
-      const { data } = await ApiClient.delete<DeletePostResponse>(`/post/delete/${payload.postId}`, {
+
+      let deletePostUrl = `/post/delete/${payload.postId}`;
+
+      if (payload.code) deletePostUrl += `?code=${payload.code}`;
+      else if (payload.twoFaCode) deletePostUrl += `?twoFaCode=${payload.twoFaCode}`;
+
+      console.log('deletePostUrl', deletePostUrl);
+      const { data } = await ApiClient.delete<DeletePostResponse>(deletePostUrl, {
         headers: { 'x-access-token': `Bearer ${payload.token}` }
       });
 

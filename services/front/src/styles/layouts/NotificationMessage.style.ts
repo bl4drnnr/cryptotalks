@@ -9,7 +9,7 @@ export const Container = styled.div`
   position: fixed;
   text-align: center;
   z-index: 1000;
-  max-width: 280px;
+  max-width: 350px;
   border-radius: 8px;
   border: 1px solid rgb(${(props) => props.theme.colors.primary});
   background-color: rgb(${(props) => props.theme.colors.darkBackground});
