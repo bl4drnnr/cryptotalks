@@ -235,7 +235,7 @@ paths:
               $ref: "#/components/schemas/SignUpDto"
       responses:
         "201":
-          description: As a response function gets 2 tokens - refresh and access
+          description: As a response function returns success message
       tags: &a2
         - User
   /api/user/sign-in:
@@ -251,7 +251,7 @@ paths:
               $ref: "#/components/schemas/SignInDto"
       responses:
         "201":
-          description: As a response function returns success message
+          description: As a response function gets 2 tokens - refresh and access
       tags: *a2
   "/api/user/account-confirmation/{confirmationHash}":
     get:
