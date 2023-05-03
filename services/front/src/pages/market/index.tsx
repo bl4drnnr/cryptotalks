@@ -9,7 +9,6 @@ import { Input } from '@components/Input/Input.component';
 import Pagination from '@components/Pagination/Pagination.component';
 import { useWindowDimensions } from '@hooks/useGetWindowDimensions.hook';
 import { useHandleException } from '@hooks/useHandleException.hook';
-import { parseCoins } from '@hooks/useParseCoins.hook';
 import DefaultLayout from '@layouts/Default.layout';
 import { GetStatsResponse } from '@services/get-stats/get-stats.interface';
 import { useGetStatsService } from '@services/get-stats/get-stats.service';

@@ -16,8 +16,7 @@ import {
   EditButtonWrapper
 } from '@styles/PostPreview.style';
 
-const PostPreview = (
-  {
+const PostPreview = ({
     slug,
     title,
     preview,
@@ -25,8 +24,7 @@ const PostPreview = (
     createdAt,
     isAdmin,
     onDeleteClick
-  }: PostProps
-) => {
+  }: PostProps) => {
   const router = useRouter();
 
   const handlePostDeletion = (e: any) => {

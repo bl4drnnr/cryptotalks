@@ -45,6 +45,14 @@ import {
   UserTitle,
   Wrapper
 } from '@styles/account.style';
+import { SearchInputWrapper } from '@styles/market.style';
+import {
+  PostSearchInputWrapper,
+  SortBar,
+  SortItem,
+  SortWrapper,
+  TypeOfSortItem
+} from '@styles/posts.style';
 
 const Username = () => {
   const router = useRouter();
@@ -118,9 +126,19 @@ const Username = () => {
           setListOfCrypto(cryptoRes.rows);
         });
         fetchListPosts(username as string).then();
+      }).catch((err) => {
+        setUserNotFound(true);
       });
     }
   }, [router.query]);
+
+  React.useEffect(() => {
+    setCryptoOrderBy(cryptoCurrentSort.name);
+  }, [cryptoCurrentSort]);
+
+  React.useEffect(() => {
+    setPostsOrderBy(postsCurrentSort.name);
+  }, [postsCurrentSort]);
 
   React.useEffect(() => {
     fetchListCrypto(userData?.username as string).then();
@@ -148,8 +166,8 @@ const Username = () => {
       setUserData(data);
       return;
     } catch (e) {
-      setUserNotFound(true);
       handleException(e);
+      throw new Error('');
     }
   };
 
@@ -208,180 +226,242 @@ const Username = () => {
       <DefaultLayout loading={l0 || l1 || l2}>
         <Container>
           <Wrapper>
-            <AccountContainer>
-              <UserInfoContainer>
-                {userData && (
-                  <UserProfilePicture>
-                    <UserProfilePictureWrapper>
-                      {userData.isProfilePicPresent ? (
-                        <Image
-                          className={'ava'}
-                          src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/users-profile-pictures/${userData?.id}.png`}
-                          alt={'ava'}
-                          width={225}
-                          height={225}
-                        />
-                      ) : (
-                        <Image
-                          className={'ava'}
-                          src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/testava.jpg`}
-                          alt={'ava'}
-                          width={225}
-                          height={225}
-                        />
-                      )}
-
-                      <UserTitle>
-                        {userData.title}
-                      </UserTitle>
-                    </UserProfilePictureWrapper>
-
-                    <AccountInfoContainer>
-                      <AccountInfo>
-                        <Nickname>{userData.username}</Nickname>
-                        <FullName>aka {userData.firstName} {userData.lastName}</FullName>
-                      </AccountInfo>
-                      <UserBio>{userData.bio}</UserBio>
-                      <ContactInformationWrapper>
-                        {userData.twitter && (
-                          <ContactField
-                            onClick={() => copyToClipboard(userData.twitter)}
-                          >
-                            <ContactIcon>
-                              <Image
-                                src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/twitter.svg`}
-                                width={32}
-                                height={32}
-                                alt={'t'}
-                              />
-                            </ContactIcon>
-                            <Input
-                              disabled={true}
-                              value={userData.twitter}
-                              placeholder={''}
-                              onChange={() => {}}
-                            />
-                          </ContactField>
-                        )}
-                        {userData.linkedIn && (
-                          <ContactField
-                            onClick={() => copyToClipboard(userData.linkedIn)}
-                          >
-                            <ContactIcon>
-                              <Image
-                                src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/linkedin.svg`}
-                                width={32}
-                                height={32}
-                                alt={'l'}
-                              />
-                            </ContactIcon>
-                            <Input
-                              disabled={true}
-                              value={userData.linkedIn}
-                              placeholder={''}
-                              onChange={() => {}}
-                            />
-                          </ContactField>
-                        )}
-                        {userData.personalWebsite && (
-                          <ContactField
-                            onClick={() => copyToClipboard(userData.personalWebsite)}
-                          >
-                            <ContactIcon>
-                              <Image
-                                src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/tag.svg`}
-                                width={32}
-                                height={32}
-                                alt={'w'}
-                              />
-                            </ContactIcon>
-                            <Input
-                              disabled={true}
-                              value={userData.personalWebsite}
-                              placeholder={''}
-                              onChange={() => {}}
-                            />
-                          </ContactField>
-                        )}
-                      </ContactInformationWrapper>
-                    </AccountInfoContainer>
-
-                    <AccountCreatedAtContainer>
-                      <CreatedAtParagraph>Account created at</CreatedAtParagraph>
-                      <CreatedAtDate>{dayjs(userData.createdAt).format('YYYY-MM-DD')}</CreatedAtDate>
-                    </AccountCreatedAtContainer>
-
-                  </UserProfilePicture>
-                )}
-              </UserInfoContainer>
-
-              <AccountContentContainer>
-                <UserContentSectionWrapper>
-                  <LatestPostsContainer>
-                    {listOfPosts?.length ? (
-                      <>
-                        <PostsTitle>{userData?.username}&apos;s posts</PostsTitle>
-                        {listOfPosts?.map((post, key) => (
-                          <>
-                            <PostPreview
-                              slug={post.slug}
-                              title={post.title}
-                              preview={post.preview}
-                              searchTags={post.searchTags}
-                              createdAt={post.createdAt}
-                              key={key}
-                            />
-                          </>
-                        ))}
-                        <Pagination
-                          currentPage={postsPage + 1}
-                          pageSize={postsPageSize}
-                          onPageChange={setPostsPage}
-                          onPageSizeChange={setPostsPageSize}
-                          totalPages={Math.ceil(postsTotalPages / postsPageSize)}
-                        />
-                      </>
-                    ) : (
-                      <NoPostsTitle>
-                        No posts yet.
-                      </NoPostsTitle>
-                    )}
-                  </LatestPostsContainer>
-                  <LatestPostsContainer>
-                    {listOfCrypto?.length ? (
-                      <>
-                        <PostsTitle>{userData?.username}&apos;s favorite cryptos</PostsTitle>
-                        {listOfCrypto?.map((item, index) => (
-                          <CoinPreview
-                            uuid={item.uuid}
-                            iconUrl={item.iconUrl}
-                            name={item.name}
-                            symbol={item.symbol}
-                            price={item.price}
-                            change={item.change}
-                            sparkline={item.sparkline}
-                            width={150}
-                            height={80}
-                            key={index}
+            {userNotFound ? (
+              <PostsTitle>
+                Eh... No such user :(
+              </PostsTitle>
+            ) : (
+              <AccountContainer>
+                <UserInfoContainer>
+                  {userData && (
+                    <UserProfilePicture>
+                      <UserProfilePictureWrapper>
+                        {userData.isProfilePicPresent ? (
+                          <Image
+                            className={'ava'}
+                            src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/users-profile-pictures/${userData?.id}.png`}
+                            alt={'ava'}
+                            width={225}
+                            height={225}
                           />
-                        ))}
-                        <Pagination
-                          currentPage={cryptoPage + 1}
-                          pageSize={cryptoPageSize}
-                          onPageChange={setCryptoPage}
-                          onPageSizeChange={setCryptoPageSize}
-                          totalPages={Math.ceil(cryptoTotalPages / cryptoPageSize)}
-                        />
-                      </>
-                    ): (
-                      <NoPostsTitle>
-                        No favorite coins yet.
-                      </NoPostsTitle>
-                    )}
-                  </LatestPostsContainer>
-                </UserContentSectionWrapper>
-              </AccountContentContainer>
-            </AccountContainer>
+                        ) : (
+                          <Image
+                            className={'ava'}
+                            src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/testava.jpg`}
+                            alt={'ava'}
+                            width={225}
+                            height={225}
+                          />
+                        )}
+
+                        <UserTitle>
+                          {userData.title}
+                        </UserTitle>
+                      </UserProfilePictureWrapper>
+
+                      <AccountInfoContainer>
+                        <AccountInfo>
+                          <Nickname>{userData.username}</Nickname>
+                          <FullName>aka {userData.firstName} {userData.lastName}</FullName>
+                        </AccountInfo>
+                        <UserBio>{userData.bio}</UserBio>
+                        <ContactInformationWrapper>
+                          {userData.twitter && (
+                            <ContactField
+                              onClick={() => copyToClipboard(userData.twitter)}
+                            >
+                              <ContactIcon>
+                                <Image
+                                  src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/twitter.svg`}
+                                  width={32}
+                                  height={32}
+                                  alt={'t'}
+                                />
+                              </ContactIcon>
+                              <Input
+                                disabled={true}
+                                value={userData.twitter}
+                                placeholder={''}
+                                onChange={() => {}}
+                              />
+                            </ContactField>
+                          )}
+                          {userData.linkedIn && (
+                            <ContactField
+                              onClick={() => copyToClipboard(userData.linkedIn)}
+                            >
+                              <ContactIcon>
+                                <Image
+                                  src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/linkedin.svg`}
+                                  width={32}
+                                  height={32}
+                                  alt={'l'}
+                                />
+                              </ContactIcon>
+                              <Input
+                                disabled={true}
+                                value={userData.linkedIn}
+                                placeholder={''}
+                                onChange={() => {}}
+                              />
+                            </ContactField>
+                          )}
+                          {userData.personalWebsite && (
+                            <ContactField
+                              onClick={() => copyToClipboard(userData.personalWebsite)}
+                            >
+                              <ContactIcon>
+                                <Image
+                                  src={`${process.env.NEXT_PUBLIC_PUBLIC_S3_BUCKET_URL}/tag.svg`}
+                                  width={32}
+                                  height={32}
+                                  alt={'w'}
+                                />
+                              </ContactIcon>
+                              <Input
+                                disabled={true}
+                                value={userData.personalWebsite}
+                                placeholder={''}
+                                onChange={() => {}}
+                              />
+                            </ContactField>
+                          )}
+                        </ContactInformationWrapper>
+                      </AccountInfoContainer>
+
+                      <AccountCreatedAtContainer>
+                        <CreatedAtParagraph>Account created at</CreatedAtParagraph>
+                        <CreatedAtDate>{dayjs(userData.createdAt).format('YYYY-MM-DD')}</CreatedAtDate>
+                      </AccountCreatedAtContainer>
+
+                    </UserProfilePicture>
+                  )}
+                </UserInfoContainer>
+
+                <AccountContentContainer>
+                  <UserContentSectionWrapper>
+                    <LatestPostsContainer>
+                      {listOfPosts?.length ? (
+                        <>
+                          <PostsTitle>{userData?.username}&apos;s posts</PostsTitle>
+
+                          <PostSearchInputWrapper>
+                            <Input
+                              value={postsSearchQuery}
+                              placeholder={'Search for posts'}
+                              onChange={(e) => setPostsSearchQuery(e.target.value)}
+                            />
+                          </PostSearchInputWrapper>
+
+                          <SortWrapper>
+                            <SortBar>
+                              {postsSorts.map((item) => (
+                                <SortItem
+                                  className={postsCurrentSort.name === item.name ? 'active': ''}
+                                  key={item.name}
+                                  onClick={() => setPostsCurrentSort(item)}
+                                >
+                                  {item.value}
+                                </SortItem>
+                              ))}
+                            </SortBar>
+                            <TypeOfSortItem
+                              onClick={() => setPostsOrder(postsOrder === 'ASC' ? 'DESC' : 'ASC')}
+                            >
+                              {postsOrder}
+                            </TypeOfSortItem>
+                          </SortWrapper>
+
+                          {listOfPosts?.map((post, key) => (
+                            <>
+                              <PostPreview
+                                slug={post.slug}
+                                title={post.title}
+                                preview={post.preview}
+                                searchTags={post.searchTags}
+                                createdAt={post.createdAt}
+                                key={key}
+                              />
+                            </>
+                          ))}
+                          <Pagination
+                            currentPage={postsPage + 1}
+                            pageSize={postsPageSize}
+                            onPageChange={setPostsPage}
+                            onPageSizeChange={setPostsPageSize}
+                            totalPages={Math.ceil(postsTotalPages / postsPageSize)}
+                          />
+                        </>
+                      ) : (
+                        <NoPostsTitle>
+                          No posts yet.
+                        </NoPostsTitle>
+                      )}
+                    </LatestPostsContainer>
+                    <LatestPostsContainer>
+                      {listOfCrypto?.length ? (
+                        <>
+                          <PostsTitle>{userData?.username}&apos;s favorite cryptos</PostsTitle>
+
+                          <SearchInputWrapper>
+                            <Input
+                              value={cryptoSearchQuery}
+                              placeholder={'Search for coins'}
+                              onChange={(e) => setCryptoSearchQuery(e.target.value)}
+                            />
+                          </SearchInputWrapper>
+
+                          <SortWrapper>
+                            <SortBar>
+                              {cryptoSorts.map((item) => (
+                                <SortItem
+                                  className={cryptoCurrentSort.name === item.name ? 'active': ''}
+                                  key={item.name}
+                                  onClick={() => setCryptoCurrentSort(item)}
+                                >
+                                  {item.value}
+                                </SortItem>
+                              ))}
+                            </SortBar>
+                            <TypeOfSortItem
+                              onClick={() => setCryptoOrder(cryptoOrder === 'ASC' ? 'DESC' : 'ASC')}
+                            >
+                              {cryptoOrder}
+                            </TypeOfSortItem>
+                          </SortWrapper>
+
+                          {listOfCrypto?.map((item, index) => (
+                            <CoinPreview
+                              uuid={item.uuid}
+                              iconUrl={item.iconUrl}
+                              name={item.name}
+                              symbol={item.symbol}
+                              price={item.price}
+                              change={item.change}
+                              sparkline={item.sparkline}
+                              width={150}
+                              height={80}
+                              key={index}
+                            />
+                          ))}
+                          <Pagination
+                            currentPage={cryptoPage + 1}
+                            pageSize={cryptoPageSize}
+                            onPageChange={setCryptoPage}
+                            onPageSizeChange={setCryptoPageSize}
+                            totalPages={Math.ceil(cryptoTotalPages / cryptoPageSize)}
+                          />
+                        </>
+                      ): (
+                        <NoPostsTitle>
+                          No favorite coins yet.
+                        </NoPostsTitle>
+                      )}
+                    </LatestPostsContainer>
+                  </UserContentSectionWrapper>
+                </AccountContentContainer>
+              </AccountContainer>
+            )}
           </Wrapper>
         </Container>
       </DefaultLayout>
