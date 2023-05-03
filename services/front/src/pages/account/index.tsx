@@ -362,6 +362,7 @@ const Account = () => {
                         {userPosts?.map((post, key) => (
                           <>
                             <PostPreview
+                              rates={post.rates}
                               slug={post.slug}
                               title={post.title}
                               preview={post.preview}

@@ -13,7 +13,7 @@ import {
   PostTitle,
   PostCreatedAt,
   EditButtonsWrapper,
-  EditButtonWrapper
+  EditButtonWrapper, PostInfoWrapper, PostInfoItem
 } from '@styles/PostPreview.style';
 
 const PostPreview = ({
@@ -23,6 +23,7 @@ const PostPreview = ({
     searchTags,
     createdAt,
     isAdmin,
+    rates,
     onDeleteClick
   }: PostProps) => {
   const router = useRouter();
@@ -39,6 +40,15 @@ const PostPreview = ({
     await router.push(path);
   };
 
+  const countRating = () => {
+    let rate = 0;
+    rates.forEach((item) => {
+      if (item.rate === '+') rate++;
+      else rate--;
+    });
+    return rate;
+  };
+
   return (
     <PostContainer
       onClick={(e) => handleRedirect(e, `/posts/post/${slug}`)}
@@ -50,11 +60,18 @@ const PostPreview = ({
           <PostTag key={key}>{searchTag}</PostTag>
         ))}
       </PostSearchTags>
-      {createdAt && (
-        <PostCreatedAt>
-          Post created at: {dayjs(createdAt).format('YYYY-MM-DD HH:mm:ss')}
-        </PostCreatedAt>
-      )}
+      <PostInfoWrapper>
+        <PostInfoItem>
+          {createdAt && (
+            <PostCreatedAt>
+              Post created at: {dayjs(createdAt).format('YYYY-MM-DD HH:mm:ss')}
+            </PostCreatedAt>
+          )}
+        </PostInfoItem>
+        <PostInfoItem>
+          <PostCreatedAt className={countRating() > 0 ? 'positive' : countRating() < 0 ? 'negative' : 'neutral'}>Rating: {countRating()}</PostCreatedAt>
+        </PostInfoItem>
+      </PostInfoWrapper>
       {isAdmin ? (
         <EditButtonsWrapper>
           <EditButtonWrapper className={'first'}>

@@ -42,6 +42,16 @@ export const PostTag = styled.p`
 export const PostCreatedAt = styled.p`
   color: rgb(${(props) => props.theme.colors.textColor}, .5);
   margin-top: 10px;
+
+  &.positive {
+    color: rgb(${(props) => props.theme.colors.success});
+  }
+  &.negative {
+    color: rgb(${(props) => props.theme.colors.error});
+  }
+  &.neutral {
+    color: rgba(${(props) => props.theme.colors.textColor});
+  }
 `;
 
 export const EditButtonsWrapper = styled.div`
@@ -57,4 +67,12 @@ export const EditButtonWrapper = styled.div`
   &.second {
     margin-left: 5px;
   }
+`;
+
+export const PostInfoItem = styled.div``;
+
+export const PostInfoWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;

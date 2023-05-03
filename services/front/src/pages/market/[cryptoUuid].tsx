@@ -247,6 +247,7 @@ const Coin = () => {
                   </CoinSubtitle>
                   {relatedPosts?.rows.map((post, index) => (
                     <PostPreview
+                      rates={post.rates}
                       key={index}
                       slug={post.slug}
                       title={post.title}

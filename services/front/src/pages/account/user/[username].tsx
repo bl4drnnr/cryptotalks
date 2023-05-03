@@ -221,7 +221,7 @@ const Username = () => {
   return (
     <>
       <Head>
-        <title>Cryptotalks | UsernameHere</title>
+        <title>Cryptotalks | {userData?.username}</title>
       </Head>
       <DefaultLayout loading={l0 || l1 || l2}>
         <Container>
@@ -375,6 +375,7 @@ const Username = () => {
                           {listOfPosts?.map((post, key) => (
                             <>
                               <PostPreview
+                                rates={post.rates}
                                 slug={post.slug}
                                 title={post.title}
                                 preview={post.preview}

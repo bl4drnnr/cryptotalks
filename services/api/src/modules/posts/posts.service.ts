@@ -168,7 +168,7 @@ export class PostsService {
       ];
     }
 
-    return await this.postRepository.findAndCountAll({
+    const { rows, count } = await this.postRepository.findAndCountAll({
       where: { ...where },
       order: [[orderBy, order]],
       limit,
@@ -182,6 +182,34 @@ export class PostsService {
         [sequelize.literal('created_at'), 'createdAt']
       ]
     });
+
+    const postsInfo = await this.postInfoRepository.findAll({
+      where: {
+        postId: {
+          [Op.in]: rows.map((post) => post.id)
+        }
+      },
+      attributes: ['postId', 'rates']
+    });
+
+    const posts = [];
+
+    rows.forEach((row) => {
+      postsInfo.forEach((postInfo) => {
+        if (row.id === postInfo.postId)
+          posts.push({
+            id: row.id,
+            title: row.title,
+            preview: row.preview,
+            slug: row.slug,
+            searchTags: row.searchTags,
+            createdAt: row.createdAt,
+            rates: postInfo.rates
+          });
+      });
+    });
+
+    return { rows: posts, count };
   }
 
   async deletePost({

@@ -119,6 +119,7 @@ const Posts = () => {
 
           {posts?.map((post) => (
             <PostPreview
+              rates={post.rates}
               slug={post.slug}
               key={post.id}
               title={post.title}

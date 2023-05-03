@@ -5,6 +5,7 @@ export interface IPosts {
   slug: string;
   createdAt: string;
   searchTags: Array<string>;
+  rates: Array<{ rate: '+' | '-'; userId: string; username: string; }>;
 }
 
 export interface ListPostsPayload {
