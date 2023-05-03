@@ -10,6 +10,8 @@ services:
       context: ./services/front
       dockerfile: ./Dockerfile
     command: npm run dev
+    depends_on:
+      - api
     volumes:
       - ./services/front:/usr/src/cryptotalks-front
     ports:
@@ -33,7 +35,7 @@ services:
       - ./services/common/exceptions:/usr/src/cryptotalks-users/src/exceptions
       - ./services/common/mongo-schemas:/usr/src/cryptotalks-users/src/mongo-schemas
     depends_on:
-      - api
+      - crypto-rates
     networks:
       - cryptotalks_cryptotalks-network
   crypto-rates:
@@ -53,7 +55,7 @@ services:
       - ./services/common/exceptions:/usr/src/cryptotalks-crypto-rates/src/exceptions
       - ./services/common/mongo-schemas:/usr/src/cryptotalks-crypto-rates/src/mongo-schemas
     depends_on:
-      - api
+      - auth
     networks:
       - cryptotalks_cryptotalks-network
   auth:
@@ -73,7 +75,7 @@ services:
       - ./services/common/exceptions:/usr/src/cryptotalks-auth/src/exceptions
       - ./services/common/mongo-schemas:/usr/src/cryptotalks-auth/src/mongo-schemas
     depends_on:
-      - api
+      - posts
     networks:
       - cryptotalks_cryptotalks-network
   posts:

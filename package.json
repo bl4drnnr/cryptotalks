@@ -4,11 +4,8 @@
   "description": "Cryptotalks - forum/blog for cryptogeeks.",
   "scripts": {
     "dev:build": "docker-compose --env-file .env.development up --build",
-    "dev:up": "docker-compose --env-file .env.development up",
-    "prod:build": "docker-compose --env-file .env.production up --build",
-    "prod:up": "docker-compose --env-file .env.production up",
-    "dev:down": "docker-compose --env-file .env.development down",
-    "prod:down": "docker-compose --env-file .env.production down",
+    "dev:up": "docker-compose --env-file .env.development up -d",
+    "dev:down": "docker-compose --env-file .env.development down && docker-compose -f docker-compose.kafka.yml down",
     "front:dev": "docker-compose --env-file .env.development up front",
     "front:build": "npm run build --workspace=front",
     "api:dev": "docker-compose --env-file .env.development up api",
@@ -22,14 +19,14 @@
     "users:dev": "docker-compose --env-file .env.development up users",
     "users:build": "npm run build --workspace=users",
     "db:dev:up": "docker-compose --env-file .env.development up db",
-    "kafka:up": "docker-compose -f docker-compose.kafka.yml up",
+    "kafka:up": "docker-compose -f docker-compose.kafka.yml up -d",
     "kafka:down": "docker-compose -f docker-compose.kafka.yml down",
-    "rmi": "docker rmi cryptotalks-api cryptotalks-db cryptotalks-crypto-rates cryptotalks-auth cryptotalks-front cryptotalks-posts cryptotalks-users",
+    "rmi": "docker rmi cryptotalks-api cryptotalks-db cryptotalks-crypto-rates cryptotalks-auth cryptotalks-front cryptotalks-posts cryptotalks-users cryptotalks-kafdrop-1 cryptotalks-kafka-1",
     "format": "npm run format --workspace=users && npm run format --workspace=posts && npm run format --workspace=api && npm run format --workspace=auth && npm run format --workspace=crypto-rates && npm run format --workspace=common",
     "prep": "npm --prefix . install --no-workspaces && npm --prefix services/api install --no-workspaces && npm --prefix services/auth install --no-workspaces && npm --prefix services/crypto-rates install --no-workspaces && npm --prefix services/front install --no-workspaces && npm --prefix services/posts install --no-workspaces && npm --prefix services/users install --no-workspaces && npm --prefix services/common install --no-workspaces",
     "seeders": "npm run sequelize:seed --workspace=api",
     "seeders:undo": "npm run sequelize:seed:undo --workspace=api",
-    "demo": "docker-compose -f docker-compose.kafka.yml up -d && npm run prep && docker-compose up -d && npm run sequelize:seed --workspace=api"
+    "demo": "npm run kafka:up && npm run prep && npm run dev:up && npm run seeders"
   },
   "workspaces": [
     "./services/*"
