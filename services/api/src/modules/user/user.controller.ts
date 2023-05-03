@@ -52,7 +52,7 @@ export class UserController {
   @ApiOperation({ summary: 'Responsible for user account creation' })
   @ApiResponse({
     status: 201,
-    description: 'As a response function gets 2 tokens - refresh and access'
+    description: 'As a response function returns success message'
   })
   @Post('sign-up')
   signUp(@Body() payload: SignUpDto) {
@@ -63,7 +63,7 @@ export class UserController {
   @ApiOperation({ summary: 'Responsible for user login' })
   @ApiResponse({
     status: 201,
-    description: 'As a response function returns success message'
+    description: 'As a response function gets 2 tokens - refresh and access'
   })
   @Post('sign-in')
   async signIn(@Body() payload: SignInDto, @Res({ passthrough: true }) res) {
