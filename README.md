@@ -4,133 +4,151 @@
 
 # Table of contents
 1. [Introduction](#introduction)
-2. [Project architecture](#project-architecture)
-3. [Services](#services)
-   1. [API](#api)
-   2. [Front](#front)
+2. [Microservices infrastructure](#microservices-infrastructure)
+   1. [Description of the microservices infrastructure](#description-of-the-microservices-infrastructure)
+   2. [Types of communication](#types-of-communication)
+   3. [Details of infrastructure implementation in the project](#details-of-infrastructure-implementation-in-the-project)
+3. [Available endpoints](#available-endpoints)
+   1. [Users module](#users-module)
+   2. [Post module](#post-module)
+   3. [Authentication module](#authentication-module)
+   4. [Cryptocurrency module](#cryptocurrency-module)
+4. [Microservices and their roles](#microservices-and-their-roles)
+   1. [Front end](#front-end)
+   2. [Back-end (API Gateway) and its key elements](#back-end-api-gateway-and-its-key-elements)
    3. [Authentication](#authentication)
-   4. [Crypto rates](#crypto-rates)
+   4. [Users](#users)
    5. [Posts](#posts)
-   6. [Users](#users)
+   6. [Crypto rates](#crypto-rates)
    7. [Common](#common)
-4. [Contact and references](#contact-and-references)
-5. [License and tech stack](#license)
+5. [Internal documentation](#internal-documentation)
+6. [Technical requirements to run the project](#technical-requirements-to-run-the-project)
+7. [Literature and other sources](#literature-and-other-sources)
+8. [License](#license)
 
 ## Introduction
 
-**Cryptotalks** - is a blog/forum dedicated to all things crypto for the crypto enthusiasts out there. If you're passionate about cryptocurrencies, blockchain technology, and decentralized finance, this is the perfect platform for you.
 
-Our goal is to create a vibrant community where crypto geeks from all over the world can share their knowledge, insights, and experiences with one another. Our blog will feature articles on the latest developments in the crypto world, expert opinions on the hottest topics, and in-depth analysis of new projects and protocols.
+Cryptocurrencies have become a hot topic in recent years, with more and more people showing interest in this digital form of currency. From Bitcoin to Ethereum, these decentralized currencies have revolutionized the way we view and use money. With the growth of cryptocurrencies, it has become crucial to provide a platform where people can meet and discuss the latest news, trends and developments in the world of digital currencies.
 
-Our forum, on the other hand, will provide a space for discussions, debates, and Q&A sessions, where members can ask questions, share ideas, and collaborate on projects. We believe that by bringing together people with diverse backgrounds and expertise, we can foster innovation and drive the growth of the crypto ecosystem.
+This is where Cryptotalks comes in - the forum/blog platform is designed to gather cryptocurrency enthusiasts who share their knowledge, experiences and opinions on everything related to cryptocurrencies.
 
-So, whether you're a seasoned crypto trader, a blockchain developer, or just someone who's curious about this fascinating new technology, we invite you to join our community and be a part of the conversation. Let's explore the future of money together!
+This project was developed using a microservices framework, which makes it flexible and also makes it easier for developers to develop the application as it evolves over time. Before we begin to describe the architecture itself, as well as how it is implemented, below is a short list of technologies that were used during the development of the project.
 
-## Project architecture
+- **Programming languages**: JavaScript, TypeScript
+- **Frameworks**:
+  - **Front-end**: Next.js (React.js + TypeScript + Server-Side Rendering)
+  - **Back-end and microservices**: Nest.js
+- **Databases and ORMs**: PostgreSQL, MongoDB, Sequelize
+- **Microservice platforms**: Docker, Apache Kafka
+- **Other technologies**:
+   - **Describing documentation**: Swagger, OpenAPI – Version control system: Git
+   - **Package manager**: NPM
+   - **Static file storage**: AWS S3
+- **External APIs and service providers**:
+  - **Email sending service**: SendGrid
+  - **SMS messaging service**: Twilio
+  - **Downloading data on cryptocurrencies**: RapidApi, CoinGecko (Getting general information), Coinranking (Getting market information)
 
-This application has been build according to microservices approach. [In the next](#services) section dedicated to services you will find the detailed description of every service that have been implemented, but before that, **let's discuss what microservices are**. 
+## Microservices infrastructure
 
-[//]: # ()
-[//]: # (Microservices architecture is an approach to building software applications as a collection of small, independently deployable services, each running in its own process and communicating with lightweight mechanisms, such as HTTP APIs or message queues.)
 
-[//]: # ()
-[//]: # (The architecture of microservices typically consists of the following components:)
+Below we will describe what a microservices infrastructure is, what it consists of, and what it is there are types of communication as well as details and tools for implementing this infrastructure in the project.
 
-[//]: # ()
-[//]: # (1. **_Services_**: Microservices are the individual services that make up the application. Each microservice is a self-contained module that performs a specific business function, such as user authentication or order processing. )
+### Description of the microservices infrastructure
 
-[//]: # (2. **_API Gateway_**: The API gateway is the entry point for all external requests to the application. It receives requests from clients and routes them to the appropriate microservices. It also performs other functions, such as authentication and rate limiting. )
+As already mentioned above, this application was built according to the microservice approach. The next section will specifically describe the functionality of each microservice, but before that, it's worth discussing whether there are microservices.
 
-[//]: # (3. **_Service Registry_**: The service registry is a central directory that stores information about all the microservices in the system, including their location and endpoints. This allows the API gateway to route requests to the correct microservice. )
+**Microservice architecture** - is an approach to building applications as a collection of small, independently deployed services, each running in its own process and communicating through lightweight mechanisms such as HTTP APIs or message queues.
 
-[//]: # (4. **_Load Balancer_**: The load balancer distributes requests across multiple instances of a microservice to ensure that the system can handle high levels of traffic and provide high availability. )
+A microservices architecture typically consists of the following components:
 
-[//]: # (5. **_Database_**: Each microservice typically has its own database, which it uses to store its data. The databases can be of different types and can be located in different physical locations. )
+1. **Services**: Microservices (or microservices) are individual services that make up an application. Each microservice is a standalone module that performs a specific business function, such as user authentication or order processing.
+2. **API Gateway**: The API Gateway is the entry point for all external requests to the application. It receives requests from clients and routes them to the appropriate microservices.
+   It also performs other functions such as authentication and rate limiting.
+3. **Service Registry**: The Service Registry is a central directory where information about all microservices in the system is stored, including their location and endpoints. This allows the API Gateway to route requests to the correct microservice.
+4. **Load Balancer**: A load balancer distributes requests across multiple microservice instances to ensure the system can handle heavy traffic and ensure high availability.
+5. **Database**: Each microservice usually has its own database where it stores its data. Databases can be of different types and can be located in different physical locations.
+6. **Monitoring and logging**: Monitoring and logging are key elements of microservices architecture. They allow developers to track system performance, identify issues, and troubleshoot.
+7. **Deployment and orchestration**: Microservices are typically deployed using containerization technologies such as Docker and managed with orchestration platforms such as Kubernetes. This allows developers to easily deploy, scale, and manage microservices.
 
-[//]: # (6. **_Monitoring and Logging_**: Monitoring and logging are crucial components of a microservices architecture. They allow developers to track the performance of the system, identify problems, and troubleshoot issues. )
 
-[//]: # (7. **_Deployment and Orchestration_**: Microservices are typically deployed using containerization technologies such as Docker and managed using orchestration platforms such as Kubernetes. This allows developers to easily deploy, scale, and manage the microservices.)
+In general, microservices architecture is designed to enable teams to build applications that are
+scalable, resilient, and maintainable. It provides a flexible and modular approach to application development that allows developers to focus on building small, focused services that can be quickly deployed and updated independently of each other.
 
-[//]: # ()
-[//]: # (Overall, the architecture of microservices is designed to enable teams to build applications that are scalable, resilient, and easy to maintain. It provides a flexible and modular approach to application development that allows developers to focus on building small, focused services that can be quickly deployed and updated independently of each other.)
+The main advantage of the microservices architecture approach is that the failure of one service will not have a negative impact on the availability of other services and the operation of the entire project. For example, in this project, an error in the operation of the cryptocurrency exchange service will not affect the project in its entirety, it will still be possible to log in to the account and write posts, because these functionalities are implemented as separate microservices.
 
-[//]: # ()
-[//]: # (In this project not every component has been implemented, because the description above describes big, production environment, since **_this project has been implemented for study purpose_** there were no need for implementing the whole infrastructure.)
+### Types of communication
 
-[//]: # ()
-[//]: # (Here is more details about the difference between the architecture of microservices described above and the architecture of microservices that has been implemented in this project. The most of them are explained by the **_scale of the project_**, meaning that there were no need of implementation of the entire component. Therefore, they were either simplify or not implemented: )
+In a microservices architecture, there are several ways for different services to communicate. Here are some of the most common types of communication between microservices:
 
-[//]: # ()
-[//]: # (- **_Load Balancer_**: Not for production. In the development mode, there is no need to control the flow of the traffic.)
+- **Synchronous communication (API Calls)**: This is a type of communication where the service that initiates the communication blocks the communication until it receives a response from the other service. The most common example of synchronous communication is the Request-Reply pattern, where a client service sends a request to a server service and the server sends back a response. This type of communication is useful when an immediate response is required and the client cannot proceed without it.
+- **Asynchronous communication (via Message Broker)**: This is a type of communication where the service that initiates the communication does not wait for a response from the other service. Instead, it sends the message to a message broker or queue, and the other service consumes the message when it's ready. Asynchronous communication is useful when a response is not required immediately and the client can run without it.
 
-[//]: # (- **_Monitoring and Logging_**: The monitoring system has been implemented, since, as mentioned previously, there is no production mode, but **some of critical logs are sent to MongoDB**.)
+For this particular project, a mixed approach of both types of communication was used. This means that from the front end, the user sends requests to the API entry gateway. This API has several roles which will be described below. But the point is that if it is a synchronous operation, e.g. logging in, the API will process this query and return a response, because from the architecture and UI/UX level, there is no point in adding such an operation to the queue if it is an asynchronous operation e.g. creating a record in the database with the new user's settings, such an operation can be added to the queue and the response returned to the user faster, which will ensure good UI/UX.
 
-[//]: # (- **_Deployment and Orchestration_**: As orchestration for this project **_Docker_** and **Apache Kafka** have been used. All services were compiled in [docker-compose]&#40;docker-compose.yml&#41; file and can be executed together joined by the same network. Also, in the root folder of the project, in [package.json]&#40;package.json&#41; file was written scripts that allow execution services both together and separately either within containers or locally. )
 
-[//]: # ()
-[//]: # (The main advantage of the architecture of microservices approach is that fail of the one service won't make any negative impact of availability of other services. For instance, in this project, if something bad happens to [cryptocurrencies rates]&#40;services/crypto-rates&#41; services, you still will be able to log in to our account and write posts. The only thing that you won't be able to access is the rates of currencies, availability and accessibility of other services won't be impacted. )
+And to solve such a problem, or at least show how it can be done, communication between of individual microservices was implemented using **Apache Kafka**.
 
-## Services
+**Apache Kafka** - is a distributed streaming platform designed to handle large amounts of data in real time. It was originally developed by LinkedIn and later made open source for the Apache Software Foundation. Kafka is scalable and fault tolerant, making it ideal for building real-time data pipelines and streaming applications. Kafka is very well suited for:
 
-[//]: # (As it was mentioned above, the architecture of microservices have been built using Docker and docker-compose. It means, that all 5 services are working within the save network inside the network of container and that way are able to communicate with each other.)
+- **Real-time processing**: Kafka allows you to process data as it flows in real time, making it ideal for applications such as fraud detection, monitoring and alerting.
+- **Messaging**: Kafka can be used as a messaging system to transfer data between different systems or applications.
 
-[//]: # (Even though some of external API's could be implemented as the separated service, because of the project scale, there were no need for that. This is why main, for example, [API]&#40;services/api&#41; acts as an API Gateway and API responsible for different functionalities at the same time.)
+### Details of infrastructure implementation in the project
 
-### API
+At this point, it would be worth discussing how the individual components were implemented, and what is the difference between large, production environments and this project, which was implemented for educational purposes, to show how microservices work on an example. Generally, some components were not created either by the scale of the project, because it is too small and implementing it does not make sense (or by implementing it on a smaller scale), or by the fact that this project as such does not have a production environment, i.e., some things are not It could be done.
 
-[//]: # (The service named in project [API]&#40;services/api&#41; is the gateway. It receives requests from the client and then routes them to appropriate services. Generally speaking, **routing** is the main function of the API Gateway.)
+1. **Service Registry**: A component of the microservices architecture that enables services to discover and communicate with each other in a dynamic and distributed environment. It provides a central directory of all available services, their locations, and other relevant metadata, facilitating seamless interaction between services. In this case, it was not implemented as a separate component, this role is played by API Gateway/Back-end.
+2. **Load Balancer**: In general, the application was not written for production environment, and in development mode there is no need to control traffic flow.
+   In life, traffic management is the responsibility of either a separate server that is the entry point. In such a scenario, the entire infrastructure is behind this server.
+   Or the machine that hosts this application acts as a balancer.
+3. **Monitoring and logging**: Most often, a monitoring system is required to monitor and report that everything is working properly in the production. In development mode, this function makes less sense, because developers have access to the source code of individual components, which facilitates the debugging and bug-finding process.
+   However, the login process was implemented using MongoDB. When some important action happens, any microservice can create and send a record to this remote database (collection) with information about this event. It can be like some kind of error, as well as an action such as creating an account by the user.
+4. **Deployment and orchestration**: Docker and Apache Kafka were used as orchestration for this project. All services have been compiled in docker-compose.yml and can be run together on the same network. In addition, scripts have been saved in the root folder of the project in the package.json file, which allow you to perform services both together and separately in containers.
+5. **Database**: As it was indicated above, in the case of large projects, when each micro-service has
+   a separate database, not only logical but also physically, the main goal of the entire infrastructure is data synchronization. Due to the fact that with a database of such scale, its division does not make sense, everything was done not only in one database, but also in one schema of this database, but anyway, this synchronization process was implemented/simulated.
+   It can be noticed that in the folder with database models, connections between models have not been specially made, foreign keys have not been added. This was done to simulate a real example of microservices architecture and to have each service responsible for synchronizing the entire database.
+   So, despite the fact that it is logically and physically one database, the lack of foreign keys simulates the operation as if we physically had several databases.
+   You can also pay attention to the fact that some fields store JSON as a data type (no. rates and comments), which formally violates the form of the database, but firstly, the type of these data was described in the code, and secondly, it was done specifically to save resources.
 
-### Front
+| ![Cryptotalks uml](media/cryptotalks_uml.png) | 
+|:---------------------------:| 
+|           *Space*           |
 
-[//]: # (The [front-end]&#40;services/front&#41; of the project was written using `Next.js` framework, which is basically `React` + `Typescript` + `SSR`. In this particular case, since there is no production mode, there were no need in making `SEO` optimization and `server-side rendering`, which is the main feature of the `Next.js`. It means that basically React + Typescript could be used, but Next.js was chosen because of other features such as routing, API building approach etc.   )
+## Available endpoints
+
+### Users module
+
+### Post module
+
+### Authentication module
+
+### Cryptocurrency module
+
+## Microservices and their roles
+
+### Front end
+
+### Back-end (API Gateway) and its key elements
 
 ### Authentication
 
-[//]: # (The [authentication]&#40;services/auth&#41; is responsible for the authentication of the **already created users**. Endpoints of this microservice mostly responsible for communication with `Sessions` table within database. This includes - generating user tokens, log out and refresh of the tokens. )
-
-### Crypto rates
-
-[//]: # (The [cryptocurrencies rates]&#40;services/crypto-rates&#41; service is the simple HTTP service that sends requests to an exchange and obtains all rates. Then, it writes them to database. In this case, a cache could be implemented.)
-
-[//]: # (Also, this services works as a webjob. It means that it has a schedule and every `X` minutes &#40;can be configured via environmental variables&#41; sends requests to the cryptocurrency exchange.)
-
-### Database
-
-[//]: # (As the database, `PostgreSQL` was chosen. Even though it is possible and very convenient, it is not the best choice for the production. Database should be implemented as a separated server.)
-
-[//]: # (To implement `ORM` and be able to provide `CRUD` operations, `Sequelize` has been utilized. It allows to describe models which will be converted to tables within database. Except that, Sequelize is probably the best ORM for Nest.js that provides the developers the ability of migrations.)
-
-[//]: # (Talking about migrations, they were used for `demo` script inside [package.json]&#40;package.json&#41; in the root folder of the project.)
+### Users
 
 ### Posts
 
-[//]: # (Microservice named [posts]&#40;services/posts&#41; simple responsible for handling posts. It includes - creating, editing, removing etc.)
-
-### Users
-
-[//]: # (Microservice named [users]&#40;services/users&#41; is responsible for every action that is connected with user such as account creation or login &#40;in this case it just checks data and asks for tokens [authentication]&#40;services/auth&#41; service&#41;. It also is responsible for sending the confirmation email to the new user. As an external provider of email service `Sendgrid` was used.)
+### Crypto rates
 
 ### Common
 
-[//]: # (Common is not a microservices itself, it doesn't receive or respond on requests. Instead of it, it stores all entities that can be shared between services. It includes - DTOs, exceptions, events and database modes.)
+## Internal documentation
 
-[//]: # (It is very important to mention that in real life example this would be a little incorrect. The purpose of the architecture of microservices is to synchronize data states. It means that microservices can have its own database, physically or logically. Therefore, there is no availability to connect records logically, using foreign keys. Here is where microservices come into play. Every table that needs to be synchronized has at least one column with id from table, or even database, to which it has no logical connection. And all microservices are responsible to handle this and prevent desynchronization.)
+## Technical requirements to run the project
 
-## Contact and references
+## Conclusions
 
-[//]: # (- Developer contact - [contact@mikhailbahdashych.me]&#40;mailto:contact@mikhailbahdashych.me&#41;)
-
-[//]: # (- API Gateway - [services/api]&#40;services/api&#41;)
-
-[//]: # (- Authentication microservice - [services/auth]&#40;services/auth&#41;)
-
-[//]: # (- Front microservice - [services/front]&#40;services/front&#41;)
-
-[//]: # (- Crypto rates microservice - [services/crypto-rates]&#40;services/crypto-rates&#41;)
-
-[//]: # (- Users microservice - [services/users]&#40;services/users&#41;)
-
-[//]: # (- Posts microservice - [services/posts]&#40;services/posts&#41;)
+## Literature and other sources
 
 ## License
 
