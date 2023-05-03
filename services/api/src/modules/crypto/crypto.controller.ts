@@ -120,14 +120,14 @@ export class CryptoController {
     @Param('pageSize') pageSize: number,
     @Param('order') order: string,
     @Param('orderBy') orderBy: string,
-    @Query('userId') userId: string
+    @Query('username') username: string
   ) {
     return this.cryptoService.listFavoriteCrypto({
       page,
       pageSize,
       order,
       orderBy,
-      userId,
+      username,
       requestUserId
     });
   }

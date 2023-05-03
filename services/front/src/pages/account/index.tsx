@@ -44,7 +44,7 @@ import {
   Nickname,
   NoPostsTitle,
   PostsTitle,
-  UserBio,
+  UserBio, UserContentSectionWrapper,
   UserInfoContainer,
   UserProfilePicture,
   UserProfilePictureWrapper,
@@ -97,7 +97,10 @@ const Account = () => {
             setUserData(res.user);
 
             fetchUserPosts().then();
-            fetchUserCryptocurrencies().then();
+            fetchUserCryptocurrencies().then((res: any) => {
+              setFavoriteCrypto(res.rows);
+              setCryptoTotalPages(res.count);
+            });
           }
         });
       }
@@ -105,7 +108,10 @@ const Account = () => {
   }, []);
 
   React.useEffect(() => {
-    fetchUserCryptocurrencies().then();
+    fetchUserCryptocurrencies().then((res: any) => {
+      setFavoriteCrypto(res.rows);
+      setCryptoTotalPages(res.count);
+    });
   }, [cryptoPage, cryptoPageSize]);
 
   React.useEffect(() => {
@@ -171,9 +177,7 @@ const Account = () => {
         token
       });
 
-      // setFavoriteCrypto(parseCoins(rows));
-      setCryptoTotalPages(count);
-      return;
+      return { rows: parseCoins(rows), count };
     } catch (e) {
       await exceptionHandler(e);
     }
@@ -350,7 +354,7 @@ const Account = () => {
                     onClick={() => handleRedirect('/account/settings')}
                   />
                 </UserSideBar>
-                <div>
+                <UserContentSectionWrapper>
                   <LatestPostsContainer>
                     {userPosts?.length ? (
                       <>
@@ -466,7 +470,7 @@ const Account = () => {
                       </NoPostsTitle>
                     )}
                   </LatestPostsContainer>
-                </div>
+                </UserContentSectionWrapper>
               </AccountContentContainer>
             </AccountContainer>
           </Wrapper>

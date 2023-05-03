@@ -85,6 +85,8 @@ export const UserSideBar = styled.div`
   padding: 0 15px;
 `;
 
+export const UserContentSectionWrapper = styled.div``;
+
 export const UserProfilePictureWrapper = styled.div`
   border-right: 1px solid rgb(${(props) => props.theme.colors.opposite}, .5);
   padding: 15px;

@@ -15,12 +15,7 @@ import { UserSettings } from '@models/user-settings.model';
 @Module({
   imports: [
     forwardRef(() => UserModule),
-    SequelizeModule.forFeature([
-      User,
-      UserSettings,
-      ConfirmationHash,
-      Session
-    ]),
+    SequelizeModule.forFeature([User, UserSettings, ConfirmationHash, Session]),
     ClientsModule.register([
       {
         name: 'AUTH_SERVICE',

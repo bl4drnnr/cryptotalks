@@ -5,5 +5,5 @@ export interface GetUserByUsernamePayload {
 }
 
 export interface GetUserByUsernameResponse {
-  userData: IPersonalInformation;
+  data: IPersonalInformation;
 }

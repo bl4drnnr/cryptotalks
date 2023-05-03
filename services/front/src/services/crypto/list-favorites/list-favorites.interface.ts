@@ -5,7 +5,7 @@ export interface ListFavoritesPayload {
   pageSize: number;
   order: string;
   orderBy: string;
-  userId?: string;
+  username?: string;
   token?: string | null;
 }
 

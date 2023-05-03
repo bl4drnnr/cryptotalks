@@ -968,7 +968,7 @@ export class UserService {
     return new ResponseDto();
   }
 
-  async getUserByUsername({ username }: { username: string; }) {
+  async getUserByUsername({ username }: { username: string }) {
     const user = await this.userRepository.findOne({
       where: { username }
     });
@@ -983,6 +983,6 @@ export class UserService {
 
     if (publicEmail) delete userData.email;
 
-    return userData;
+    return { data: userData };
   }
 }

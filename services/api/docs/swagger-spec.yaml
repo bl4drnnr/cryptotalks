@@ -641,7 +641,7 @@ paths:
           in: path
           schema:
             type: string
-        - name: userId
+        - name: username
           required: true
           in: query
           schema:

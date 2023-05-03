@@ -5,7 +5,10 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 
+import CoinPreview from '@components/CoinPreview/CoinPreview.component';
 import { Input } from '@components/Input/Input.component';
+import Pagination from '@components/Pagination/Pagination.component';
+import PostPreview from '@components/PostPreview/PostPreview.component';
 import { useHandleException } from '@hooks/useHandleException.hook';
 import { parseCoins } from '@hooks/useParseCoins.hook';
 import { useNotificationMessage } from '@hooks/useShowNotificationMessage.hook';
@@ -19,17 +22,23 @@ import { useListPostsService } from '@services/posts/list-posts/list-posts.servi
 import { NotificationType } from '@store/global/global.state';
 import {
   AccountContainer,
+  AccountContentContainer,
   AccountCreatedAtContainer,
   AccountInfo,
   AccountInfoContainer,
   ContactField,
   ContactIcon,
   ContactInformationWrapper,
-  Container, CreatedAtDate,
+  Container,
+  CreatedAtDate,
   CreatedAtParagraph,
   FullName,
+  LatestPostsContainer,
   Nickname,
+  NoPostsTitle,
+  PostsTitle,
   UserBio,
+  UserContentSectionWrapper,
   UserInfoContainer,
   UserProfilePicture,
   UserProfilePictureWrapper,
@@ -103,19 +112,18 @@ const Username = () => {
     const { username } = router.query;
 
     if (username) {
-      fetchGetUserByUsername(username as string).then((res) => {
-        setUserData(res?.userData);
-        fetchListCrypto().then((cryptoRes: any) => {
+      fetchGetUserByUsername(username as string).then(() => {
+        fetchListCrypto(username as string).then((cryptoRes: any) => {
           setCryptoTotalPages(cryptoRes.count);
           setListOfCrypto(cryptoRes.rows);
         });
-        fetchListPosts().then();
+        fetchListPosts(username as string).then();
       });
     }
   }, [router.query]);
 
   React.useEffect(() => {
-    fetchListCrypto().then();
+    fetchListCrypto(userData?.username as string).then();
   }, [
     cryptoPage,
     cryptoPageSize,
@@ -125,7 +133,7 @@ const Username = () => {
   ]);
 
   React.useEffect(() => {
-    fetchListPosts().then();
+    fetchListPosts(userData?.username as string).then();
   }, [
     postsPage,
     postsPageSize,
@@ -136,14 +144,16 @@ const Username = () => {
 
   const fetchGetUserByUsername = async (username: string) => {
     try {
-      return await getUserByUsername({ username });
+      const { data } = await getUserByUsername({ username });
+      setUserData(data);
+      return;
     } catch (e) {
       setUserNotFound(true);
       handleException(e);
     }
   };
 
-  const fetchListPosts = async () => {
+  const fetchListPosts = async (username: string) => {
     try {
       const { rows, count } = await listPosts({
         page: postsPage,
@@ -151,7 +161,7 @@ const Username = () => {
         order: postsOrder,
         orderBy: postsOrderBy,
         searchQuery: postsSearchQuery,
-        username: userData?.username
+        username
       });
 
       setListOfPosts(rows);
@@ -161,14 +171,14 @@ const Username = () => {
     }
   };
 
-  const fetchListCrypto = async () => {
+  const fetchListCrypto = async (username: string) => {
     try {
       const { rows, count } = await listFavorites({
         page: cryptoPage,
         pageSize: cryptoPageSize,
         order: cryptoOrder,
         orderBy: cryptoOrderBy,
-        userId: userData?.id
+        username
       });
 
       return { rows: parseCoins(rows), count };
@@ -183,6 +193,7 @@ const Username = () => {
 
   const copyToClipboard = async (text: string) => {
     await navigator.clipboard.writeText(text);
+
     showNotificationMessage({
       type: NotificationType.SUCCESS,
       content: 'Copied to clipboard',
@@ -303,6 +314,73 @@ const Username = () => {
                   </UserProfilePicture>
                 )}
               </UserInfoContainer>
+
+              <AccountContentContainer>
+                <UserContentSectionWrapper>
+                  <LatestPostsContainer>
+                    {listOfPosts?.length ? (
+                      <>
+                        <PostsTitle>{userData?.username}&apos;s posts</PostsTitle>
+                        {listOfPosts?.map((post, key) => (
+                          <>
+                            <PostPreview
+                              slug={post.slug}
+                              title={post.title}
+                              preview={post.preview}
+                              searchTags={post.searchTags}
+                              createdAt={post.createdAt}
+                              key={key}
+                            />
+                          </>
+                        ))}
+                        <Pagination
+                          currentPage={postsPage + 1}
+                          pageSize={postsPageSize}
+                          onPageChange={setPostsPage}
+                          onPageSizeChange={setPostsPageSize}
+                          totalPages={Math.ceil(postsTotalPages / postsPageSize)}
+                        />
+                      </>
+                    ) : (
+                      <NoPostsTitle>
+                        No posts yet.
+                      </NoPostsTitle>
+                    )}
+                  </LatestPostsContainer>
+                  <LatestPostsContainer>
+                    {listOfCrypto?.length ? (
+                      <>
+                        <PostsTitle>{userData?.username}&apos;s favorite cryptos</PostsTitle>
+                        {listOfCrypto?.map((item, index) => (
+                          <CoinPreview
+                            uuid={item.uuid}
+                            iconUrl={item.iconUrl}
+                            name={item.name}
+                            symbol={item.symbol}
+                            price={item.price}
+                            change={item.change}
+                            sparkline={item.sparkline}
+                            width={150}
+                            height={80}
+                            key={index}
+                          />
+                        ))}
+                        <Pagination
+                          currentPage={cryptoPage + 1}
+                          pageSize={cryptoPageSize}
+                          onPageChange={setCryptoPage}
+                          onPageSizeChange={setCryptoPageSize}
+                          totalPages={Math.ceil(cryptoTotalPages / cryptoPageSize)}
+                        />
+                      </>
+                    ): (
+                      <NoPostsTitle>
+                        No favorite coins yet.
+                      </NoPostsTitle>
+                    )}
+                  </LatestPostsContainer>
+                </UserContentSectionWrapper>
+              </AccountContentContainer>
             </AccountContainer>
           </Wrapper>
         </Container>

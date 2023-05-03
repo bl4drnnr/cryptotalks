@@ -265,8 +265,7 @@ export class UserController {
   @ApiOperation({ summary: 'Allows to obtain user public info' })
   @ApiResponse({
     status: 201,
-    description:
-      'As a response returns users public info'
+    description: 'As a response returns users public info'
   })
   @Get('get/:username')
   getUserByUsername(@Param('username') username: string) {

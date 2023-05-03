@@ -14,6 +14,7 @@ import { NoCryptoException } from '@exceptions/no-crypto.exception';
 import { UpdateCoinEvent } from '@events/update-coin.event';
 import { MarketStats } from '@models/market-stats.model';
 import { UserNotFoundException } from '@exceptions/user-not-found.exception';
+import { User } from '@models/user.model';
 
 @Injectable()
 export class CryptoService implements OnModuleInit {
@@ -24,6 +25,8 @@ export class CryptoService implements OnModuleInit {
     private readonly favoriteCoinsRepo: typeof FavoriteCoins,
     @InjectModel(MarketStats)
     private readonly marketStatsRepository: typeof MarketStats,
+    @InjectModel(User)
+    private readonly userRepository: typeof User,
     @Inject('CRYPTO_SERVICE') private readonly cryptoClient: ClientKafka
   ) {}
 
@@ -209,14 +212,14 @@ export class CryptoService implements OnModuleInit {
     pageSize,
     order,
     orderBy,
-    userId,
+    username,
     requestUserId
   }: {
     page: number;
     pageSize: number;
     order: string;
     orderBy: string;
-    userId: string;
+    username: string;
     requestUserId: string;
   }) {
     const offset = page * pageSize;
@@ -239,7 +242,14 @@ export class CryptoService implements OnModuleInit {
       'tier'
     ];
 
-    where['userId'] = requestUserId ? requestUserId : userId;
+    if (requestUserId) {
+      where['userId'] = requestUserId;
+    } else if (username) {
+      const user = await this.userRepository.findOne({
+        where: { username }
+      });
+      where['userId'] = user.id;
+    }
 
     const userFavoriteCrypto = await this.favoriteCoinsRepo.findOne({
       where: { ...where }
