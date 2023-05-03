@@ -16,6 +16,7 @@ import {
 import CoinPreview from '@components/CoinPreview/CoinPreview.component';
 import { Input } from '@components/Input/Input.component';
 import { useHandleException } from '@hooks/useHandleException.hook';
+import { parseCoins } from '@hooks/useParseCoins.hook';
 import DefaultLayout from '@layouts/Default.layout';
 import { ICoins } from '@services/list-crypto/list-crypto.interface';
 import { useListCryptoService } from '@services/list-crypto/list-crypto.service';
@@ -70,24 +71,6 @@ const Home = () => {
   React.useEffect(() => {
     fetchCoinByName(coinSearch).then((res: any) => setSearchedCoin(res.coin[0]));
   }, [coinSearch]);
-
-  const parseCoins = (listOfCoins: Array<ICoins>) => {
-    return listOfCoins.map((item) => {
-      const sparklineLength = item.sparkline.length;
-      const parsedSparklines = item.sparkline.map((item: any, index: number) => ({
-        date: dayjs().subtract(sparklineLength - index, 'hours').format('hh'),
-        price: parseFloat(item).toFixed(8)
-      }));
-      return {
-        ...item,
-        sparkline: parsedSparklines,
-        price: parseFloat(item.price).toFixed(2),
-        marketCap: (parseFloat(item.marketCap) / 1000000000).toFixed(2),
-        volume24h: (parseFloat(item.volume24h) / 1000000000).toFixed(2),
-        btcPrice: parseFloat(item.btcPrice).toFixed(8)
-      };
-    });
-  };
 
   const fetchCoinByName = async (name: string) => {
     try {

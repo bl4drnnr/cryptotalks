@@ -13,7 +13,7 @@ export const useListFavoritesService = () => {
     order,
     orderBy,
     token,
-    userId
+    username
   }: ListFavoritesPayload)
     : Promise<ListFavoritesResponse> => {
     try {
@@ -22,7 +22,7 @@ export const useListFavoritesService = () => {
       const queryParams = [];
       let listFavoritesUrl = `/crypto/list-favorites/${page}/${pageSize}/${order}/${orderBy}?`;
 
-      if (userId) queryParams.push({ userId });
+      if (username) queryParams.push({ username });
 
       if (queryParams.length) {
         queryParams.forEach((item) => {

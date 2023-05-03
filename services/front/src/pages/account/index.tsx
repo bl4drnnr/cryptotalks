@@ -13,6 +13,7 @@ import Pagination from '@components/Pagination/Pagination.component';
 import PostPreview from '@components/PostPreview/PostPreview.component';
 import { TwoFa } from '@components/TwoFa/TwoFa.component';
 import { useHandleException } from '@hooks/useHandleException.hook';
+import { parseCoins } from '@hooks/useParseCoins.hook';
 import { useNotificationMessage } from '@hooks/useShowNotificationMessage.hook';
 import DefaultLayout from '@layouts/Default.layout';
 import { IPersonalInformation } from '@services/get-user-settings/get-user-settings.interface';
@@ -43,7 +44,7 @@ import {
   Nickname,
   NoPostsTitle,
   PostsTitle,
-  UserBio,
+  UserBio, UserContentSectionWrapper,
   UserInfoContainer,
   UserProfilePicture,
   UserProfilePictureWrapper,
@@ -96,7 +97,10 @@ const Account = () => {
             setUserData(res.user);
 
             fetchUserPosts().then();
-            fetchUserCryptocurrencies().then();
+            fetchUserCryptocurrencies().then((res: any) => {
+              setFavoriteCrypto(res.rows);
+              setCryptoTotalPages(res.count);
+            });
           }
         });
       }
@@ -104,30 +108,16 @@ const Account = () => {
   }, []);
 
   React.useEffect(() => {
-    fetchUserCryptocurrencies().then();
+    fetchUserCryptocurrencies().then((res: any) => {
+      setFavoriteCrypto(res.rows);
+      setCryptoTotalPages(res.count);
+    });
   }, [cryptoPage, cryptoPageSize]);
 
   React.useEffect(() => {
     fetchUserPosts().then();
   }, [postsPage, postsPageSize]);
 
-  const parseCoins = (listOfCoins: Array<ICoins>) => {
-    return listOfCoins.map((item) => {
-      const sparklineLength = item.sparkline.length;
-      const parsedSparklines = item.sparkline.map((item: any, index: number) => ({
-        date: dayjs().subtract(sparklineLength - index, 'hours').format('hh'),
-        price: parseFloat(item).toFixed(8)
-      }));
-      return {
-        ...item,
-        sparkline: parsedSparklines,
-        price: parseFloat(item.price).toFixed(2),
-        marketCap: (parseFloat(item.marketCap) / 1000000000).toFixed(2),
-        volume24h: (parseFloat(item.volume24h) / 1000000000).toFixed(2),
-        btcPrice: parseFloat(item.btcPrice).toFixed(8)
-      };
-    });
-  };
   const copyToClipboard = async (text: string) => {
     await navigator.clipboard.writeText(text);
     showNotificationMessage({
@@ -187,9 +177,7 @@ const Account = () => {
         token
       });
 
-      setFavoriteCrypto(parseCoins(rows));
-      setCryptoTotalPages(count);
-      return;
+      return { rows: parseCoins(rows), count };
     } catch (e) {
       await exceptionHandler(e);
     }
@@ -366,7 +354,7 @@ const Account = () => {
                     onClick={() => handleRedirect('/account/settings')}
                   />
                 </UserSideBar>
-                <div>
+                <UserContentSectionWrapper>
                   <LatestPostsContainer>
                     {userPosts?.length ? (
                       <>
@@ -374,6 +362,7 @@ const Account = () => {
                         {userPosts?.map((post, key) => (
                           <>
                             <PostPreview
+                              rates={post.rates}
                               slug={post.slug}
                               title={post.title}
                               preview={post.preview}
@@ -482,7 +471,7 @@ const Account = () => {
                       </NoPostsTitle>
                     )}
                   </LatestPostsContainer>
-                </div>
+                </UserContentSectionWrapper>
               </AccountContentContainer>
             </AccountContainer>
           </Wrapper>

@@ -476,6 +476,22 @@ paths:
         "201":
           description: As a response function returns success message
       tags: *a2
+  "/api/user/get/{username}":
+    get:
+      operationId: UserController_getUserByUsername
+      summary: Allows to obtain user public info
+      parameters:
+        - name: username
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+        "201":
+          description: As a response returns users public info
+      tags: *a2
   /api/auth/refresh:
     get:
       operationId: AuthController_refreshTokens
@@ -625,7 +641,7 @@ paths:
           in: path
           schema:
             type: string
-        - name: userId
+        - name: username
           required: true
           in: query
           schema:

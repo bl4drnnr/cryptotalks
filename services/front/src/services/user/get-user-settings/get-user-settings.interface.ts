@@ -1,5 +1,6 @@
 export interface IPersonalInformation {
   id: string;
+  email?: string | undefined;
   firstName: string;
   lastName: string;
   twitter: string;

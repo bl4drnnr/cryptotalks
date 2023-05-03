@@ -47,6 +47,7 @@ import { EmailChangeConfirmedException } from '@exceptions/email-change-confirme
 import { ForgotPasswordDto } from '@dto/forgot-password.dto';
 import { SendVerificationEmailEvent } from '@events/send-verification-email.event';
 import { ApiConfigService } from '@shared/config.service';
+import { UserNotFoundException } from '@exceptions/user-not-found.exception';
 
 @Injectable()
 export class UserService {
@@ -965,5 +966,23 @@ export class UserService {
     );
 
     return new ResponseDto();
+  }
+
+  async getUserByUsername({ username }: { username: string }) {
+    const user = await this.userRepository.findOne({
+      where: { username }
+    });
+
+    if (!user) throw new UserNotFoundException();
+
+    const { publicEmail } = await this.userSettingsRepository.findOne({
+      where: { userId: user.id }
+    });
+
+    const userData = await this.getUserPersonalInformation({ userId: user.id });
+
+    if (publicEmail) delete userData.email;
+
+    return { data: userData };
   }
 }

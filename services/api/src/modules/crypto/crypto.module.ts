@@ -8,10 +8,16 @@ import { FavoriteCoins } from '@models/favorites-coins.model';
 import { JwtModule } from '@nestjs/jwt';
 import { ApiConfigService } from '@shared/config.service';
 import { MarketStats } from '@models/market-stats.model';
+import { User } from '@models/user.model';
 
 @Module({
   imports: [
-    SequelizeModule.forFeature([Cryptocurrency, FavoriteCoins, MarketStats]),
+    SequelizeModule.forFeature([
+      Cryptocurrency,
+      FavoriteCoins,
+      MarketStats,
+      User
+    ]),
     ClientsModule.register([
       {
         name: 'CRYPTO_SERVICE',
