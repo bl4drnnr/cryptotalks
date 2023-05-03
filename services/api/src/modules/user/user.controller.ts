@@ -261,4 +261,15 @@ export class UserController {
   ) {
     return this.userService.uploadPhoto({ userId, photo: payload.photo });
   }
+
+  @ApiOperation({ summary: 'Allows to obtain user public info' })
+  @ApiResponse({
+    status: 201,
+    description:
+      'As a response returns users public info'
+  })
+  @Get('get/:username')
+  getUserByUsername(@Param('username') username: string) {
+    return this.userService.getUserByUsername({ username });
+  }
 }

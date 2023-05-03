@@ -253,6 +253,7 @@ export class CryptoService implements OnModuleInit {
           [Op.in]: userFavoriteCrypto.favoriteCoins
         }
       },
+      order: [[orderBy, order]],
       offset,
       limit,
       attributes

@@ -1,6 +1,5 @@
 import React from 'react';
 
-import dayjs from 'dayjs';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -9,6 +8,7 @@ import { Legend, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
 import { Button } from '@components/Button/Button.component';
 import PostPreview from '@components/PostPreview/PostPreview.component';
 import { useHandleException } from '@hooks/useHandleException.hook';
+import { parseCoins } from '@hooks/useParseCoins.hook';
 import { useNotificationMessage } from '@hooks/useShowNotificationMessage.hook';
 import DefaultLayout from '@layouts/Default.layout';
 import { useAddCryptoToFavoritesService } from '@services/add-crypto-to-favorites/add-crypto-to-favorites.service';
@@ -117,23 +117,6 @@ const Coin = () => {
     } catch (e) {
       handleException(e);
     }
-  };
-
-  const parseCoins = (coin: GetCryptoByIdResponse) => {
-    const sparklineLength = coin.sparkline.length;
-    const parsedSparklines = coin.sparkline.map((item: any, index: number) => ({
-      date: dayjs().subtract(sparklineLength - index, 'hours').format('hh'),
-      price: parseFloat(item).toFixed(8)
-    }));
-
-    return {
-      ...coin,
-      sparkline: parsedSparklines,
-      price: parseFloat(String(coin.price)).toFixed(2),
-      marketCap: (parseFloat(coin.marketCap) / 1000000000).toFixed(2),
-      volume24h: (parseFloat(coin.volume24h) / 1000000000).toFixed(2),
-      btcPrice: parseFloat(String(coin.btcPrice)).toFixed(8)
-    };
   };
 
   const handleRedirect = async (path: string) => {

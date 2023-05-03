@@ -10,7 +10,9 @@ import DefaultLayout from '@layouts/Default.layout';
 import { IPosts } from '@services/posts/list-posts/list-posts.interface';
 import { useListPostsService } from '@services/posts/list-posts/list-posts.service';
 import {
-  Container, PostIndexParagraph, PostIndexTitle,
+  Container,
+  PostIndexParagraph,
+  PostIndexTitle,
   PostSearchInputWrapper,
   SortBar,
   SortItem,
