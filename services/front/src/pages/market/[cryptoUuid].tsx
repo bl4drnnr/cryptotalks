@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import { Legend, Line, LineChart, Tooltip, XAxis, YAxis } from 'recharts';
 
 import { Button } from '@components/Button/Button.component';
+import PostPreview from '@components/PostPreview/PostPreview.component';
 import { useHandleException } from '@hooks/useHandleException.hook';
 import { useNotificationMessage } from '@hooks/useShowNotificationMessage.hook';
 import DefaultLayout from '@layouts/Default.layout';
@@ -58,7 +59,7 @@ const Coin = () => {
       fetchGetCoin(cryptoUuid as string).then((res: any) => {
         setCurrentCrypto(res);
         setIsFavoriteCoin(res?.isFavorite);
-        fetchListPosts(res?.name).then((posts) => setRelatedPosts(posts));
+        fetchListPosts(res?.symbol).then((posts) => setRelatedPosts(posts));
       });
     }
   }, [router.query]);
@@ -256,9 +257,22 @@ const Coin = () => {
                 </CoinTitles>
               </CoinMarketDataWrapper>
 
-              <CoinSubtitle className={'subsubtitle'}>
-                Related posts
-              </CoinSubtitle>
+              {relatedPosts?.count ? (
+                <>
+                  <CoinSubtitle className={'subsubtitle'}>
+                    Related posts
+                  </CoinSubtitle>
+                  {relatedPosts?.rows.map((post, index) => (
+                    <PostPreview
+                      key={index}
+                      slug={post.slug}
+                      title={post.title}
+                      preview={post.preview}
+                      searchTags={post.searchTags}
+                    />
+                  ))}
+                </>
+              ) : (<></>)}
             </>
           ) : (
             <CoinTitle>
